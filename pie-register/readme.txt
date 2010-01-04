@@ -48,6 +48,8 @@ Tired of the same old emails when someone new registers?  Spice it up with your 
 **Charge for Membership**
 Wanna charge your user for registeration? If you would like to charge for a fee for registeration, Pie-Register has Built-in Paypal Integration, now easy to charge members on registeration. Pie-Register seemsly integrates with Paypal.
 
+This is a fork of Register-Plus, however now lots of things have changed since.
+
 == Installation ==
 
 1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
