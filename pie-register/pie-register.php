@@ -3,8 +3,10 @@
 Plugin Name: Pie Register
 Plugin URI: http://pie-solutions.com/products/pie-register/
 Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimer, Captcha Validation, Email Validation, User Moderation, Profile Fields, Charge User fees through Paypal and more.
+Pie-register is a fork of register-plus, however many things has changed since.
+
 Author: Johnibom
-Version: 1.0.1
+Version: 1.1.1
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -12,6 +14,13 @@ Place your language file within this plugin directory and name it "piereg-{langu
 				
 CHANGELOG
 See readme.txt
+*/
+
+/*Created by Skullbit
+ (website: skullbit.com)
+
+ Modified by JOHNIBOM
+ (website: pie-solutions.com       email : johnibom@pie-solutions.com)
 */
 
 $rp = get_option( 'pie_register' ); //load options
@@ -770,6 +779,13 @@ jQuery(document).ready(function() {
                                 <div><label for="paypal_butt_id"><strong><?php _e('Paypal Button ID', 'piereg');?></strong>: </label><input type="text" name="piereg_paypal_butt_id" id="paypal_butt_id" style="width:100px;" value="<?php echo $piereg['paypal_butt_id'];?>" />
                             </div>
 							<div><label for="paypal_PDT"><strong><?php _e('Paypal PDT Token', 'piereg');?></strong>: </label><input type="text" name="piereg_paypal_pdt" id="paypal_pdt" style="width:300px;" value="<?php echo $piereg['paypal_pdt'];?>" />
+							<br />
+							<strong>
+							<?php _e('Set Thank You URL In Step 2<br>'.wp_login_url(), 'piereg');?><br />
+							<?php _e('SET this variables at STEP 3', 'piereg');?><br />
+							<?php _e('rm=2', 'piereg');?><br />
+							<?php _e('notify_url='.wp_login_url(), 'piereg');?>
+							</strong>
                             </div>
 </td>
                         	</tr>
@@ -1829,7 +1845,7 @@ value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="
 		function ValidPUser(){
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
-			if(isset($_GET['payment_success']) ){
+			if(isset($_GET['tx']) ){
 			$req = 'cmd=_notify-synch';
 $tx_token = $_GET['tx'];
 $pptoken=$piereg['paypal_pdt'];

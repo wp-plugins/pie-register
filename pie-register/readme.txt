@@ -48,6 +48,8 @@ Tired of the same old emails when someone new registers?  Spice it up with your 
 **Charge for Membership**
 Wanna charge your user for registeration? If you would like to charge for a fee for registeration, Pie-Register has Built-in Paypal Integration, now easy to charge members on registeration. Pie-Register seemsly integrates with Paypal.
 
+Pie-Register is a fork of register-Plus Plugin, however many things have changed since.
+
 == Installation ==
 
 1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
@@ -58,6 +60,10 @@ Wanna charge your user for registeration? If you would like to charge for a fee 
 * Place your language file in the plugin folder directory and name it "piereg-{language}.mo" replacing {language} with your language value from wp-config.php 
 				
 == CHANGELOG ==
+
+**v1.1.1** January 06 2010 
+
+* Added Paypal Return and thank you URL.
 
 **v1.0.1** January 04 2010 
 
