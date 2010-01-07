@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.1
+Version: 1.1.2
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -1637,7 +1637,7 @@ small{
 		
 		function HideLogin(){
 			$piereg = get_option( 'pie_register' );
-			if($_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
+			if($piereg['paypal_option'] && $_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
 			if($piereg['paypal_option']){
 			?>
 			<div id="login">
@@ -1816,10 +1816,31 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 				$piereg = get_option( 'pie_register' );
 				$verify_key = $_GET['piereg_verification'];
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
+				}else if($piereg['paypal_option'] && isset( $_GET['checkemail'] ) ){
+					
+				echo '<p style="text-align:center;">' . __('Please click below to Continue and finish registeration.', 'regplus') . '</p>';
+				session_start();
+				
+				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify_user' AND meta_value='".$_SESSION['secure_id']."'");
+				$user_details_gender=$wpdb->get_row( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'gender' AND user_id='".$user_id."'");
+				$user_details_username=$wpdb->get_row( "SELECT user_login FROM $wpdb->users WHERE ID='".$user_id."'");
+				$user_name=$_SESSION['secure_id'];
+				}
 				if ( $user_id ) {
 					if($piereg['paypal_option']){
 					$login = get_usermeta($user_id, 'email_verify_user');
-					$msg = '<p>' . sprintf(__('Thank you %s, your email has been verified, please Click below to Complete and your account registeration.', 'piereg'), $login ) . '</p>';
+					$msg = '<p>' . sprintf(__('Hello %s, please Click below to Complete your account registeration.', 'piereg'), $login ) . '</p>';
+					
+					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
+
+value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="0" SRC="http://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" ALT="PayPal - The safer, easier way to pay online">
+
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">';
+					
+					}
+					else if($piereg['paypal_option'] && $piereg['email_verify']){
+					$login = get_usermeta($user_id, 'email_verify_user');
+					$msg = '<p>' . sprintf(__('Thank you %s, your email has been verified, please Click below to Complete your account registeration.', 'piereg'), $login ) . '</p>';
 					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
 
 value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="0" SRC="http://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" ALT="PayPal - The safer, easier way to pay online">
@@ -1839,7 +1860,7 @@ value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="
 					echo $msg;
 					echo $paypalcode?$paypalcode:'';
 				}
-			}
+			
 		}
 		
 		function ValidPUser(){
@@ -2201,7 +2222,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	}
 	if( $ref != $admin && ( $piereg['email_verify'] || $piereg['admin_verify'] ) ) {
 			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
-			}else if( $ref != $admin ) {
+			}else if( $ref != $admin && ($piereg['paypal_option']) ) {
 			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
 			}
 			
