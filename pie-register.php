@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.2
+Version: 1.1.3
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -1923,7 +1923,7 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 	$itemname = $keyarray['item_name'];
 	$amount = $keyarray['mc_gross'];
 	$user_login=$keyarray['custom'];
-	$user_id=$wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE meta_key= 'email-verify'   AND meta_value='".$user_login."' OR meta_key='admin_verify'  AND meta_value='".$user_login."'");
+	$user_id=$wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE meta_value='".$user_login."'");
 				/*$verify_key = $_GET['piereg_verification'];
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");*/
 				if ( $user_id ) {
@@ -1935,13 +1935,15 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 					delete_usermeta($user_id, 'email_verify_user');
 					delete_usermeta($user_id, 'email_verify');
 					delete_usermeta($user_id, 'email_verify_date');
+					$msg = '<p class="message">' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
 					}else if($loginA){
 					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginA' WHERE ID = '$user_id'" );
 					delete_usermeta($user_id, 'admin_verify_user');
 					delete_usermeta($user_id, 'admin_verify');
+					$msg = '<p class="message">' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
 					
 					}
-					$msg = '<p>' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
+					
 					
 					
 					echo $msg;
