@@ -598,15 +598,15 @@ jQuery(document).ready(function() {
 			
 			if($pp && $piereg['email_verify']){
 			$user = get_usermeta($user_id, 'email_verify_user');
-			$message = __('Your account has now been verified by an administrator. Now you are requested to pay to complete the registeration and activate the account.') . "\r\n";
+			$message = __('Your account has now been verified by an administrator. Now you are requested to pay to complete the registration and activate the account.') . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
-			 $message .= $pp." \r\n Click to Complete the Registeration. \r\n";
+			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
 			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
 			}else if($pp && $piereg['admin_verify']){
 			$user =get_usermeta($user_id, 'admin_verify_user');
-			$message = __('Your account has now been approved by an administrator. To activate the account please Click on a link below to finish the registeration.') . "\r\n";
+			$message = __('Your account has now been approved by an administrator. To activate the account please Click on a link below to finish the registration.') . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
-			 $message .= $pp." \r\n Click to Complete the Registeration. \r\n";
+			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
 			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
 			}else{
 			$user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
@@ -619,7 +619,7 @@ jQuery(document).ready(function() {
 			 
 			add_filter('wp_mail_from', array($this, 'userfrom'));
 			add_filter('wp_mail_from_name', array($this, 'userfromname'));
-			wp_mail($user->user_email, sprintf(__('[%s] User Account Registeration', 'piereg'), get_option('blogname')), $message);
+			wp_mail($user->user_email, sprintf(__('[%s] User Account Registration', 'piereg'), get_option('blogname')), $message);
 		}
 		function Unverified(){
 			global $wpdb;
@@ -774,7 +774,7 @@ jQuery(document).ready(function() {
 							
 							 <tr valign="top">
                        			 <th scope="row"><label for="paypal_option"><?php _e('Paypal Options', 'piereg');?></label></th>
-                        		<td><label><input type="checkbox" name="piereg_paypal_option" id="paypal_option" value="1" <?php if( $piereg['paypal_option'] ) echo 'checked="checked"';?> /> <?php _e('Add Paypal payment gateway for registeration.', 'piereg');?></label><br />
+                        		<td><label><input type="checkbox" name="piereg_paypal_option" id="paypal_option" value="1" <?php if( $piereg['paypal_option'] ) echo 'checked="checked"';?> /> <?php _e('Add Paypal payment gateway for registration.', 'piereg');?></label><br />
                                 <?php _e('Enter Your paypal hosted button ID.', 'piereg');?>
                                 <div><label for="paypal_butt_id"><strong><?php _e('Paypal Button ID', 'piereg');?></strong>: </label><input type="text" name="piereg_paypal_butt_id" id="paypal_butt_id" style="width:100px;" value="<?php echo $piereg['paypal_butt_id'];?>" />
                             </div>
@@ -1818,7 +1818,7 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
 				}else if($piereg['paypal_option'] && isset( $_GET['checkemail'] ) ){
 					
-				echo '<p style="text-align:center;">' . __('Please click below to Continue and finish registeration.', 'regplus') . '</p>';
+				echo '<p style="text-align:center;">' . __('Please click below to Continue and finish registration.', 'regplus') . '</p>';
 				session_start();
 				
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify_user' AND meta_value='".$_SESSION['secure_id']."'");
@@ -1829,7 +1829,7 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 				if ( $user_id ) {
 					if($piereg['paypal_option']){
 					$login = get_usermeta($user_id, 'email_verify_user');
-					$msg = '<p>' . sprintf(__('Hello %s, please Click below to Complete your account registeration.', 'piereg'), $login ) . '</p>';
+					$msg = '<p>' . sprintf(__('Hello %s, please Click below to Complete your account registration.', 'piereg'), $login ) . '</p>';
 					
 					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
 
@@ -1840,7 +1840,7 @@ value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="
 					}
 					else if($piereg['paypal_option'] && $piereg['email_verify']){
 					$login = get_usermeta($user_id, 'email_verify_user');
-					$msg = '<p>' . sprintf(__('Thank you %s, your email has been verified, please Click below to Complete your account registeration.', 'piereg'), $login ) . '</p>';
+					$msg = '<p>' . sprintf(__('Thank you %s, your email has been verified, please Click below to Complete your account registration.', 'piereg'), $login ) . '</p>';
 					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
 
 value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="0" SRC="http://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" ALT="PayPal - The safer, easier way to pay online">
