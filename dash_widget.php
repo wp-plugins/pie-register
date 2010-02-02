@@ -1,7 +1,7 @@
 <?php
-if( !class_exists('RegisterPlusWidget') ){
-	class RegisterPlusWidget{
-		function RegisterPlusWidget() { //contructor
+if( !class_exists('PieRegisterWidget') ){
+	class PieRegisterWidget{
+		function PieRegisterWidget() { //contructor
 			// Add the widget to the dashboard
 			add_action( 'wp_dashboard_setup', array($this, 'register_widget') );
 			add_filter( 'wp_dashboard_widgets', array($this, 'add_widget') );		
@@ -43,5 +43,5 @@ if( !class_exists('RegisterPlusWidget') ){
 } # End Class RegisterPlusWidget
 
 // Start this plugin once all other plugins are fully loaded
-add_action( 'plugins_loaded', create_function( '', 'global $piereg_widget; $piereg_widget = new RegisterPlusWidget();' ) );
+add_action( 'plugins_loaded', create_function( '', 'global $piereg_widget; $piereg_widget = new PieRegisterWidget();' ) );
 ?>

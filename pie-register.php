@@ -6,11 +6,11 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.3
+Version: 1.1.5
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
-Place your language file within this plugin directory and name it "piereg-{language}.mo" replace {language} with your language value from wp-config.php
+* Currently This feature is not available. We are working on it to improve.
 				
 CHANGELOG
 See readme.txt
@@ -84,7 +84,6 @@ if( !class_exists('PieMemberRegister') ){
 			//FILTERS
 				#Check Register Form for Errors
 				add_filter( 'registration_errors', array($this, 'RegErrors') );	
-				
 			//LOCALIZATION
 				#Place your language file in the plugin folder and name it "piereg-{language}.mo"
 				#replace {language} with your language value from wp-config.php
@@ -763,7 +762,7 @@ jQuery(document).ready(function() {
                         	</tr>
                             <tr valign="top">
                        			 <th scope="row"><label for="logo"><?php _e('Custom Logo', 'piereg');?></label></th>
-                        		<td><input type="file" name="piereg_logo" id="logo" value="1" /> &nbsp; <small><?php _e("Recommended Logo width is 292px, but any height should work.", "piereg");?></small><br /> <img src="<?php echo $piereg['logo'];?>" alt="" />
+                        		<td><input type="file" name="piereg_logo" id="logo" value="1" /> &nbsp; <small><?php _e("Recommended Logo width is 358px, but any height should work.", "piereg");?></small><br /> <img src="<?php echo $piereg['logo'];?>" alt="" />
                                 <?php if ( $piereg['logo'] ) {?>
                                 <br /><label><input type="checkbox" name="remove_logo" value="1" /> <?php _e('Delete Logo', 'piereg');?></label>
                                 <?php } else { ?>
@@ -1221,58 +1220,53 @@ jQuery(document).ready(function() {
 			if ( $piereg['firstname'] ){	
 				if( isset( $_GET['firstname'] ) ) $_POST['firstname'] = $_GET['firstname'];
 			?>
-   		<p><label><?php _e('First Name:', 'piereg');?> <br />
-		<input autocomplete="off" name="firstname" id="firstname" size="25" value="<?php echo $_POST['firstname'];?>" type="text" tabindex="30" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('First Name:', 'piereg');?> <p>
+		<input autocomplete="off" name="firstname" id="firstname" size="25" value="<?php echo $_POST['firstname'];?>" type="text" tabindex="30" /></p></label>
+        </div>
             <?php
 			}
 			if ( $piereg['lastname'] ){
 				if( isset( $_GET['lastname'] ) ) $_POST['lastname'] = $_GET['lastname'];
 			?>
-   		<p><label><?php _e('Last Name:', 'piereg');?> <br />
-		<input autocomplete="off" name="lastname" id="lastname" size="25" value="<?php echo $_POST['lastname'];?>" type="text" tabindex="31" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('Last Name:', 'piereg');?> <p>
+		<input autocomplete="off" name="lastname" id="lastname" size="25" value="<?php echo $_POST['lastname'];?>" type="text" tabindex="31" /></p></label></div>
             <?php
 			}
 			if ( $piereg['website'] ){
 				if( isset( $_GET['website'] ) ) $_POST['website'] = $_GET['website'];
 			?>
-   		<p><label><?php _e('Website:', 'piereg');?> <br />
-		<input autocomplete="off" name="website" id="website" size="25" value="<?php echo $_POST['website'];?>" type="text" tabindex="32" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('Website:', 'piereg');?> <p>
+		<input autocomplete="off" name="website" id="website" size="25" value="<?php echo $_POST['website'];?>" type="text" tabindex="32" /></p></label></div>
             <?php
 			}
 			if ( $piereg['aim'] ){
 				if( isset( $_GET['aim'] ) ) $_POST['aim'] = $_GET['aim'];
 			?>
-   		<p><label><?php _e('AIM:', 'piereg');?> <br />
-		<input autocomplete="off" name="aim" id="aim" size="25" value="<?php echo $_POST['aim'];?>" type="text" tabindex="32" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('AIM:', 'piereg');?> <p>
+		<input autocomplete="off" name="aim" id="aim" size="25" value="<?php echo $_POST['aim'];?>" type="text" tabindex="32" /></p></label></div>
             <?php
 			}
 			if ( $piereg['yahoo'] ){
 				if( isset( $_GET['yahoo'] ) ) $_POST['yahoo'] = $_GET['yahoo'];
 			?>
-   		<p><label><?php _e('Yahoo IM:', 'piereg');?> <br />
-		<input autocomplete="off" name="yahoo" id="yahoo" size="25" value="<?php echo $_POST['yahoo'];?>" type="text" tabindex="33" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('Yahoo IM:', 'piereg');?> <p>
+		<input autocomplete="off" name="yahoo" id="yahoo" size="25" value="<?php echo $_POST['yahoo'];?>" type="text" tabindex="33" /></p></label></div>
             <?php
 			}
 			if ( $piereg['jabber'] ){
 				if( isset( $_GET['jabber'] ) ) $_POST['jabber'] = $_GET['jabber'];
 			?>
-   		<p><label><?php _e('Jabber / Google Talk:', 'piereg');?> <br />
-		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" tabindex="34" /></label><br />
-        </p>
+   		<div style="clear:both"><label><?php _e('Jabber / Google Talk:', 'piereg');?> <p>
+		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" tabindex="34" /></p></label></div>
             <?php
 			}
 			if ( $piereg['about'] ){
 				if( isset( $_GET['about'] ) ) $_POST['about'] = $_GET['about'];
 			?>
-   		<p><label><?php _e('About Yourself:', 'piereg');?> <br />
-		<textarea autocomplete="off" name="about" id="about" cols="25" rows="5" tabindex="35"><?php echo stripslashes($_POST['about']);?></textarea></label><br />
+   		<div style="clear:both"><label><?php _e('About Yourself:', 'piereg');?> <p>
+		<textarea autocomplete="off" name="about" id="about" cols="25" rows="5" tabindex="35"><?php echo stripslashes($_POST['about']);?></textarea></p></label>
         <small><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.', 'piereg');?></small>
-        </p>
+        </div>
             <?php
 			}
 			
@@ -1284,12 +1278,12 @@ jQuery(document).ready(function() {
 		
        
         <?php if( $v['fieldtype'] == 'text' ){ ?>
-        <p><label><?php echo $v['label'];?>: <br />
-		<input autocomplete="off" class="custom_field" tabindex="36" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label><br /></p>
+        <div style="clear:both"><label><?php echo $v['label'];?>: <p>
+		<input autocomplete="off" class="custom_field" tabindex="36" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></p></label></div>
         
         <?php } else if( $v['fieldtype'] == 'date' ){ ?>
-        <p><label><?php echo $v['label'];?>: <br />
-		<input autocomplete="off" class="custom_field date-pick" tabindex="36" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label><br /></p>
+       <div style="clear:both"><label><?php echo $v['label'];?>: <p>
+		<input autocomplete="off" class="custom_field date-pick" tabindex="36" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></p></label></div>
         
 		<?php } else if( $v['fieldtype'] == 'select' ){ 
 			$ops = explode(',',$v['extraoptions']);
@@ -1300,10 +1294,10 @@ jQuery(document).ready(function() {
 				$options .= '>' . $op . '</option>';
 			}
 		?>
-        <p><label><?php echo $v['label'];?>: <br />
+        <div style="clear:both"><label><?php echo $v['label'];?>: <p>
         <select class="custom_select" tabindex="36" name="<?php echo $id;?>" id="<?php echo $id;?>">
         	<?php echo $options;?>
-        </select></label><br /></p>
+        </select></p></label></div>
       
         <?php } else if( $v['fieldtype'] == 'checkbox' ){ 
 				$ops = explode(',',$v['extraoptions']);
@@ -1314,8 +1308,8 @@ jQuery(document).ready(function() {
 					$check .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
-                <p><label><?php echo $v['label'];?>:</label> <br /><?php
-				echo $check . '<br /></p>';
+                <div style="clear:both"><label><?php echo $v['label'];?>:</label> <p><?php
+				echo $check . '</p></div>';
 			
 			} else if( $v['fieldtype'] == 'radio' ){
 				$ops = explode(',',$v['extraoptions']);
@@ -1326,15 +1320,15 @@ jQuery(document).ready(function() {
 					$radio .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
-                <p><label><?php echo $v['label'];?>:</label> <br /><?php
-				echo $radio . '<br /></p>';
+               <div style="clear:both"><label><?php echo $v['label'];?>:</label> <p><?php
+				echo $radio . '</p></div>';
 				
 			} else if( $v['fieldtype'] == 'textarea' ){ ?>
-            <p><label><?php echo $v['label'];?>: <br />
-		<textarea tabindex="36" name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo $_POST[$id];?></textarea></label><br /></p>
+           <div style="clear:both"><label><?php echo $v['label'];?>: <p>
+		<textarea tabindex="36" name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo $_POST[$id];?></textarea></p></label></div>	
 		
-		<?php } else if( $v['fieldtype'] == 'hidden' ){ ?>
-		<input class="custom_field" tabindex="36" name="<?php echo $id;?>" value="<?php echo $_POST[$id];?>" type="hidden" />  	        	
+		<?php } else if( $v['fieldtype'] == 'hidden' ){ ?><p>
+		<input class="custom_field" tabindex="36" name="<?php echo $id;?>" value="<?php echo $_POST[$id];?>" type="hidden" />  </p>        	
         <?php } ?>		
 				
 		<?php	}
@@ -1343,48 +1337,48 @@ jQuery(document).ready(function() {
 			
 			if ( $piereg['password'] ){
 			?>
-        <p><label><?php _e('Password:', 'piereg');?> <br />
-		<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo $_POST['pass1'];?>" type="password" tabindex="40" /></label><br />
-        <label><?php _e('Confirm Password:', 'piereg');?> <br />
-        <input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo $_POST['pass2'];?>" type="password" tabindex="41" /></label>
-        <?php if( $piereg['password_meter'] ){ ?><br />
-        <span id="pass-strength-result"><?php echo $piereg['short'];?></span>
-		<small><?php _e('Hint: Use upper and lower case characters, numbers and symbols like !"?$%^&amp;( in your password.', 'piereg'); ?> </small><?php } ?></p>
+        <div style="clear:both"><label><?php _e('Password:', 'piereg');?> <p>
+		<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo $_POST['pass1'];?>" type="password" tabindex="40" /></p></label></div>
+       <div> <label><?php _e('Confirm Password:', 'piereg');?> <p>
+        <input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo $_POST['pass2'];?>" type="password" tabindex="41" /></p></label></div>
+        <?php if( $piereg['password_meter'] ){ ?>
+       <div> <span id="pass-strength-result"><?php echo $piereg['short'];?></span>
+		<small><?php _e('Hint: Use upper and lower case characters, numbers and symbols like !"?$%^&amp;( in your password.', 'piereg'); ?> </small></div><?php } ?>
             <?php
 			}
 			if ( $piereg['code'] ){
 				if( isset( $_GET['regcode'] ) ) $_POST['regcode'] = $_GET['regcode'];
 			?>
-        <p><label><?php _e('Invitation Code:', 'piereg');?> <br />
-		<input name="regcode" id="regcode" size="25" value="<?php echo $_POST['regcode'];?>" type="text" tabindex="45" /></label><br />
+        <div style="clear:both"><label><?php _e('Invitation Code:', 'piereg');?> <p>
+		<input name="regcode" id="regcode" size="25" value="<?php echo $_POST['regcode'];?>" type="text" tabindex="45" /></p></label>
         <?php if ($piereg['code_req']) {?>
-		<small><?php _e('This website is currently closed to public registrations.  You will need an invitation code to register.', 'piereg');?></small>
+		<p><small><?php _e('This website is currently closed to public registrations.  You will need an invitation code to register.', 'piereg');?></small></p>
         <?php }else{ ?>
-        <small><?php _e('Have an invitation code? Enter it here. (This is not required)', 'piereg');?></small>
+        <p><small><?php _e('Have an invitation code? Enter it here. (This is not required)', 'piereg');?></small></p>
         <?php } ?>
-        </p>
+        </div>
             <?php
 			}
 			
 			if ( $piereg['disclaimer'] ){
 			?>
-   		<p><label><?php echo stripslashes( $piereg['disclaimer_title'] );?> <br />
+   		<div style="clear:both"><label><?php echo stripslashes( $piereg['disclaimer_title'] );?> <p>
         <span id="disclaimer"><?php echo stripslashes($piereg['disclaimer_content']); ?></span>
-		<input name="disclaimer" value="1" type="checkbox" tabindex="50"<?php if($_POST['disclaimer']) echo ' checked="checked"';?> /> <?php echo $piereg['disclaimer_agree'];?></label></p>
+		<input name="disclaimer" value="1" type="checkbox" tabindex="50"<?php if($_POST['disclaimer']) echo ' checked="checked"';?> /> <?php echo $piereg['disclaimer_agree'];?></p></label></div>
             <?php
 			}
 			if ( $piereg['license'] ){
 			?>
-   		<p><label><?php echo stripslashes( $piereg['license_title'] );?> <br />
+   		<div style="clear:both"><label><?php echo stripslashes( $piereg['license_title'] );?> <p>
         <span id="license"><?php echo stripslashes($piereg['license_content']); ?></span>
-		<input name="license" value="1" type="checkbox" tabindex="50"<?php if($_POST['license']) echo ' checked="checked"';?> /> <?php echo $piereg['license_agree'];?></label></p>
+		<input name="license" value="1" type="checkbox" tabindex="50"<?php if($_POST['license']) echo ' checked="checked"';?> /> <?php echo $piereg['license_agree'];?></p></label></div>
             <?php
 			}
 			if ( $piereg['privacy'] ){
 			?>
-   		<p><label><?php echo stripslashes( $piereg['privacy_title'] );?> <br />
+   		<div style="clear:both"><label><?php echo stripslashes( $piereg['privacy_title'] );?> <p>
         <span id="privacy"><?php echo stripslashes($piereg['privacy_content']); ?></span>
-		<input name="privacy" value="1" type="checkbox" tabindex="50"<?php if($_POST['privacy']) echo ' checked="checked"';?> /> <?php echo $piereg['privacy_agree'];?></label></p>
+		<input name="privacy" value="1" type="checkbox" tabindex="50"<?php if($_POST['privacy']) echo ' checked="checked"';?> /> <?php echo $piereg['privacy_agree'];?></p></label></div>
             <?php
 			}
 			
@@ -1394,11 +1388,11 @@ jQuery(document).ready(function() {
 				if( !isset( $_SESSION['OK'] ) )
 					session_start(); 
 				?>
-                <p><label><?php _e('Validation Image:', 'piereg');?> <br />
+               <div style="clear:both"><label><?php _e('Validation Image:', 'piereg');?> <p>
                 <img src="<?php echo $plugin_url;?>captcha.php" id="captchaimg" alt="" />
-                <input type="text" name="captcha" id="captcha" size="25" value="" tabindex="55" /></label><br />
-                <small><?php _e('Enter the text from the image.', 'piereg');?></small>
-                </p>
+                <input type="text" name="captcha" id="captcha" size="25" value="" tabindex="55" /></p></label>
+                <small><?php _e('Enter the text from the image.', 'piereg');?></small></div>
+               
                 <?php
 				
 			} else if ( $piereg['captcha'] == 2 && $piereg['reCAP_public_key'] && $piereg['reCAP_private_key'] ){
@@ -1406,18 +1400,24 @@ jQuery(document).ready(function() {
 				$publickey = $piereg['reCAP_public_key'];
 				echo '<div id="reCAPTCHA">';
 				echo rp_recaptcha_get_html($publickey);
-				echo '</div>&nbsp;<br />';
+				echo '</div>';
 			}
+			
+			if ($piereg['paypal_option']) {
 			?>
 			
 			<div class="submit" style="margin-top:10px;padding-top:10px;">
-<input id="wp-submit" type="submit" tabindex="100" value="Continue" name="wp-submit"/>
+<input class="button-primary" id="wp-submit" type="submit" tabindex="100" value="Continue" name="wp-submit"/>
 </div>
 <style>
 p.submit{
 display:none;
 }
 </style>
+<?php
+}
+?>
+
 			<?php
 		}
 		
@@ -1638,14 +1638,7 @@ small{
 		function HideLogin(){
 			$piereg = get_option( 'pie_register' );
 			if($piereg['paypal_option'] && $_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
-			if($piereg['paypal_option']){
-			?>
-			<div id="login">
-			<form id="registerform" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-
-<input type="hidden" name="cmd" value="_s-xclick">
-<?
-}
+			
 			?>
 
 <style type="text/css">
@@ -1695,7 +1688,16 @@ label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
 }
 #login{
 margin:0 auto;
-width:436px;
+width:330px;
+}
+#login p.register{
+margin-right:-40px;
+}
+#login h1{
+margin-left:10px;
+}
+form{
+width:100%;
 }
 <?php if( $piereg['register_css'] &&  $_GET['action'] == 'register') echo $piereg['register_css']; 
 else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
@@ -1806,46 +1808,40 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
 			if( $piereg['admin_verify'] && isset( $_GET['checkemail'] ) ){
-			
-				echo '<p style="text-align:center;">' . __('Your account will be reviewed by an administrator and you will be notified when it is activated.', 'piereg') . '</p>';
+				
+				echo '<p style="text-align:center;margin-bottom:10px;">' . __('Your account will be reviewed by an administrator and you will be notified when it is activated.', 'piereg') . '</p>';
 			}else if( $piereg['email_verify'] && isset( $_GET['checkemail'] ) ){
 					
-				echo '<p style="text-align:center;">' . __('Please activate your account using the verification link sent to your email address.', 'piereg') . '</p>';
+				echo '<p style="text-align:center;margin-bottom:10px;">' . __('Please activate your account using the verification link sent to your email address.', 'piereg') . '</p>';
 			}
 			if( $piereg['email_verify'] && isset( $_GET['piereg_verification'] ) ){
 				$piereg = get_option( 'pie_register' );
 				$verify_key = $_GET['piereg_verification'];
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
-				}else if($piereg['paypal_option'] && isset( $_GET['checkemail'] ) ){
+				}else if($piereg['paypal_option'] && !$piereg['email_verify'] && isset( $_GET['checkemail'] ) ){
 					
-				echo '<p style="text-align:center;">' . __('Please click below to Continue and finish registration.', 'regplus') . '</p>';
+				echo '<p style="text-align:center;margin-bottom:10px;background-color:#FFFFE0;border:1px solid #E6DB55;padding:12px 0px;">' . __('Please click below to Continue and finish registration.', 'regplus') . '</p>';
 				session_start();
 				
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify_user' AND meta_value='".$_SESSION['secure_id']."'");
+				
 				$user_details_gender=$wpdb->get_row( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'gender' AND user_id='".$user_id."'");
 				$user_details_username=$wpdb->get_row( "SELECT user_login FROM $wpdb->users WHERE ID='".$user_id."'");
 				$user_name=$_SESSION['secure_id'];
 				}
 				if ( $user_id ) {
-					if($piereg['paypal_option']){
+					if($piereg['paypal_option'] && !$piereg['email_verify']){
 					$login = get_usermeta($user_id, 'email_verify_user');
-					$msg = '<p>' . sprintf(__('Hello %s, please Click below to Complete your account registration.', 'piereg'), $login ) . '</p>';
+					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, There is One-Time Subscription fee. Click to Complete your account registration.', 'piereg'), $login ) . '</p>';
 					
-					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
-
-value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="0" SRC="http://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" ALT="PayPal - The safer, easier way to pay online">
-
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">';
+					
+					$paypalcode="<a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
 					
 					}
-					else if($piereg['paypal_option'] && $piereg['email_verify']){
+					else if($piereg['paypal_option'] && $piereg['email_verify'] && isset( $_GET['piereg_verification'] )){
 					$login = get_usermeta($user_id, 'email_verify_user');
-					$msg = '<p>' . sprintf(__('Thank you %s, your email has been verified, please Click below to Complete your account registration.', 'piereg'), $login ) . '</p>';
-					$paypalcode='<input type="hidden" name="custom" value="'.$login.'"><input type="hidden" name="hosted_button_id" 
-
-value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="0" SRC="http://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" ALT="PayPal - The safer, easier way to pay online">
-
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">';
+					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, your email has been verified. There is One-Time Subscription fee. Please Click below to Complete your account registration.', 'piereg'), $login ) . '</p>';
+					$paypalcode="<a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
 					
 					}else{
 					$login = get_usermeta($user_id, 'email_verify_user');
@@ -1854,7 +1850,7 @@ value="'.$piereg['paypal_butt_id'].'"><INPUT TYPE="image" NAME="submit" BORDER="
 					delete_usermeta($user_id, 'email_verify');
 					delete_usermeta($user_id, 'email_verify_date');
 					
-					$msg = '<p>' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
+					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
 					}
 					
 					echo $msg;
@@ -1923,7 +1919,9 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 	$itemname = $keyarray['item_name'];
 	$amount = $keyarray['mc_gross'];
 	$user_login=$keyarray['custom'];
-	$user_id=$wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE meta_value='".$user_login."'");
+	$user_id=trim($keyarray['custom']);
+	$uuseremail=$wpdb->get_col("SELECT meta_value FROM $wpdb->usermeta WHERE meta_key='email_verify_email' AND user_id='".$user_id."'");
+	$uuseremail=$uuseremail[0];
 				/*$verify_key = $_GET['piereg_verification'];
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");*/
 				if ( $user_id ) {
@@ -1932,15 +1930,21 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 					$loginA = get_usermeta($user_id, 'admin_verify_user');
 					if($loginE){
 					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginE' WHERE ID = '$user_id'" );
+					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$uuseremail' WHERE ID = '$user_id'" );
 					delete_usermeta($user_id, 'email_verify_user');
 					delete_usermeta($user_id, 'email_verify');
 					delete_usermeta($user_id, 'email_verify_date');
-					$msg = '<p class="message">' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
+					delete_usermeta($user_id, 'email_verify_user_pwd');
+					delete_usermeta($user_id, 'email_verify_email');
+					$msg = '<p class="message">' . sprintf(__('Thank you %s, your payment has been recieved. Please login to your account now!', 'piereg'), $login ) . '</p>';
 					}else if($loginA){
 					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginA' WHERE ID = '$user_id'" );
+					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$uuseremail' WHERE ID = '$user_id'" );
 					delete_usermeta($user_id, 'admin_verify_user');
+					delete_usermeta($user_id, 'email_verify_user_pwd');
+					delete_usermeta($user_id, 'email_verify_email');
 					delete_usermeta($user_id, 'admin_verify');
-					$msg = '<p class="message">' . sprintf(__('Thank you %s, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
+					$msg = '<p class="message">' . sprintf(__('Thank you %s, your payment has been recieved, Please login to your account now!', 'piereg'), $login ) . '</p>';
 					
 					}
 					
@@ -2066,6 +2070,8 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		update_usermeta( $user_id, 'invite_code', $wpdb->prepare($_POST['regcode']));
 	if( $ref != $admin && $piereg['admin_verify'] ){
 		update_usermeta( $user_id, 'admin_verify_user', $user->user_login );
+		update_usermeta( $user_id, 'email_verify_user_pwd', $user->user_pass );
+		update_usermeta( $user_id, 'email_verify_email', $user->user_email );
 		$temp_id = 'unverified__' . $pie_register->RanPass(7);
 		$notice = __('Your account requires activation by an administrator before you will be able to login.', 'piereg') . "\r\n";
 	}else if( $ref != $admin && $piereg['email_verify'] ){
@@ -2074,6 +2080,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		update_usermeta( $user_id, 'email_verify_date', date('Ymd') );
 		update_usermeta( $user_id, 'email_verify_user', $user->user_login );
 		update_usermeta( $user_id, 'email_verify_user_pwd', $user->user_pass );
+		update_usermeta( $user_id, 'email_verify_email', $user->user_email );
 		$email_code = '?piereg_verification=' . $code;
 		$prelink = __('Verification URL: ', 'piereg');
 		$notice = __('Please use the link above to verify and activate your account', 'piereg') . "\r\n";
@@ -2083,7 +2090,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		update_usermeta( $user_id, 'email_verify', $code );
 		update_usermeta( $user_id, 'email_verify_user', $user->user_login );
 		update_usermeta( $user_id, 'email_verify_user_pwd', $user->user_pass );
-		
+		update_usermeta( $user_id, 'email_verify_email', $user->user_email );
 		$temp_id = 'unverified__' . $pie_register->RanPass(7);
 		
 	}
@@ -2211,8 +2218,12 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		}
 		
 		$redirect = 'redirect_to=' . $piereg['login_redirect'];
-		if( $piereg['email_verify'] )
+		if( $piereg['email_verify'] &&  !$piereg['paypal_option'])
 			$siteurl = get_option('siteurl') . "/wp-login.php" . $email_code . '&' . $redirect;
+			
+		else if( $piereg['email_verify'] &&  $piereg['paypal_option'])
+			$siteurl = get_option('siteurl') . "/wp-login.php" . $email_code;
+			
 		else
 			$siteurl = get_option('siteurl') . "/wp-login.php?" . $redirect;
 		$message = str_replace('%siteurl%', $siteurl, $message);
@@ -2224,8 +2235,10 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	}
 	if( $ref != $admin && ( $piereg['email_verify'] || $piereg['admin_verify'] ) ) {
 			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
+			$wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
 			}else if( $ref != $admin && ($piereg['paypal_option']) ) {
-			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
+			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
+			$wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
 			}
 			
 	#-- END REGPLUS --#
