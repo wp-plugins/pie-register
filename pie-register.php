@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.5
+Version: 1.1.6
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -251,6 +251,7 @@ if( !class_exists('PieMemberRegister') ){
 			$update["aim"] = $_POST['piereg_aim'];
 			$update["yahoo"] = $_POST['piereg_yahoo'];
 			$update["jabber"] = $_POST['piereg_jabber'];
+			$update["phone"] = $_POST['piereg_phone'];
 			$update["about"] = $_POST['piereg_about'];
 			$update["profile_req"] = $_POST['piereg_profile_req'];
 			$update["require_style"] = $_POST['piereg_require_style'];
@@ -534,12 +535,12 @@ jQuery(document).ready(function() {
 					if( $piereg['email_verify'] ){
 						$login = get_usermeta($user_id, 'email_verify_user');
 							
-							$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$login;
+							$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
 							
 							
 					}else if( $piereg['admin_verify'] ){
 						$login = get_usermeta($user_id, 'admin_verify_user');
-						$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$login;
+						$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
 					}
 					
 					$this->VerifyNotification($user_id,$pp);
@@ -880,7 +881,7 @@ jQuery(document).ready(function() {
                         	</tr>
                             <tr valign="top">
                        			 <th scope="row"><label for="contact"><?php _e('Contact Info', 'piereg');?></label></th>
-                        		<td><label><input type="checkbox" name="piereg_website" id="contact" value="1" <?php if( $piereg['website'] ) echo 'checked="checked"';?> /> <?php _e('Website', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_aim" value="1" <?php if( $piereg['aim'] ) echo 'checked="checked"';?> /> <?php _e('AIM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_yahoo" value="1" <?php if( $piereg['yahoo'] ) echo 'checked="checked"';?> /> <?php _e('Yahoo IM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_jabber" value="1" <?php if( $piereg['jabber'] ) echo 'checked="checked"';?> /> <?php _e('Jabber / Google Talk', 'piereg');?></label></td>
+                        		<td><label><input type="checkbox" name="piereg_website" id="contact" value="1" <?php if( $piereg['website'] ) echo 'checked="checked"';?> /> <?php _e('Website', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_aim" value="1" <?php if( $piereg['aim'] ) echo 'checked="checked"';?> /> <?php _e('AIM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_yahoo" value="1" <?php if( $piereg['yahoo'] ) echo 'checked="checked"';?> /> <?php _e('Yahoo IM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_jabber" value="1" <?php if( $piereg['jabber'] ) echo 'checked="checked"';?> /> <?php _e('Jabber / Google Talk', 'piereg');?></label>  &nbsp; <label><input type="checkbox" name="piereg_phone" value="1" <?php if( $piereg['phone'] ) echo 'checked="checked"';?> /> <?php _e('Phone # / Mobile #.', 'piereg');?></label></td>
                         	</tr>
                             <tr valign="top">
                        			 <th scope="row"><label for="about"><?php _e('About Yourself', 'piereg');?></label></th>
@@ -888,7 +889,7 @@ jQuery(document).ready(function() {
                         	</tr>
                             <tr valign="top">
                        			 <th scope="row"><label for="req"><?php _e('Required Profile Fields', 'piereg');?></label></th>
-                        		<td><label><input type="checkbox" name="piereg_profile_req[]" value="firstname" <?php if( in_array('firstname', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('First Name', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="lastname" <?php if( in_array('lastname', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Last Name', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="website" <?php if( in_array('website', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Website', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="aim" <?php if( in_array('aim', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('AIM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="yahoo" <?php if( in_array('yahoo', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Yahoo IM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="jabber" <?php if( in_array('jabber', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Jabber / Google Talk', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="about" <?php if( in_array('about', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('About Yourself', 'piereg');?></label></td>
+                        		<td><label><input type="checkbox" name="piereg_profile_req[]" value="firstname" <?php if( in_array('firstname', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('First Name', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="lastname" <?php if( in_array('lastname', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Last Name', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="website" <?php if( in_array('website', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Website', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="aim" <?php if( in_array('aim', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('AIM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="yahoo" <?php if( in_array('yahoo', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Yahoo IM', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="jabber" <?php if( in_array('jabber', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Jabber / Google Talk', 'piereg');?></label>  &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="phone" <?php if( in_array('phone', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('Phone # / Mobile #', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_profile_req[]" value="about" <?php if( in_array('about', $piereg['profile_req']) ) echo 'checked="checked"';?> /> <?php _e('About Yourself', 'piereg');?></label></td>
                         	</tr>
                             <tr valign="top">
                             	<th scope="row"><label for="require_style"><?php _e('Required Field Style Rules', 'piereg');?></label></th>
@@ -1122,6 +1123,13 @@ jQuery(document).ready(function() {
 					$errors->add('empty_jabber', __('<strong>ERROR</strong>: Please enter your Jabber / Google Talk username.', 'piereg'));
 				}
 			}
+			if( $piereg['phone'] && in_array('phone', $piereg['profile_req']) ){
+				if(empty($_POST['phone']) || $_POST['phone'] == ''){
+					$errors->add('empty_phone', __('<strong>ERROR</strong>: Please enter your Phone / Mobile number.', 'piereg'));
+				}else if(!preg_match('/^0\d{9}$/',$_POST['phone']) || $_POST['phone']>13){
+					$errors->add('Wrong_Phone', __('<strong>ERROR</strong>: Please enter your Phone / Mobile number in correct formart No Alphabet No more 13 Variables.', 'piereg'));
+				}
+			}
 			if( $piereg['about'] && in_array('about', $piereg['profile_req']) ){
 				if(empty($_POST['about']) || $_POST['about'] == ''){
 					$errors->add('empty_about', __('<strong>ERROR</strong>: Please enter some information About Yourself.', 'piereg'));
@@ -1258,6 +1266,13 @@ jQuery(document).ready(function() {
 			?>
    		<div style="clear:both"><label><?php _e('Jabber / Google Talk:', 'piereg');?> <p>
 		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" tabindex="34" /></p></label></div>
+            <?php
+			}
+			if ( $piereg['phone'] ){
+				if( isset( $_GET['phone'] ) ) $_POST['phone'] = $_GET['phone'];
+			?>
+   		<div style="clear:both"><label><?php _e('Phone # / Mobile #:', 'piereg');?> <p>
+		<input autocomplete="off" name="phone" id="phone" size="25" value="<?php echo $_POST['phone'];?>" type="text" tabindex="34" /></p></label></div>
             <?php
 			}
 			if ( $piereg['about'] ){
@@ -1537,7 +1552,7 @@ jQuery(function() {
 <style type="text/css">
 a.dp-choose-date { float: left; width: 16px; height: 16px; padding: 0; margin: 5px 3px 0; display: block; text-indent: -2000px; overflow: hidden; background: url(<?php echo $plugin_url;?>datepicker/calendar.png) no-repeat; } a.dp-choose-date.dp-disabled { background-position: 0 -20px; cursor: default; } /* makes the input field shorter once the date picker code * has run (to allow space for the calendar icon */ input.dp-applied { width: 140px; float: left; }
 																																																																																				
-#pass1, #pass2, #regcode, #captcha, #firstname, #lastname, #website, #aim, #yahoo, #jabber, #about, .custom_field{
+#phone, #pass1, #pass2, #regcode, #captcha, #firstname, #lastname, #website, #aim, #yahoo, #jabber, #about, .custom_field{
 	font-size: 20px;	
 	width: 97%;
 	padding: 3px;
@@ -1573,7 +1588,7 @@ if (!empty($piereg_custom)) {
 if( $piereg['profile_req'][0] ) $profile_req = ', #' . implode(', #', $piereg['profile_req']);
 if( $custom[0] )$profile_req .= implode('', $custom);
 ?>
-#user_login, #user_email, #pass1, #pass2 <?php echo $profile_req;?>{
+#phone, #user_login, #user_email, #pass1, #pass2 <?php echo $profile_req;?>{
 
 	<?php echo $piereg['require_style'];?>
 	
@@ -2064,6 +2079,8 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		update_usermeta( $user_id, 'yim', $wpdb->prepare($_POST['yahoo']));
 	if( $piereg['jabber'] && $_POST['jabber'] )	
 		update_usermeta( $user_id, 'jabber', $wpdb->prepare($_POST['jabber']));
+	if( $piereg['phone'] && $_POST['phone'] )	
+		update_usermeta( $user_id, 'phone', $wpdb->prepare($_POST['phone']));
 	if( $piereg['about'] && $_POST['about'] )	
 		update_usermeta( $user_id, 'description', $wpdb->prepare($_POST['about']));
 	if( $piereg['code'] && $_POST['regcode'] )	
@@ -2142,6 +2159,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		if( $piereg['aim'] ) $message = str_replace('%aim%', $_POST['aim'], $message);
 		if( $piereg['yahoo'] ) $message = str_replace('%yahoo%', $_POST['yahoo'], $message);
 		if( $piereg['jabber'] ) $message = str_replace('%jabber%', $_POST['jabber'], $message);
+		if( $piereg['phone'] ) $message = str_replace('%phone%', $_POST['phone'], $message);
 		if( $piereg['about'] ) $message = str_replace('%about%', $_POST['about'], $message);
 		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['code'], $message);
 		
@@ -2205,6 +2223,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		if( $piereg['aim'] ) $message = str_replace('%aim%', $_POST['aim'], $message);
 		if( $piereg['yahoo'] ) $message = str_replace('%yahoo%', $_POST['yahoo'], $message);
 		if( $piereg['jabber'] ) $message = str_replace('%jabber%', $_POST['jabber'], $message);
+		if( $piereg['phone'] ) $message = str_replace('%phone%', $_POST['phone'], $message);
 		if( $piereg['about'] ) $message = str_replace('%about%', $_POST['about'], $message);
 		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['code'], $message);
 		
