@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.6
+Version: 1.1.7
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -571,7 +571,7 @@ jQuery(document).ready(function() {
 			foreach( $valid as $user_id ){
 				$code = get_usermeta($user_id, 'email_verify');
 				$user_login = get_usermeta($user_id, 'email_verify_user');
-				$user_email = $wpdb->get_var("SELECT user_email FROM $wpdb->users WHERE ID='$user_id'");
+				$user_email = get_usermeta($user_id, 'email_verify_email');
 				$email_code = '?piereg_verification=' . $code;
 
 
@@ -602,24 +602,27 @@ jQuery(document).ready(function() {
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
 			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
 			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
+			 $user_email=get_usermeta($user_id, 'email_verify_email');
 			}else if($pp && $piereg['admin_verify']){
 			$user =get_usermeta($user_id, 'admin_verify_user');
 			$message = __('Your account has now been approved by an administrator. To activate the account please Click on a link below to finish the registration.') . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
 			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
 			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
+			 $user_email=get_usermeta($user_id, 'email_verify_email');
 			}else{
 			$user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
 			$message = __('Your account has now been activated by an administrator.') . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
 			$message .= $prelink . get_option('siteurl') . "/wp-login.php" . $email_code . "\r\n";
+			$user_email=get_usermeta($user_id, 'email_verify_email');
 			}
 			
 			
 			 
 			add_filter('wp_mail_from', array($this, 'userfrom'));
 			add_filter('wp_mail_from_name', array($this, 'userfromname'));
-			wp_mail($user->user_email, sprintf(__('[%s] User Account Registration', 'piereg'), get_option('blogname')), $message);
+			wp_mail($$user_email, sprintf(__('[%s] User Account Registration', 'piereg'), get_option('blogname')), $message);
 		}
 		function Unverified(){
 			global $wpdb;
