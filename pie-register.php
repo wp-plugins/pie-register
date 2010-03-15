@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.7
+Version: 1.1.8
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -104,7 +104,7 @@ if( !class_exists('PieMemberRegister') ){
 		function AddPanel(){ //Add the Settings and User Panels
 			add_options_page( 'Pie Register', 'Pie Register', 10, 'pie-register', array($this, 'RegPlusSettings') );
 			$piereg = get_option('pie_register');
-			if( $piereg['email_verify'] || $piereg['admin_verify'] )
+			if( $piereg['email_verify'] || $piereg['admin_verify'] || $piereg['paypal_option'] )
 				add_users_page( 'Unverified Users', 'Unverified Users', 10, 'unverified-users', array($this, 'Unverified') );
 		}
 		
@@ -502,26 +502,46 @@ jQuery(document).ready(function() {
 			$piereg = get_option('pie_register');
 			check_admin_referer('piereg-unverified');
 			$valid = $_POST['vusers'];
+			if($valid){
 			foreach( $valid as $user_id ){
 				if ( $user_id ) {
 					if( $piereg['email_verify'] ){
 						$login = get_usermeta($user_id, 'email_verify_user');
-							
+							$useremail=get_usermeta($user_id,'email_verify_email');
+		
+							$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
 							$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
 							delete_usermeta($user_id, 'email_verify_user');
 							delete_usermeta($user_id, 'email_verify');
 							delete_usermeta($user_id, 'email_verify_date');
+							delete_usermeta($user_id, 'email_verify_user_email');
 							
 					}else if( $piereg['admin_verify'] ){
 						$login = get_usermeta($user_id, 'admin_verify_user');
 						$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
+						$useremail=get_usermeta($user_id,'email_verify_email');
+		
+						$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
 						delete_usermeta($user_id, 'admin_verify_user');
+						delete_usermeta($user_id, 'email_verify_user_email');
+					}else if( $piereg['paypal_option'] ){
+							$login = get_usermeta($user_id, 'email_verify_user');
+							$useremail=get_usermeta($user_id,'email_verify_email');
+							$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
+							$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
+							delete_usermeta($user_id, 'email_verify_user_email');
+							delete_usermeta($user_id, 'email_verify_user');
+							delete_usermeta($user_id, 'email_verify');
+							delete_usermeta($user_id, 'email_verify_date');
 					}
 					
 					$this->VerifyNotification($user_id);
 				}
 			}
-			
+			}else{
+			$_POST['notice'] = __("<strong>Error:</strong> Please select a user to validate!","piereg");
+			return false;
+			}
 			$_POST['notice'] = __("Users Verified","piereg");
 			
 		}
@@ -530,23 +550,35 @@ jQuery(document).ready(function() {
 			$piereg = get_option('pie_register');
 			check_admin_referer('piereg-unverified');
 			$valid = $_POST['vusers'];
+			if($valid){
 			foreach( $valid as $user_id ){
 				if ( $user_id ) {
-					if( $piereg['email_verify'] ){
+					if( $piereg['email_verify'] || $piereg['paypal_option']){
 						$login = get_usermeta($user_id, 'email_verify_user');
-							
+						$user_email = get_usermeta($user_id, 'email_verify_email');	
 							$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
 							
 							
 					}else if( $piereg['admin_verify'] ){
 						$login = get_usermeta($user_id, 'admin_verify_user');
+						$user_email = get_usermeta($user_id, 'admin_verify_email');
 						$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
 					}
-					
-					$this->VerifyNotification($user_id,$pp);
+					$message = __('Dear User,') . "\r\n\r\n";
+					$message .= __('You have successfuly registered but your payment has been overdue.') . "\r\n";
+					$message .= sprintf(__('Username: %s', 'piereg'), $login) . "\r\n\r\n";
+					$message .= __('Please Click or copy this link to browser to finish the registration.') . "\r\n\r\n";
+					$message .= $pp." \r\n Thank you. \r\n";
+					add_filter('wp_mail_from', array($this, 'userfrom'));
+			add_filter('wp_mail_from_name', array($this, 'userfromname'));
+			wp_mail($user_email, sprintf(__('[%s] Payment Pending', 'piereg'), get_option('blogname')), $message);
+					//$this->VerifyNotification($user_id,$pp);
 				}
 			}
-			
+			}else{
+			$_POST['notice'] = __("<strong>Error:</strong> Please select a user to send link to!","piereg");
+			return false;
+			}
 			$_POST['notice'] = __("Payment link has been e-mail to the user(s)","piereg");
 		
 		}
@@ -556,10 +588,15 @@ jQuery(document).ready(function() {
 			check_admin_referer('piereg-unverified');
 			$delete = $_POST['vusers'];
 			include_once( ABSPATH . 'wp-admin/includes/user.php' );
+			if($delete){
 			foreach( $delete as $user_id ){
 				if ( $user_id ) {	
 					wp_delete_user($user_id);
 				}
+			}
+			}else{
+			$_POST['notice'] = __("<strong>Error:</strong> Please select a user to delete","piereg");
+			return false;
 			}
 			$_POST['notice'] = __("Users Deleted","piereg");
 		}
@@ -596,33 +633,15 @@ jQuery(document).ready(function() {
 			global $wpdb;
 			$piereg = get_option('pie_register');
 			
-			if($pp && $piereg['email_verify']){
-			$user = get_usermeta($user_id, 'email_verify_user');
-			$message = __('Your account has now been verified by an administrator. Now you are requested to pay to complete the registration and activate the account.') . "\r\n";
-			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
-			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
-			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
-			 $user_email=get_usermeta($user_id, 'email_verify_email');
-			}else if($pp && $piereg['admin_verify']){
-			$user =get_usermeta($user_id, 'admin_verify_user');
-			$message = __('Your account has now been approved by an administrator. To activate the account please Click on a link below to finish the registration.') . "\r\n";
-			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
-			 $message .= $pp." \r\n Click to Complete the Registration. \r\n";
-			 $user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
-			 $user_email=get_usermeta($user_id, 'email_verify_email');
-			}else{
 			$user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
 			$message = __('Your account has now been activated by an administrator.') . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
 			$message .= $prelink . get_option('siteurl') . "/wp-login.php" . $email_code . "\r\n";
 			$user_email=get_usermeta($user_id, 'email_verify_email');
-			}
-			
-			
-			 
+						 
 			add_filter('wp_mail_from', array($this, 'userfrom'));
 			add_filter('wp_mail_from_name', array($this, 'userfromname'));
-			wp_mail($$user_email, sprintf(__('[%s] User Account Registration', 'piereg'), get_option('blogname')), $message);
+			wp_mail($user_email, sprintf(__('[%s] User Account Registration', 'piereg'), get_option('blogname')), $message);
 		}
 		function Unverified(){
 			global $wpdb;
@@ -747,6 +766,14 @@ jQuery(document).ready(function() {
 			?>
             <div class="wrap">
             	<h2><?php _e('Pie Register Settings', 'piereg')?></h2>
+				<div style="background:#FFEBE8; border-color:#cc0000; padding:5px;-moz-border-radius-bottomleft:3px;
+-moz-border-radius-bottomright:3px;
+-moz-border-radius-topleft:3px;
+-moz-border-radius-topright:3px;
+border-style:solid;
+border-width:1px;
+margin:0 0 16px 8px;
+padding:12px; width:400px;">Please put this code at the top of your wp-login.php otherwise the plugin won't work properly. <br /><code>&lt;&#0063;php <br />session_start(); &#0063;&gt;</code></div>
                 <form method="post" action="" enctype="multipart/form-data">
                 	<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg-update-options'); ?>
                     <p class="submit"><input name="Submit" value="<?php _e('Save Changes','piereg');?>" type="submit" />
@@ -1129,7 +1156,7 @@ jQuery(document).ready(function() {
 			if( $piereg['phone'] && in_array('phone', $piereg['profile_req']) ){
 				if(empty($_POST['phone']) || $_POST['phone'] == ''){
 					$errors->add('empty_phone', __('<strong>ERROR</strong>: Please enter your Phone / Mobile number.', 'piereg'));
-				}else if(!preg_match('/^0\d{9}$/',$_POST['phone']) || $_POST['phone']>13){
+				}else if(preg_match('/\D/ism',$_POST['phone']) || (strlen($_POST['phone'])>13) || (strlen($_POST['phone'])<7)){
 					$errors->add('Wrong_Phone', __('<strong>ERROR</strong>: Please enter your Phone / Mobile number in correct formart No Alphabet No more 13 Variables.', 'piereg'));
 				}
 			}
@@ -1206,17 +1233,18 @@ jQuery(document).ready(function() {
 				  	$errors->add('privacy', __('<strong>ERROR</strong>: Please accept the ', 'piereg') . stripslashes( $piereg['privacy_title'] ) . '.');
 				}	
 			}
-			session_start();
+			/*session_start();*/
 			$_SESSION['secure_id']=$_POST['user_login'];
+			session_register($_SESSION['secure_id']);
 			return $errors;
 		}	
 		
 		function RegMsg($errors){
 			$piereg = get_option( 'pie_register' );
 			
-			session_start();
+			/*session_start();*/
 			if ( $errors->errors['registered'] ){
-				//unset($errors->errors['registered']);
+				unset($errors->errors['registered']);
 			}
 			if	( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )	$errors->add('registeredit', __('Please check your e-mail and click the verification link to activate your account and complete your registration.'), 'message');
 			return $errors;
@@ -1838,8 +1866,8 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
 				}else if($piereg['paypal_option'] && !$piereg['email_verify'] && isset( $_GET['checkemail'] ) ){
 					
-				echo '<p style="text-align:center;margin-bottom:10px;background-color:#FFFFE0;border:1px solid #E6DB55;padding:12px 0px;">' . __('Please click below to Continue and finish registration.', 'regplus') . '</p>';
-				session_start();
+				echo '<p style="text-align:center;margin-bottom:10px;background-color:#FFFFE0;border:1px solid #E6DB55;padding:12px 0px;">' . __('Please click below to Continue and finish registration.', 'piereg') . '</p>';
+				/*session_start();*/
 				
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify_user' AND meta_value='".$_SESSION['secure_id']."'");
 				
@@ -1864,11 +1892,13 @@ else if( $piereg['login_css'] ) echo $piereg['login_css']; ?>
 					}else{
 					$login = get_usermeta($user_id, 'email_verify_user');
 					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
+					$user_email=get_usermeta($user_id, 'email_verify_email');
+					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$user_email' WHERE ID = '$user_id' " );
 					delete_usermeta($user_id, 'email_verify_user');
 					delete_usermeta($user_id, 'email_verify');
 					delete_usermeta($user_id, 'email_verify_date');
 					
-					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, your account has been verified, please login.', 'piereg'), $login ) . '</p>';
+					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, for registration, Please login.', 'piereg'), $login ) . '</p>';
 					}
 					
 					echo $msg;
@@ -1938,8 +1968,9 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 	$amount = $keyarray['mc_gross'];
 	$user_login=$keyarray['custom'];
 	$user_id=trim($keyarray['custom']);
-	$uuseremail=$wpdb->get_col("SELECT meta_value FROM $wpdb->usermeta WHERE meta_key='email_verify_email' AND user_id='".$user_id."'");
-	$uuseremail=$uuseremail[0];
+	$useremail=get_usermeta($user_id,'email_verify_email');
+	
+	
 				/*$verify_key = $_GET['piereg_verification'];
 				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");*/
 				if ( $user_id ) {
@@ -1948,7 +1979,7 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 					$loginA = get_usermeta($user_id, 'admin_verify_user');
 					if($loginE){
 					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginE' WHERE ID = '$user_id'" );
-					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$uuseremail' WHERE ID = '$user_id'" );
+					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
 					delete_usermeta($user_id, 'email_verify_user');
 					delete_usermeta($user_id, 'email_verify');
 					delete_usermeta($user_id, 'email_verify_date');
@@ -2245,9 +2276,13 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 			
 		else if( $piereg['email_verify'] &&  $piereg['paypal_option'])
 			$siteurl = get_option('siteurl') . "/wp-login.php" . $email_code;
-			
+		
+		else if($piereg['paypal_option'])
+			$siteurl = get_option('siteurl') . "/wp-login.php" . $email_code;
+				
 		else
 			$siteurl = get_option('siteurl') . "/wp-login.php?" . $redirect;
+			
 		$message = str_replace('%siteurl%', $siteurl, $message);
 		
 		if( $piereg['html'] && $piereg['user_nl2br'] )
@@ -2257,10 +2292,11 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	}
 	if( $ref != $admin && ( $piereg['email_verify'] || $piereg['admin_verify'] ) ) {
 			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
-			$wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
-			}else if( $ref != $admin && ($piereg['paypal_option']) ) {
-			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
-			$wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id' WHERE ID = '$user_id'" );
+	}else if( $ref != $admin && ($piereg['paypal_option']) ) {
+	
+			$temp_user = $wpdb->query( "UPDATE $wpdb->users SET user_login = '$temp_id' WHERE ID = '$user_id'" );
+			$temp_email = $wpdb->query( "UPDATE $wpdb->users SET user_email = '$temp_id_".$user_email."' WHERE ID = '$user_id'" );
+			//$wpdb->query( "UPDATE $wpdb->users SET user_email = '$user_email_$temp_id' WHERE ID = '$user_id'" );
 			}
 			
 	#-- END REGPLUS --#
