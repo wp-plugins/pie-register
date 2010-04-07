@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.8
+Version: 1.1.9
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -1683,7 +1683,7 @@ small{
 		
 		function HideLogin(){
 			$piereg = get_option( 'pie_register' );
-			if($piereg['paypal_option'] && $_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
+			if($piereg['paypal_option'] && $_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] && $piereg['paypal_option'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
 			
 			?>
 
@@ -1694,7 +1694,7 @@ label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
 </style>
 		<?php
 			}
-			else if($_GET['piereg_verification']){
+			else if($_GET['piereg_verification'] && $piereg['paypal_option']){
 			?>
 <style type="text/css">
 label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
@@ -2087,7 +2087,7 @@ if ( !function_exists('wp_new_user_notification') ) :
 function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	$user = new WP_User($user_id);	
 	
-	#-- REGPLUS --#
+	#-- PIE REGESTER --#
 	global $wpdb, $pie_register;
 	$piereg = get_option( 'pie_register' );
 	$piereg_custom = get_option( 'pie_register_custom' );
@@ -2101,6 +2101,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		$plaintext_pass = $wpdb->prepare($_POST['pass1']);
 	else
 		$plaintext_pass = $pie_register->RanPass(6);
+		if($_POST){ echo "<pre>"; print_r($_POST); echo "</pre>"; die(); }
 	if( $piereg['firstname'] && $_POST['firstname'] )	
 		update_usermeta( $user_id, 'first_name', $wpdb->prepare($_POST['firstname']));
 	if( $piereg['lastname'] && $_POST['lastname'] )	
@@ -2195,7 +2196,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		if( $piereg['jabber'] ) $message = str_replace('%jabber%', $_POST['jabber'], $message);
 		if( $piereg['phone'] ) $message = str_replace('%phone%', $_POST['phone'], $message);
 		if( $piereg['about'] ) $message = str_replace('%about%', $_POST['about'], $message);
-		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['code'], $message);
+		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['regcode'], $message);
 		
 		if( !is_array( $piereg_custom ) ) $piereg_custom = array();
 		if (!empty($piereg_custom)) {
@@ -2259,7 +2260,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		if( $piereg['jabber'] ) $message = str_replace('%jabber%', $_POST['jabber'], $message);
 		if( $piereg['phone'] ) $message = str_replace('%phone%', $_POST['phone'], $message);
 		if( $piereg['about'] ) $message = str_replace('%about%', $_POST['about'], $message);
-		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['code'], $message);
+		if( $piereg['code'] ) $message = str_replace('%invitecode%', $_POST['regcode'], $message);
 		
 		if( !is_array( $piereg_custom ) ) $piereg_custom = array();
 		if (!empty($piereg_custom)) {

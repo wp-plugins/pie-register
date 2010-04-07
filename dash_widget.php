@@ -7,7 +7,8 @@ if( !class_exists('PieRegisterWidget') ){
 			add_filter( 'wp_dashboard_widgets', array($this, 'add_widget') );		
 		}
 		function register_widget() {
-			wp_register_sidebar_widget( 'piereg_invite_tracking', __( 'Invitation Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
+		if ( current_user_can('manage_options') )wp_register_sidebar_widget( 'piereg_invite_tracking', __( 'Invitation Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
+			
 		}
 		// Modifies the array of dashboard widgets and adds this plugin's
 		function add_widget( $widgets ) {
@@ -18,11 +19,14 @@ if( !class_exists('PieRegisterWidget') ){
 			array_splice( $widgets, 2, 0, 'piereg_invite_tracking' );
 	
 			return $widgets;
+			
 		}
 		// Output the widget contents
 		function widget( $args ) {
-			extract( $args, EXTR_SKIP );
-	
+			
+				
+			@extract( $args, EXTR_SKIP );
+
 			echo $before_widget;
 	
 			echo $before_title;
@@ -38,6 +42,8 @@ if( !class_exists('PieRegisterWidget') ){
 				echo '<h3>' . $code . ': <small style="font-weight:normal">' . count($users) . ' Users Registered.</small></h3>';
 			}		
 			echo $after_widget;
+		
+			
 		}
 	}
 } # End Class RegisterPlusWidget
