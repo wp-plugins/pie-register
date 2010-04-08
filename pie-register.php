@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.9
+Version: 1.1.9a
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -2101,7 +2101,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		$plaintext_pass = $wpdb->prepare($_POST['pass1']);
 	else
 		$plaintext_pass = $pie_register->RanPass(6);
-		if($_POST){ echo "<pre>"; print_r($_POST); echo "</pre>"; die(); }
+		
 	if( $piereg['firstname'] && $_POST['firstname'] )	
 		update_usermeta( $user_id, 'first_name', $wpdb->prepare($_POST['firstname']));
 	if( $piereg['lastname'] && $_POST['lastname'] )	

@@ -61,6 +61,10 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 				
 == CHANGELOG ==
 
+**v1.1.9a April 07 2010
+
+* Fixed Error after registration.
+
 **v1.1.9 April 06 2010
 
 * Fixed Login box after verification.
