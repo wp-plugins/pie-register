@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.1.9a
+Version: 1.2.0
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -302,6 +302,7 @@ if( !class_exists('PieMemberRegister') ){
 		
 		function UploadLogo(){
 		 	$upload_dir = ABSPATH . get_option('upload_path');
+			if(!empty($upload_dir)) $upload_dir=ABSPATH.'wp-content/uploads';
 			$upload_file = trailingslashit($upload_dir) . basename($_FILES['piereg_logo']['name']);
 			//echo $upload_file;
 			if( !is_dir($upload_dir) )
