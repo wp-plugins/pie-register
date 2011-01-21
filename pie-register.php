@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.2.0
+Version: 1.2.1
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -22,7 +22,7 @@ See readme.txt
  Modified by JOHNIBOM
  (website: pie-solutions.com       email : johnibom@pie-solutions.com)
 */
-
+error_reporting(0);
 $rp = get_option( 'pie_register' ); //load options
 if( $rp['dash_widget'] ) //if dashboard widget is enabled
 	include_once('dash_widget.php'); //add the dashboard widget
@@ -1500,12 +1500,13 @@ display:none;
 	function check_pass_strength ( ) {
 
 		var pass = jQuery('#pass1').val();
+		var pass2 = jQuery('#pass2').val();
 		var user = jQuery('#user_login').val();
 
 		// get the result as an object, i'm tired of typing it
 		var res = jQuery('#pass-strength-result');
 
-		var strength = passwordStrength(pass, user);
+		var strength = passwordStrength(pass, user, pass2);
 
 		jQuery(res).removeClass('short bad good strong');
 		
