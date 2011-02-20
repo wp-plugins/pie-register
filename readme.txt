@@ -4,7 +4,7 @@ Donate link: http://pie-solutions.com/products/pie-register/donate
 Tags: register, registration, password, invitation, code, invite, disclaimer, captcha, email, validation, recaptcha, privacy, policy, license, agreement, logo, moderation, user
 Requires at least: 2.5
 Tested up to: 3.0.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimers, CAPTCHA Validation, Email Validation, User Moderation, Profile Fields and more.
 
@@ -60,6 +60,12 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 * Currently This feature is not available. We are working on it to improve.
 				
 == CHANGELOG ==
+
+**v1.2.2 February 20 2011
+
+* Fixed Settings Override.
+* Compatible to Wp 3.0.5
+
 
 **v1.2.1 January 20 2011
 

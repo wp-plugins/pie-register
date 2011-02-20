@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.2.1
+Version: 1.2.2
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -92,6 +92,10 @@ if( !class_exists('PieMemberRegister') ){
 			//VERSION CONTROL
 				if( $wp_version < 2.5 )
 					add_action('admin_notices', array($this, 'version_warning'));
+					
+					// Load this plugin last to ensure other plugins don't overwrite the settings
+
+		  add_action( 'activated_plugin', array($this, 'load_last') );
 			
 		}
 		
@@ -101,6 +105,45 @@ if( !class_exists('PieMemberRegister') ){
 		";
 		
 		}
+		
+		function load_last(){
+
+		  // Get array of active plugins
+
+		  if( !$active_plugins = get_option('active_plugins') ) return;
+
+		  // Set this plugin as variable
+
+		  $my_plugin = 'pie-register/'.basename(__FILE__);
+
+		  // See if my plugin is in the array
+
+		  $key = array_search( $my_plugin, $active_plugins );
+
+		  // If my plugin was found
+
+		  if( $key !== FALSE ){
+
+			// Remove it from the array
+
+			unset( $active_plugins[$key] );
+
+			// Reset keys in the array
+
+			$active_plugins = array_values( $active_plugins );
+
+			// Add my plugin to the end
+
+			array_push( $active_plugins, $my_plugin );
+
+			// Resave the array of active plugins
+
+			update_option( 'active_plugins', $active_plugins );
+
+		  }
+
+	  }
+		
 		function AddPanel(){ //Add the Settings and User Panels
 			add_options_page( 'Pie Register', 'Pie Register', 10, 'pie-register', array($this, 'RegPlusSettings') );
 			$piereg = get_option('pie_register');
