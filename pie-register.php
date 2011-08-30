@@ -6,7 +6,7 @@ Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Pag
 Pie-register is a fork of register-plus, however many things has changed since.
 
 Author: Johnibom
-Version: 1.2.2
+Version: 1.2.3
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
