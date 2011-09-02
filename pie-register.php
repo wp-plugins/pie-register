@@ -4,6 +4,8 @@ Plugin Name: Pie Register
 Plugin URI: http://pie-solutions.com/products/pie-register/
 Description: <strong>WordPress 2.5+ ONLY.</strong> Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimer, Captcha Validation, Email Validation, User Moderation, Profile Fields, Charge User fees through Paypal and more.
 Pie-register is a fork of register-plus, however many things has changed since.
+Please put this code at the top of your wp-login.php otherwise the plugin won't work properly, and always update your wp-login.php with the following code after upgrade.
+[code]<?php session_start(); ?>[/code]
 
 Author: Johnibom
 Version: 1.2.3
