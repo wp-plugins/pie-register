@@ -62,6 +62,8 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 * Currently This feature is not available. We are working on it to improve.
 				
 == CHANGELOG ==
+**v1.2.3 August 8 2011
+*Highlighted the Code to put on the wp-login.php at the plugin page.
 
 **v1.2.2 February 20 2011
 
