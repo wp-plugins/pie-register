@@ -8,7 +8,7 @@ Please put this code at the top of your wp-login.php otherwise the plugin won't 
 [code]<?php session_start(); ?>[/code]
 
 Author: Johnibom
-Version: 1.2.3
+Version: 1.2.4
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -101,6 +101,22 @@ if( !class_exists('PieMemberRegister') ){
 			
 		}
 		
+		function disable_magic_quotes_gpc($rpg){
+			if (TRUE == function_exists('get_magic_quotes_gpc') && 1 == get_magic_quotes_gpc()){
+				$mqs = strtolower(ini_get('magic_quotes_sybase'));
+		
+				if (TRUE == empty($mqs) || 'off' == $mqs){
+					// we need to do stripslashes on $_GET, $_POST and $_COOKIE
+					$rpg=stripslashes($rpg);
+				}
+				else{
+					// we need to do str_replace("''", "'", ...) on $_GET, $_POST, $_COOKIE
+					$rpg=str_replace("''","'",$rpg);
+				}
+			}
+			return $rpg;
+		}
+	
 		function version_warning(){ //Show warning if plugin is installed on a WordPress lower than 2.5
 			global $wp_version;
 			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v2.5 and up.  You are currently using WordPress v.', 'piereg').$wp_version."</strong> </p></div>
@@ -259,77 +275,77 @@ if( !class_exists('PieMemberRegister') ){
 		function SaveSettings(){
 			check_admin_referer('piereg-update-options');
 			$update = get_option( 'pie_register' );
-			$update["paypal_option"] = $_POST['piereg_paypal_option'];
-			$update["paypal_butt_id"] = $_POST['piereg_paypal_butt_id'];
-			$update["paypal_pdt"] = $_POST['piereg_paypal_pdt'];
-			$update["password"] = $_POST['piereg_password'];
-			$update["password_meter"] = $_POST['piereg_password_meter'];
-			$update["short"] = $_POST['piereg_short'];
-			$update["bad"] = $_POST['piereg_bad'];
-			$update["good"] = $_POST['piereg_good'];
-			$update["strong"] = $_POST['piereg_strong'];
-			$update["code"] = $_POST['piereg_code'];
+			$update["paypal_option"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_option']);
+			$update["paypal_butt_id"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
+			$update["paypal_pdt"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_pdt']);
+			$update["password"] = $this->disable_magic_quotes_gpc($_POST['piereg_password']);
+			$update["password_meter"] = $this->disable_magic_quotes_gpc($_POST['piereg_password_meter']);
+			$update["short"] = $this->disable_magic_quotes_gpc($_POST['piereg_short']);
+			$update["bad"] = $this->disable_magic_quotes_gpc($_POST['piereg_bad']);
+			$update["good"] = $this->disable_magic_quotes_gpc($_POST['piereg_good']);
+			$update["strong"] = $this->disable_magic_quotes_gpc($_POST['piereg_strong']);
+			$update["code"] = $this->disable_magic_quotes_gpc($_POST['piereg_code']);
 			if( $_POST['piereg_code'] ) {
-				$update["codepass"] = $_POST['piereg_codepass'];
+				$update["codepass"] = $this->disable_magic_quotes_gpc($_POST['piereg_codepass']);
 				foreach( $update["codepass"] as $k=>$v ){
 					$update["codepass"][$k] = strtolower($v);
 				}
-				$update["code_req"] = $_POST['piereg_code_req'];
+				$update["code_req"] = $this->disable_magic_quotes_gpc($_POST['piereg_code_req']);
 			}
-			$update["captcha"] = $_POST['piereg_captcha'];
-			$update["disclaimer"] = $_POST['piereg_disclaimer'];
-			$update["disclaimer_title"] = $_POST['piereg_disclaimer_title'];
-			$update["disclaimer_content"] = $_POST['piereg_disclaimer_content'];
-			$update["disclaimer_agree"] = $_POST['piereg_disclaimer_agree'];
-			$update["license"] = $_POST['piereg_license'];
-			$update["license_title"] = $_POST['piereg_license_title'];
-			$update["license_content"] = $_POST['piereg_license_content'];
-			$update["license_agree"] = $_POST['piereg_license_agree'];
-			$update["privacy"] = $_POST['piereg_privacy'];
-			$update["privacy_title"] = $_POST['piereg_privacy_title'];
-			$update["privacy_content"] = $_POST['piereg_privacy_content'];
-			$update["privacy_agree"] = $_POST['piereg_privacy_agree'];
-			$update["email_exists"] = $_POST['piereg_email_exists'];
-			$update["firstname"] = $_POST['piereg_firstname'];
-			$update["lastname"] = $_POST['piereg_lastname'];
-			$update["website"] = $_POST['piereg_website'];
-			$update["aim"] = $_POST['piereg_aim'];
-			$update["yahoo"] = $_POST['piereg_yahoo'];
-			$update["jabber"] = $_POST['piereg_jabber'];
-			$update["phone"] = $_POST['piereg_phone'];
-			$update["about"] = $_POST['piereg_about'];
-			$update["profile_req"] = $_POST['piereg_profile_req'];
-			$update["require_style"] = $_POST['piereg_require_style'];
-			$update["dash_widget"] = $_POST['piereg_dash_widget'];
-			$update["admin_verify"] = $_POST['piereg_admin_verify'];
-			$update["email_verify"] = $_POST['piereg_email_verify'];
-			$update["email_verify_date"] = $_POST['piereg_email_verify_date'];
-			$update["email_delete_grace"] = $_POST['piereg_email_delete_grace'];
-			$update["reCAP_public_key"] = $_POST['piereg_reCAP_public_key'];
-			$update["reCAP_private_key"] = $_POST['piereg_reCAP_private_key'];
-			$update['html'] = $_POST['piereg_html'];
-			$update['from'] = $_POST['piereg_from'];
-			$update['fromname'] = $_POST['piereg_fromname'];
-			$update['subject'] = $_POST['piereg_subject'];
-			$update['custom_msg'] = $_POST['piereg_custom_msg'];
-			$update['user_nl2br'] = $_POST['piereg_user_nl2br'];
-			$update['msg'] = $_POST['piereg_msg'];
-			$update['disable_admin'] = $_POST['piereg_disable_admin'];
-			$update['adminhtml'] = $_POST['piereg_adminhtml'];
-			$update['adminfrom'] = $_POST['piereg_adminfrom'];
-			$update['adminfromname'] = $_POST['piereg_adminfromname'];
-			$update['adminsubject'] = $_POST['piereg_adminsubject'];
-			$update['custom_adminmsg'] = $_POST['piereg_custom_adminmsg'];
-			$update['admin_nl2br'] = $_POST['piereg_admin_nl2br'];
-			$update['adminmsg'] = $_POST['piereg_adminmsg'];
-			$update['login_redirect'] = $_POST['piereg_login_redirect'];
-			$update['register_css'] = $_POST['piereg_register_css'];
-			$update['login_css'] = $_POST['piereg_login_css'];
-			$update['firstday'] = $_POST['piereg_firstday'];
-			$update['dateformat'] = $_POST['piereg_dateformat'];
-			$update['startdate'] = $_POST['piereg_startdate'];
-			$update['calyear'] = $_POST['piereg_calyear'];
-			$update['calmonth'] = $_POST['piereg_calmonth'];
+			$update["captcha"] = $this->disable_magic_quotes_gpc($_POST['piereg_captcha']);
+			$update["disclaimer"] = $this->disable_magic_quotes_gpc($_POST['piereg_disclaimer']);
+			$update["disclaimer_title"] = $this->disable_magic_quotes_gpc($_POST['piereg_disclaimer_title']);
+			$update["disclaimer_content"] = $this->disable_magic_quotes_gpc($_POST['piereg_disclaimer_content']);
+			$update["disclaimer_agree"] = $this->disable_magic_quotes_gpc($_POST['piereg_disclaimer_agree']);
+			$update["license"] = $this->disable_magic_quotes_gpc($_POST['piereg_license']);
+			$update["license_title"] = $this->disable_magic_quotes_gpc($_POST['piereg_license_title']);
+			$update["license_content"] = $this->disable_magic_quotes_gpc($_POST['piereg_license_content']);
+			$update["license_agree"] = $this->disable_magic_quotes_gpc($_POST['piereg_license_agree']);
+			$update["privacy"] = $this->disable_magic_quotes_gpc($_POST['piereg_privacy']);
+			$update["privacy_title"] = $this->disable_magic_quotes_gpc($_POST['piereg_privacy_title']);
+			$update["privacy_content"] = $this->disable_magic_quotes_gpc($_POST['piereg_privacy_content']);
+			$update["privacy_agree"] = $this->disable_magic_quotes_gpc($_POST['piereg_privacy_agree']);
+			$update["email_exists"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_exists']);
+			$update["firstname"] = $this->disable_magic_quotes_gpc($_POST['piereg_firstname']);
+			$update["lastname"] = $this->disable_magic_quotes_gpc($_POST['piereg_lastname']);
+			$update["website"] = $this->disable_magic_quotes_gpc($_POST['piereg_website']);
+			$update["aim"] = $this->disable_magic_quotes_gpc($_POST['piereg_aim']);
+			$update["yahoo"] = $this->disable_magic_quotes_gpc($_POST['piereg_yahoo']);
+			$update["jabber"] = $this->disable_magic_quotes_gpc($_POST['piereg_jabber']);
+			$update["phone"] = $this->disable_magic_quotes_gpc($_POST['piereg_phone']);
+			$update["about"] = $this->disable_magic_quotes_gpc($_POST['piereg_about']);
+			$update["profile_req"] = $this->disable_magic_quotes_gpc($_POST['piereg_profile_req']);
+			$update["require_style"] = $this->disable_magic_quotes_gpc($_POST['piereg_require_style']);
+			$update["dash_widget"] = $this->disable_magic_quotes_gpc($_POST['piereg_dash_widget']);
+			$update["admin_verify"] = $this->disable_magic_quotes_gpc($_POST['piereg_admin_verify']);
+			$update["email_verify"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_verify']);
+			$update["email_verify_date"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_verify_date']);
+			$update["email_delete_grace"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_delete_grace']);
+			$update["reCAP_public_key"] = $this->disable_magic_quotes_gpc($_POST['piereg_reCAP_public_key']);
+			$update["reCAP_private_key"] = $this->disable_magic_quotes_gpc($_POST['piereg_reCAP_private_key']);
+			$update['html'] = $this->disable_magic_quotes_gpc($_POST['piereg_html']);
+			$update['from'] = $this->disable_magic_quotes_gpc($_POST['piereg_from']);
+			$update['fromname'] = $this->disable_magic_quotes_gpc($_POST['piereg_fromname']);
+			$update['subject'] = $this->disable_magic_quotes_gpc($_POST['piereg_subject']);
+			$update['custom_msg'] = $this->disable_magic_quotes_gpc($_POST['piereg_custom_msg']);
+			$update['user_nl2br'] = $this->disable_magic_quotes_gpc($_POST['piereg_user_nl2br']);
+			$update['msg'] = $this->disable_magic_quotes_gpc($_POST['piereg_msg']);
+			$update['disable_admin'] = $this->disable_magic_quotes_gpc($_POST['piereg_disable_admin']);
+			$update['adminhtml'] = $this->disable_magic_quotes_gpc($_POST['piereg_adminhtml']);
+			$update['adminfrom'] = $this->disable_magic_quotes_gpc($_POST['piereg_adminfrom']);
+			$update['adminfromname'] = $this->disable_magic_quotes_gpc($_POST['piereg_adminfromname']);
+			$update['adminsubject'] = $this->disable_magic_quotes_gpc($_POST['piereg_adminsubject']);
+			$update['custom_adminmsg'] = $this->disable_magic_quotes_gpc($_POST['piereg_custom_adminmsg']);
+			$update['admin_nl2br'] = $this->disable_magic_quotes_gpc($_POST['piereg_admin_nl2br']);
+			$update['adminmsg'] = $this->disable_magic_quotes_gpc($_POST['piereg_adminmsg']);
+			$update['login_redirect'] = $this->disable_magic_quotes_gpc($_POST['piereg_login_redirect']);
+			$update['register_css'] = $this->disable_magic_quotes_gpc($_POST['piereg_register_css']);
+			$update['login_css'] = $this->disable_magic_quotes_gpc($_POST['piereg_login_css']);
+			$update['firstday'] = $this->disable_magic_quotes_gpc($_POST['piereg_firstday']);
+			$update['dateformat'] = $this->disable_magic_quotes_gpc($_POST['piereg_dateformat']);
+			$update['startdate'] = $this->disable_magic_quotes_gpc($_POST['piereg_startdate']);
+			$update['calyear'] = $this->disable_magic_quotes_gpc($_POST['piereg_calyear']);
+			$update['calmonth'] = $this->disable_magic_quotes_gpc($_POST['piereg_calmonth']);
 			if( $_FILES['piereg_logo']['name'] ) $update['logo'] = $this->UploadLogo();
 			else if( $_POST['remove_logo'] ) $update['logo'] = '';
 
