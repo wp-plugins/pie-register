@@ -66,7 +66,7 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 
 == CHANGELOG ==
 
-**v1.2.5 October 4 2011**
+**v1.2.6 October 4 2011**
 * Fixed Multiple Invitation Saving Problem
 
 **v1.2.5 October 3 2011**
