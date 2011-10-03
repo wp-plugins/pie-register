@@ -52,8 +52,8 @@
 					if( $v['required'] ) $rows .= ' checked="checked"';
 					$rows .= ' /> ' . __('Required', 'piereg') . '</label> &nbsp; 
                                 
-                                <a href="#" onClick="return selrem(this);" class="remove_row"><img src="' . $plugin_url . 'removeBtn.gif" alt="' . __("Remove Row","piereg") . '" title="' . __("Remove Row","piereg") . '" /></a>
-						<a href="#" onClick="return seladd(this);" class="add_row"><img src="' . $plugin_url . 'addBtn.gif" alt="' . __("Add Row","piereg") . '" title="' . __("Add Row","piereg") . '" /></a></td>
+                                <a href="#" onClick="return selrem(this);" class="remove_row"><img src="' . $this->plugin_url . 'removeBtn.gif" alt="' . __("Remove Row","piereg") . '" title="' . __("Remove Row","piereg") . '" /></a>
+						<a href="#" onClick="return seladd(this);" class="add_row"><img src="' . $this->plugin_url . 'addBtn.gif" alt="' . __("Add Row","piereg") . '" title="' . __("Add Row","piereg") . '" /></a></td>
                         	</tr>';
 				}
 			}
