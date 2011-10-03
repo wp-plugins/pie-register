@@ -60,7 +60,10 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 
 == LOCALIZATION ==
 * Currently This feature is not available. We are working on it to improve.
-				
+
+== Support ==
+* Please visit http://www.pie-solutions.com/products/pie-register in order to get support regarding this plugin!
+
 == CHANGELOG ==
 **v1.2.5 October 3 2011
 *Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
