@@ -1,7 +1,6 @@
 <?php
 $piereg = get_option( 'pie_register' );
 $piereg_custom = get_option( 'pie_register_custom' );
-$plugin_url = trailingslashit(get_option('siteurl')) . 'wp-content/plugins/' . basename(dirname(__FILE__)) .'/';
 if( $_POST['notice'] ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 }

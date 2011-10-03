@@ -626,6 +626,7 @@ display:inline;
 		
 		function RegPlusSettings(){
 			//error_reporting(E_ALL);
+			
 			require_once($this->plugin_dir.'/menus/pieregisterSettings.php');
 		}
 		function PieRegPaymentGateway(){
@@ -959,13 +960,13 @@ display:inline;
 			}
 			
 			if ( $piereg['captcha'] == 1 ){
-				$plugin_url = trailingslashit(get_option('siteurl')) . 'wp-content/plugins/' . basename(dirname(__FILE__)) .'/';
+				
 				$_SESSION['OK'] = 1;
 				if( !isset( $_SESSION['OK'] ) )
 					session_start(); 
 				?>
                <div style="clear:both"><label><?php _e('Validation Image:', 'piereg');?> <p>
-                <img src="<?php echo $plugin_url;?>captcha.php" id="captchaimg" alt="" />
+                <img src="<?php echo $this->plugin_url;?>captcha.php" id="captchaimg" alt="" />
                 <input type="text" name="captcha" id="captcha" size="25" value="" tabindex="55" /></p></label>
                 <small><?php _e('Enter the text from the image.', 'piereg');?></small></div>
                
@@ -1078,14 +1079,13 @@ display:none;
 </script>
 <?php } ?>
 
-<?php $plugin_url = trailingslashit(get_option('siteurl')) . 'wp-content/plugins/' . basename(dirname(__FILE__)) .'/'; ?>
 <!-- required plugins -->
-<script type="text/javascript" src="<?php echo $plugin_url;?>datepicker/date.js"></script>
+<script type="text/javascript" src="<?php echo $this->plugin_url;?>datepicker/date.js"></script>
 <!--[if IE]><script type="text/javascript" src="<?php echo $plugin_url;?>datepicker/jquery.bgiframe.js"></script><![endif]-->
 
 <!-- jquery.datePicker.js -->
-<script type="text/javascript" src="<?php echo $plugin_url;?>datepicker/jquery.datePicker.js"></script>
-<link href="<?php echo $plugin_url;?>datepicker/datePicker.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo $this->plugin_url;?>datepicker/jquery.datePicker.js"></script>
+<link href="<?php echo $this->plugin_url;?>datepicker/datePicker.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 jQuery.dpText = {
 	TEXT_PREV_YEAR		:	'<?php _e('Previous year','piereg');?>',
@@ -1112,7 +1112,7 @@ jQuery(function() {
 });
 </script>
 <style type="text/css">
-a.dp-choose-date { float: left; width: 16px; height: 16px; padding: 0; margin: 5px 3px 0; display: block; text-indent: -2000px; overflow: hidden; background: url(<?php echo $plugin_url;?>datepicker/calendar.png) no-repeat; } a.dp-choose-date.dp-disabled { background-position: 0 -20px; cursor: default; } /* makes the input field shorter once the date picker code * has run (to allow space for the calendar icon */ input.dp-applied { width: 140px; float: left; }
+a.dp-choose-date { float: left; width: 16px; height: 16px; padding: 0; margin: 5px 3px 0; display: block; text-indent: -2000px; overflow: hidden; background: url(<?php echo $this->plugin_url;?>datepicker/calendar.png) no-repeat; } a.dp-choose-date.dp-disabled { background-position: 0 -20px; cursor: default; } /* makes the input field shorter once the date picker code * has run (to allow space for the calendar icon */ input.dp-applied { width: 140px; float: left; }
 																																																																																				
 #phone, #pass1, #pass2, #regcode, #captcha, #firstname, #lastname, #website, #aim, #yahoo, #jabber, #about, .custom_field{
 	font-size: 20px;	

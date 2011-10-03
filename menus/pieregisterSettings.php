@@ -2,7 +2,7 @@
 
 			$piereg = get_option( 'pie_register' );
 			$piereg_custom = get_option( 'pie_register_custom' );
-			$plugin_url = trailingslashit(get_option('siteurl')) . 'wp-content/plugins/' . basename(dirname(__FILE__)) .'/';
+			
 			if( $_POST['notice'] )
 				echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 				
@@ -12,8 +12,8 @@
 				foreach( $piereg['codepass'] as $code ){
 					$codes .= '<div class="code_block">
                                     <input type="text" name="piereg_codepass[]"  value="' . $code . '" /> &nbsp;
-                                    <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="' . $plugin_url . 'removeBtn.gif" alt="' . __("Remove Code","piereg") . '" title="' .  __("Remove Code","piereg") . '" /></a>
-						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="' . $plugin_url . 'addBtn.gif" alt="' . __("Add Code","piereg") . '" title="' . __("Add Code","piereg") . '" /></a>
+                                    <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="' . $this->plugin_url . 'removeBtn.gif" alt="' . __("Remove Code","piereg") . '" title="' .  __("Remove Code","piereg") . '" /></a>
+						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="' . $this->plugin_url . 'addBtn.gif" alt="' . __("Add Code","piereg") . '" title="' . __("Add Code","piereg") . '" /></a>
                                     </div>';
 				}
 			}
@@ -126,8 +126,8 @@ padding:12px; width:400px;">Please put this code at the top of your wp-login.php
                               <?php if( $codes ){ echo $codes; } else { ?>
                                     <div class="code_block">
                                     <input type="text" name="piereg_codepass[]"  value="<?php echo $piereg['codepass'];?>" /> &nbsp;
-                                    <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="<?php echo $plugin_url; ?>removeBtn.gif" alt="<?php _e("Remove Code","piereg")?>" title="<?php _e("Remove Code","piereg")?>" /></a>
-						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="<?php echo $plugin_url; ?>addBtn.gif" alt="<?php _e("Add Code","piereg")?>" title="<?php _e("Add Code","piereg")?>" /></a>
+                                    <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="<?php echo $this->plugin_url; ?>removeBtn.gif" alt="<?php _e("Remove Code","piereg")?>" title="<?php _e("Remove Code","piereg")?>" /></a>
+						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="<?php echo $this->plugin_url; ?>addBtn.gif" alt="<?php _e("Add Code","piereg")?>" title="<?php _e("Add Code","piereg")?>" /></a>
                                     </div>
                                <?php } ?>
                                     <small><?php _e('One of these codes will be required for users to register.', 'piereg');?></small></div>
