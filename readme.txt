@@ -65,59 +65,59 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 * Please visit http://www.pie-solutions.com/products/pie-register in order to get support regarding this plugin!
 
 == CHANGELOG ==
-**v1.2.5 October 3 2011
+**v1.2.5 October 3 2011**
 *Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
 *Added New Layout Pie-Register Menu built!
 
-**v1.2.4 September 21 2011
+**v1.2.4 September 21 2011**
 *Fixed the "Backslash" problem on the admin Setting Page.
 
-**v1.2.3 August 8 2011
+**v1.2.3 August 8 2011**
 *Highlighted the Code to put on the wp-login.php at the plugin page.
 
-**v1.2.2 February 20 2011
+**v1.2.2 February 20 2011**
 
 * Fixed Settings Override.
 * Compatible to Wp 3.0.5
 
 
-**v1.2.1 January 20 2011
+**v1.2.1 January 20 2011**
 
 * Fixed Password strength meter.
 * Compatible to Wp 3.0.4
 
 
-**v1.2.0 June 25 2010
+**v1.2.0 June 25 2010**
 
 * Fixed Image uploads errors.
 * First step to Compatiblity to Wp 3.0
 
-**v1.1.9a April 07 2010
+**v1.1.9a April 07 2010**
 
 * Fixed Error after registration.
 
-**v1.1.9 April 06 2010
+**v1.1.9 April 06 2010**
 
 * Fixed Login box after verification.
 * Fixed diplaying invitation codes to the user dashboard.
 
-**v1.1.8 March 03 2010
+**v1.1.8 March 03 2010**
 
 * Fixed Payment link.
 * Fixed session errors/header errors.
 * And much much more..
 
-**v1.1.7 Febraury 04 2010
+**v1.1.7 Febraury 04 2010**
 
 * Fixed Resend verification email.
 * Fixed resend payment link.
 
-**v1.1.6 February 03 2010
+**v1.1.6 February 03 2010**
 
 * Fixed Security updates for Paypal resend code.
 * Add Phone/Mobile number Field.
 
-**v1.1.5 February 02 2010
+**v1.1.5 February 02 2010**
 
 * Keep away Unverified/Un-paid users to get logged in.
 * Fixed Logo display and form fields.
@@ -125,20 +125,20 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 * Fixed Date fields.
 * Changed Paypal Buy now to One -Time Subscription fee Button.
 
-**v1.1.3** January 08 2010 
+**v1.1.3** January 08 2010 **
 
 * Fixed User Registeration after Paypal Return.
 
 
-**v1.1.2** January 07 2010 
+**v1.1.2** January 07 2010 **
 
 * Fixed temp user id and email verification.
 
-**v1.1.1** January 06 2010 
+**v1.1.1** January 06 2010 **
 
 * Added Paypal Return and thank you URL.
 
-**v1.0.1** January 04 2010 
+**v1.0.1** January 04 2010 **
 
 * Fixed Password meter.
 * Added Paypal as shopping Cart
