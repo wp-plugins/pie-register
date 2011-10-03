@@ -8,7 +8,7 @@ Please put this code at the top of your wp-login.php otherwise the plugin won't 
 [code]<?php session_start(); ?>[/code]
 
 Author: Johnibom
-Version: 1.2.5
+Version: 1.2.6
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -317,7 +317,7 @@ if( !class_exists('PieMemberRegister') ){
 			$update["strong"] = $this->disable_magic_quotes_gpc($_POST['piereg_strong']);
 			$update["code"] = $this->disable_magic_quotes_gpc($_POST['piereg_code']);
 			if( $_POST['piereg_code'] ) {
-				$update["codepass"] = $this->disable_magic_quotes_gpc($_POST['piereg_codepass']);
+				$update["codepass"] = $_POST['piereg_codepass'];
 				foreach( $update["codepass"] as $k=>$v ){
 					$update["codepass"][$k] = strtolower($v);
 				}
