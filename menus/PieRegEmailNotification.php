@@ -1,6 +1,7 @@
 <?php
 $piereg = get_option( 'pie_register' );
 $piereg_custom = get_option( 'pie_register_custom' );
+
 if( $_POST['notice'] ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 }
@@ -45,7 +46,7 @@ if( $_POST['notice'] ){
 							if( $piereg['yahoo'] ) $custom_keys .= ' &nbsp; %yahoo%';
 							if( $piereg['jabber'] ) $custom_keys .= ' &nbsp; %jabber%';
 							if( $piereg['about'] ) $custom_keys .= ' &nbsp; %about%';
-							if( $piereg['code'] ) $custom_keys .= ' &nbsp; %invitecode%';
+							if( $piereg['code'] ) $custom_keys .= ' &nbsp; %'.$piereg['codename'].'code%';
 
 							if( is_array($piereg_custom) ){
 								foreach( $piereg_custom as $k=>$v ){
@@ -58,7 +59,14 @@ if( $_POST['notice'] ){
                             <p><strong><?php _e('Replacement Keys', 'piereg');?>:</strong> &nbsp; %user_login%  &nbsp; %user_pass% &nbsp; %user_email% &nbsp; %blogname% &nbsp; %siteurl% <?php echo $custom_keys; ?>&nbsp; %user_ip% &nbsp; %user_ref% &nbsp; %user_host% &nbsp; %user_agent% </p>
                             <textarea name="piereg_msg" id="msg" rows="10" cols="25" style="width:80%;height:300px;"><?php echo $piereg['msg'];?></textarea><br /><label><input type="checkbox" name="piereg_html" id="html" value="1" <?php if( $piereg['html'] ) echo 'checked="checked"';?> /> <?php _e('Send as HTML', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_user_nl2br" id="html" value="1" <?php if( $piereg['user_nl2br'] ) echo 'checked="checked"';?> /> <?php _e('Convert new lines to &lt;br/> tags (HTML only)' , 'piereg');?></label></td>
                        	</tr>
-                        
+                         <tr valign="top">
+                       		<th scope="row"><label for="emailvmsg"><?php _e('Pending Email Verification Message', 'piereg');?></label></th>
+                        	<td><textarea name="piereg_emailvmsg" id="emailvmsg" rows="10" cols="25" style="width:80%;height:300px;"><?php echo $piereg['emailvmsg'];?></textarea><br /><label><input type="checkbox" name="piereg_emailvmsghtml" id="emailvmsghtml" value="1" <?php if( $piereg['emailvmsghtml'] ) echo 'checked="checked"';?> /> <?php _e('Send as HTML', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_emailvmsguser_nl2br" id="html" value="1" <?php if( $piereg['emailvmsguser_nl2br'] ) echo 'checked="checked"';?> /> <?php _e('Convert new lines to &lt;br/> tags (HTML only)' , 'piereg');?></label></td>
+						</tr>
+						<tr valign="top">
+                       		<th scope="row"><label for="adminvmsg"><?php _e('Pending Admin Verification Message', 'piereg');?></label></th>
+                        	<td><textarea name="piereg_adminvmsg" id="adminvmsg" rows="10" cols="25" style="width:80%;height:300px;"><?php echo $piereg['adminvmsg'];?></textarea><br /><label><input type="checkbox" name="piereg_adminvmsghtml" id="adminvmsghtml" value="1" <?php if( $piereg['adminvmsghtml'] ) echo 'checked="checked"';?> /> <?php _e('Send as HTML', 'piereg');?></label> &nbsp; <label><input type="checkbox" name="piereg_adminvmsguser_nl2br" id="html" value="1" <?php if( $piereg['adminvmsguser_nl2br'] ) echo 'checked="checked"';?> /> <?php _e('Convert new lines to &lt;br/> tags (HTML only)' , 'piereg');?></label></td>
+						</tr>
                         </tbody>
                      </table>
                      </div>

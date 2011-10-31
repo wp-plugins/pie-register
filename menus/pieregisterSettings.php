@@ -8,7 +8,7 @@
 				
 			if( !is_array($piereg['profile_req']) )
 				$piereg['profile_req'] = array();
-			if( is_array($piereg['codepass']) ){
+			/*if( is_array($piereg['codepass']) ){
 				foreach( $piereg['codepass'] as $code ){
 					$codes .= '<div class="code_block">
                                     <input type="text" name="piereg_codepass[]"  value="' . $code . '" /> &nbsp;
@@ -16,7 +16,7 @@
 						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="' . $this->plugin_url . 'addBtn.gif" alt="' . __("Add Code","piereg") . '" title="' . __("Add Code","piereg") . '" /></a>
                                     </div>';
 				}
-			}
+			}*/
 			
 			$types = '<option value="text">Text Field</option><option value="date">Date Field</option><option value="select">Select Field</option><option value="checkbox">Checkbox</option><option value="radio">Radio Box</option><option value="textarea">Text Area</option><option value="hidden">Hidden Field</option>';
 			$extras = '<div class="extraoptions" style="float:left"><label>Extra Options: <input type="text" class="extraops" name="extraoptions[0]" value="" /></label></div>';
@@ -58,18 +58,27 @@
                         	</tr>';
 				}
 			}
-			
+			//Check if there's Expired Codes
+			$expiredcodes=$this->SelectCode();
+			if($expiredcodes){
+				$echoExpiredCode="<div class='expired_code'><ul>";
+				foreach($expiredcodes as $expiredcode){
+					$echoExpiredCode.="<li>".$expiredcode->name."</li>";
+				}
+				
+				$echoExpiredCode.="</ul></div>";
+			}
 			?>
             <div id="pie-register" class="wrap">
             	<h2><?php _e('Pie Register Settings', 'piereg')?></h2>
-				<div style="background:#FFEBE8; border-color:#cc0000; padding:5px;-moz-border-radius-bottomleft:3px;
+				<!--<div style="background:#FFEBE8; border-color:#cc0000; padding:5px;-moz-border-radius-bottomleft:3px;
 -moz-border-radius-bottomright:3px;
 -moz-border-radius-topleft:3px;
 -moz-border-radius-topright:3px;
 border-style:solid;
 border-width:1px;
 margin:0 0 16px 8px;
-padding:12px; width:400px;">Please put this code at the top of your wp-login.php otherwise the plugin won't work properly. <br /><code>&lt;&#0063;php <br />session_start(); &#0063;&gt;</code></div>
+padding:12px; width:400px;">Please put this code at the top of your wp-login.php otherwise the plugin won't work properly. <br /><code>&lt;&#0063;php <br />session_start(); &#0063;&gt;</code></div>-->
                 <form method="post" action="" enctype="multipart/form-data">
                 	<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg-update-options'); ?>
                     <p class="submit"><input name="Submit" value="<?php _e('Save Changes','piereg');?>" type="submit" />
@@ -84,6 +93,7 @@ padding:12px; width:400px;">Please put this code at the top of your wp-login.php
                                     <label><?php _e('Bad', 'piereg');?> <input type="text" name="piereg_bad" value="<?php echo $piereg['bad'];?>" /></label><br />
                                     <label><?php _e('Good', 'piereg');?> <input type="text" name="piereg_good" value="<?php echo $piereg['good'];?>" /></label><br />
                                     <label><?php _e('Strong', 'piereg');?> <input type="text" name="piereg_strong" value="<?php echo $piereg['strong'];?>" /></label><br />
+									<label><?php _e('Mismatch', 'piereg');?> <input type="text" name="piereg_mismatch" value="<?php echo $piereg['mismatch'];?>" /></label><br />
                                 </div>
                                 </td>
                         	</tr>
@@ -118,27 +128,29 @@ padding:12px; width:400px;">Please put this code at the top of your wp-login.php
                         		<td><label><input type="checkbox" name="piereg_admin_verify" id="admin_verify" value="1" <?php if( $piereg['admin_verify'] ) echo 'checked="checked"';?> /> <?php _e('Moderate all user registrations to require admin approval. NOTE: Email Verification must be DISABLED to use this feature.', 'piereg');?></label></td>
                         	</tr>
                             <tr valign="top">
-                       			 <th scope="row"><label for="code"><?php _e('Invitation Code', 'piereg');?></label></th>
-                        		<td><label><input type="checkbox" name="piereg_code" id="code" value="1" <?php if( $piereg['code'] ) echo 'checked="checked"';?> /> <?php _e('Enable Invitation Code(s)', 'piereg');?></label>
+                       			 <th scope="row"><label for="code"><?php _e($piereg['codename'].' Code', 'piereg');?></label></th>
+                        		<td><label><input type="checkbox" name="piereg_code" id="code" value="1" <?php if( $piereg['code'] ) echo 'checked="checked"';?> /> <?php _e('Enable '.$piereg['codename'].' Code(s)', 'piereg');?></label>
                                     <div id="codepass">
-                                    <label><input type="checkbox" name="piereg_dash_widget" value="1" <?php if( $piereg['dash_widget'] ) echo 'checked="checked"'; ?>  /> <?php _e('Enable Invitation Tracking Dashboard Widget', 'piereg');?></label><br />
-                                    <label><input type="checkbox" name="piereg_code_req" id="code_req" value="1" <?php if( $piereg['code_req'] ) echo 'checked="checked"';?> /> <?php _e('Require Invitation Code to Register', 'piereg');?></label>
-                              <?php if( $codes ){ echo $codes; } else { ?>
+                                    <label><input type="checkbox" name="piereg_dash_widget" value="1" <?php if( $piereg['dash_widget'] ) echo 'checked="checked"'; ?>  /> <?php _e('Enable '.$piereg['codename'].' Code Tracking Dashboard Widget', 'piereg');?></label><br />
+                                    <label><input type="checkbox" name="piereg_code_req" id="code_req" value="1" <?php if( $piereg['code_req'] ) echo 'checked="checked"';?> /> <?php _e('Require '.$piereg['codename'].' Code to Register', 'piereg');?></label>
+                              
                                     <div class="code_block">
-                                    <input type="text" name="piereg_codepass[]"  value="<?php echo $piereg['codepass'];?>" /> &nbsp;
+                                    <textarea rows="5" cols="15" name="piereg_codepass"><?php echo $piereg['codepass'];?></textarea><!-- &nbsp;
                                     <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="<?php echo $this->plugin_url; ?>removeBtn.gif" alt="<?php _e("Remove Code","piereg")?>" title="<?php _e("Remove Code","piereg")?>" /></a>
-						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="<?php echo $this->plugin_url; ?>addBtn.gif" alt="<?php _e("Add Code","piereg")?>" title="<?php _e("Add Code","piereg")?>" /></a>
+						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="<?php echo $this->plugin_url; ?>addBtn.gif" alt="<?php _e("Add Code","piereg")?>" title="<?php _e("Add Code","piereg")?>" /></a>-->
                                     </div>
-                               <?php } ?>
-                                    <small><?php _e('One of these codes will be required for users to register.', 'piereg');?></small></div>
+                              
+                                    <small><?php _e('One of these codes will be required for users to register.', 'piereg');?></small><div>
+									<?php echo ($echoExpiredCode)?$echoExpiredCode. _e('Expired '.$piereg['codename'].' Code(s)', 'piereg'):''; ?>
+									<label><input type="textbox" name="piereg_codename" id="codename" value="<?php echo $piereg['codename'];?>"  /> <?php _e('Rename '.$piereg['codename'].' Code(s) Field', 'piereg');?></label></div><small><?php _e('Please note: You will need to update the Message Body on Email Notification Page as you rename.', 'piereg');?></small>
+									<div><label><input type="checkbox" name="piereg_code_auto_del" id="code_auto_del" value="1" <?php if( $piereg['code_auto_del'] ) echo 'checked="checked"';?> /> <?php _e('Auto Delete the Expired '.$piereg['codename'].' Code', 'piereg');?></label></div><div><label><input size="3" type="textbox" name="piereg_codeexpiry" id="codeexpiry" value="<?php echo $piereg['codeexpiry'];?>" onkeyup="javascript:this.value=this.value.replace(/[^0-9]/g, '');"  /> <?php _e('Times each '.$piereg['codename'].' code will be used.', 'piereg');?></label></div><small><?php _e('Please note: Enter Numeric Value Only. "0" (Zero) means Unlimited', 'piereg');?></small>
+									</div>
                                     </td>
                         	</tr>
                             <tr valign="top">
                        			 <th scope="row"><label for="captcha"><?php _e('CAPTCHA', 'piereg');?></label></th>
                         		<td><label><input type="radio" name="piereg_captcha" id="none" value="0" <?php if( $piereg['captcha'] == 0 ) echo 'checked="checked"';?> /> <?php _e('None', 'piereg');?></label> <input type="radio" name="piereg_captcha" id="captcha" value="1" <?php if( $piereg['captcha'] == 1 ) echo 'checked="checked"';?> /> <?php _e('Simple CAPTCHA', 'piereg');?></label> <label><input type="radio" name="piereg_captcha" id="recaptcha" value="2" <?php if( $piereg['captcha'] == 2 ) echo 'checked="checked"';?> /> <a href="http://recaptcha.net/"><?php _e('reCAPTCHA','piereg');?></a></label>
-                                <div id="SimpleDetails">
-                                <p><?php _e('You may need to add the code <code>&lt;?php session_start(); ?></code> to the top line of the wp_login.php file to enable Simple CAPTCHA to work correctly.', 'piereg');?></p>
-                                </div>
+                                
                                 <div id="reCAPops">
                                 <label for="public_key"><?php _e('reCAPTCHA Public Key:','piereg');?></label> <input type="text" style="width:500px;" name="piereg_reCAP_public_key" id="public_key" value="<?php echo $piereg['reCAP_public_key'];?>" /> <a href="https://www.google.com/recaptcha/admin/create" target="_blank"><?php _e('Sign up &raquo;','piereg');?></a><br />
 								<label for="private_key"><?php _e('reCAPTCHA Private Key:','piereg');?></label> <input type="text" style="width:500px;" id="private_key" name="piereg_reCAP_private_key" value="<?php echo $piereg['reCAP_private_key'];?>" />
@@ -250,19 +262,19 @@ padding:12px; width:400px;">Please put this code at the top of your wp-login.php
                                       <label for="startdate"><?php _e('First Selectable Date','piereg');?>:</label> <input type="text" name="piereg_startdate" id="startdate" value="<?php echo $piereg['startdate'];?>"  style="width:100px;" /> <br />
                                        <label for="calyear"><?php _e('Default Year','piereg');?>:</label> <input type="text" name="piereg_calyear" id="calyear" value="<?php echo $piereg['calyear'];?>" style="width:40px;" /> &nbsp;
                                        <label for="calmonth"><?php _e('Default Month','piereg');?>:</label> <select name="piereg_calmonth" id="calmonth">
-                                       		<option value="cur" <?php if( $piereg['calmonth'] === 'cur' ) echo 'selected="selected"';?>><?php _e('Current Month','piereg');?></option>
-                                            <option value="0" <?php if( $piereg['calmonth'] == '0' ) echo 'selected="selected"';?>><?php _e('Jan','piereg');?></option>
-                                            <option value="1" <?php if( $piereg['calmonth'] == '1' ) echo 'selected="selected"';?>><?php _e('Feb','piereg');?></option>
-                                            <option value="2" <?php if( $piereg['calmonth'] == '2' ) echo 'selected="selected"';?>><?php _e('Mar','piereg');?></option>
-                                            <option value="3" <?php if( $piereg['calmonth'] == '3' ) echo 'selected="selected"';?>><?php _e('Apr','piereg');?></option>
-                                            <option value="4" <?php if( $piereg['calmonth'] == '4' ) echo 'selected="selected"';?>><?php _e('May','piereg');?></option>
-                                            <option value="5" <?php if( $piereg['calmonth'] == '5' ) echo 'selected="selected"';?>><?php _e('Jun','piereg');?></option>
-                                            <option value="6" <?php if( $piereg['calmonth'] == '6' ) echo 'selected="selected"';?>><?php _e('Jul','piereg');?></option>
-                                            <option value="7" <?php if( $piereg['calmonth'] == '7' ) echo 'selected="selected"';?>><?php _e('Aug','piereg');?></option>
-                                            <option value="8" <?php if( $piereg['calmonth'] == '8' ) echo 'selected="selected"';?>><?php _e('Sep','piereg');?></option>
-                                            <option value="9" <?php if( $piereg['calmonth'] == '9' ) echo 'selected="selected"';?>><?php _e('Oct','piereg');?></option>
-                                            <option value="10" <?php if( $piereg['calmonth'] == '10' ) echo 'selected="selected"';?>><?php _e('Nov','piereg');?></option>
-                                            <option value="11" <?php if( $piereg['calmonth'] == '11' ) echo 'selected="selected"';?>><?php _e('Dec','piereg');?></option>
+                                       		<option value="cur" <?php if( $piereg['calmonth'] == 'cur' ) echo 'selected="selected"';?>><?php _e('Current Month','piereg');?></option>
+                                            <option value="1" <?php if( $piereg['calmonth'] == '1' ) echo 'selected="selected"';?>><?php _e('Jan','piereg');?></option>
+                                            <option value="2" <?php if( $piereg['calmonth'] == '2' ) echo 'selected="selected"';?>><?php _e('Feb','piereg');?></option>
+                                            <option value="3" <?php if( $piereg['calmonth'] == '3' ) echo 'selected="selected"';?>><?php _e('Mar','piereg');?></option>
+                                            <option value="4" <?php if( $piereg['calmonth'] == '4' ) echo 'selected="selected"';?>><?php _e('Apr','piereg');?></option>
+                                            <option value="5" <?php if( $piereg['calmonth'] == '5' ) echo 'selected="selected"';?>><?php _e('May','piereg');?></option>
+                                            <option value="6" <?php if( $piereg['calmonth'] == '6' ) echo 'selected="selected"';?>><?php _e('Jun','piereg');?></option>
+                                            <option value="7" <?php if( $piereg['calmonth'] == '7' ) echo 'selected="selected"';?>><?php _e('Jul','piereg');?></option>
+                                            <option value="8" <?php if( $piereg['calmonth'] == '8' ) echo 'selected="selected"';?>><?php _e('Aug','piereg');?></option>
+                                            <option value="9" <?php if( $piereg['calmonth'] == '9' ) echo 'selected="selected"';?>><?php _e('Sep','piereg');?></option>
+                                            <option value="10" <?php if( $piereg['calmonth'] == '10' ) echo 'selected="selected"';?>><?php _e('Oct','piereg');?></option>
+                                            <option value="11" <?php if( $piereg['calmonth'] == '11' ) echo 'selected="selected"';?>><?php _e('Nov','piereg');?></option>
+                                            <option value="12" <?php if( $piereg['calmonth'] == '12' ) echo 'selected="selected"';?>><?php _e('Dec','piereg');?></option>
                                        </select>
                                      
                                     </td>

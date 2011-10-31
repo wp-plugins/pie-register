@@ -85,9 +85,7 @@ jQuery(document).ready(function() {
 	<?php if( $piereg['captcha'] != 2 ){ ?>
 	jQuery('#reCAPops').hide();
 	<?php } ?>
-	<?php if( $piereg['captcha'] != 1 ){ ?>
-	jQuery('#SimpleDetails').hide();
-	<?php } ?>
+	
 	<?php if( !$piereg['custom_msg'] ){ ?>
 	jQuery('#enabled_msg').hide();
 	<?php } ?>
@@ -139,16 +137,16 @@ jQuery(document).ready(function() {
 	jQuery('#captcha').change(function() {
 		if(jQuery('#captcha').attr('checked')){
 			jQuery('#reCAPops').hide();
-			jQuery('#SimpleDetails').show();
+			
 			}
 			
 		else
-			jQuery('#SimpleDetails').hide();
+		
 		return true;
 	});
 	jQuery('#recaptcha').change(function() {
 		if(jQuery('#recaptcha').attr('checked')){
-			jQuery('#SimpleDetails').hide();
+			
 			jQuery('#reCAPops').show();
 			}
 		else
@@ -157,7 +155,6 @@ jQuery(document).ready(function() {
 	});
 	jQuery('#none').change(function() {
 		if(jQuery('#none').attr('checked')){
-			jQuery('#SimpleDetails').hide();
 			jQuery('#reCAPops').hide();
 			}
 		return true;
