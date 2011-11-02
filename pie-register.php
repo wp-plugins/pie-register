@@ -8,7 +8,7 @@ Please put this code at the top of your wp-login.php otherwise the plugin won't 
 [code]<?php session_start(); ?>[/code]
 
 Author: Johnibom
-Version: 1.2.7
+Version: 1.2.7a
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION

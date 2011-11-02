@@ -66,6 +66,9 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 
 == CHANGELOG ==
 
+**v1.2.7a October November 2 2011**
+Blank Screen Fixed
+
 **v1.2.7 October 4 2011**
 * New ScreenShots Added
 
