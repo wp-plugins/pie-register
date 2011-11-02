@@ -19,9 +19,9 @@
 			}*/
 			if( is_array($piereg['codepass']) ){
 				foreach( $piereg['codepass'] as $code ){
-					$code.=$code.'\n';
+					$cod.=($code."\n");
 				}
-				$piereg['codepass']=$code;
+				$piereg['codepass']=$cod;
 			}
 			$types = '<option value="text">Text Field</option><option value="date">Date Field</option><option value="select">Select Field</option><option value="checkbox">Checkbox</option><option value="radio">Radio Box</option><option value="textarea">Text Area</option><option value="hidden">Hidden Field</option>';
 			$extras = '<div class="extraoptions" style="float:left"><label>Extra Options: <input type="text" class="extraops" name="extraoptions[0]" value="" /></label></div>';
@@ -140,7 +140,7 @@ padding:12px; width:400px;">Please put this code at the top of your wp-login.php
                                     <label><input type="checkbox" name="piereg_code_req" id="code_req" value="1" <?php if( $piereg['code_req'] ) echo 'checked="checked"';?> /> <?php _e('Require '.$piereg['codename'].' Code to Register', 'piereg');?></label>
                               
                                     <div class="code_block">
-                                    <textarea rows="5" cols="15" name="piereg_codepass"><?php echo $piereg['codepass'];?></textarea><!-- &nbsp;
+                                    <textarea rows="25" cols="50" name="piereg_codepass"><?php echo $piereg['codepass'];?></textarea><!-- &nbsp;
                                     <a href="#" onClick="return selremcode(this);" class="remove_code"><img src="<?php echo $this->plugin_url; ?>removeBtn.gif" alt="<?php _e("Remove Code","piereg")?>" title="<?php _e("Remove Code","piereg")?>" /></a>
 						<a href="#" onClick="return seladdcode(this);" class="add_code"><img src="<?php echo $this->plugin_url; ?>addBtn.gif" alt="<?php _e("Add Code","piereg")?>" title="<?php _e("Add Code","piereg")?>" /></a>-->
                                     </div>
