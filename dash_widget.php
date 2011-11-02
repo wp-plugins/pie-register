@@ -7,7 +7,8 @@ if( !class_exists('PieRegisterWidget') ){
 			add_filter( 'wp_dashboard_widgets', array($this, 'add_widget') );		
 		}
 		function register_widget() {
-		if ( current_user_can('manage_options') )wp_register_sidebar_widget( 'piereg_invite_tracking', __( 'Invitation Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
+		$piereg = get_option( 'pie_register' );
+		if ( current_user_can('manage_options') )wp_register_sidebar_widget( 'piereg_invite_tracking', __( $piereg['codename'].' Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
 			
 		}
 		// Modifies the array of dashboard widgets and adds this plugin's
@@ -35,7 +36,7 @@ if( !class_exists('PieRegisterWidget') ){
 	
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
-			$codes = $piereg['codepass'];
+			$codes = explode("\n", $piereg['codepass']);
 			$usercodes = array();
 			foreach($codes as $code){
 				$users = $wpdb->get_results( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key='invite_code' AND meta_value='$code'" );
