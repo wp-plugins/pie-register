@@ -17,7 +17,12 @@
                                     </div>';
 				}
 			}*/
-			
+			if( is_array($piereg['codepass']) ){
+				foreach( $piereg['codepass'] as $code ){
+					$code.=$code.'\n';
+				}
+				$piereg['codepass']=$code;
+			}
 			$types = '<option value="text">Text Field</option><option value="date">Date Field</option><option value="select">Select Field</option><option value="checkbox">Checkbox</option><option value="radio">Radio Box</option><option value="textarea">Text Area</option><option value="hidden">Hidden Field</option>';
 			$extras = '<div class="extraoptions" style="float:left"><label>Extra Options: <input type="text" class="extraops" name="extraoptions[0]" value="" /></label></div>';
 			if( is_array($piereg_custom) ){
