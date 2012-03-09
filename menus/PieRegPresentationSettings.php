@@ -22,11 +22,11 @@ if( $_POST['notice'] ){
                         <tbody>
                         <tr valign="top">
                        		<th scope="row"><label for="register_css"><?php _e('Custom Register CSS', 'piereg');?></label></th>
-                        	<td><textarea name="piereg_register_css" id="register_css" rows="20" cols="40" style="width:80%; height:200px;"><?php echo $piereg['register_css'];?></textarea></td>
+                        	<td><textarea name="piereg_register_css" id="register_css" rows="20" cols="40" style="width:80%; height:200px;"><?php echo stripslashes($piereg['register_css']);?></textarea></td>
                         </tr>
                         <tr valign="top">
                        		<th scope="row"><label for="login_css"><?php _e('Custom Login CSS', 'piereg');?></label></th>
-                        	<td><textarea name="piereg_login_css" id="login_css" rows="20" cols="40" style="width:80%; height:200px;"><?php echo $piereg['login_css'];?></textarea></td>
+                        	<td><textarea name="piereg_login_css" id="login_css" rows="20" cols="40" style="width:80%; height:200px;"><?php echo html_entity_decode(stripslashes($piereg['login_css']));?></textarea></td>
                         </tr>
                         </tbody>
                      </table>

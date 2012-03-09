@@ -3,8 +3,8 @@ Contributors: pie-solutions
 Donate link: http://pie-solutions.com/products/pie-register/donate
 Tags: register, registration, password, invitation, code, invite, disclaimer, captcha, email, validation, recaptcha, privacy, policy, license, agreement, logo, moderation, user
 Requires at least: 3.2.1
-Tested up to: 3.2.1
-Stable tag: 1.2.8 beta
+Tested up to: 3.2.3
+Stable tag: 1.2.9
 
 Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimers, CAPTCHA Validation, Email Validation, User Moderation, Profile Fields and more.
 

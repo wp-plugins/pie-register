@@ -317,7 +317,8 @@ Date.fullYearStart = '20';
 	 * @cat Plugins/Methods/Date
 	 */
 	add("addDays", function(num) {
-		this.setDate(this.getDate() + num);
+		//this.setDate(this.getDate() + num);
+		this.setTime(this.getTime() + (num*86400000) );
 		return this;
 	});
 	
@@ -406,14 +407,20 @@ Date.fullYearStart = '20';
 	 * @cat Plugins/Methods/Date
 	 * @author Kelvin Luck
 	 */
-	add("asString", function() {
-		var r = Date.format;
-		return r
-			.split('yyyy').join(this.getFullYear())
+	add("asString", function(format) {
+		var r = format || Date.format;
+		if (r.split('mm').length>1) { // ugly workaround to make sure we don't replace the m's in e.g. noveMber
+			r = r.split('mmmm').join(this.getMonthName(false))
+				.split('mmm').join(this.getMonthName(true))
+				.split('mm').join(_zeroPad(this.getMonth()+1))
+		} else {
+			r = r.split('m').join(this.getMonth()+1);
+		}
+		r = r.split('yyyy').join(this.getFullYear())
 			.split('yy').join((this.getFullYear() + '').substring(2))
-			.split('mmm').join(this.getMonthName(true))
-			.split('mm').join(_zeroPad(this.getMonth()+1))
-			.split('dd').join(_zeroPad(this.getDate()));
+			.split('dd').join(_zeroPad(this.getDate()))
+			.split('d').join(this.getDate());
+		return r;
 	});
 	
 	/**
@@ -432,28 +439,61 @@ Date.fullYearStart = '20';
 	Date.fromString = function(s)
 	{
 		var f = Date.format;
-		var d = new Date('01/01/1977');
-		var iY = f.indexOf('yyyy');
-		if (iY > -1) {
-			d.setFullYear(Number(s.substr(iY, 4)));
-		} else {
-			// TODO - this doesn't work very well - are there any rules for what is meant by a two digit year?
-			d.setFullYear(Number(Date.fullYearStart + s.substr(f.indexOf('yy'), 2)));
-		}
-		var iM = f.indexOf('mmm');
-		if (iM > -1) {
-			var mStr = s.substr(iM, 3);
-			for (var i=0; i<Date.abbrMonthNames.length; i++) {
-				if (Date.abbrMonthNames[i] == mStr) break;
+		
+		var d = new Date('01/01/1970');
+		
+		if (s == '') return d;
+
+		s = s.toLowerCase();
+		var matcher = '';
+		var order = [];
+		var r = /(dd?d?|mm?m?|yy?yy?)+([^(m|d|y)])?/g;
+		var results;
+		while ((results = r.exec(f)) != null)
+		{
+			switch (results[1]) {
+				case 'd':
+				case 'dd':
+				case 'm':
+				case 'mm':
+				case 'yy':
+				case 'yyyy':
+					matcher += '(\\d+\\d?\\d?\\d?)+';
+					order.push(results[1].substr(0, 1));
+					break;
+				case 'mmm':
+					matcher += '([a-z]{3})';
+					order.push('M');
+					break;
 			}
-			d.setMonth(i);
-		} else {
-			d.setMonth(Number(s.substr(f.indexOf('mm'), 2)) - 1);
+			if (results[2]) {
+				matcher += results[2];
+			}
+			
 		}
-		d.setDate(Number(s.substr(f.indexOf('dd'), 2)));
-		if (isNaN(d.getTime())) {
-			return false;
+		var dm = new RegExp(matcher);
+		var result = s.match(dm);
+		for (var i=0; i<order.length; i++) {
+			var res = result[i+1];
+			switch(order[i]) {
+				case 'd':
+					d.setDate(res);
+					break;
+				case 'm':
+					d.setMonth(Number(res)-1);
+					break;
+				case 'M':
+					for (var j=0; j<Date.abbrMonthNames.length; j++) {
+						if (Date.abbrMonthNames[j].toLowerCase() == res) break;
+					}
+					d.setMonth(j);
+					break;
+				case 'y':
+					d.setYear(res);
+					break;
+			}
 		}
+
 		return d;
 	};
 	
