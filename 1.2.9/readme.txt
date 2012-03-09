@@ -64,6 +64,9 @@ Pie-Register is a fork of register-Plus Plugin, however many things have changed
 * Please visit http://www.pie-solutions.com/products/pie-register in order to get support regarding this plugin!
 
 == CHANGELOG ==
+**v1.2.9 March 9 2012**
+*Fixed the array problem
+*Compatible with the WP 3.3.*
 
 **v1.2.8 beta October 31 2011**
 * Invitation Code Section has been extended
