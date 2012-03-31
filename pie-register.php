@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.2 + ONLY.</strong> Enhance your Registration Pa
 
 
 Author: Johnibom
-Version: 1.2.9
+Version: 1.2.9a
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
@@ -119,7 +119,7 @@ if( !class_exists('PieMemberRegister') ){
 				load_plugin_textdomain( 'piereg', '/wp-content/plugins/pie-register' );
 			
 			//VERSION CONTROL
-				if( $wp_version < 2.5 )
+				if( $wp_version < 3.2 )
 					add_action('admin_notices', array($this, 'version_warning'));
 					
 					// Load this plugin last to ensure other plugins don't overwrite the settings
@@ -260,7 +260,7 @@ if( !class_exists('PieMemberRegister') ){
 			//return $drf;
 		}
 	
-		function version_warning(){ //Show warning if plugin is installed on a WordPress lower than 2.5
+		function version_warning(){ //Show warning if plugin is installed on a WordPress lower than 3.2
 			global $wp_version;
 			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.2.1 and up.  You are currently using WordPress v.', 'piereg').$wp_version."</strong> </p></div>
 		";
@@ -492,6 +492,7 @@ if( !class_exists('PieMemberRegister') ){
 			check_admin_referer('piereg-update-options');
 			$update = array();
 			$update = get_option( 'pie_register' );
+			$custom = get_option( 'pie_register_custom' );
 			$update["paypal_option"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_option']);
 			if(isset($_POST['payment_gateway_page'])){
 			$update["paypal_butt_id"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
@@ -1032,6 +1033,10 @@ padding:5px 10px;
 					unset($errors->errors['email_exists']);
 				}
 				
+			}else{
+				if ( $errors->errors['email_exists'] ){
+					$CeRror=1;
+				}
 			}
 			
 			if( $piereg['firstname'] && in_array('firstname', $piereg['profile_req']) ){
