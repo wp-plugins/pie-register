@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.2 + ONLY.</strong> Enhance your Registration Pa
 
 
 Author: Johnibom
-Version: 1.2.9
+Version: 1.2.8 (beta)
 Author URI: http://www.pie-solutions.com
 
 LOCALIZATION
