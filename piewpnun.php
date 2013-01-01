@@ -18,40 +18,31 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	//Julian Fixes
 	if (!empty($plaintext_pass)){
 		if( $piereg['password'] && !empty($_POST['user_pw'])){
-            $plaintext_pass = $wpdb->prepare($_POST['user_pw']);
+            $plaintext_pass = $_POST['user_pw'];
 		}
            // otherwise use the supplied password
 	}else{
 		$plaintext_pass = $pie_register->RanPass(6);
 	}
 	
-	//if(empty($plaintext_pass)){		
-		/*if( $piereg['password'] && $_POST['user_pw'] )
-			$plaintext_pass = $wpdb->prepare($_POST['user_pw']);
-		else if( $ref == $admin && $_POST['pass1'] == $_POST['pass2'] )
-			$plaintext_pass = $wpdb->prepare($_POST['pass1']);
-		else
-			$plaintext_pass = $pie_register->RanPass(6);*/
-	//}
-		//var_dump($ref);
 	if( $piereg['firstname'] && $_POST['firstname'] )	
-		update_usermeta( $user_id, 'first_name', $wpdb->prepare($_POST['firstname']));
+		update_usermeta( $user_id, 'first_name', $_POST['firstname']);
 	if( $piereg['lastname'] && $_POST['lastname'] )	
-		update_usermeta( $user_id, 'last_name', $wpdb->prepare($_POST['lastname']));
+		update_usermeta( $user_id, 'last_name', $_POST['lastname']);
 	if( $piereg['website'] && $_POST['website'] )	
-		update_usermeta( $user_id, 'user_url', $wpdb->prepare($_POST['website']));
+		update_usermeta( $user_id, 'user_url', $_POST['website']);
 	if( $piereg['aim'] && $_POST['aim'] )	
-		update_usermeta( $user_id, 'aim', $wpdb->prepare($_POST['aim']));
+		update_usermeta( $user_id, 'aim', $_POST['aim']);
 	if( $piereg['yahoo'] && $_POST['yahoo'] )	
-		update_usermeta( $user_id, 'yim', $wpdb->prepare($_POST['yahoo']));
+		update_usermeta( $user_id, 'yim', $_POST['yahoo']);
 	if( $piereg['jabber'] && $_POST['jabber'] )	
-		update_usermeta( $user_id, 'jabber', $wpdb->prepare($_POST['jabber']));
+		update_usermeta( $user_id, 'jabber', $_POST['jabber']);
 	if( $piereg['phone'] && $_POST['phone'] )	
-		update_usermeta( $user_id, 'phone', $wpdb->prepare($_POST['phone']));
+		update_usermeta( $user_id, 'phone', $_POST['phone']);
 	if( $piereg['about'] && $_POST['about'] )	
-		update_usermeta( $user_id, 'description', $wpdb->prepare($_POST['about']));
+		update_usermeta( $user_id, 'description',$_POST['about']);
 	if( $piereg['code'] && $_POST['regcode'] )	
-		update_usermeta( $user_id, 'invite_code', $wpdb->prepare($_POST['regcode']));
+		update_usermeta( $user_id, 'invite_code', $_POST['regcode']);
 	if( $ref != $admin && $piereg['admin_verify'] ){
 		update_usermeta( $user_id, 'admin_verify_user', $user->user_login );
 		update_usermeta( $user_id, 'email_verify_user_pwd', $user->user_pass );
@@ -88,7 +79,7 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 			$id = $pie_register->Label_ID($v['label']);
 			if( $v['reg'] && $_POST[$id] ){
 				if( is_array( $_POST[$id] ) ) $_POST[$id] = implode(', ', $_POST[$id]);
-				update_usermeta( $user_id, $id, $wpdb->prepare($_POST[$id]));
+				update_usermeta( $user_id, $id, $_POST[$id]);
 			}
 		}
 	}
