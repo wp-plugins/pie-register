@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Pie Register
-Plugin URI: http://pie-solutions.com/products/pie-register/
-Description: <strong>WordPress 3.2 + ONLY.</strong> Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimer, Captcha Validation, Email Validation, User the fork of register-plus, however many things have been changed since.
+Plugin URI: http://genetechsolutions.com.com/pie-register.html
+Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimer, Captcha Validation, Email Validation, User the fork of register-plus, however many things have been changed since.
 
 
-Author: Johnibom
-Version: 1.2.91
-Author URI: http://www.pie-solutions.com
+Author: Genetech
+Version: 1.30
+Author URI: http://www.genetechsolutions.com/
 
 LOCALIZATION
 * Currently This feature is not available. We are working on it to improve.
@@ -16,12 +16,9 @@ CHANGELOG
 See readme.txt
 */
 
-/*Created by Skullbit
-
- Enhanced by JOHNIBOM
- (website: pie-solutions.com       email : johnibom@pie-solutions.com)
-*/
-
+define('LOG_FILE', '.ipn_results.log');
+define('SSL_P_URL', 'https://www.paypal.com/cgi-bin/webscr');
+define('SSL_SAND_URL','https://www.sandbox.paypal.com/cgi-bin/webscr');
 $rp = get_option( 'pie_register' ); //load options
 if( $rp['dash_widget'] ) //if dashboard widget is enabled
 	include_once('dash_widget.php'); //add the dashboard widget
@@ -31,41 +28,100 @@ if( !class_exists('PieMemberRegister') ){
 		public static $instance;
 		protected $retrieve_password_for   = '';
 		public    $during_user_creation    = false; // hack
-		
+		private $ipn_status;
+		public $txn_id;
+		public $ipn_log;
+		private $ipn_response;
+		public $ipn_data = array();
+		public $postvars;
+		private $ipn_debug;
+		var $holdmsg = '';
 		/**
 		* Constructor
 		*/
 		public function __construct() {
+			$this->ipn_status = '';
+			$this->txn_id = null;
+			$this->ipn_log = true;
+			$this->ipn_response = '';
+			$this->ipn_debug = false;
 			$this->PieMemberRegister();
+		}
+		
+		private function log_ipn_results($success) {
+			$hostname = gethostbyaddr ( $_SERVER ['REMOTE_ADDR'] );
+			// Timestamp
+			$text = '[' . date ( 'm/d/Y g:i A' ) . '] - ';
+			// Success or failure being logged?
+			if ($success)
+				$this->ipn_status = $text . 'SUCCESS:' . $this->ipn_status . "!\n";
+			else
+				$this->ipn_status = $text . 'FAIL: ' . $this->ipn_status . "!\n";
+				// Log the POST variables
+			$this->ipn_status .= "[From:" . $hostname . "|" . $_SERVER ['REMOTE_ADDR'] . "]IPN POST Vars Received By Paypal_IPN Response API:\n";
+			foreach ( $this->ipn_data as $key => $value ) {
+				$this->ipn_status .= "$key=$value \n";
+			}
+			// Log the response from the paypal server
+			$this->ipn_status .= "IPN Response from Paypal Server:\n" . $this->ipn_response;
+			$this->write_to_log ();
+		}
+		private function write_to_log() {
+			if (! $this->ipn_log)
+				return; // is logging turned off?
+	
+			// Write to log
+			$fp = fopen ( LOG_FILE , 'a' );
+			fwrite ( $fp, $this->ipn_status . "\n\n" );
+			fclose ( $fp ); // close file
+			chmod ( LOG_FILE , 0600 );
 		}
 		function PieMemberRegister() { //constructor
 			global $wp_version;
 			self::$instance = $this;
 			
 			$this->plugin_dir = dirname(__FILE__);
-			$this->plugin_url = trailingslashit(get_option('siteurl')) . 'wp-content/plugins/' . basename(dirname(__FILE__)) .'/';
+			$this->plugin_url = plugins_url() .'/'. basename(dirname(__FILE__)) .'/';
 			$this->ref = explode('?',$_SERVER['REQUEST_URI']);
 			$this->ref = $this->ref[0];
 			$this->admin_edit_profile_page = '/wp-admin/user-edit.php';
 			$this->admin_own_profile_page = '/wp-admin/profile.php';		
 			//ACTIONS
+				if (get_magic_quotes_gpc()) {
+					array_walk_recursive($_GET, array(&$this,'disable_magic_quotes_gpc'));
+					array_walk_recursive($_POST, array(&$this,'disable_magic_quotes_gpc'));
+					array_walk_recursive($_COOKIE, array(&$this,'disable_magic_quotes_gpc'));
+					array_walk_recursive($_REQUEST, array(&$this,'disable_magic_quotes_gpc'));
+				}
 				if( ($this->ref == $this->admin_edit_profile_page) || ($this->ref == $this->admin_own_profile_page) ){
 					add_action( 'admin_head', array($this, 'ProfilesHead') );
 				}
 				add_action( 'retrieve_password', array( &$this, 'retrieve_password' ) );
+				add_filter( 'login_headerurl',   array(&$this,'login_headerurl')   );
+				add_filter( 'login_headertitle', array(&$this,'login_headertitle') );
+				
+				add_filter( 'login_redirect', array(&$this, 'loginredirect'),10,3 );
+				
+				add_filter('allow_password_reset', array(&$this,'allow_password_reset'),10,2);
 				
 				#Add Settings Panel
 				
 				add_action( 'admin_menu', array($this, 'AddPanel') );
 				#Update Settings on Save
-				if( isset($_POST['action']) && $_POST['action'] == 'pie_reg_update' )
+				if($_POST['pieregister_reset'] && $_POST['action'] == 'pie_reg_update'){
+					add_action( 'init', array($this, 'DefaultSettings') );
+				}elseif( isset($_POST['action']) && $_POST['action'] == 'pie_reg_update' )
 					add_action( 'init', array($this,'SaveSettings') );
 				#Enable jQuery on Settings panel
 				if( isset($_GET['page']) && $_GET['page'] == 'pie-register' ){
 					wp_enqueue_script('jquery');
+					if ( !is_multisite() ) wp_enqueue_script( 'media-upload' );
+					if ( !is_multisite() ) wp_enqueue_script( 'thickbox' );
+					if ( !is_multisite() ) wp_enqueue_style( 'thickbox' );
 					add_action( 'admin_head', array($this, 'SettingsHead') );
 				}
 				add_action( 'login_init', array($this, 'SessionStart'),1 );
+				add_action( 'login_init', array($this, 'setCookies'),1 );
 				#Add Register Form Fields
 				//Julian Fix
 				add_action( 'register_form', array($this, 'RegForm'),5 );	
@@ -85,9 +141,10 @@ if( !class_exists('PieMemberRegister') ){
 					add_action( 'edit_user_profile', array($this, 'Add2Profile') );
 					add_action( 'profile_update', array($this, 'SaveProfile') );
 				#Validate User
-					add_action( 'login_form', array($this, 'ValidateUser') );
+					//add_action( 'login_form', array($this, 'ValidateUser') );
+					add_action( 'login_head', array($this, 'ValidateUser') );
 					#Validate Payment of a User
-					add_action( 'login_form', array($this, 'ValidPUser') );
+					add_action( 'login_head', array($this, 'ValidPUser') );
 					
 				#Delete Invalid Users
 					add_action( 'init', array($this, 'DeleteInvalidUsers') );
@@ -111,21 +168,44 @@ if( !class_exists('PieMemberRegister') ){
 				add_filter( 'registration_errors', array($this, 'RegErrors'),1 );
 				/* Since 1.2.9 Hack for wp >= 3.0 */
 				add_filter( 'pre_user_email',             array( &$this, 'hack_pre_user_email' ) );
-				add_filter( 'retrieve_password_message', array( &$this, 'retrieve_password_message' ) );
+				add_filter( 'retrieve_password_message', array( &$this, 'retrieve_password_message' ),10,2 );
 					
 			//LOCALIZATION
 				#Place your language file in the plugin folder and name it "piereg-{language}.mo"
 				#replace {language} with your language value from wp-config.php
-				load_plugin_textdomain( 'piereg', '/wp-content/plugins/pie-register' );
+				load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/');
 			
 			//VERSION CONTROL
-				if( $wp_version < 3.2 )
+				if( $wp_version < 3.5 )
 					add_action('admin_notices', array($this, 'version_warning'));
 					
 					// Load this plugin last to ensure other plugins don't overwrite the settings
 
 		  add_action( 'activated_plugin', array($this, 'load_last') );
 			
+		}
+		
+		function login_headerurl($login_header_url){
+			return site_url();
+		}
+		function login_headertitle($login_header_title){
+			return get_bloginfo('name');
+		}
+		function loginredirect($redirect_to,$request,$user){
+			$piereg=get_option( 'pie_register' );
+			$loginredirect = $piereg['loginredirect'];
+			if(!empty($loginredirect)){
+				return $loginredirect;
+			}
+			return $redirect_to;
+		}
+		function allow_password_reset($allow, $userid){
+			global $wpdb;
+			$pending_payment = get_user_meta( $userid, 'pending_payment', true );
+			$email_verify = get_user_meta( $userid, 'email_verify_user', true );
+			$admin_verify = get_user_meta( $userid, 'admin_verify_user', true );
+			if($pending_payment || $email_verify || $admin_verify) return false;
+			return $allow;
 		}
 		function Install(){
 			global $wpdb;
@@ -149,27 +229,22 @@ if( !class_exists('PieMemberRegister') ){
 			$prefix=$wpdb->prefix."pieregister_";
 			$codetable=$prefix."code";
 			$expiry=$piereg['codeexpiry'];
-			$date=date("Y-m-d");
-			$check=$wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM ".$codetable." WHERE `name`='".$name."';" ) );
-			if($check > 0){
-				$counts=$wpdb->get_var( $wpdb->prepare( "SELECT `count` FROM ".$codetable." WHERE `name`='".$name."';" ) );
-				
-				if($counts>=$expiry){
-					$wpdb->query("DELETE FROM ".$codetable." WHERE `name`='".$name."' AND `status`='2'");
-					$wpdb->flush();
-					
-					$wpdb->query("INSERT INTO ".$codetable." (`created`,`modified`,`name`,`count`,`status`)VALUES('".$date."','".$date."','".$name."','0','1')");
-					$wpdb->flush();
-					return true;
-				}else{
-					return false;
-				}
-				
-			}else{
-				$wpdb->query("INSERT INTO ".$codetable." (`created`,`modified`,`name`,`count`,`status`)VALUES('".$date."','".$date."','".$name."','0','1')");
-				$wpdb->flush();
+			$users = $wpdb->get_results( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key='invite_code' AND meta_value='$name'" );
+			$counts = count($users);
+			$wpdb->query("DELETE FROM ".$codetable." WHERE `name`='{$name}'");
+			$wpdb->flush();
+			if( ($expiry > 0) && ($counts == $expiry) ){
 				return true;
 			}
+			$name = mysql_real_escape_string(trim(preg_replace("/[^A-Za-z0-9_-]/", '', $name)));
+			/*$expiry=$piereg['codeexpiry'];
+			if($expiry == '0')
+			$expiry = 999999999999999999999999999999;*/
+			$date=date("Y-m-d");
+			
+			$wpdb->query("INSERT INTO ".$codetable." (`created`,`modified`,`name`,`count`,`status`)VALUES('".$date."','".$date."','".$name."','".$counts."','1')");
+			$wpdb->flush();
+			return true;
 			
 		}
 		/**
@@ -200,11 +275,14 @@ if( !class_exists('PieMemberRegister') ){
 			$piereg=get_option( 'pie_register' );
 			$expiry=$piereg['codeexpiry'];
 			$date=date("Y-m-d");
-			$counts=$wpdb->get_var( $wpdb->prepare( "SELECT `count` FROM ".$codetable." WHERE `name`='".$name."';" ) );
-			if( ($expiry > 0) && ($counts == $expiry) ){
-				$wpdb->query("UPDATE ".$codetable." SET `modified`='".$date."' ,`status`='2' WHERE `name`='".$name."'");
+			$name = trim($name);
+			
+			$counts=$wpdb->get_var( "SELECT `count` FROM ".$codetable." WHERE `name`='".$name."';" );
+			$new_counts=$counts+1;
+			if( ($expiry > 0) && ($counts == $expiry || $new_counts == $expiry) ){
+				$wpdb->query("UPDATE ".$codetable." SET `modified`='".$date."' ,`count`='".$new_counts."',`status`='2' WHERE `name`='".$name."'");
 				
-				$pieregcodes=explode("\n", $piereg['codepass']);
+				/*$pieregcodes=explode("\n", $piereg['codepass']);
 				$newcodes='';
 				foreach($pieregcodes as $k=>$v){
 					if($name !== trim($v)){
@@ -213,14 +291,14 @@ if( !class_exists('PieMemberRegister') ){
 				}
 				$newcodes=trim($newcodes,"\n");
 				$piereg["codepass"] = $newcodes;
-				update_option( 'pie_register', $piereg );
+				update_option( 'pie_register', $piereg )*/;
 				if($piereg['code_auto_del']){
 					$wpdb->query("DELETE FROM ".$codetable." WHERE `name`='".$name."'");
 				}
 				
 				return 2;
 			}else{
-				$wpdb->query("UPDATE ".$codetable." SET `modified`='".$date."' ,`count`='".($counts+1)."' WHERE `name`='".$name."'");
+				$wpdb->query("UPDATE ".$codetable." SET `modified`='".$date."' ,`count`='".$new_counts."' WHERE `name`='".$name."'");
 				
 				return true;
 			}
@@ -230,6 +308,7 @@ if( !class_exists('PieMemberRegister') ){
 			global $wpdb;
 			$prefix=$wpdb->prefix."pieregister_";
 			$codetable=$prefix."code";
+			$name = trim($name);
 			if(empty($name)){
 				$result='';
 				$result=$wpdb->get_results( "SELECT * FROM ".$codetable." WHERE `status`='2';" );
@@ -242,9 +321,12 @@ if( !class_exists('PieMemberRegister') ){
 		function SessionStart(){
 			return session_start();
 		}
-		function disable_magic_quotes_gpc($rpg){
-			$drf=$rpg;
-			if (TRUE == function_exists('get_magic_quotes_gpc') && 1 == get_magic_quotes_gpc()){
+		function setCookies(){
+			if(isset($_SESSION['secure_id']))
+				setcookie("session_secure_id", $_SESSION['secure_id'], time()+172800, "/", COOKIE_DOMAIN);
+		}
+		function disable_magic_quotes_gpc(&$value){
+			/*if (TRUE == function_exists('get_magic_quotes_gpc') && 1 == get_magic_quotes_gpc()){
 				$mqs = strtolower(ini_get('magic_quotes_sybase'));
 		
 				if (TRUE == empty($mqs) || 'off' == $mqs){
@@ -255,14 +337,16 @@ if( !class_exists('PieMemberRegister') ){
 					// we need to do str_replace("''", "'", ...) on $_GET, $_POST, $_COOKIE
 					$rpg=str_replace("''","'",$rpg);
 				}
-			}
-			return $rpg;
-			//return $drf;
+			}*/
+			
+				$value = stripslashes($value);
+			
+			return $value;
 		}
 	
 		function version_warning(){ //Show warning if plugin is installed on a WordPress lower than 3.2
 			global $wp_version;
-			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.2.1 and up.  You are currently using WordPress v.', 'piereg').$wp_version."</strong> </p></div>
+			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.5 and up. You are currently using WordPress v.', 'piereg').$wp_version.". The plugin may not work as expected.</strong> </p></div>
 		";
 		
 		}
@@ -321,7 +405,9 @@ if( !class_exists('PieMemberRegister') ){
 			$default = array( 
 								'paypal_option'			=> '0',
 								'paypal_butt_id'		=> '',
+								'paypal_sandbox'		=> 'no',
 								'paypal_pdt'			=> '',
+								'loginredirect'			=> get_option('siteurl'),
 								'password' 				=> '0',
 								'password_meter'		=> '0',
 								'short'					=> 'Too Short',
@@ -385,12 +471,12 @@ if( !class_exists('PieMemberRegister') ){
 								'adminmsg'				=> " New %blogname% Registration \r\n --------------------------- \r\n\r\n Username: %user_login% \r\n E-Mail: %user_email% \r\n",
 								'logo'					=> '',
 								'login_redirect'		=> get_option('siteurl'),
-								'register_css'			=> 'body{height:auto;}',
+								'register_css'			=> 'body{height:auto;} #login{width: 370px;} .login #pass-strength-result{width:295;}',
 								'login_css'				=> 'body{height:auto;}',
 								'firstday'				=> 6,
 								'dateformat'			=> 'mm/dd/yyyy',
-								'startdate'				=> '',
-								'calyear'				=> '',
+								'startdate'				=> '01/01/1901',
+								'calyear'				=> '1999',
 								'calmonth'				=> 'cur',
 								'_admin_message_1'      => 'Please select a user to validate!',
 								'_admin_message_2' => 'Users Verified',
@@ -439,15 +525,20 @@ if( !class_exists('PieMemberRegister') ){
 								'_admin_message_46' => 'for registration, Please login.',
 								'_admin_message_47' => 'your payment has been recieved. Please login to your account now!',
 								'_admin_message_48' => 'You have successfully Paid for your membership.',
-								'_admin_message_49' => 'There\'s an error while verifying your payment.'
+								'_admin_message_49' => 'There\'s an error while verifying your payment.',
+								'_admin_message_50'	=>	'Thank you for your payment, we are verifying your payment! Please refresh this page in few seconds.'
 							);
 			# Get Previously Saved Items and put into new Settings
 			if( get_option("paypal_option") )
 			  	$default['paypal_option'] = get_option("paypal_option");
 				if( get_option("paypal_butt_id") )
 			  	$default['paypal_butt_id'] = get_option("paypal_butt_id");
+				if( get_option("paypal_sandbox") )
+			  	$default['paypal_sandbox'] = get_option("paypal_sandbox");
 				if( get_option("paypal_pdt") )
 			  	$default['paypal_pdt'] = get_option("paypal_pdt");
+			if( get_option("loginredirect") )
+			  	$default['loginredirect'] = get_option("loginredirect");
 				if( get_option("piereg_password") )
 			  	$default['password'] = get_option("piereg_password");
 			if( get_option("piereg_code") )
@@ -464,8 +555,10 @@ if( !class_exists('PieMemberRegister') ){
 			  	$default['captcha'] = get_option("piereg_captcha");
 			#Delete Previous Saved Items
 			delete_option('paypal_option');
+			delete_option('paypal_sandbox');
 			delete_option('paypal_butt_id');
 			delete_option('paypal_pdt');
+			delete_option('loginredirect');
 			delete_option('piereg_password');
 			delete_option('piereg_code');
 			delete_option('piereg_codename');
@@ -473,6 +566,11 @@ if( !class_exists('PieMemberRegister') ){
 			delete_option('piereg_code_auto_del');
 			delete_option('piereg_codeexpiry');
 			delete_option('piereg_captcha');
+			
+			if($_POST['pieregister_reset']){
+				update_option( 'pie_register', $default );
+				delete_option( 'pie_register_custom' );
+			}
 			#Set Default Settings
 			if( !get_option('pie_register') ){ #Set Defaults if no values exist
 				add_option( 'pie_register', $default );
@@ -489,6 +587,7 @@ if( !class_exists('PieMemberRegister') ){
 			}
 		}
 		function SaveSettings(){
+			global $wpdb;
 			check_admin_referer('piereg-update-options');
 			$update = array();
 			$update = get_option( 'pie_register' );
@@ -497,6 +596,7 @@ if( !class_exists('PieMemberRegister') ){
 			if(isset($_POST['payment_gateway_page'])){
 			$update["paypal_butt_id"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
 			$update["paypal_pdt"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_pdt']);
+			$update["paypal_sandbox"] = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_sandbox']);
 			}
 			if(isset($_POST['email_notification_page'])){
 			
@@ -526,6 +626,7 @@ if( !class_exists('PieMemberRegister') ){
 			}
 			if(isset($_POST['pieregister_page'])){
 			$update['login_redirect'] = $this->disable_magic_quotes_gpc($_POST['piereg_login_redirect']);
+			$update['loginredirect'] = $this->disable_magic_quotes_gpc($_POST['piereg_loginredirect']);
 			$update["password"] = $this->disable_magic_quotes_gpc($_POST['piereg_password']);
 			$update["password_meter"] = $this->disable_magic_quotes_gpc($_POST['piereg_password_meter']);
 			$update["short"] = $this->disable_magic_quotes_gpc($_POST['piereg_short']);
@@ -534,6 +635,7 @@ if( !class_exists('PieMemberRegister') ){
 			$update["strong"] = $this->disable_magic_quotes_gpc($_POST['piereg_strong']);
 			$update["mismatch"] = $this->disable_magic_quotes_gpc($_POST['piereg_mismatch']);
 			$update["code"] = $this->disable_magic_quotes_gpc($_POST['piereg_code']);
+			$update["custom_logo_url"] = $this->disable_magic_quotes_gpc($_POST['custom_logo_url']);
 			
 			if(isset($_POST['piereg_codeexpiry']) && is_numeric($_POST['piereg_codeexpiry'])){
 			$update["codeexpiry"] = $_POST['piereg_codeexpiry'];
@@ -543,7 +645,11 @@ if( !class_exists('PieMemberRegister') ){
 			if( isset($_POST['piereg_code']) ) {
 				$update["codepass"] = $_POST['piereg_codepass'];
 				$codespasses=explode("\n",$update["codepass"]);
-				
+				$piereg=get_option( 'pie_register' );
+				$prefix=$wpdb->prefix."pieregister_";
+				$codetable=$prefix."code";
+				$wpdb->query("DELETE FROM ".$codetable." WHERE 1=1");
+				$wpdb->flush();
 				foreach( $codespasses as $k=>$v ){
 					$this->InsertCode(trim($v));
 				}
@@ -589,7 +695,7 @@ if( !class_exists('PieMemberRegister') ){
 			$update['calyear'] = ($_POST['piereg_calyear']);
 			$update['calmonth'] = $_POST['piereg_calmonth'];
 			if( $_FILES['piereg_logo']['name'] ) $update['logo'] = $this->UploadLogo();
-			else if( $_POST['remove_logo'] ) $update['logo'] = '';
+			else if( $_POST['remove_logo'] ) $update['custom_logo_url'] = '';
 
 			if( $_POST['label'] ){
 				foreach( $_POST['label'] as $k => $field ){
@@ -647,13 +753,14 @@ if( !class_exists('PieMemberRegister') ){
 				$update['_admin_message_47'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_47']);
 				$update['_admin_message_48'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_48']); 
 				$update['_admin_message_49'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_49']);
+				$update['_admin_message_50'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_50']);
 			}
 			
 			update_option( 'pie_register_custom', $custom );
 			update_option( 'pie_register', $update );
 			$_POST['notice'] = __('Settings Saved', 'piereg');
 		}
-		
+		/*Deprecated Function*/
 		function UploadLogo(){
 		 	$upload_dir = ABSPATH . get_option('upload_path');
 			if(!empty($upload_dir)) $upload_dir=ABSPATH.'wp-content/uploads';
@@ -752,10 +859,10 @@ padding:5px 10px;
 			if($valid){
 			foreach( $valid as $user_id ){
 				if ( $user_id ) {
+					update_user_meta( $user_id, 'admin_verified_user','yes');
 					if( $piereg['email_verify'] ){
 						$login = get_user_meta($user_id, 'email_verify_user',true);
 							$useremail=get_user_meta($user_id,'email_verify_email',true);
-		
 							$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
 							$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
 							delete_user_meta($user_id, 'email_verify_user');
@@ -767,7 +874,6 @@ padding:5px 10px;
 						$login = get_user_meta($user_id, 'admin_verify_user',true);
 						$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
 						$useremail=get_user_meta($user_id,'email_verify_email',true);
-		
 						$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
 						delete_user_meta($user_id, 'admin_verify_user');
 						delete_user_meta($user_id, 'email_verify_user_email');
@@ -802,14 +908,21 @@ padding:5px 10px;
 				if ( $user_id ) {
 					if( $piereg['email_verify'] || $piereg['paypal_option']){
 						$login = get_user_meta($user_id, 'email_verify_user',true);
-						$user_email = get_user_meta($user_id, 'email_verify_email',true);	
-							$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
+						if(!$login)
+						$login = get_user_meta($user_id, 'admin_verify_user',true);
+						$user_email = get_user_meta($user_id, 'email_verify_email',true);
+							if($piereg['paypal_sandbox'] == "yes") $pp=SSL_SAND_URL."?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
+							else $pp=SSL_P_URL."?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
+							
 							
 							
 					}else if( $piereg['admin_verify'] ){
 						$login = get_user_meta($user_id, 'admin_verify_user',true);
+						if(!$login)
+						$login = get_user_meta($user_id, 'email_verify_user',true);
 						$user_email = get_user_meta($user_id, 'email_verify_email',true);
-						$pp="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
+						if($piereg['paypal_sandbox'] == "yes") $pp=SSL_SAND_URL."?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
+						else $pp=SSL_P_URL."?cmd=_s-xclick&hosted_button_id=".$piereg['paypal_butt_id']."&custom=".$user_id;
 					}
 					$message = __($piereg['_admin_message_3']) . "\r\n\r\n";
 					$message .= __($piereg['_admin_message_4']) . "\r\n";
@@ -1006,16 +1119,34 @@ padding:5px 10px;
 			
 			return $user_login;
 		}
-		function retrieve_password_message( $message ) {
+		function retrieve_password_message( $message, $key ) {
 			$user = get_user_by( 'login', $this->retrieve_password_for );
+			$pending_payment = get_user_meta( $user->ID, 'pending_payment', true );
+			$email_verify = get_user_meta( $user->ID, 'email_verify_user', true );
+			$admin_verify = get_user_meta( $user->ID, 'admin_verify_user', true );
+			if($pending_payment || $email_verify || $admin_verify){
+				$message.='Hello,
+				You can not reset the password for your primary username.
+				';
+			}
 			if ( $this->has_multiple_accounts( $user->user_email ) ) {
 				$message .= "\r\n\r\n";
-				$message .= __( 'For your information, your e-mail address is also associated with the following accounts:', 'piereg' ) . "\r\n\r\n";
+				$message .= __( 'For your information, there are multiple accounts associated with your email:', 'piereg' ) . "\r\n\r\n";
 				foreach ( $this->get_users_by_email( $user->user_email ) as $user ) {
-					$message .= "\t" . $user->user_login . "\r\n";
+					$pending_payment = get_user_meta( $user->ID, 'pending_payment', true );
+					$email_verify = get_user_meta( $user->ID, 'email_verify_user', true );
+					$admin_verify = get_user_meta( $user->ID, 'admin_verify_user', true );
+					if($pending_payment || $email_verify || $admin_verify){
+						continue;
+					}
+					$message .= "To reset password for username " . $user->user_login . ", Please follow the link below:\r\n";
+					$message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n\r\n";
+					$cnt+=1;
 				}
+				if($cnt){
 				$message .= "\r\n";
 				$message .= __( 'In order to reset the password for any of these (if you aren\'t already successfully in the middle of doing so already), you should specify the login when requesting a password reset rather than using your e-mail.', 'piereg' ) . "\r\n\r\n";
+				}
 			}
 			return $message;
 		}
@@ -1185,7 +1316,9 @@ padding:5px 10px;
 			}
 			/*session_start();*/
 			$_SESSION['secure_id']=$_POST['user_login'];
-			session_register($_SESSION['secure_id']);
+			setcookie("session_secure_id", $_POST['user_login'], time()+172800, "/", COOKIE_DOMAIN);
+			//Will be Deprecated Soon
+			//session_register($_SESSION['secure_id']);
 			return $errors;
 		}	
 		
@@ -1207,79 +1340,35 @@ padding:5px 10px;
 			$piereg_custom = get_option( 'pie_register_custom' );
 			if( !is_array( $piereg_custom ) ) $piereg_custom = array();
 			
-			if ( $piereg['password'] ){
-			?>
-			<div style="clear:both"><label><?php _e('Password:', 'piereg');?> <p>
-			<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo $_POST['pass1'];?>" type="password" tabindex="28" /></p></label></div>
-		   <div> <label><?php _e('Confirm Password:', 'piereg');?> <p>
-			<input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo $_POST['pass2'];?>" type="password" tabindex="29" /></p></label></div>
-			<?php if( $piereg['password_meter'] ){ ?>
-		   <div> <span id="pass-strength-result"><?php echo $piereg['short'];?></span>
-			<small><?php _e('Hint: Use upper and lower case characters, numbers and symbols like !"?$%^&amp;( in your password.', 'piereg'); ?> </small></div>
-			<?php } ?>
-            <?php
-			}
-			
 			if ( $piereg['firstname'] ){
 				if( isset( $_GET['firstname'] ) ) $_POST['firstname'] = $_GET['firstname'];
 			?>
-   		<div style="clear:both"><label><?php _e('First Name:', 'piereg');?> <p>
-		<input autocomplete="off" name="firstname" id="firstname" size="25" value="<?php echo $_POST['firstname'];?>" type="text" tabindex="30" /></p></label>
-        </div>
+   		<p><label for="firstname"><?php _e('First Name:', 'piereg');?><br />
+		<input autocomplete="off" name="firstname" id="firstname" size="25" value="<?php echo $_POST['firstname'];?>" type="text" /></label>
+        </p>
             <?php
 			}
 			if ( $piereg['lastname'] ){
 				if( isset( $_GET['lastname'] ) ) $_POST['lastname'] = $_GET['lastname'];
 			?>
-   		<div style="clear:both"><label><?php _e('Last Name:', 'piereg');?> <p>
-		<input autocomplete="off" name="lastname" id="lastname" size="25" value="<?php echo $_POST['lastname'];?>" type="text" tabindex="31" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['website'] ){
-				if( isset( $_GET['website'] ) ) $_POST['website'] = $_GET['website'];
-			?>
-   		<div style="clear:both"><label><?php _e('Website:', 'piereg');?> <p>
-		<input autocomplete="off" name="website" id="website" size="25" value="<?php echo $_POST['website'];?>" type="text" tabindex="32" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['aim'] ){
-				if( isset( $_GET['aim'] ) ) $_POST['aim'] = $_GET['aim'];
-			?>
-   		<div style="clear:both"><label><?php _e('AIM:', 'piereg');?> <p>
-		<input autocomplete="off" name="aim" id="aim" size="25" value="<?php echo $_POST['aim'];?>" type="text" tabindex="33" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['yahoo'] ){
-				if( isset( $_GET['yahoo'] ) ) $_POST['yahoo'] = $_GET['yahoo'];
-			?>
-   		<div style="clear:both"><label><?php _e('Yahoo IM:', 'piereg');?> <p>
-		<input autocomplete="off" name="yahoo" id="yahoo" size="25" value="<?php echo $_POST['yahoo'];?>" type="text" tabindex="34" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['jabber'] ){
-				if( isset( $_GET['jabber'] ) ) $_POST['jabber'] = $_GET['jabber'];
-			?>
-   		<div style="clear:both"><label><?php _e('Jabber / Google Talk:', 'piereg');?> <p>
-		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" tabindex="35" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['phone'] ){
-				if( isset( $_GET['phone'] ) ) $_POST['phone'] = $_GET['phone'];
-			?>
-   		<div style="clear:both"><label><?php _e('Phone # / Mobile #:', 'piereg');?> <p>
-		<input autocomplete="off" name="phone" id="phone" size="25" value="<?php echo $_POST['phone'];?>" type="text" tabindex="36" /></p></label></div>
-            <?php
-			}
-			if ( $piereg['about'] ){
-				if( isset( $_GET['about'] ) ) $_POST['about'] = $_GET['about'];
-			?>
-   		<div style="clear:both"><label><?php _e('About Yourself:', 'piereg');?> <p>
-		<textarea autocomplete="off" name="about" id="about" cols="25" rows="5" tabindex="37"><?php echo stripslashes($_POST['about']);?></textarea></p></label>
-        <small><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.', 'piereg');?></small>
-        </div>
+   		<p><label for="lastname"><?php _e('Last Name:', 'piereg');?><br />
+		<input autocomplete="off" name="lastname" id="lastname" size="25" value="<?php echo $_POST['lastname'];?>" type="text" /></label></p>
             <?php
 			}
 			
+			if ( $piereg['password'] ){
+			?>
+			<p><label for="password"><?php _e('Password:', 'piereg');?><br />
+			<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo $_POST['pass1'];?>" type="password" /></label>
+		  <br /> <label><?php _e('Confirm Password:', 'piereg');?><br />
+			<input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo $_POST['pass2'];?>" type="password" /></label>
+			<?php if( $piereg['password_meter'] ){ ?>
+		  <br /> <span id="pass-strength-result"><?php echo $piereg['short'];?></span>
+			<small><?php _e('Hint: Use upper and lower case characters, numbers and symbols like !"?$%^&amp;( in your password.', 'piereg'); ?> </small>
+			<?php } ?>
+            </p>
+            <?php
+			}
 			foreach( $piereg_custom as $k=>$v){
 				if( $v['reg'] ){
 				$id = $this->Label_ID($v['label']);
@@ -1288,12 +1377,12 @@ padding:5px 10px;
 		
        
         <?php if( $v['fieldtype'] == 'text' ){ ?>
-        <div style="clear:both"><label><?php echo $v['label'];?>: <p>
-		<input autocomplete="off" class="custom_field" tabindex="38" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></p></label></div>
+        <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
+		<input autocomplete="off" class="custom_field" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label></p>
         
         <?php } else if( $v['fieldtype'] == 'date' ){ ?>
-       <div style="clear:both"><label><?php echo $v['label'];?>: <p>
-		<input autocomplete="off" class="custom_field date-pick" tabindex="39" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></p></label></div>
+       <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
+		<input autocomplete="off" class="custom_field date-pick" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label></p>
         
 		<?php } else if( $v['fieldtype'] == 'select' ){ 
 			$ops = explode(',',$v['extraoptions']);
@@ -1304,81 +1393,125 @@ padding:5px 10px;
 				$options .= '>' . $op . '</option>';
 			}
 		?>
-        <div style="clear:both"><label><?php echo $v['label'];?>: <p>
-        <select class="custom_select" tabindex="40" name="<?php echo $id;?>" id="<?php echo $id;?>">
+        <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
+        <select class="custom_select" name="<?php echo $id;?>" id="<?php echo $id;?>">
         	<?php echo $options;?>
-        </select></p></label></div>
+        </select></label></p>
       
         <?php } else if( $v['fieldtype'] == 'checkbox' ){ 
 				$ops = explode(',',$v['extraoptions']);
 				$check='';
 				foreach( $ops as $op ){
-					$check .= '<label><input type="checkbox" class="custom_checkbox" tabindex="36" name="'.$id.'[]" id="'.$id.'" ';
+					$check .= '<label><input type="checkbox" class="custom_checkbox" name="'.$id.'[]" id="'.$id.'" ';
 					//if( in_array($op, $_POST[$id]) ) $check .= 'checked="checked" ';
 					$check .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
-                <div style="clear:both"><label><?php echo $v['label'];?>:</label> <p><?php
-				echo $check . '</p></div>';
+                <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:</label><br /><?php
+				echo $check . '</p></p>';
 			
 			} else if( $v['fieldtype'] == 'radio' ){
 				$ops = explode(',',$v['extraoptions']);
 				$radio = '';
 				foreach( $ops as $op ){
-					$radio .= '<label><input type="radio" class="custom_radio" tabindex="36" name="'.$id.'" id="'.$id.'" ';
+					$radio .= '<label for="'.$id.'"><input type="radio" class="custom_radio" name="'.$id.'" id="'.$id.'" ';
 					//if( in_array($op, $_POST[$id]) ) $radio .= 'checked="checked" ';
 					$radio .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
-               <div style="clear:both"><label><?php echo $v['label'];?>:</label> <p><?php
-				echo $radio . '</p></div>';
+               <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:</label><br /><?php
+				echo $radio . '</p></p>';
 				
 			} else if( $v['fieldtype'] == 'textarea' ){ ?>
-           <div style="clear:both"><label><?php echo $v['label'];?>: <p>
-		<textarea tabindex="42" name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo $_POST[$id];?></textarea></p></label></div>	
+           <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
+		<textarea name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo $_POST[$id];?></textarea></label></p>	
 		
 		<?php } else if( $v['fieldtype'] == 'hidden' ){ ?><p>
-		<input class="custom_field" tabindex="43" name="<?php echo $id;?>" value="<?php echo $_POST[$id];?>" type="hidden" />  </p>        	
+		<input class="custom_field" name="<?php echo $id;?>" value="<?php echo $_POST[$id];?>" type="hidden" />  </p>        	
         <?php } ?>		
 				
 		<?php	}
-        	}			
+        	}
+			if ( $piereg['website'] ){
+				if( isset( $_GET['website'] ) ) $_POST['website'] = $_GET['website'];
+			?>
+   		<p><label for="website"><?php _e('Website:', 'piereg');?><br />
+		<input autocomplete="off" name="website" id="website" size="25" value="<?php echo $_POST['website'];?>" type="text" /></label></p>
+            <?php
+			}
+			if ( $piereg['aim'] ){
+				if( isset( $_GET['aim'] ) ) $_POST['aim'] = $_GET['aim'];
+			?>
+   		<p><label for="aim"><?php _e('AIM:', 'piereg');?><br />
+		<input autocomplete="off" name="aim" id="aim" size="25" value="<?php echo $_POST['aim'];?>" type="text" /></label></p>
+            <?php
+			}
+			if ( $piereg['yahoo'] ){
+				if( isset( $_GET['yahoo'] ) ) $_POST['yahoo'] = $_GET['yahoo'];
+			?>
+   		<p><label for="yahoo"><?php _e('Yahoo IM:', 'piereg');?><br />
+		<input autocomplete="off" name="yahoo" id="yahoo" size="25" value="<?php echo $_POST['yahoo'];?>" type="text" /></label></p>
+            <?php
+			}
+			if ( $piereg['jabber'] ){
+				if( isset( $_GET['jabber'] ) ) $_POST['jabber'] = $_GET['jabber'];
+			?>
+   		<p><label for="jabber"><?php _e('Jabber / Google Talk:', 'piereg');?><br />
+		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" /></label></p>
+            <?php
+			}
+			if ( $piereg['phone'] ){
+				if( isset( $_GET['phone'] ) ) $_POST['phone'] = $_GET['phone'];
+			?>
+   		<p><label for="phone"><?php _e('Phone # / Mobile #:', 'piereg');?><br />
+		<input autocomplete="off" name="phone" id="phone" size="25" value="<?php echo $_POST['phone'];?>" type="text" /></label></p>
+            <?php
+			}
+			if ( $piereg['about'] ){
+				if( isset( $_GET['about'] ) ) $_POST['about'] = $_GET['about'];
+			?>
+   		<p><label for="about"><?php _e('About Yourself:', 'piereg');?><br />
+		<textarea autocomplete="off" name="about" id="about" cols="25" rows="5"><?php echo stripslashes($_POST['about']);?></textarea></label>
+        <small><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.', 'piereg');?></small>
+        </p>
+            <?php
+			}
 			
 			if ( $piereg['code'] ){
 			$pieregcodes=explode("\n", $piereg['codepass']);
 						
 				if( isset( $_GET['regcode'] ) ) $_POST['regcode'] = $_GET['regcode'];
 			?>
-        <div style="clear:both"><label><?php _e($piereg['codename'].' Code:', 'piereg');?> <p>
-		<input name="regcode" id="regcode" size="25" value="<?php echo $_POST['regcode'];?>" type="text" tabindex="44" /></p></label>
+        <p><label for="code"><?php _e($piereg['codename'].' Code:', 'piereg');?><br />
+		<input name="regcode" id="regcode" size="25" value="<?php echo $_POST['regcode'];?>" type="text" /></label>
         <?php if ($piereg['code_req']) {?>
 		<p><small><?php _e(str_replace('[prcodename]',$piereg['codename'],$piereg['_admin_message_38']), 'piereg');?></small></p>
         <?php }else{ ?>
-        <p><small><?php _e(str_replace('[prcodename]',$piereg['codename'],$piereg['_admin_message_39']), 'piereg');?></small></p>
+       <br /><small><?php _e(str_replace('[prcodename]',$piereg['codename'],$piereg['_admin_message_39']), 'piereg');?></small></p>
         <?php } ?>
-        </div>
+        </p>
             <?php
 			}
 			
 			if ( $piereg['disclaimer'] ){
 			?>
-   		<div style="clear:both"><label><?php echo stripslashes( $piereg['disclaimer_title'] );?> <p>
-        <span id="disclaimer"><?php echo stripslashes($piereg['disclaimer_content']); ?></span>
-		<input name="disclaimer" value="1" type="checkbox" tabindex="45"<?php if($_POST['disclaimer']) echo ' checked="checked"';?> /> <?php echo $piereg['disclaimer_agree'];?></p></label></div>
+   		<p><label for="disclaimer"><?php echo stripslashes( $piereg['disclaimer_title'] );?><br />
+        <span id="disclaimer"><?php echo stripslashes(html_entity_decode($piereg['disclaimer_content'])); ?></span>
+		<input name="disclaimer" value="1" type="checkbox" <?php if($_POST['disclaimer']) echo ' checked="checked"';?> /> <?php echo $piereg['disclaimer_agree'];?></label></p>
             <?php
 			}
 			if ( $piereg['license'] ){
 			?>
-   		<div style="clear:both"><label><?php echo stripslashes( $piereg['license_title'] );?> <p>
-        <span id="license"><?php echo stripslashes($piereg['license_content']); ?></span>
-		<input name="license" value="1" type="checkbox" tabindex="46"<?php if($_POST['license']) echo ' checked="checked"';?> /> <?php echo $piereg['license_agree'];?></p></label></div>
+   		<p><label for="license"><?php echo stripslashes( $piereg['license_title'] );?><br />
+        <span id="license"><?php echo stripslashes(html_entity_decode($piereg['license_content'])); ?></span>
+		<input name="license" value="1" type="checkbox" <?php if($_POST['license']) echo ' checked="checked"';?> /> <?php echo $piereg['license_agree'];?></label></p>
             <?php
 			}
 			if ( $piereg['privacy'] ){
 			?>
-   		<div style="clear:both"><label><?php echo stripslashes( $piereg['privacy_title'] );?> <p>
-        <span id="privacy"><?php echo stripslashes($piereg['privacy_content']); ?></span>
-		<input name="privacy" value="1" type="checkbox" tabindex="47"<?php if($_POST['privacy']) echo ' checked="checked"';?> /> <?php echo $piereg['privacy_agree'];?></p></label></div>
+   		<p><label for="privacy"><?php echo stripslashes( $piereg['privacy_title'] );?><br />
+        <span id="privacy"><?php echo stripslashes(html_entity_decode($piereg['privacy_content'])); ?></span>
+		<input name="privacy" value="1" type="checkbox" <?php if($_POST['privacy']) echo ' checked="checked"';?> /> <?php echo $piereg['privacy_agree'];?></label></p>
             <?php
 			}
 			
@@ -1388,10 +1521,10 @@ padding:5px 10px;
 				if( !isset( $_SESSION['OK'] ) )
 					session_start(); 
 				?>
-               <div style="clear:both"><label><?php _e('Validation Image:', 'piereg');?> <p>
+               <p><label for="captcha"><?php _e('Validation Image:', 'piereg');?><br />
                 <img src="<?php echo $this->plugin_url;?>captcha.php" id="captchaimg" alt="" />
-                <input type="text" name="captcha" id="captcha" size="25" value="" tabindex="48" /></p></label>
-                <small><?php _e($piereg['_admin_message_40'], 'piereg');?></small></div>
+                <input type="text" name="captcha" id="captcha" size="25" value="" /></label>
+                <small><?php _e($piereg['_admin_message_40'], 'piereg');?></small></p>
                
                 <?php
 				
@@ -1407,7 +1540,7 @@ padding:5px 10px;
 			?>
 			
 			<div class="submit" style="margin-top:10px;padding-top:10px;">
-<input class="button-primary" id="wp-submit" type="submit" tabindex="100" value="Continue" name="wp-submit"/>
+<input class="button-primary" id="wp-submit" type="submit" value="Continue" name="wp-submit"/>
 </div>
 <style>
 p.submit{
@@ -1433,16 +1566,16 @@ display:none;
 			if( isset( $_GET['user_login'] ) ) $user_login = $_GET['user_login'];
 			if( isset( $_GET['user_email'] ) ) $user_email = $_GET['user_email'];
 			?>
-			<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-includes/js/jquery/jquery.js?ver=1.7.1'></script>
-			<!--<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-admin/js/common.js?ver=20080318'></script>-->
+			<script type='text/javascript' src='<?php echo includes_url("/js/jquery/jquery.js?ver=1.7.1");?>'></script>
+			<?php /*?><!--<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-admin/js/common.js?ver=20080318'></script>--><?php */?>
 			<?php
 			if ( $piereg['password'] ){
 ?>
 
 
 
-<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-includes/js/jquery/jquery.color.js?ver=2.0-4561'></script>
-<script type='text/javascript'>
+<?php /*?><script type='text/javascript' src='<?php echo includes_url("/js/jquery/jquery.color.js?ver=2.0-4561");?>'></script>
+<?php */?><script type='text/javascript'>
 /* <![CDATA[ */
 	pwsL10n = {
 		short: "<?php echo $piereg['short'];?>",
@@ -1453,7 +1586,7 @@ display:none;
 	}
 /* ]]> */
 </script>
-<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-admin/js/password-strength-meter.dev.js?ver=20070405'></script>
+<script type='text/javascript' src='<?php echo admin_url("/js/password-strength-meter.js");?>'></script>
 <script type="text/javascript">
 	function check_pass_strength ( ) {
 
@@ -1545,7 +1678,7 @@ jQuery(function() {
 });
 </script>
 <style type="text/css">
-a.dp-choose-date { float: left; width: 16px; height: 16px; padding: 0; margin: 5px 3px 0; display: block; text-indent: -2000px; overflow: hidden; background: url(<?php echo $this->plugin_url;?>datepicker/calendar.png) no-repeat; } a.dp-choose-date.dp-disabled { background-position: 0 -20px; cursor: default; } /* makes the input field shorter once the date picker code * has run (to allow space for the calendar icon */ input.dp-applied { width: 140px; float: left; }
+a.dp-choose-date { width: 16px; height: 16px; padding: 0; margin: 5px 3px 0; display: inline-block; text-indent: -2000px; overflow: hidden; background: url(<?php echo $this->plugin_url;?>datepicker/calendar.png) no-repeat; } a.dp-choose-date.dp-disabled { background-position: 0 -20px; cursor: default; } /* makes the input field shorter once the date picker code * has run (to allow space for the calendar icon */ input.dp-applied { width: 140px !important;display:inline-block;}
 																																																																																				
 #phone, #pass1, #pass2, #regcode, #captcha, #firstname, #lastname, #website, #aim, #yahoo, #jabber, #about, .custom_field{
 	font-size: 20px;	
@@ -1646,42 +1779,30 @@ small{
 		}
 		
 		function HideLogin(){
+			global $wpdb;
 			$piereg = get_option( 'pie_register' );
-			if($piereg['paypal_option'] && $_GET['checkemail'] == 'registered' || $_GET['piereg_verification'] && $piereg['paypal_option'] ||($piereg['admin_verify'] || $piereg['email_verify'] ) && $_GET['checkemail'] == 'registered' ){
-			
-			?>
-
-<style type="text/css">
-label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
-	display:none;
-}
-</style>
-		<?php
+			$username = $_COOKIE['session_secure_id'];
+			$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+			//var_dump($username,$user_id);
+			$admin_verified_user = get_user_meta($user_id,'admin_verified_user',true);
+			$email_verified_user = get_user_meta($user_id,'email_verified_user',true);
+			//var_dump($admin_verified_user ,$email_verified_user);
+			if(($piereg['paypal_option'] && $_GET['checkemail']) || (isset($_GET['piereg_verification']) && $piereg['paypal_option'])){
+				if(!$admin_verified_user && !$email_verified_user){
+					echo '<style type="text/css">label, #user_login, #user_pass, .forgetmenot, #wp-submit{display:none;}</style>';
+				}
 			}
-			else if($_GET['piereg_verification'] && $piereg['paypal_option']){
-			?>
-<style type="text/css">
-label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
-	display:none;
-}
-</style>
-		
-		
-
-
-		<?php
-			}
-		}
+        }
 		
 		function LogoHead(){
 			$piereg = get_option( 'pie_register' );
 			
-			if( $piereg['logo'] ){ 
-				$logo = str_replace( trailingslashit( get_option('siteurl') ), ABSPATH, $piereg['logo'] );
+			if( $piereg['custom_logo_url'] ){ 
+				$logo = $piereg['custom_logo_url'];
 				list($width, $height, $type, $attr) = getimagesize($logo);
 				?>
                 <?php if( $_GET['action'] != 'register' ) : ?>
-                <script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-includes/js/jquery/jquery.js?ver=1.2.3'></script>
+                <script type='text/javascript' src='<?php includes_url("/js/jquery/jquery.js");?>'></script>
                 <?php endif; ?>
 <script type="text/javascript">
 	jQuery(document).ready( function() {
@@ -1691,11 +1812,10 @@ label, #user_login, #user_pass, .forgetmenot, #wp-submit, .message {
 </script>
 <style type="text/css">
 #login h1 a {
-	background-image: url(<?php echo $piereg['logo'];?>);
+	background-image: url(<?php echo $logo;?>);
 	background-position:center top;
 	width: <?php echo $width; ?>px;
 	min-width:292px;
-	height: <?php echo $height; ?>px;
 	margin:0 auto;
 }
 
@@ -1719,13 +1839,22 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 			global $user_ID;
 			get_currentuserinfo();
 			if( $_GET['user_id'] ) $user_ID = $_GET['user_id'];
+			$piereg = get_option( 'pie_register' );
 			$piereg_custom = get_option( 'pie_register_custom' );
+			//codename
 			if( !is_array( $piereg_custom ) ) $piereg_custom = array();
+			$invite_code = get_user_meta($user_ID, 'invite_code', true);
+			if($invite_code != ''){
+				echo '<table class="form-table"><tbody>';
+				echo '<tr><th><label for="invitation_code">'.$piereg['codename'].'</label></th><td><input type="text" name="invite_code" value="'.$invite_code.'" readonly="readonly" /></td></tr>';
+				echo '</tbody></table>';
+			}
 			if( count($piereg_custom) > 0){
 				$top = '<h3>' . __('Additional Information', 'piereg') . '</h3><table class="form-table"><tbody>';
 				$bottom = '</tbody></table>';
 			}
 			echo $top;
+			
 			if (!empty($piereg_custom)) {
 				foreach( $piereg_custom as $k=>$v ){
 				
@@ -1822,172 +1951,299 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 		}
 		
 		function ValidateUser(){
+			//die("MOHSIN");
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
-			if( $piereg['admin_verify'] && isset( $_GET['checkemail'] ) ){
-				
-				echo '<p style="text-align:center;margin-bottom:10px;">' . __($piereg['_admin_message_41'], 'piereg') . '</p>';
-			}else if( $piereg['email_verify'] && isset( $_GET['checkemail'] ) ){
-					
-				echo '<p style="text-align:center;margin-bottom:10px;">' . __($piereg['_admin_message_42'], 'piereg') . '</p>';
-			}
-			if( $piereg['email_verify'] && isset( $_GET['piereg_verification'] ) ){
-				$piereg = get_option( 'pie_register' );
-				$verify_key = $_GET['piereg_verification'];
-				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
-				}else if($piereg['paypal_option'] && !$piereg['email_verify'] && isset( $_GET['checkemail'] ) ){
-					
-				echo '<p style="text-align:center;margin-bottom:10px;background-color:#FFFFE0;border:1px solid #E6DB55;padding:12px 0px;">' . __($piereg['_admin_message_43'], 'piereg') . '</p>';
-				/*session_start();*/
-				
-				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify_user' AND meta_value='".$_SESSION['secure_id']."'");
-				
-				$user_details_gender=$wpdb->get_row( "SELECT meta_value FROM $wpdb->usermeta WHERE meta_key = 'gender' AND user_id='".$user_id."'");
-				$user_details_username=$wpdb->get_row( "SELECT user_login FROM $wpdb->users WHERE ID='".$user_id."'");
-				$user_name=$_SESSION['secure_id'];
-				}
-				if ( $user_id ) {
-					if($piereg['paypal_option'] && !$piereg['email_verify']){
-					$login = get_user_meta($user_id, 'email_verify_user',true);
-					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, '.$piereg['_admin_message_44'], 'piereg'), $login ) . '</p>';
-					
-					
-					$paypalcode="<a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
-					
-					}
-					else if($piereg['paypal_option'] && $piereg['email_verify'] && isset( $_GET['piereg_verification'] )){
-					$login = get_user_meta($user_id, 'email_verify_user',true);
-					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_45'], 'piereg'), $login ) . '</p>';
-					$paypalcode="<a href='https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
-					
+			if($_GET['checkemail'] == "registered"){
+				$username = ($_SESSION['secure_id'] != '')?$_SESSION['secure_id'] : $_COOKIE['session_secure_id'];
+				if($piereg['paypal_option']){
+					//die($username);
+					$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE (`meta_key` = 'email_verify_user' OR `meta_key` = 'admin_verify_user') AND `meta_value`='".$username."'");
+					if($user_id){
+						$login = get_user_meta($user_id, 'email_verify_user',true);
+						if(!$login)
+						$login = get_user_meta($user_id, 'admin_verify_user',true);
+						$paypalcode="<a href='";
+						if($piereg['paypal_sandbox'] == "yes"){
+							$paypalcode.=SSL_SAND_URL;
+						}else{
+							$paypalcode.=SSL_P_URL;
+						}
+						$paypalcode.="?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
+						$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, '.$piereg['_admin_message_44'], 'piereg'), $login ) . '</p>'.$paypalcode;
+						$func3 = function() use ($msg){ echo $msg; };
+						add_action('login_form', $func3);
+						
+						$message = __($piereg['_admin_message_43'], 'piereg');
+						$func = function($ms) use ($message){ return $message; };
+						add_filter('login_messages', $func);
+						return true;
 					}else{
-					$login = get_user_meta($user_id, 'email_verify_user',true);
-					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
-					$user_email=get_user_meta($user_id, 'email_verify_email',true);
-					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$user_email' WHERE ID = '$user_id' " );
-					delete_user_meta($user_id, 'email_verify_user');
-					delete_user_meta($user_id, 'email_verify');
-					delete_user_meta($user_id, 'email_verify_date');
-					
-					$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_46'], 'piereg'), $login ) . '</p>';
+						///die($username);
+						$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+						if($user_id){
+							$admin_verified_user = get_user_meta($user_id,'admin_verified_user',true);
+							if($admin_verified_user){
+								$message = __($piereg['_admin_message_17'], 'piereg');
+								$func = function($ms) use ($message){ return $message; };
+								add_filter('login_messages', $func);
+							}
+						}
 					}
-					
-					echo $msg;
-					echo $paypalcode?$paypalcode:'';
+				}elseif( $piereg['admin_verify']){
+					$message = __($piereg['_admin_message_41'], 'piereg');
+					$func = function() use ($message){ return $message; };
+					add_filter('login_messages', $func);
+					return true;
+				}elseif($piereg['email_verify']){
+					$message = __($piereg['_admin_message_42'], 'piereg');
+					$func = function() use ($message){ return $message; };
+					add_filter('login_messages', $func);
+					return true;
 				}
-			
+			}elseif(isset($_GET['piereg_verification'])){
+				$verify_key =  $wpdb->escape($_GET['piereg_verification']);
+				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");
+				//var_dump($user_id);
+				if($user_id > 0){
+					$login = get_user_meta($user_id, 'email_verify_user',true);
+					//var_dump($login);
+					update_user_meta( $user_id, 'is_email_verified', 'yes' );
+					update_user_meta( $user_id, 'email_verified_user','yes');
+					$payment_received = get_user_meta($user_id,'payment_verified',true);
+					if($payment_received == 'yes'){
+						$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
+						$user_email=get_user_meta($user_id, 'email_verify_email',true);
+						$wpdb->query( "UPDATE $wpdb->users SET user_email = '$user_email' WHERE ID = '$user_id' " );
+						add_user_meta( $user_id, 'email_verified', 'yes' );
+						delete_user_meta($user_id, 'email_verify_user');
+						//delete_user_meta($user_id, 'email_verify');
+						delete_user_meta($user_id, 'email_verify_date');
+						
+						$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_46'], 'piereg'), $login ) . '</p>';
+						$func3 = function() use ($msg){ echo $msg; };
+						add_action('login_form', $func3);
+					}
+					else{
+						if($piereg['paypal_option']){
+							$paypalcode="<a href='";
+							if($piereg['paypal_sandbox'] == "yes"){
+								$paypalcode.=SSL_SAND_URL;
+							}else{
+								$paypalcode.=SSL_P_URL;
+							}
+							$paypalcode.="?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
+							$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, '.$piereg['_admin_message_45'], 'piereg'), $login ) . '</p>'.$paypalcode;
+							$func3 = function() use ($msg){ echo $msg; };
+							add_action('login_form', $func3);
+							
+						}else{
+							$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
+							$user_email=get_user_meta($user_id, 'email_verify_email',true);
+							$wpdb->query( "UPDATE $wpdb->users SET user_email = '$user_email' WHERE ID = '$user_id' " );
+							delete_user_meta($user_id, 'email_verify_user');
+							//delete_user_meta($user_id, 'email_verify');
+							delete_user_meta($user_id, 'email_verify_date');
+							
+							$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_46'], 'piereg'), $login ) . '</p>';
+							$func3 = function() use ($msg){ echo $msg; };
+							add_action('login_form', $func3);
+						}
+					}
+					//var_dump($func3);
+					
+					return true;
+				}else{
+					//do nothing
+					return false;
+				}
+			}else{
+				//do nothing
+				return false;
+			}
 		}
-		
+		/**
+		 * validate the	IPN
+		 * 
+		 * @return bool IPN validation result
+		 */
+		public function validate_ipn() {
+			global $wpdb;
+			$piereg = get_option( 'pie_register' );
+			$hostname = gethostbyaddr ( $_SERVER ['REMOTE_ADDR'] );
+			if (! preg_match ( '/paypal\.com$/', $hostname )) {
+				$this->ipn_status = 'Validation post isn\'t from PayPal';
+				$this->log_ipn_results ( false );
+				return false;
+			}
+			
+			/*if (isset($this->paypal_mail) && strtolower ( $_POST['receiver_email'] ) != strtolower(trim( $this->paypal_mail ))) {
+				$this->ipn_status = "Receiver Email Not Match";
+				$this->log_ipn_results ( false );
+				return false;
+			}*/
+			
+			if (isset($this->txn_id)&& in_array($_POST['txn_id'],$this->txn_id)) {
+				$this->ipn_status = "txn_id have a duplicate";
+				$this->log_ipn_results ( false );
+				return false;
+			}
+	
+			// parse the paypal URL
+			$paypal_url = ($_POST['test_ipn'] == 1) ? SSL_SAND_URL : SSL_P_URL;
+			$url_parsed = parse_url($paypal_url);        
+			
+			// generate the post string from the _POST vars aswell as load the
+			// _POST vars into an arry so we can play with them from the calling
+			// script.
+			$post_string = '';
+			  
+			$this->postvars = $_POST;
+			foreach ($_POST as $field=>$value) { 
+				$this->ipn_data["$field"] = $value;
+				$post_string .= $field.'='.urlencode(stripslashes($value)).'&'; 
+			}
+			$post_string.="cmd=_notify-validate"; // append ipn command
+			
+			// open the connection to paypal
+			if ($piereg['paypal_sandbox'] == "yes")
+				$fp = fsockopen ( 'ssl://www.sandbox.paypal.com', "443", $err_num, $err_str, 60 );
+			else
+				$fp = fsockopen ( 'ssl://www.paypal.com', "443", $err_num, $err_str, 60 );
+	 
+			if(!$fp) {
+				// could not open the connection.  If loggin is on, the error message
+				// will be in the log.
+				$this->ipn_status = "fsockopen error no. $err_num: $err_str";
+				$this->log_ipn_results(false);       
+				return false;
+			} else { 
+				// Post the data back to paypal
+				fputs($fp, "POST $url_parsed[path] HTTP/1.1\r\n"); 
+				fputs($fp, "Host: $url_parsed[host]\r\n"); 
+				fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n"); 
+				fputs($fp, "Content-length: ".strlen($post_string)."\r\n"); 
+				fputs($fp, "Connection: close\r\n\r\n"); 
+				fputs($fp, $post_string . "\r\n\r\n"); 
+			
+				// loop through the response from the server and append to variable
+				while(!feof($fp)) { 
+				$this->ipn_response .= fgets($fp, 1024); 
+			   } 
+			  fclose($fp); // close connection
+			}
+			
+			// Invalid IPN transaction.  Check the $ipn_status and log for details.
+			if (! eregi("VERIFIED",$this->ipn_response)) {
+				$this->ipn_status = 'IPN Validation Failed';
+				$this->log_ipn_results(false);   
+				return false;
+			} else {
+				$this->ipn_status = "IPN VERIFIED";
+				$this->userPaymentReceived($this->postvars);
+				$this->log_ipn_results(true); 
+				return true;
+			}
+		}
+		function userPaymentReceived($postvars){
+			global $wpdb;
+			$piereg = get_option( 'pie_register' );
+			$firstname		= $postvars['first_name'];
+			$lastname		= $postvars['last_name'];
+			$email			= $postvars['payer_email'];
+			$itemname		= $postvars['item_name'];
+			$amount			= $postvars['mc_gross'];
+			$user_login		= $postvars['custom'];
+			$user_id		= trim($postvars['custom']);
+			$useremail		= get_user_meta($user_id,'email_verify_email',true);
+			if ( $user_id ) {
+				$loginE = get_user_meta($user_id, 'email_verify_user',true);
+				$loginA = get_user_meta($user_id, 'admin_verify_user',true);
+				$admin_verified_user = get_user_meta($user_id,'admin_verified_user',true);
+				$email_verified_user = get_user_meta($user_id,'email_verified_user',true);
+				//pending_payment
+				add_user_meta( $user_id, 'payment_verified', 'yes' );
+				if($loginE){
+					
+					if($admin_verified_user || $email_verified_user){
+						$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginE' WHERE ID = '$user_id'" );
+						$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
+						delete_user_meta($user_id, 'pending_payment');
+						delete_user_meta($user_id, 'email_verify_user');
+						//delete_user_meta($user_id, 'email_verify');
+						//add_user_meta( $user_id, 'email_verified', 'yes' );
+						delete_user_meta($user_id, 'email_verify_date');
+						delete_user_meta($user_id, 'email_verify_user_pwd');
+						delete_user_meta($user_id, 'email_verify_email');
+						$this->holdmsg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_47'], 'piereg'), $login ) . '</p>';
+					}else{				
+						$this->holdmsg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_48'], 'piereg'), $login ) . '</p>';
+					}
+				}else if($loginA){
+					if($admin_verified_user || $email_verified_user){
+						$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginA' WHERE ID = '$user_id'" );
+						$wpdb->query( "UPDATE $wpdb->users SET user_email = '$uuseremail' WHERE ID = '$user_id'" );
+						add_user_meta( $user_id, 'payment_verified', 'yes' );
+						delete_user_meta($user_id, 'pending_payment');
+						delete_user_meta($user_id, 'admin_verify_user');
+						delete_user_meta($user_id, 'email_verify_user_pwd');
+						delete_user_meta($user_id, 'email_verify_email');
+						delete_user_meta($user_id, 'admin_verify');
+						$this->holdmsg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_47'], 'piereg'), $login ) . '</p>';
+					}else{
+						$this->holdmsg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_48'], 'piereg'), $login ) . '</p>';
+					}
+				
+				}
+				//echo $msg;
+				return true;
+			}
+			return false;
+		}
+		function payment_success_msg($message){
+			global $wpdb;
+			$piereg = get_option( 'pie_register' );
+			$admin_verified_user = get_user_meta($_GET['cm'],'admin_verified_user',true);
+			$email_verified_user = get_user_meta($_GET['cm'],'email_verified_user',true);
+			if($admin_verified_user || $email_verified_user)
+			$newmessage='<p class="message">' .  __($piereg['_admin_message_47'], 'piereg') . '</p>';
+			else
+			$newmessage='<p class="message">' .  __($piereg['_admin_message_48'], 'piereg') . '</p>';
+			return $newmessage.$message;
+		}
+		function payment_error_msg($message){
+			global $wpdb;
+			$piereg = get_option( 'pie_register' );
+			if(isset($_GET['tx']) && isset($_GET['cm']))
+				$newmessage='<div id="login_error">' .  __($piereg['_admin_message_50'], 'piereg') . '</div>';
+			else
+			$newmessage='<div id="login_error">' .  __($piereg['_admin_message_49'], 'piereg') . '</div>';
+			return $newmessage.$message;
+		}
 		function ValidPUser(){
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
-			if(isset($_GET['tx']) ){
-			$req = 'cmd=_notify-synch';
-$tx_token = $_GET['tx'];
-$pptoken=$piereg['paypal_pdt'];
-$auth_token = $pptoken;
-
-$req .= "&tx=$tx_token&at=$auth_token";
-foreach($_POST as $key=>$value) $req.=('&'.$key.'='.urlencode(stripslashes($value)));
-
-// post back to PayPal system to validate
-$header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
-$header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-$header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
-$url='www.paypal.com';
-$fp = fsockopen ($url, 80, $errno, $errstr, 30);
-			
-	if (!$fp) {
-	// HTTP ERROR
-	
-	}else {
-	fputs ($fp, $header . $req);
-	// read the body data
-	$res = '';
-	$headerdone = false;
-	while (!feof($fp)) {
-	$line = fgets ($fp, 1024);
-	if (strcmp($line, "\r\n") == 0) {
-	// read the header
-	$headerdone = true;
-	}
-	else if ($headerdone)
-	{
-	// header has been read. now read the contents
-	$res .= $line;
-	}
-	}
-	fclose ($fp);
-	// parse the data
-	$lines = explode("\n", $res);
-	$keyarray = array();
-	
-	if (strcmp ($lines[0], "SUCCESS") == 0) {
-	for ($i=1; $i<count($lines);$i++){
-	list($key,$val) = explode("=", $lines[$i]);
-	$keyarray[urldecode($key)] = urldecode($val);
-	}
-	// check the payment_status is Completed
-	// check that txn_id has not been previously processed
-	// check that receiver_email is your Primary PayPal email
-	// check that payment_amount/payment_currency are correct
-	// process payment
-	$firstname = $keyarray['first_name'];
-	$lastname = $keyarray['last_name'];
-	$email= $keyarray['payer_email'];
-	$itemname = $keyarray['item_name'];
-	$amount = $keyarray['mc_gross'];
-	$user_login=$keyarray['custom'];
-	$user_id=trim($keyarray['custom']);
-	$useremail=get_user_meta($user_id,'email_verify_email',true);
-	
-	
-				/*$verify_key = $_GET['piereg_verification'];
-				$user_id = $wpdb->get_var( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'email_verify' AND meta_value='$verify_key'");*/
-				if ( $user_id ) {
-					
-					$loginE = get_user_meta($user_id, 'email_verify_user',true);
-					$loginA = get_user_meta($user_id, 'admin_verify_user',true);
-					if($loginE){
-					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginE' WHERE ID = '$user_id'" );
-					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$useremail' WHERE ID = '$user_id'" );
-					delete_user_meta($user_id, 'email_verify_user');
-					delete_user_meta($user_id, 'email_verify');
-					delete_user_meta($user_id, 'email_verify_date');
-					delete_user_meta($user_id, 'email_verify_user_pwd');
-					delete_user_meta($user_id, 'email_verify_email');
-					$msg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_47'], 'piereg'), $login ) . '</p>';
-					}else if($loginA){
-					$wpdb->query( "UPDATE $wpdb->users SET user_login = '$loginA' WHERE ID = '$user_id'" );
-					$wpdb->query( "UPDATE $wpdb->users SET user_email = '$uuseremail' WHERE ID = '$user_id'" );
-					delete_user_meta($user_id, 'admin_verify_user');
-					delete_user_meta($user_id, 'email_verify_user_pwd');
-					delete_user_meta($user_id, 'email_verify_email');
-					delete_user_meta($user_id, 'admin_verify');
-					$msg = '<p class="message">' . sprintf(__('Thank you %s, '.$piereg['_admin_message_47'], 'piereg'), $login ) . '</p>';
-					
-					}
-					
-					
-					
-					echo $msg;
-					
+			//mail('mohsin.abbas@genetechsolutions.com','IPN Test 2',print_r($_POST,1));
+			if($_POST['txn_id']){
+				//We have a IPN to Validate
+				$this->validate_ipn();
+				
+			}elseif($_GET['action'] == 'payment_success'){
+				//$this->holdmsg
+				//apply_filters('login_message', $message);
+				//echo $this->holdmsg;
+				$is_payment_verified = get_user_meta($_REQUEST['cm'], 'payment_verified', true);
+				if($is_payment_verified == "yes"){
+					add_filter("login_message",array(&$this,"payment_success_msg"));
+					//echo '<p style="text-align:center;">' . __($piereg['_admin_message_48'], 'piereg') . '</p>';
+				}else{
+					add_filter("login_message",array(&$this,"payment_error_msg"));
 				}
-				echo '<p style="text-align:center;">' . __($piereg['_admin_message_48'], 'piereg') . '</p>';
-	}
-	else if (strcmp ($lines[0], "FAIL") == 0) {
-	// log for manual investigation
-	echo '<p style="text-align:center;">' . __($piereg['_admin_message_49'], 'piereg') . '</p>';
-					
-				
-	}
-	}
-			
-				
+			}elseif($_GET['action'] == 'payment_cancel'){
+				echo '<p style="text-align:center;">' . __($piereg['_admin_message_49'], 'piereg') . '</p>';
+			}else{
+				return false;
 			}
-			
-				
-			
 		}
 		
 		function adminfrom(){
@@ -2027,19 +2283,8 @@ $fp = fsockopen ($url, 80, $errno, $errstr, 30);
 		}
 		
 		function override_warning(){
-			if( current_user_can(10) &&  $_GET['page'] == 'pie-register' )
-			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('You have another plugin installed that is conflicting with Pie Register.  This other plugin is overriding the user notification emails.  Please see <a href="http://pie-solutions.com/products/pie-register/">Pie Register Conflicts</a> for more information.', 'piereg') . "</strong></p></div>";
-		}
-		
-		function donate(){
-			echo '<p><strong>' . __('If you find this plugin useful, please consider ', 'piereg') . '<form target="_blank" method="post" action="https://www.paypal.com/cgi-bin/webscr">
-
-<input type="hidden" value="_s-xclick" name="cmd">
-<input type="hidden" value="LB2XC8BNHCQ4W" name="hosted_button_id">
-<input type="image" border="0" alt="PayPal - The safer, easier way to pay online!" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif">
-<img width="1" border="0" height="1" src="https://www.paypal.com/en_US/i/scr/pixel.gif" alt=""><br>
-
-</form>'  . __('donating', 'piereg') . '</strong></p>';
+			//if( current_user_can('activate_plugins') &&  $_GET['page'] == 'pie-register' )
+			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('You have another plugin installed that is conflicting with Pie Register.  This other plugin is overriding the user notification emails.  Please contact <a href="http://www.genetechsolutions.com/support.html" target="_blank">support</a> with the list of your installed plugins and theme information.', 'piereg') . "</strong></p></div>";
 		}
 	}
 }# END Class PieMemberRegister
