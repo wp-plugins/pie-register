@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 1.30
+Stable tag: 1.31
 
 Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimers, CAPTCHA Validation, Email Validation, User Moderation, Profile Fields and more.
 
