@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration Pa
 
 
 Author: Genetech
-Version: 1.30
+Version: 1.31
 Author URI: http://www.genetechsolutions.com/
 
 LOCALIZATION
@@ -36,6 +36,8 @@ if( !class_exists('PieMemberRegister') ){
 		public $postvars;
 		private $ipn_debug;
 		var $holdmsg = '';
+		public $headmsg='';
+		public $bodymsg='';
 		/**
 		* Constructor
 		*/
@@ -93,6 +95,7 @@ if( !class_exists('PieMemberRegister') ){
 					array_walk_recursive($_COOKIE, array(&$this,'disable_magic_quotes_gpc'));
 					array_walk_recursive($_REQUEST, array(&$this,'disable_magic_quotes_gpc'));
 				}
+				
 				if( ($this->ref == $this->admin_edit_profile_page) || ($this->ref == $this->admin_own_profile_page) ){
 					add_action( 'admin_head', array($this, 'ProfilesHead') );
 				}
@@ -600,25 +603,25 @@ if( !class_exists('PieMemberRegister') ){
 			}
 			if(isset($_POST['email_notification_page'])){
 			
-			$update['html'] = $this->disable_magic_quotes_gpc($_POST['piereg_html']);
-			$update['from'] = $this->disable_magic_quotes_gpc($_POST['piereg_from']);
-			$update['fromname'] = $this->disable_magic_quotes_gpc($_POST['piereg_fromname']);
-			$update['subject'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_subject']));
-			$update['custom_msg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_custom_msg']));
+			$update['html'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_html'],'HTML-ENTITIES','utf-8'));
+			$update['from'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_from'],'HTML-ENTITIES','utf-8'));
+			$update['fromname'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_fromname'],'HTML-ENTITIES','utf-8'));
+			$update['subject'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_subject'],'HTML-ENTITIES','utf-8')));
+			$update['custom_msg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_custom_msg'],'HTML-ENTITIES','utf-8')));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_user_nl2br']));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_emailvmsguser_nl2br']));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminvmsguser_nl2br']));
-			$update['msg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_msg']));
-			$update['adminvmsg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminvmsg']));
-			$update['emailvmsg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_emailvmsg']));
+			$update['msg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_msg'],'HTML-ENTITIES','utf-8')));
+			$update['adminvmsg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_adminvmsg'],'HTML-ENTITIES','utf-8')));
+			$update['emailvmsg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_emailvmsg'],'HTML-ENTITIES','utf-8')));
 			$update['disable_admin'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disable_admin']));
 			$update['adminhtml'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminhtml']));
-			$update['adminfrom'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminfrom']));
-			$update['adminfromname'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminfromname']));
-			$update['adminsubject'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminsubject']));
-			$update['custom_adminmsg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_custom_adminmsg']));
+			$update['adminfrom'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_adminfrom'],'HTML-ENTITIES','utf-8')));
+			$update['adminfromname'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_adminfromname'],'HTML-ENTITIES','utf-8')));
+			$update['adminsubject'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_adminsubject'],'HTML-ENTITIES','utf-8')));
+			$update['custom_adminmsg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_custom_adminmsg'],'HTML-ENTITIES','utf-8')));
 			$update['admin_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_admin_nl2br']));
-			$update['adminmsg'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminmsg']));
+			$update['adminmsg'] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_adminmsg'],'HTML-ENTITIES','utf-8')));
 			}
 			if(isset($_POST['presentation_page'])){
 			$update['register_css'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_register_css']));
@@ -629,19 +632,19 @@ if( !class_exists('PieMemberRegister') ){
 			$update['loginredirect'] = $this->disable_magic_quotes_gpc($_POST['piereg_loginredirect']);
 			$update["password"] = $this->disable_magic_quotes_gpc($_POST['piereg_password']);
 			$update["password_meter"] = $this->disable_magic_quotes_gpc($_POST['piereg_password_meter']);
-			$update["short"] = $this->disable_magic_quotes_gpc($_POST['piereg_short']);
-			$update["bad"] = $this->disable_magic_quotes_gpc($_POST['piereg_bad']);
-			$update["good"] = $this->disable_magic_quotes_gpc($_POST['piereg_good']);
-			$update["strong"] = $this->disable_magic_quotes_gpc($_POST['piereg_strong']);
-			$update["mismatch"] = $this->disable_magic_quotes_gpc($_POST['piereg_mismatch']);
-			$update["code"] = $this->disable_magic_quotes_gpc($_POST['piereg_code']);
+			$update["short"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_short'],'HTML-ENTITIES','utf-8'));
+			$update["bad"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_bad'],'HTML-ENTITIES','utf-8'));
+			$update["good"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_good'],'HTML-ENTITIES','utf-8'));
+			$update["strong"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_strong'],'HTML-ENTITIES','utf-8'));
+			$update["mismatch"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_mismatch'],'HTML-ENTITIES','utf-8'));
+			$update["code"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_code'],'HTML-ENTITIES','utf-8'));
 			$update["custom_logo_url"] = $this->disable_magic_quotes_gpc($_POST['custom_logo_url']);
 			
 			if(isset($_POST['piereg_codeexpiry']) && is_numeric($_POST['piereg_codeexpiry'])){
 			$update["codeexpiry"] = $_POST['piereg_codeexpiry'];
 			}
 			$update["code_auto_del"] = $this->disable_magic_quotes_gpc($_POST['piereg_code_auto_del']);
-			$update["codename"] = $this->disable_magic_quotes_gpc($_POST['piereg_codename']);
+			$update["codename"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($$_POST['piereg_codename'],'HTML-ENTITIES','utf-8'));
 			if( isset($_POST['piereg_code']) ) {
 				$update["codepass"] = $_POST['piereg_codepass'];
 				$codespasses=explode("\n",$update["codepass"]);
@@ -656,27 +659,27 @@ if( !class_exists('PieMemberRegister') ){
 				$update["code_req"] = $this->disable_magic_quotes_gpc($_POST['piereg_code_req']);
 			}
 			$update["captcha"] = $this->disable_magic_quotes_gpc($_POST['piereg_captcha']);
-			$update["disclaimer"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disclaimer']));
-			$update["disclaimer_title"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disclaimer_title']));
-			$update["disclaimer_content"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disclaimer_content']));
-			$update["disclaimer_agree"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disclaimer_agree']));
-			$update["license"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_license']));
-			$update["license_title"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_license_title']));
-			$update["license_content"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_license_content']));
-			$update["license_agree"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_license_agree']));
-			$update["privacy"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_privacy']));
-			$update["privacy_title"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_privacy_title']));
-			$update["privacy_content"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_privacy_content']));
-			$update["privacy_agree"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_privacy_agree']));
+			$update["disclaimer"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_disclaimer'],'HTML-ENTITIES','utf-8')));
+			$update["disclaimer_title"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_disclaimer_title'],'HTML-ENTITIES','utf-8'));
+			$update["disclaimer_content"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_disclaimer_content'],'HTML-ENTITIES','utf-8')));
+			$update["disclaimer_agree"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_disclaimer_agree'],'HTML-ENTITIES','utf-8')));
+			$update["license"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_license'],'HTML-ENTITIES','utf-8')));
+			$update["license_title"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_license_title'],'HTML-ENTITIES','utf-8'));
+			$update["license_content"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_license_content'],'HTML-ENTITIES','utf-8')));
+			$update["license_agree"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_license_agree'],'HTML-ENTITIES','utf-8')));
+			$update["privacy"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_privacy'],'HTML-ENTITIES','utf-8')));
+			$update["privacy_title"] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg_privacy_title'],'HTML-ENTITIES','utf-8'));
+			$update["privacy_content"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_privacy_content'],'HTML-ENTITIES','utf-8')));
+			$update["privacy_agree"] = $this->disable_magic_quotes_gpc(htmlentities(mb_convert_encoding($_POST['piereg_privacy_agree'],'HTML-ENTITIES','utf-8')));
 			$update["email_exists"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_exists']);
 			$update["firstname"] = $this->disable_magic_quotes_gpc($_POST['piereg_firstname']);
 			$update["lastname"] = $this->disable_magic_quotes_gpc($_POST['piereg_lastname']);
 			$update["website"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_website']));
-			$update["aim"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_aim']));
-			$update["yahoo"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_yahoo']));
-			$update["jabber"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_jabber']));
-			$update["phone"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_phone']));
-			$update["about"] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_about']));
+			$update["aim"] = $this->disable_magic_quotes_gpc($_POST['piereg_aim']);
+			$update["yahoo"] = $this->disable_magic_quotes_gpc($_POST['piereg_yahoo']);
+			$update["jabber"] = $this->disable_magic_quotes_gpc($_POST['piereg_jabber']);
+			$update["phone"] = $this->disable_magic_quotes_gpc($_POST['piereg_phone']);
+			$update["about"] = $this->disable_magic_quotes_gpc($_POST['piereg_about']);
 			$update["profile_req"] = $this->disable_magic_quotes_gpc($_POST['piereg_profile_req']);
 			$update["require_style"] = $this->disable_magic_quotes_gpc(($_POST['piereg_require_style']));
 			$update["dash_widget"] = $this->disable_magic_quotes_gpc(($_POST['piereg_dash_widget']));
@@ -705,55 +708,55 @@ if( !class_exists('PieMemberRegister') ){
 			}			
 			}
 			if(isset($_POST['customised_messages_page'])){
-				$update['_admin_message_1'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_1']);
-				$update['_admin_message_2'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_2']);
-				$update['_admin_message_3'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_3']);
-				$update['_admin_message_4'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_4']);
-				$update['_admin_message_5'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_5']);
-				$update['_admin_message_6'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_6']);
-				$update['_admin_message_7'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_7']);
-				$update['_admin_message_8'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_8']);
-				$update['_admin_message_9'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_9']);
-				$update['_admin_message_10'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_10']);
-				$update['_admin_message_12'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_12']);
-				$update['_admin_message_13'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_13']);
-				$update['_admin_message_14'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_14']);
-				$update['_admin_message_15'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_15']);
-				$update['_admin_message_16'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_16']);
-				$update['_admin_message_17'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_17']);
-				$update['_admin_message_18'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_18']);
-				$update['_admin_message_19'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_19']);
-				$update['_admin_message_20'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_20']);
-				$update['_admin_message_21'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_21']);
-				$update['_admin_message_22'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_22']);
-				$update['_admin_message_23'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_23']);
-				$update['_admin_message_24'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_24']);
-				$update['_admin_message_25'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_25']);
-				$update['_admin_message_26'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_26']);
-				$update['_admin_message_27'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_27']);
-				$update['_admin_message_28'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_28']);
-				$update['_admin_message_29'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_29']);
-				$update['_admin_message_30'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_30']);
-				$update['_admin_message_31'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_31']);
-				$update['_admin_message_32'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_32']);
-				$update['_admin_message_33'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_33']);
-				$update['_admin_message_34'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_34']);
-				$update['_admin_message_35'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_35']);
-				$update['_admin_message_36'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_36']);
-				$update['_admin_message_37'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_37']);
-				$update['_admin_message_38'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_38']);
-				$update['_admin_message_39'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_39']);
-				$update['_admin_message_40'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_40']);
-				$update['_admin_message_41'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_41']);
-				$update['_admin_message_42'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_42']);
-				$update['_admin_message_43'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_43']);
-				$update['_admin_message_44'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_44']); 
-				$update['_admin_message_45'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_45']);
-				$update['_admin_message_46'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_46']);
-				$update['_admin_message_47'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_47']);
-				$update['_admin_message_48'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_48']); 
-				$update['_admin_message_49'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_49']);
-				$update['_admin_message_50'] = $this->disable_magic_quotes_gpc($_POST['piereg__admin_message_50']);
+				$update['_admin_message_1'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_1'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_2'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_2'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_3'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_3'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_4'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_4'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_5'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_5'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_6'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_6'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_7'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_7'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_8'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_8'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_9'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_9'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_10'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_10'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_12'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_12'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_13'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_13'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_14'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_14'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_15'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_15'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_16'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_16'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_17'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_17'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_18'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_18'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_19'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_19'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_20'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_20'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_21'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_21'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_22'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_22'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_23'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_23'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_24'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_24'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_25'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_25'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_26'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_26'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_27'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_27'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_28'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_28'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_29'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_29'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_30'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_30'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_31'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_31'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_32'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_32'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_33'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_33'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_34'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_34'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_35'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_35'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_36'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_36'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_37'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_37'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_38'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_38'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_39'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_39'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_40'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_40'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_41'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_41'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_42'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_42'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_43'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_43'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_44'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_44'],'HTML-ENTITIES','utf-8')); 
+				$update['_admin_message_45'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_45'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_46'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_46'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_47'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_47'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_48'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_48'],'HTML-ENTITIES','utf-8')); 
+				$update['_admin_message_49'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_49'],'HTML-ENTITIES','utf-8'));
+				$update['_admin_message_50'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['piereg__admin_message_50'],'HTML-ENTITIES','utf-8'));
 			}
 			
 			update_option( 'pie_register_custom', $custom );
@@ -1004,7 +1007,8 @@ padding:5px 10px;
 			global $wpdb;
 			$piereg = get_option('pie_register');
 			
-			$user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
+			//$user = $wpdb->get_row("SELECT user_login, user_email FROM $wpdb->users WHERE ID='$user_id'");
+			$user = get_user_by('id', $user_id);
 			$message = __($piereg['_admin_message_17']) . "\r\n";
 			$message .= sprintf(__('Username: %s', 'piereg'), $user->user_login) . "\r\n";
 			$message .= $prelink . get_option('siteurl') . "/wp-login.php" . "\r\n";
@@ -1224,7 +1228,7 @@ padding:5px 10px;
 			if (!empty($piereg_custom)) {
 				foreach( $piereg_custom as $k=>$v ){
 					if( $v['required'] && $v['reg'] ){
-						$id = $this->Label_ID($v['label']);
+						$id = str_replace('.','_',$this->Label_ID($v['label']));
 						if(empty($_POST[$id]) || $_POST[$id] == ''){
 							$errors->add('empty_' . $id, __('<strong>ERROR</strong>: Please enter your ' . $v['label'] . '.', 'piereg'));
 							$CeRror=1;
@@ -1261,7 +1265,7 @@ padding:5px 10px;
 			} else if ( $piereg['captcha'] == 2){
 				require_once('recaptchalib.php');
 				$privatekey = $piereg['reCAP_private_key'];
-				$resp = rp_recaptcha_check_answer ($privatekey,
+				$resp = recaptcha_check_answer ($privatekey,
 
 												$_SERVER["REMOTE_ADDR"],
 												$_POST["recaptcha_challenge_field"],
@@ -1302,7 +1306,7 @@ padding:5px 10px;
 					$errors->add('empty_regcode', __('<strong>ERROR</strong>: '.$piereg['_admin_message_34'].' '.$piereg['codename'].' Code.', 'piereg'));
 					$CeRror=1;
 				}elseif( ($Cexpiry > 0) && $this->SelectCode($_POST['regcode']) == $Cexpiry ){
-					$this->UpdateCode($_POST['regcode']);
+					//$this->UpdateCode($_POST['regcode']);
 					$errors->add('expired_regcode', __('<strong>ERROR</strong>: Your '.$piereg['codename'].' '.$piereg['_admin_message_35'], 'piereg'));
 					$CeRror=1;
 				}elseif( !in_array($_POST['regcode'], $Pieregcodes) ){
@@ -1344,7 +1348,7 @@ padding:5px 10px;
 				if( isset( $_GET['firstname'] ) ) $_POST['firstname'] = $_GET['firstname'];
 			?>
    		<p><label for="firstname"><?php _e('First Name:', 'piereg');?><br />
-		<input autocomplete="off" name="firstname" id="firstname" size="25" value="<?php echo $_POST['firstname'];?>" type="text" /></label>
+		<input name="firstname" id="firstname" size="25" value="<?php echo sanitize_text_field($_POST['firstname']);?>" type="text" /></label>
         </p>
             <?php
 			}
@@ -1352,16 +1356,16 @@ padding:5px 10px;
 				if( isset( $_GET['lastname'] ) ) $_POST['lastname'] = $_GET['lastname'];
 			?>
    		<p><label for="lastname"><?php _e('Last Name:', 'piereg');?><br />
-		<input autocomplete="off" name="lastname" id="lastname" size="25" value="<?php echo $_POST['lastname'];?>" type="text" /></label></p>
+		<input name="lastname" id="lastname" size="25" value="<?php echo sanitize_text_field($_POST['lastname']);?>" type="text" /></label></p>
             <?php
 			}
 			
 			if ( $piereg['password'] ){
 			?>
 			<p><label for="password"><?php _e('Password:', 'piereg');?><br />
-			<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo $_POST['pass1'];?>" type="password" /></label>
+			<input autocomplete="off" name="pass1" id="pass1" size="25" value="<?php echo sanitize_text_field($_POST['pass1']);?>" type="password" /></label>
 		  <br /> <label><?php _e('Confirm Password:', 'piereg');?><br />
-			<input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo $_POST['pass2'];?>" type="password" /></label>
+			<input autocomplete="off" name="pass2" id="pass2" size="25" value="<?php echo sanitize_text_field($_POST['pass2']);?>" type="password" /></label>
 			<?php if( $piereg['password_meter'] ){ ?>
 		  <br /> <span id="pass-strength-result"><?php echo $piereg['short'];?></span>
 			<small><?php _e('Hint: Use upper and lower case characters, numbers and symbols like !"?$%^&amp;( in your password.', 'piereg'); ?> </small>
@@ -1378,18 +1382,28 @@ padding:5px 10px;
        
         <?php if( $v['fieldtype'] == 'text' ){ ?>
         <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
-		<input autocomplete="off" class="custom_field" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label></p>
+		<input class="custom_field" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo sanitize_text_field($_POST[$id]);?>" type="text" /></label></p>
         
-        <?php } else if( $v['fieldtype'] == 'date' ){ ?>
+        <?php } else if( $v['fieldtype'] == 'date' ){
+			/*$test_arr  = explode('/', $_POST[$id]);
+			if (count($test_arr) == 3) {
+				//date is valid
+				$sanitized_date=intval($test_arr[0]).'/'.intval($test_arr[1]).'/'.intval($test_arr[2]);
+			} else {
+				// problem with input ...
+				$sanitized_date = '';
+			}*/
+						
+			?>
        <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
-		<input autocomplete="off" class="custom_field date-pick" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label></p>
+		<input class="custom_field date-pick" name="<?php echo $id;?>" id="<?php echo $id;?>" size="25" value="<?php echo $_POST[$id];?>" type="text" /></label></p>
         
 		<?php } else if( $v['fieldtype'] == 'select' ){ 
 			$ops = explode(',',$v['extraoptions']);
 				$options='';
 			foreach( $ops as $op ){
 				$options .= '<option value="'.$op.'" ';
-				if( $_POST[$id] == $op ) $options .= 'selected="selected"';
+				if( $_POST[$id] == $op ) $options .= 'selected="selected" ';
 				$options .= '>' . $op . '</option>';
 			}
 		?>
@@ -1404,6 +1418,7 @@ padding:5px 10px;
 				foreach( $ops as $op ){
 					$check .= '<label><input type="checkbox" class="custom_checkbox" name="'.$id.'[]" id="'.$id.'" ';
 					//if( in_array($op, $_POST[$id]) ) $check .= 'checked="checked" ';
+					if( $_POST[$id] == $op ) $check .= 'checked="checked" ';
 					$check .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
@@ -1414,8 +1429,9 @@ padding:5px 10px;
 				$ops = explode(',',$v['extraoptions']);
 				$radio = '';
 				foreach( $ops as $op ){
-					$radio .= '<label for="'.$id.'"><input type="radio" class="custom_radio" name="'.$id.'" id="'.$id.'" ';
+					$radio .= '<label for="'.$id.'-'.$op.'"><input type="radio" class="custom_radio" name="'.$id.'" id="'.$id.'-'.$op.'" ';
 					//if( in_array($op, $_POST[$id]) ) $radio .= 'checked="checked" ';
+					if( $_POST[$id] == $op ) $radio .= 'checked="checked" ';
 					$radio .= 'value="'.$op.'" /> '.$op.'</label> ';
 				}
 				?>
@@ -1424,10 +1440,10 @@ padding:5px 10px;
 				
 			} else if( $v['fieldtype'] == 'textarea' ){ ?>
            <p><label for="<?php echo $id;?>"><?php echo $v['label'];?>:<br />
-		<textarea name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo $_POST[$id];?></textarea></label></p>	
+		<textarea name="<?php echo $id;?>" cols="25" rows="5" id="<?php echo $id;?>" class="custom_textarea"><?php echo sanitize_text_field($_POST[$id]);?></textarea></label></p>	
 		
 		<?php } else if( $v['fieldtype'] == 'hidden' ){ ?><p>
-		<input class="custom_field" name="<?php echo $id;?>" value="<?php echo $_POST[$id];?>" type="hidden" />  </p>        	
+		<input class="custom_field" name="<?php echo $id;?>" value="<?php echo sanitize_text_field($_POST[$id]);?>" type="hidden" />  </p>        	
         <?php } ?>		
 				
 		<?php	}
@@ -1436,42 +1452,42 @@ padding:5px 10px;
 				if( isset( $_GET['website'] ) ) $_POST['website'] = $_GET['website'];
 			?>
    		<p><label for="website"><?php _e('Website:', 'piereg');?><br />
-		<input autocomplete="off" name="website" id="website" size="25" value="<?php echo $_POST['website'];?>" type="text" /></label></p>
+		<input name="website" id="website" size="25" value="<?php echo sanitize_text_field($_POST['website']);?>" type="text" /></label></p>
             <?php
 			}
 			if ( $piereg['aim'] ){
 				if( isset( $_GET['aim'] ) ) $_POST['aim'] = $_GET['aim'];
 			?>
    		<p><label for="aim"><?php _e('AIM:', 'piereg');?><br />
-		<input autocomplete="off" name="aim" id="aim" size="25" value="<?php echo $_POST['aim'];?>" type="text" /></label></p>
+		<input name="aim" id="aim" size="25" value="<?php echo sanitize_text_field($_POST['aim']);?>" type="text" /></label></p>
             <?php
 			}
 			if ( $piereg['yahoo'] ){
 				if( isset( $_GET['yahoo'] ) ) $_POST['yahoo'] = $_GET['yahoo'];
 			?>
    		<p><label for="yahoo"><?php _e('Yahoo IM:', 'piereg');?><br />
-		<input autocomplete="off" name="yahoo" id="yahoo" size="25" value="<?php echo $_POST['yahoo'];?>" type="text" /></label></p>
+		<input name="yahoo" id="yahoo" size="25" value="<?php echo sanitize_text_field($_POST['yahoo']);?>" type="text" /></label></p>
             <?php
 			}
 			if ( $piereg['jabber'] ){
 				if( isset( $_GET['jabber'] ) ) $_POST['jabber'] = $_GET['jabber'];
 			?>
    		<p><label for="jabber"><?php _e('Jabber / Google Talk:', 'piereg');?><br />
-		<input autocomplete="off" name="jabber" id="jabber" size="25" value="<?php echo $_POST['jabber'];?>" type="text" /></label></p>
+		<input name="jabber" id="jabber" size="25" value="<?php echo sanitize_text_field($_POST['jabber']);?>" type="text" /></label></p>
             <?php
 			}
 			if ( $piereg['phone'] ){
 				if( isset( $_GET['phone'] ) ) $_POST['phone'] = $_GET['phone'];
 			?>
    		<p><label for="phone"><?php _e('Phone # / Mobile #:', 'piereg');?><br />
-		<input autocomplete="off" name="phone" id="phone" size="25" value="<?php echo $_POST['phone'];?>" type="text" /></label></p>
+		<input name="phone" id="phone" size="25" value="<?php echo sanitize_text_field($_POST['phone']);?>" type="text" /></label></p>
             <?php
 			}
 			if ( $piereg['about'] ){
 				if( isset( $_GET['about'] ) ) $_POST['about'] = $_GET['about'];
 			?>
    		<p><label for="about"><?php _e('About Yourself:', 'piereg');?><br />
-		<textarea autocomplete="off" name="about" id="about" cols="25" rows="5"><?php echo stripslashes($_POST['about']);?></textarea></label>
+		<textarea name="about" id="about" cols="25" rows="5"><?php echo stripslashes(sanitize_text_field($_POST['about']));?></textarea></label>
         <small><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.', 'piereg');?></small>
         </p>
             <?php
@@ -1483,7 +1499,7 @@ padding:5px 10px;
 				if( isset( $_GET['regcode'] ) ) $_POST['regcode'] = $_GET['regcode'];
 			?>
         <p><label for="code"><?php _e($piereg['codename'].' Code:', 'piereg');?><br />
-		<input name="regcode" id="regcode" size="25" value="<?php echo $_POST['regcode'];?>" type="text" /></label>
+		<input name="regcode" id="regcode" size="25" value="<?php echo sanitize_text_field($_POST['regcode']);?>" type="text" /></label>
         <?php if ($piereg['code_req']) {?>
 		<p><small><?php _e(str_replace('[prcodename]',$piereg['codename'],$piereg['_admin_message_38']), 'piereg');?></small></p>
         <?php }else{ ?>
@@ -1532,7 +1548,7 @@ padding:5px 10px;
 				require_once('recaptchalib.php');
 				$publickey = $piereg['reCAP_public_key'];
 				echo '<div id="reCAPTCHA">';
-				echo rp_recaptcha_get_html($publickey);
+				echo recaptcha_get_html($publickey);
 				echo '</div>';
 			}
 			
@@ -1782,7 +1798,9 @@ small{
 			global $wpdb;
 			$piereg = get_option( 'pie_register' );
 			$username = $_COOKIE['session_secure_id'];
-			$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+			//$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+			$user = get_user_by('login', $username);
+			$user_id = $user->ID;
 			//var_dump($username,$user_id);
 			$admin_verified_user = get_user_meta($user_id,'admin_verified_user',true);
 			$email_verified_user = get_user_meta($user_id,'email_verified_user',true);
@@ -1900,7 +1918,7 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 								}
 								break;
 							case "date" :
-								$outfield = '<input autocomplete="off" class="custom_field date-pick" tabindex="36" name="' . $id . '" id="' . $id . '" value="' . $value . '"  />';
+								$outfield = '<input class="custom_field date-pick" tabindex="36" name="' . $id . '" id="' . $id . '" value="' . $value . '"  />';
 							break;
 						}
 						?>		
@@ -1971,34 +1989,43 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 						}
 						$paypalcode.="?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
 						$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, '.$piereg['_admin_message_44'], 'piereg'), $login ) . '</p>'.$paypalcode;
-						$func3 = function() use ($msg){ echo $msg; };
-						add_action('login_form', $func3);
+						//$func3 = function() use ($msg){ echo $msg; };
+						$this->bodymsg = $msg;
+						add_action('login_form', array(&$this,'pie_login_form_body_msg'));
 						
 						$message = __($piereg['_admin_message_43'], 'piereg');
-						$func = function($ms) use ($message){ return $message; };
-						add_filter('login_messages', $func);
+						//$func = function($ms) use ($message){ return $message; };
+						$this->headmsg = $message;
+						add_filter('login_messages', array(&$this,'pie_login_head_message'));
 						return true;
 					}else{
 						///die($username);
-						$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+						//$user_id = $wpdb->get_var( "SELECT ID FROM $wpdb->users WHERE `user_login` = '".$username."'");
+						$user = get_user_by('login', $username);
+						$user_id = $user->ID;
 						if($user_id){
 							$admin_verified_user = get_user_meta($user_id,'admin_verified_user',true);
 							if($admin_verified_user){
 								$message = __($piereg['_admin_message_17'], 'piereg');
-								$func = function($ms) use ($message){ return $message; };
-								add_filter('login_messages', $func);
+								//$func = function($ms) use ($message){ return $message; };
+								$this->headmsg = $message;
+								add_filter('login_messages', array(&$this,'pie_login_head_message'));
 							}
 						}
 					}
 				}elseif( $piereg['admin_verify']){
 					$message = __($piereg['_admin_message_41'], 'piereg');
-					$func = function() use ($message){ return $message; };
-					add_filter('login_messages', $func);
+					//$func = function() use ($message){ return $message; };
+					$this->headmsg = $message;
+						add_filter('login_messages', array(&$this,'pie_login_head_message'));
 					return true;
 				}elseif($piereg['email_verify']){
 					$message = __($piereg['_admin_message_42'], 'piereg');
-					$func = function() use ($message){ return $message; };
-					add_filter('login_messages', $func);
+					//$func = function() use ($message){ return $message; };
+					//die(__($piereg['_admin_message_42'], 'piereg'));
+					$this->headmsg = $message;
+					//$session[] = $message;
+					add_filter('login_messages', array(&$this,'pie_login_head_message'));
 					return true;
 				}
 			}elseif(isset($_GET['piereg_verification'])){
@@ -2007,6 +2034,10 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 				//var_dump($user_id);
 				if($user_id > 0){
 					$login = get_user_meta($user_id, 'email_verify_user',true);
+					if(!$login){
+						$user = get_user_by("id",$user_id);
+						$login = $user->user_login;
+					}
 					//var_dump($login);
 					update_user_meta( $user_id, 'is_email_verified', 'yes' );
 					update_user_meta( $user_id, 'email_verified_user','yes');
@@ -2021,8 +2052,9 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 						delete_user_meta($user_id, 'email_verify_date');
 						
 						$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_46'], 'piereg'), $login ) . '</p>';
-						$func3 = function() use ($msg){ echo $msg; };
-						add_action('login_form', $func3);
+						//$func3 = function() use ($msg){ echo $msg; };
+						$this->bodymsg = $msg;
+						add_action('login_form', array(&$this,'pie_login_form_body_msg'));
 					}
 					else{
 						if($piereg['paypal_option']){
@@ -2034,8 +2066,9 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 							}
 							$paypalcode.="?cmd=_s-xclick&custom=".$user_id."&hosted_button_id=".$piereg['paypal_butt_id']."'><img src='https://www.paypal.com/en_US/i/btn/btn_subscribe_LG.gif' alt='PayPal - The safer, easier way to pay online' border='0' /></a>";
 							$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Hello <strong>%s</strong>, '.$piereg['_admin_message_45'], 'piereg'), $login ) . '</p>'.$paypalcode;
-							$func3 = function() use ($msg){ echo $msg; };
-							add_action('login_form', $func3);
+							//$func3 = function() use ($msg){ echo $msg; };
+							$this->bodymsg = $msg;
+							add_action('login_form', array(&$this,'pie_login_form_body_msg'));
 							
 						}else{
 							$wpdb->query( "UPDATE $wpdb->users SET user_login = '$login' WHERE ID = '$user_id'" );
@@ -2046,8 +2079,9 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 							delete_user_meta($user_id, 'email_verify_date');
 							
 							$msg = '<p style="margin-bottom:10px;">' . sprintf(__('Thank you <strong>%s</strong>, '.$piereg['_admin_message_46'], 'piereg'), $login ) . '</p>';
-							$func3 = function() use ($msg){ echo $msg; };
-							add_action('login_form', $func3);
+							//$func3 = function() use ($msg){ echo $msg; };
+							$this->bodymsg = $msg;
+							add_action('login_form', array(&$this,'pie_login_form_body_msg'));
 						}
 					}
 					//var_dump($func3);
@@ -2240,7 +2274,9 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 					add_filter("login_message",array(&$this,"payment_error_msg"));
 				}
 			}elseif($_GET['action'] == 'payment_cancel'){
-				echo '<p style="text-align:center;">' . __($piereg['_admin_message_49'], 'piereg') . '</p>';
+				//die('true');
+				//$this->headmsg = __($piereg['_admin_message_49'], 'piereg');
+				add_filter('login_message', array(&$this,'payment_error_msg'));
 			}else{
 				return false;
 			}
@@ -2283,8 +2319,21 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 		}
 		
 		function override_warning(){
+			$reflFunc = new ReflectionFunction('wp_new_user_notification');
+			print $reflFunc->getFileName() . ':' . $reflFunc->getStartLine();	
 			//if( current_user_can('activate_plugins') &&  $_GET['page'] == 'pie-register' )
 			echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('You have another plugin installed that is conflicting with Pie Register.  This other plugin is overriding the user notification emails.  Please contact <a href="http://www.genetechsolutions.com/support.html" target="_blank">support</a> with the list of your installed plugins and theme information.', 'piereg') . "</strong></p></div>";
+		}
+		/*
+		Backward Compatibility Issue fix
+		*/
+		//Callback functions
+		function pie_login_head_message(){
+			return $this->headmsg;
+		}
+		//Callback functions
+		function pie_login_form_body_msg(){
+			echo $this->bodymsg;
 		}
 	}
 }# END Class PieMemberRegister

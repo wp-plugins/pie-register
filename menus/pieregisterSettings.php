@@ -286,18 +286,18 @@
               <label for="disclaimer_title">
                 <?php _e('Disclaimer Title','piereg');?>
               </label>
-              <input type="text" name="piereg_disclaimer_title" id="disclaimer_title" value="<?php echo $piereg['disclaimer_title'];?>" />
+              <input type="text" name="piereg_disclaimer_title" id="disclaimer_title" value="<?php echo html_entity_decode($piereg['disclaimer_title']);?>" />
               <br />
               <label for="disclaimer_content">
                 <?php _e('Disclaimer Content','piereg');?>
               </label>
               <br />
-              <textarea name="piereg_disclaimer_content" id="disclaimer_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo stripslashes($piereg['disclaimer_content']);?></textarea>
+              <textarea name="piereg_disclaimer_content" id="disclaimer_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo html_entity_decode($piereg['disclaimer_content']);?></textarea>
               <br />
               <label for="disclaimer_agree">
                 <?php _e('Agreement Text','piereg');?>
               </label>
-              <input type="text" name="piereg_disclaimer_agree" id="disclaimer_agree" value="<?php echo $piereg['disclaimer_agree'];?>" />
+              <input type="text" name="piereg_disclaimer_agree" id="disclaimer_agree" value="<?php echo ($piereg['disclaimer_agree']);?>" />
             </div></td>
         </tr>
         <tr valign="top">
@@ -312,18 +312,18 @@
               <label for="license_title">
                 <?php _e('License Title','piereg');?>
               </label>
-              <input type="text" name="piereg_license_title" id="license_title" value="<?php echo $piereg['license_title'];?>" />
+              <input type="text" name="piereg_license_title" id="license_title" value="<?php echo ($piereg['license_title']);?>" />
               <br />
               <label for="license_content">
                 <?php _e('License Content','piereg');?>
               </label>
               <br />
-              <textarea name="piereg_license_content" id="license_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo stripslashes($piereg['license_content']);?></textarea>
+              <textarea name="piereg_license_content" id="license_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo html_entity_decode($piereg['license_content']);?></textarea>
               <br />
               <label for="license_agree">
                 <?php _e('Agreement Text','piereg');?>
               </label>
-              <input type="text" name="piereg_license_agree" id="license_agree" value="<?php echo $piereg['license_agree'];?>" />
+              <input type="text" name="piereg_license_agree" id="license_agree" value="<?php echo ($piereg['license_agree']);?>" />
             </div></td>
         </tr>
         <tr valign="top">
@@ -344,7 +344,7 @@
                 <?php _e('Privacy Policy Content','piereg');?>
               </label>
               <br />
-              <textarea name="piereg_privacy_content" id="privacy_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo stripslashes($piereg['privacy_content']);?></textarea>
+              <textarea name="piereg_privacy_content" id="privacy_content" cols="25" rows="10" style="width:80%;height:300px;display:block;"><?php echo html_entity_decode($piereg['privacy_content']);?></textarea>
               <br />
               <label for="privacy_agree">
                 <?php _e('Agreement Text','piereg');?>
