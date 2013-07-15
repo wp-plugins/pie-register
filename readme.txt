@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: trunk
+Stable tag: 1.31
 
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 
