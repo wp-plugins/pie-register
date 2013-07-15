@@ -9,7 +9,6 @@ Stable tag: 1.31
 Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimers, CAPTCHA Validation, Email Validation, User Moderation, Profile Fields and more.
 
 == Description ==
-
 # Welcome to Pie-Register by Genetech Solutions.
 
  So you want to have users register and login to your site before they interact with it? You need user registration and you don't have to build it from scratch. With Pie-Register you can use your logo and color scheme to brand your registration pages to your liking.  Use this plugin to quickly add custom user registration to your WordPress based blog or site. 
@@ -24,9 +23,9 @@ Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Cod
 *   __User Profile Moderation__
 *   __User Defined Fields__
 
-   Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. 
-   There are more features to come in the weeks ahead.  
-   See the plugin features section for complete details.
+Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. There are more features to come in the weeks ahead.
+
+See the plugin features section for complete details.
 
 ## Features
 
