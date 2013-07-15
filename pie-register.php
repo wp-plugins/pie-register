@@ -2,7 +2,7 @@
 /*
 Plugin Name: Pie Register
 Plugin URI: http://genetechsolutions.com.com/pie-register.html
-Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration Page.  Add Custom Logo, Password Field, Invitation Codes, Disclaimer, Captcha Validation, Email Validation, User the fork of register-plus, however many things have been changed since.
+Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 
 Author: Genetech
