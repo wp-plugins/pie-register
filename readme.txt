@@ -73,7 +73,7 @@ Just follow the simple steps:
 * Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
 
 == CHANGELOG ==
-=v1.31 July 13 2013=
+### v1.31 July 13 2013
 *   Backward Compatibility Issues fixed.
 *   Plugin Conflict Issue fixed.
 *   Input has been sanitized.
@@ -81,8 +81,8 @@ Just follow the simple steps:
 *   reCaptcha Library has been upgraded.
 
 
-=v1.30 July 11 2013=
-**New Features:**
+### v1.30 July 11 2013
+#### New Features:
 
 *   You can now specify the landing page on successful login.
 *   Added Logo URL box for Login pages.
@@ -91,7 +91,7 @@ Just follow the simple steps:
 *   Replaced the WordPress Link and ALT text from login and registration page logo with site URL and NAME
 *   Invitation code will now appear on the user profile page.
 
-**Bugs Fixed:**
+#### Bugs Fixed:
 
 *   Fixed Paypal issues and upgraded the IPN.
 *   Fixed password strength meter error.
@@ -99,19 +99,19 @@ Just follow the simple steps:
 *   Fixed re-Captcha size issue on registration form.
 *   Fixed some security issues.
 
-=v1.2.91 January 01 2013=
-Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
+### v1.2.91 January 01 2013
+*   Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 
-=v1.2.9a March 30 2012=
-* Fixed Custom Fields Reseting problem
-* Fixed Invitation Code update problem
+### v1.2.9a March 30 2012
+*   Fixed Custom Fields Reseting problem
+*   Fixed Invitation Code update problem
 
 
-=v1.2.9 March 9 2012=
+### v1.2.9 March 9 2012
 * Fixed Array problem on text fields.
 * Compatible upto wp 3.3.*
 
-=v1.2.8 beta October 31 2011=
+### v1.2.8 beta October 31 2011
 * Invitation Code Section has been extended
 * Custom Email Notification on Admin/Email verification
 * deprecated Functions has been replaced
@@ -119,29 +119,29 @@ Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 * and much much more..
 * Warning! This is the beta Version of the Pie-Register, Do not upgrade unless you've upgraded Wordpress to 3.2* Version.
 
-=v1.2.7 October 4 2011=
+### v1.2.7 October 4 2011
 * New ScreenShots Added
 
-=v1.2.6 October 4 2011=
+### v1.2.6 October 4 2011
 * Fixed Multiple Invitation Saving Problem
 
 =v1.2.5 October 3 2011=
 *Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
 *Added New Layout Pie-Register Menu built!
 
-=v1.2.4 September 21 2011=
+### v1.2.4 September 21 2011
 *Fixed the "Backslash" problem on the admin Setting Page.
 
-=v1.2.3 August 8 2011=
+### v1.2.3 August 8 2011
 *Highlighted the Code to put on the wp-login.php at the plugin page.
 
-=v1.2.2 February 20 2011=
+### v1.2.2 February 20 2011
 
 * Fixed Settings Override.
 * Compatible to Wp 3.0.5
 
 
-=v1.2.1 January 20 2011=
+### v1.2.1 January 20 2011
 
 * Fixed Password strength meter.
 * Compatible to Wp 3.0.4
@@ -152,32 +152,32 @@ Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 * Fixed Image uploads errors.
 * First step to Compatiblity to Wp 3.0
 
-=v1.1.9a April 07 2010=
+### v1.1.9a April 07 2010
 
 * Fixed Error after registration.
 
-=v1.1.9 April 06 2010=
+### v1.1.9 April 06 2010
 
 * Fixed Login box after verification.
 * Fixed diplaying invitation codes to the user dashboard.
 
-=v1.1.8 March 03 2010=
+### v1.1.8 March 03 2010
 
 * Fixed Payment link.
 * Fixed session errors/header errors.
 * And much much more..
 
-=v1.1.7 Febraury 04 2010=
+### v1.1.7 Febraury 04 2010
 
 * Fixed Resend verification email.
 * Fixed resend payment link.
 
-=v1.1.6 February 03 2010=
+### v1.1.6 February 03 2010
 
 * Fixed Security updates for Paypal resend code.
 * Add Phone/Mobile number Field.
 
-=v1.1.5 February 02 2010=
+### v1.1.5 February 02 2010
 
 * Keep away Unverified/Un-paid users to get logged in.
 * Fixed Logo display and form fields.
@@ -185,20 +185,20 @@ Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 * Fixed Date fields.
 * Changed Paypal Buy now to One -Time Subscription fee Button.
 
-=v1.1.3** January 08 2010=
+### v1.1.3** January 08 2010
 
 * Fixed User Registeration after Paypal Return.
 
 
-=v1.1.2** January 07 2010=
+### v1.1.2** January 07 2010
 
 * Fixed temp user id and email verification.
 
-=v1.1.1** January 06 2010=
+### v1.1.1** January 06 2010
 
 * Added Paypal Return and thank you URL.
 
-=v1.0.1** January 04 2010=
+### v1.0.1** January 04 2010
 
 * Fixed Password meter.
 * Added Paypal as shopping Cart
