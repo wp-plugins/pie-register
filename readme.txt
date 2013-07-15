@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.5
 Tested up to: 3.5.2
-Stable tag: 1.31
+Stable tag: trunk
 
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 
@@ -20,11 +20,11 @@ Want your customers to pay for the service you provide? The plugin allows you to
 
 And there is more, you can:
 
-*   __Send Invitation Codes__
-*   __Use CAPTCHA__
-*   __Email Validation__
-*   __User Profile Moderation__
-*   __User Defined Fields__
+* __Send Invitation Codes__
+* __Use CAPTCHA__
+* __Email Validation__
+* __User Profile Moderation__
+* __User Defined Fields__
 
 
 Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. There are more features to come in the weeks ahead.
@@ -74,44 +74,44 @@ Just follow the simple steps:
 
 
 == LOCALIZATION ==
-*   Currently This feature is not available. We are working on it to improve.
+* Currently This feature is not available. We are working on it to improve.
 
 == Support ==
 * Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
 
 == CHANGELOG ==
 ### v1.31 July 13 2013
-*   Backward Compatibility Issues fixed.
-*   Plugin Conflict Issue fixed.
-*   Input has been sanitized.
-*   UTF-8 characters are now supported by necessary text fields.
-*   reCaptcha Library has been upgraded.
+* Backward Compatibility Issues fixed.
+* Plugin Conflict Issue fixed.
+* Input has been sanitized.
+* UTF-8 characters are now supported by necessary text fields.
+* reCaptcha Library has been upgraded.
 
 
 ### v1.30 July 11 2013
 #### New Features:
 
-*   You can now specify the landing page on successful login.
-*   Added Logo URL box for Login pages.
-*   Added 'Reset to defaults' Button on Settings Page.
-*   Replaced the static path for admin, includes and plugin folders with WP relative Path Functions
-*   Replaced the WordPress Link and ALT text from login and registration page logo with site URL and NAME
-*   Invitation code will now appear on the user profile page.
+* You can now specify the landing page on successful login.
+* Added Logo URL box for Login pages.
+* Added 'Reset to defaults' Button on Settings Page.
+* Replaced the static path for admin, includes and plugin folders with WP relative Path Functions
+* Replaced the WordPress Link and ALT text from login and registration page logo with site URL and NAME
+* Invitation code will now appear on the user profile page.
 
 #### Bugs Fixed:
 
-*   Fixed Paypal issues and upgraded the IPN.
-*   Fixed password strength meter error.
-*   Fixed invitation code widget and auto delete problem.
-*   Fixed re-Captcha size issue on registration form.
-*   Fixed some security issues.
+* Fixed Paypal issues and upgraded the IPN.
+* Fixed password strength meter error.
+* Fixed invitation code widget and auto delete problem.
+* Fixed re-Captcha size issue on registration form.
+* Fixed some security issues.
 
 ### v1.2.91 January 01 2013
-*   Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
+* Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 
 ### v1.2.9a March 30 2012
-*   Fixed Custom Fields Reseting problem
-*   Fixed Invitation Code update problem
+* Fixed Custom Fields Reseting problem
+* Fixed Invitation Code update problem
 
 
 ### v1.2.9 March 9 2012
