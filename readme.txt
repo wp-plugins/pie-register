@@ -80,7 +80,7 @@ Just follow the simple steps:
 * Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
 
 == CHANGELOG ==
-### v1.32 September 16 2013
+### v1.32 September 23 2013
 * Stripslashes issue resolved
 * function mb_string has change to htmlentities with utf8_decode functions
 * wpdb_prepare replaced with sanitize function
