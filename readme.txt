@@ -3,13 +3,13 @@ Contributors: genetech
 
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.5
-Tested up to: 3.5.2
-Stable tag: 1.31
+Tested up to: 3.6.1
+Stable tag: 1.31.2
 
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 
 == Description ==
-= Welcome to Pie-Register by Genetech Solutions. =
+# Welcome to Pie-Register by Genetech Solutions.
 
 
 So you want to have users register and login to your site before they interact with it? You need user registration and you don't have to build it from scratch. With Pie-Register you can use your logo and color scheme to brand your registration pages to your liking.  Use this plugin to quickly add custom user registration to your WordPress based blog or site.
@@ -30,10 +30,10 @@ And there is more, you can:
 Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. There are more features to come in the weeks ahead.
 
 
-** See the plugin features section for complete details. **
+See the plugin features section for complete details.
 
 
-= Features: =
+# Features:
 
 
 Pie-Register has great features which you can’t find in any other free plugin.
@@ -77,9 +77,17 @@ Just follow the simple steps:
 * Currently This feature is not available. We are working on it to improve.
 
 == Support ==
-* Please visit [http://www.genetechsolutions.com/pie-register.html] (http://www.genetechsolutions.com/pie-register.html "Pie-Register") in order to get support regarding this plugin!
+* Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### v1.32 September 23 2013
+* Stripslashes issue resolved
+* function mb_string has change to htmlentities with utf8_decode functions
+* wpdb_prepare replaced with sanitize function
+* Empty URL field is now allowed on After Sign in redirect.
+* Custom Fields are now removeable.
+* Grace Period issue resolved.
+
 ### v1.31 July 13 2013
 * Backward Compatibility Issues fixed.
 * Plugin Conflict Issue fixed.
