@@ -3,10 +3,8 @@
 Plugin Name: Pie Register
 Plugin URI: http://genetechsolutions.com.com/pie-register.html
 Description: <strong>WordPress 3.6 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
-
-
 Author: Genetech
-Version: 1.31.2
+Version: 1.31.3
 Author URI: http://www.genetechsolutions.com/
 
 LOCALIZATION
@@ -132,6 +130,7 @@ if( !class_exists('PieMemberRegister') ){
 						
 				if(isset($_GET['action']) && $_GET['action'] == 'register')
 					add_action( 'login_head', array($this, 'PassHead') );
+				
 				#Add Custom Logo CSS to Login Page
 					add_action( 'login_head', array($this, 'LogoHead') );
 				#Hide initial login fields when email verification is enabled
@@ -165,7 +164,8 @@ if( !class_exists('PieMemberRegister') ){
 				#Admin Delete Unverified User
 					if( isset($_POST['vdeleteit']) )
 						add_action( 'init', array($this, 'AdminDeleteUnvalidated') );
-						
+				#Login Enqueu Scripts
+				add_action( 'login_enqueue_scripts', array($this, 'piereg_scripts_method') );	
 			//FILTERS
 				#Check Register Form for Errors
 				add_filter( 'registration_errors', array($this, 'RegErrors'),1 );
@@ -186,6 +186,35 @@ if( !class_exists('PieMemberRegister') ){
 
 		  add_action( 'activated_plugin', array($this, 'load_last') );
 			
+		}
+		
+		function piereg_scripts_method(){
+			$piereg = get_option( 'pie_register' );
+			wp_register_script( 'piereg-password-checker', plugins_url( '/js/pie_password_checker.js', __FILE__ ) );
+			wp_register_script( 'piereg-date', plugins_url( '/datepicker/date.js', __FILE__ ) );
+			wp_register_script( 'piereg-date-picker', plugins_url( '/datepicker/jquery.datePicker.js', __FILE__ ) );
+			wp_register_script( 'piereg-date-picker-ieonly', plugins_url( '/datepicker/jquery.bgiframe.js', __FILE__ ) );
+			wp_enqueue_script('password-strength-meter');
+			if ( $piereg['password'] ){
+				wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
+					'empty' => __('Strength indicator'),
+					'short' => __($piereg['bad']),
+					'bad' => __($piereg['bad']),
+					/* translators: password strength */
+					'good' => _x($piereg['good'], 'password strength'),
+					'strong' => __($piereg['strong']),
+					'mismatch' => __($piereg['mismatch'])
+				) );
+				//Enqueue Password Checker Script
+				wp_enqueue_script('piereg-password-checker');
+			}
+			//Enqueue Date Picker Script
+			wp_enqueue_script('piereg-date');
+			if(preg_match('/(?i)msie [1-9]/',$_SERVER['HTTP_USER_AGENT'])){
+				wp_enqueue_script('piereg-date-picker-ieonly');
+			}
+			wp_enqueue_script('piereg-date-picker');
+			wp_enqueue_style( 'piereg-date-picker', plugins_url( 'datepicker/datePicker.css', __FILE__ ) );
 		}
 		
 		function login_headerurl($login_header_url){
@@ -493,7 +522,7 @@ if( !class_exists('PieMemberRegister') ){
 								'adminmsg'				=> " New %blogname% Registration \r\n --------------------------- \r\n\r\n Username: %user_login% \r\n E-Mail: %user_email% \r\n",
 								'logo'					=> '',
 								'login_redirect'		=> '',
-								'register_css'			=> 'body{height:auto;} #login{width: 370px;} .login #pass-strength-result{width:295;}',
+								'register_css'			=> 'body{height:auto;} #login{width: 370px;} .login #pass-strength-result{width:95%;}',
 								'login_css'				=> 'body{height:auto;}',
 								'firstday'				=> 6,
 								'dateformat'			=> 'mm/dd/yyyy',
@@ -622,25 +651,25 @@ if( !class_exists('PieMemberRegister') ){
 			}
 			if(isset($_POST['email_notification_page'])){
 			
-			$update['html'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_html'], ENT_COMPAT, 'utf-8', false))));
-			$update['from'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_from'], ENT_COMPAT, 'utf-8', false))));
-			$update['fromname'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_fromname'], ENT_COMPAT, 'utf-8', false))));
-			$update['subject'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_subject'], ENT_COMPAT, 'utf-8', false))));
-			$update['custom_msg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_custom_msg'], ENT_COMPAT, 'utf-8', false))));
+			$update['html'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_html'], ENT_QUOTES, 'utf-8', false)));
+			$update['from'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_from'], ENT_QUOTES, 'utf-8', false)));
+			$update['fromname'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_fromname'], ENT_QUOTES, 'utf-8', false)));
+			$update['subject'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_subject'], ENT_QUOTES, 'utf-8', false)));
+			$update['custom_msg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_custom_msg'], ENT_QUOTES, 'utf-8', false)));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_user_nl2br']));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_emailvmsguser_nl2br']));
 			$update['user_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminvmsguser_nl2br']));
-			$update['msg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_msg'], ENT_COMPAT, 'utf-8', false))));
-			$update['adminvmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_adminvmsg'], ENT_COMPAT, 'utf-8', false))));
-			$update['emailvmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_emailvmsg'], ENT_COMPAT, 'utf-8', false))));
+			$update['msg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_msg'], ENT_QUOTES, 'utf-8', false)));
+			$update['adminvmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_adminvmsg'], ENT_QUOTES, 'utf-8', false)));
+			$update['emailvmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_emailvmsg'], ENT_QUOTES, 'utf-8', false)));
 			$update['disable_admin'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_disable_admin']));
 			$update['adminhtml'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_adminhtml']));
-			$update['adminfrom'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_adminfrom'], ENT_COMPAT, 'utf-8', false))));
-			$update['adminfromname'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_adminfromname'], ENT_COMPAT, 'utf-8', false))));
-			$update['adminsubject'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_adminsubject'], ENT_COMPAT, 'utf-8', false))));
-			$update['custom_adminmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_custom_adminmsg'], ENT_COMPAT, 'utf-8', false))));
+			$update['adminfrom'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_adminfrom'], ENT_QUOTES, 'utf-8', false)));
+			$update['adminfromname'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_adminfromname'], ENT_QUOTES, 'utf-8', false)));
+			$update['adminsubject'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_adminsubject'], ENT_QUOTES, 'utf-8', false)));
+			$update['custom_adminmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_custom_adminmsg'], ENT_QUOTES, 'utf-8', false)));
 			$update['admin_nl2br'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_admin_nl2br']));
-			$update['adminmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_adminmsg'], ENT_COMPAT, 'utf-8', false))));
+			$update['adminmsg'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_adminmsg'], ENT_QUOTES, 'utf-8', false)));
 			}
 			if(isset($_POST['presentation_page'])){
 			$update['register_css'] = $this->disable_magic_quotes_gpc(htmlentities($_POST['piereg_register_css']));
@@ -651,19 +680,19 @@ if( !class_exists('PieMemberRegister') ){
 			$update['loginredirect'] = $this->disable_magic_quotes_gpc($_POST['piereg_loginredirect']);
 			$update["password"] = $this->disable_magic_quotes_gpc($_POST['piereg_password']);
 			$update["password_meter"] = $this->disable_magic_quotes_gpc($_POST['piereg_password_meter']);
-			$update["short"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_short'], ENT_COMPAT, 'utf-8', false))));
-			$update["bad"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_bad'], ENT_COMPAT, 'utf-8', false))));
-			$update["good"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_good'], ENT_COMPAT, 'utf-8', false))));
-			$update["strong"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_strong'], ENT_COMPAT, 'utf-8', false))));
-			$update["mismatch"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_mismatch'], ENT_COMPAT, 'utf-8', false))));
-			$update["code"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_code'], ENT_COMPAT, 'utf-8', false))));
+			$update["short"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_short'], ENT_QUOTES, 'utf-8', false)));
+			$update["bad"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_bad'], ENT_QUOTES, 'utf-8', false)));
+			$update["good"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_good'], ENT_QUOTES, 'utf-8', false)));
+			$update["strong"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_strong'], ENT_QUOTES, 'utf-8', false)));
+			$update["mismatch"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_mismatch'], ENT_QUOTES, 'utf-8', false)));
+			$update["code"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_code'], ENT_QUOTES, 'utf-8', false)));
 			$update["custom_logo_url"] = $this->disable_magic_quotes_gpc($_POST['custom_logo_url']);
 			
 			if(isset($_POST['piereg_codeexpiry']) && is_numeric($_POST['piereg_codeexpiry'])){
 			$update["codeexpiry"] = $_POST['piereg_codeexpiry'];
 			}
 			$update["code_auto_del"] = $this->disable_magic_quotes_gpc($_POST['piereg_code_auto_del']);
-			$update["codename"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_codename'], ENT_COMPAT, 'utf-8', false))));
+			$update["codename"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_codename'], ENT_QUOTES, 'utf-8', false)));
 			if( isset($_POST['piereg_code']) ) {
 				$update["codepass"] = $_POST['piereg_codepass'];
 				$codespasses=explode("\n",$update["codepass"]);
@@ -678,18 +707,18 @@ if( !class_exists('PieMemberRegister') ){
 				$update["code_req"] = $this->disable_magic_quotes_gpc($_POST['piereg_code_req']);
 			}
 			$update["captcha"] = $this->disable_magic_quotes_gpc($_POST['piereg_captcha']);
-			$update["disclaimer"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_disclaimer'], ENT_COMPAT, 'utf-8', false))));
-			$update["disclaimer_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_disclaimer_title'], ENT_COMPAT, 'utf-8', false))));
-			$update["disclaimer_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_disclaimer_content'], ENT_COMPAT, 'utf-8', false))));
-			$update["disclaimer_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_disclaimer_agree'], ENT_COMPAT, 'utf-8', false))));
-			$update["license"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_license'], ENT_COMPAT, 'utf-8', false))));
-			$update["license_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_license_title'], ENT_COMPAT, 'utf-8', false))));
-			$update["license_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_license_content'], ENT_COMPAT, 'utf-8', false))));
-			$update["license_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_license_agree'], ENT_COMPAT, 'utf-8', false))));
-			$update["privacy"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_privacy'], ENT_COMPAT, 'utf-8', false))));
-			$update["privacy_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_privacy_title'], ENT_COMPAT, 'utf-8', false))));
-			$update["privacy_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_privacy_content'], ENT_COMPAT, 'utf-8', false))));
-			$update["privacy_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg_privacy_agree'], ENT_COMPAT, 'utf-8', false))));
+			$update["disclaimer"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_disclaimer'], ENT_QUOTES, 'utf-8', false)));
+			$update["disclaimer_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_disclaimer_title'], ENT_QUOTES, 'utf-8', false)));
+			$update["disclaimer_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_disclaimer_content'], ENT_QUOTES, 'utf-8', false)));
+			$update["disclaimer_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_disclaimer_agree'], ENT_QUOTES, 'utf-8', false)));
+			$update["license"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_license'], ENT_QUOTES, 'utf-8', false)));
+			$update["license_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_license_title'], ENT_QUOTES, 'utf-8', false)));
+			$update["license_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_license_content'], ENT_QUOTES, 'utf-8', false)));
+			$update["license_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_license_agree'], ENT_QUOTES, 'utf-8', false)));
+			$update["privacy"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_privacy'], ENT_QUOTES, 'utf-8', false)));
+			$update["privacy_title"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_privacy_title'], ENT_QUOTES, 'utf-8', false)));
+			$update["privacy_content"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_privacy_content'], ENT_QUOTES, 'utf-8', false)));
+			$update["privacy_agree"] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg_privacy_agree'], ENT_QUOTES, 'utf-8', false)));
 			$update["email_exists"] = $this->disable_magic_quotes_gpc($_POST['piereg_email_exists']);
 			$update["firstname"] = $this->disable_magic_quotes_gpc($_POST['piereg_firstname']);
 			$update["lastname"] = $this->disable_magic_quotes_gpc($_POST['piereg_lastname']);
@@ -727,55 +756,55 @@ if( !class_exists('PieMemberRegister') ){
 			}			
 			}
 			if(isset($_POST['customised_messages_page'])){
-				$update['_admin_message_1'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_1'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_2'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_2'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_3'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_3'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_4'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_4'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_5'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_5'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_6'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_6'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_7'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_7'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_8'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_8'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_9'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_9'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_10'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_10'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_12'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_12'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_13'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_13'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_14'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_14'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_15'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_15'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_16'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_16'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_17'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_17'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_18'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_18'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_19'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_19'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_20'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_20'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_21'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_21'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_22'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_22'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_23'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_23'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_24'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_24'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_25'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_25'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_26'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_26'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_27'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_27'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_28'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_28'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_29'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_29'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_30'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_30'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_31'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_31'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_32'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_32'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_33'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_33'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_34'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_34'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_35'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_35'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_36'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_36'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_37'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_37'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_38'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_38'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_39'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_39'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_40'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_40'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_41'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_41'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_42'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_42'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_43'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_43'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_44'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_44'], ENT_COMPAT, 'utf-8', false)))); 
-				$update['_admin_message_45'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_45'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_46'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_46'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_47'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_47'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_48'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_48'], ENT_COMPAT, 'utf-8', false)))); 
-				$update['_admin_message_49'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_49'], ENT_COMPAT, 'utf-8', false))));
-				$update['_admin_message_50'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(utf8_decode(htmlentities($_POST['piereg__admin_message_50'], ENT_COMPAT, 'utf-8', false))));
+				$update['_admin_message_1'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_1'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_2'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_2'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_3'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_3'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_4'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_4'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_5'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_5'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_6'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_6'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_7'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_7'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_8'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_8'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_9'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_9'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_10'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_10'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_12'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_12'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_13'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_13'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_14'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_14'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_15'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_15'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_16'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_16'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_17'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_17'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_18'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_18'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_19'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_19'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_20'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_20'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_21'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_21'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_22'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_22'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_23'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_23'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_24'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_24'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_25'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_25'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_26'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_26'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_27'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_27'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_28'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_28'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_29'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_29'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_30'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_30'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_31'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_31'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_32'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_32'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_33'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_33'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_34'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_34'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_35'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_35'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_36'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_36'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_37'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_37'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_38'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_38'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_39'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_39'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_40'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_40'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_41'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_41'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_42'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_42'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_43'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_43'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_44'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_44'], ENT_QUOTES, 'utf-8', false))); 
+				$update['_admin_message_45'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_45'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_46'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_46'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_47'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_47'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_48'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_48'], ENT_QUOTES, 'utf-8', false))); 
+				$update['_admin_message_49'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_49'], ENT_QUOTES, 'utf-8', false)));
+				$update['_admin_message_50'] = $this->disable_magic_quotes_gpc(htmlspecialchars_decode(htmlentities($_POST['piereg__admin_message_50'], ENT_QUOTES, 'utf-8', false)));
 			}
 			
 			update_option( 'pie_register_custom', $custom );
@@ -1003,8 +1032,6 @@ padding:5px 10px;
 				}				
 				$user_email = get_user_meta($user_id, 'email_verify_email',true);
 				$email_code = '?piereg_verification=' . $code;
-
-
 
 
 				$prelink = __($piereg['_admin_message_13'], 'piereg');		
@@ -1601,92 +1628,6 @@ display:none;
 			if( isset( $_GET['user_login'] ) ) $user_login = $_GET['user_login'];
 			if( isset( $_GET['user_email'] ) ) $user_email = $_GET['user_email'];
 			?>
-			<script type='text/javascript' src='<?php echo includes_url("/js/jquery/jquery.js?ver=1.7.1");?>'></script>
-			<?php /*?><!--<script type='text/javascript' src='<?php trailingslashit(get_option('siteurl'));?>wp-admin/js/common.js?ver=20080318'></script>--><?php */?>
-			<?php
-			if ( $piereg['password'] ){
-?>
-
-
-
-<?php /*?><script type='text/javascript' src='<?php echo includes_url("/js/jquery/jquery.color.js?ver=2.0-4561");?>'></script>
-<?php */?><script type='text/javascript'>
-/* <![CDATA[ */
-	pwsL10n = {
-		short: "<?php echo $piereg['short'];?>",
-		bad: "<?php echo $piereg['bad'];?>",
-		good: "<?php echo $piereg['good'];?>",
-		strong: "<?php echo $piereg['strong'];?>",
-		mismatch: "<?php echo $piereg['mismatch'];?>"
-	}
-/* ]]> */
-</script>
-<script type='text/javascript' src='<?php echo admin_url("/js/password-strength-meter.js");?>'></script>
-<script type="text/javascript">
-	function check_pass_strength ( ) {
-
-		var pass = jQuery('#pass1').val();
-		var pass2 = jQuery('#pass2').val();
-		var user = jQuery('#user_login').val();
-
-		// get the result as an object, i'm tired of typing it
-		var res = jQuery('#pass-strength-result');
-
-		var strength = passwordStrength(pass, user, pass2);
-
-		jQuery(res).removeClass('short bad good strong mismatch');
-		
-		 if ( strength == 1 ) {
-			// this catches 'Too short' and the off chance anything else comes along
-			jQuery(res).addClass('short');
-			jQuery(res).html( pwsL10n.short );
-		}
-		else if ( strength == 2 ) {
-			jQuery(res).addClass('bad');
-			jQuery(res).html( pwsL10n.bad );
-		}
-		else if ( strength == 3 ) {
-			jQuery(res).addClass('good');
-			jQuery(res).html( pwsL10n.good );
-		}
-		else if ( strength == 4 ) {
-			jQuery(res).addClass('strong');
-			jQuery(res).html( pwsL10n.strong );
-		}
-		else if ( strength == 5 ) {
-			jQuery(res).addClass('mismatch');
-			jQuery(res).html( pwsL10n.mismatch );
-		}
-		else {
-			// this catches 'Too short' and the off chance anything else comes along
-			jQuery(res).addClass('short');
-			jQuery(res).html( pwsL10n.short );
-		}
-
-	}
-	
-
-	jQuery(function($) { 
-		$('#pass1').keyup( check_pass_strength );
-		$('#pass2').keyup( check_pass_strength )
-		$('.color-palette').click(function(){$(this).siblings('input[name=admin_color]').attr('checked', 'checked')});
-	} );
-	
-	jQuery(document).ready( function() {
-		jQuery('#pass1,#pass2').attr('autocomplete','off');
-		jQuery('#user_login').val('<?php echo $user_login; ?>');
-		jQuery('#user_email').val('<?php echo $user_email; ?>');
-    });
-</script>
-<?php } ?>
-
-<!-- required plugins -->
-<script type="text/javascript" src="<?php echo $this->plugin_url;?>datepicker/date.js"></script>
-<!--[if IE]><script type="text/javascript" src="<?php echo $plugin_url;?>datepicker/jquery.bgiframe.js"></script><![endif]-->
-
-<!-- jquery.datePicker.js -->
-<script type="text/javascript" src="<?php echo $this->plugin_url;?>datepicker/jquery.datePicker.js"></script>
-<link href="<?php echo $this->plugin_url;?>datepicker/datePicker.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">
 jQuery.dpText = {
 	TEXT_PREV_YEAR		:	'<?php _e('Previous year','piereg');?>',
@@ -1807,8 +1748,6 @@ small{
 	position:relative;
 	margin-left:0px;
 }
-
-
 </style>
 		<?php
 		}
@@ -2356,8 +2295,6 @@ else if( $piereg['login_css'] ) echo html_entity_decode(stripslashes($piereg['lo
 		}
 	}
 }# END Class PieMemberRegister
-
-
 # Run The Plugin!
 if( class_exists('PieMemberRegister') ){
 	$pie_register = new PieMemberRegister();

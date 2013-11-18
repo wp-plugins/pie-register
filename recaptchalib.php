@@ -31,7 +31,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 /**
  * The reCAPTCHA server URL's
  */
@@ -41,13 +40,11 @@ if(!defined("RECAPTCHA_API_SECURE_SERVER"))
 define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
 if(!defined("RECAPTCHA_VERIFY_SERVER"))
 define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
-
 /**
  * Encodes the given data into a query string format
  * @param $data - array of string elements to be encoded
  * @return string - encoded request
  */
-
 if(!function_exists('_recaptcha_qsencode')){
 	function _recaptcha_qsencode ($data) {
 			$req = "";
@@ -59,9 +56,6 @@ if(!function_exists('_recaptcha_qsencode')){
 			return $req;
 	}
 }
-
-
-
 /**
  * Submits an HTTP POST to a reCAPTCHA server
  * @param string $host
@@ -99,7 +93,6 @@ if(!function_exists('_recaptcha_http_post')){
 	}
 }
 
-
 /**
  * Gets the challenge HTML (javascript and non-javascript version).
  * This is called from the browser, and the resulting reCAPTCHA HTML widget
@@ -107,7 +100,6 @@ if(!function_exists('_recaptcha_http_post')){
  * @param string $pubkey A public key for reCAPTCHA
  * @param string $error The error given by reCAPTCHA (optional, default is null)
  * @param boolean $use_ssl Should the request be made over ssl? (optional, default is false)
-
  * @return string - The HTML to be embedded in the user's form.
  */
 if(!function_exists('recaptcha_get_html')){
@@ -136,9 +128,6 @@ if(!function_exists('recaptcha_get_html')){
 		</noscript>';
 	}
 }
-
-
-
 /**
  * A ReCaptchaResponse is returned from recaptcha_check_answer()
  */
@@ -149,7 +138,6 @@ if(!class_exists('ReCaptchaResponse')){
 			var $error;
 	}
 }
-
 
 /**
   * Calls an HTTP POST function to verify if the user's guess was correct
@@ -216,7 +204,6 @@ if(!function_exists('recaptcha_get_signup_url')){
 		return "https://www.google.com/recaptcha/admin/create?" .  _recaptcha_qsencode (array ('domains' => $domain, 'app' => $appname));
 	}
 }
-
 if(!function_exists('_recaptcha_aes_pad')){
 	function _recaptcha_aes_pad($val) {
 		$block_size = 16;
@@ -224,9 +211,7 @@ if(!function_exists('_recaptcha_aes_pad')){
 		return str_pad($val, strlen ($val) + $numpad, chr($numpad));
 	}
 }
-
 /* Mailhide related code */
-
 if(!function_exists('_recaptcha_aes_encrypt')){
 	function _recaptcha_aes_encrypt($val,$ky) {
 		if (! function_exists ("mcrypt_encrypt")) {
@@ -238,13 +223,11 @@ if(!function_exists('_recaptcha_aes_encrypt')){
 		return mcrypt_encrypt($enc, $ky, $val, $mode, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	}
 }
-
 if(!function_exists('_recaptcha_mailhide_urlbase64')){
 	function _recaptcha_mailhide_urlbase64 ($x) {
 		return strtr(base64_encode ($x), '+/', '-_');
 	}
 }
-
 if(!function_exists('recaptcha_mailhide_url')){
 /* gets the reCAPTCHA Mailhide url for a given email, public key and private key */
 	function recaptcha_mailhide_url($pubkey, $privkey, $email) {
@@ -260,7 +243,6 @@ if(!function_exists('recaptcha_mailhide_url')){
 		return "http://www.google.com/recaptcha/mailhide/d?k=" . $pubkey . "&c=" . _recaptcha_mailhide_urlbase64 ($cryptmail);
 	}
 }
-
 /**
  * gets the parts of the email to expose to the user.
  * eg, given johndoe@example,com return ["john", "example.com"].
@@ -280,7 +262,6 @@ if(!function_exists('_recaptcha_mailhide_email_parts')){
 		return $arr;
 	}
 }
-
 /**
  * Gets html to display an email address given a public an private key.
  * to get a key, go to:
@@ -297,5 +278,4 @@ if(!function_exists('recaptcha_mailhide_html')){
 	
 	}
 }
-
 ?>
