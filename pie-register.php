@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Pie Register
-Plugin URI: http://genetechsolutions.com.com/pie-register.html
+Plugin URI: http://genetechsolutions.com/pie-register.html
 Description: <strong>WordPress 3.6 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 Author: Genetech
 Version: 1.31.3
