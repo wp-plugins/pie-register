@@ -1,0 +1,390 @@
+.login form select, .login select {
+	background: none repeat scroll 0 0 #FBFBFB;
+	border: 1px solid #E5E5E5;
+	box-shadow: 1px 1px 2px rgba(200, 200, 200, 0.2) inset;
+	color: #555555;
+	font-size: 24px;
+	font-weight: 200;
+	margin-bottom: 16px;
+	margin-right: 6px;
+	margin-top: 2px;
+	outline: 0 none;
+	padding: 3px;
+	width: 100%;
+}
+.login form textarea {
+	background: none repeat scroll 0 0 #FBFBFB;
+	border: 1px solid #E5E5E5;
+	box-shadow: 1px 1px 2px rgba(200, 200, 200, 0.2) inset;
+	color: #555555;
+	font-size: 24px;
+	font-weight: 200;
+	margin-bottom: 16px;
+	margin-right: 6px;
+	margin-top: 2px;
+	outline: 0 none;
+	padding: 3px;
+	width: 100%;
+}
+.login form .input, .login input[type="number"] {
+	background: none repeat scroll 0 0 #FBFBFB;
+	border: 1px solid #E5E5E5;
+	box-shadow: 1px 1px 2px rgba(200, 200, 200, 0.2) inset;
+	color: #555555;
+	font-size: 24px;
+	font-weight: 200;
+	line-height: 1;
+	margin-bottom: 16px;
+	margin-right: 6px;
+	margin-top: 2px;
+	outline: 0 none;
+	padding: 3px;
+	width: 100%;
+}
+.login form input[type="checkbox"], .login form input[type="radio"] {
+	margin: 1px 10px 0;
+	padding: 0;
+	vertical-align: text-top;
+}
+.login form div {
+	margin-bottom: 34px;
+}
+.login form span {
+	float: left;
+	min-width: 25%;
+}
+#login form#loginform h1 {
+	display:none;
+}
+#login form#loginform {
+	margin: auto;
+	width: 300px;
+}
+#login form#loginform p {
+	float: left;
+	margin: 16px 0 0;
+	width: 100%;
+}
+#login form#loginform p label {
+	float: left;
+	margin: 10px 0 0;
+	min-width: 100px;
+}
+#login form#lostpasswordform h1 {
+	display:none;
+}
+#login form#lostpasswordform {
+	margin: auto;
+	width: 300px;
+}
+#login form#lostpasswordform p {
+	float: left;
+	margin: 16px 0 0;
+	width: 100%;
+}
+#login form#lostpasswordform p label {
+	float: left;
+	margin: 10px 0 10px;
+	min-width: 100px;
+}
+ul#pie_register {
+	margin:0;
+	padding:0;
+	list-style:none;
+	float:left;
+	width:100%;
+}
+#pie_register #pie_form_desc {
+	margin-top: 9px;
+}
+
+
+#pie_register .fields2 {
+	width: 91.9%;
+	padding: 2% 4% 8px 4%;
+	border:1px solid #ffffff;
+	float:left;
+	margin-bottom:2px;
+	font-family:arial;
+	color:#66696b;
+	font-size: 14px;
+	position: relative;
+	margin-top: 9px;
+}
+#pie_register .fields2 .label_position {
+	float:left;
+	line-height:43px;
+	margin-right:10px;
+}
+#pie_register .fields2 .fields_position {
+	float:right;
+	width:81%;
+}
+#pie_register .fields2 label {
+	font-family: 'HelveticaRegular';
+	font-size: 18px;
+	color:#2d2f30;
+	float: left;
+	width: 100%;
+	text-transform:capitalize;
+}
+
+#pie_register .fields2 .input_fields {
+	width: 262px;
+	border-radius: 3px;
+	border: 1px solid #ababab;
+	height:32px;
+	padding: 0px 5px 0px 5px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+}
+#pie_register .fields {
+	width: 91.9%;
+	padding: 2% 4% 8px 4%;
+	border:1px solid #ffffff;
+	float:left;
+	margin-bottom:2px;
+	font-family:arial;
+	color:#66696b;
+	font-size: 14px;
+	position: relative;
+	margin-top: 9px;
+}
+#pie_register .fields .submit_field {
+	width: 22%;
+	height: 33px;
+	float: right;
+	padding: 16px 12px 8px 12px;
+	margin-right: 33px;
+	margin-top: -9px;
+	position: relative;
+}
+#pie_register .fields .submit_field .submit_btn {
+	float:right;
+	background:#464646;
+	color:#ffffff;
+	border: 0;
+	cursor: pointer;
+	width:74px;
+	height:26px;
+}
+#pie_register .fields .label_position {
+	float:left;
+	line-height:43px;
+	margin-right:10px;
+}
+#pie_register .fields .fields_position {
+	float:right;
+	width:81%;
+}
+#pie_register .fields label {
+	font-family: 'HelveticaRegular';
+	font-size: 18px;
+	color:#2d2f30;
+	float: left;
+	width: 100%;
+	text-transform:capitalize;
+}
+#pie_register .fields .submit_field .edit_btn {
+	left: -15px;
+	top: 13px;
+}
+#pie_register .fields .input_fields {
+	width: 262px;
+	border-radius: 3px;
+	border: 1px solid #ababab;
+	height:32px;
+	padding: 0px 5px 0px 5px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+}
+#pie_register .fields .radio_wrap {
+	float:left;
+	width:100%;
+	margin-top:10px;
+}
+#pie_register .fields .radio_wrap label {
+	font-size: 15px;
+	float: left;
+	width: auto;
+	margin-right: 5px;
+}
+#pie_register .fields .radio_wrap .radio_fields {
+	width: 12px;
+	float: left;
+	margin-right: 20px;
+	vertical-align: middle;
+	margin-top: 3px;
+}
+#pie_register .fields .radio_fields {
+	float:left;
+}
+#pie_register .fields input[type="checkbox"].input_fields, #pie_register .fields input[type="radio"].input_fields {
+	width:auto;
+}
+#pie_register .fields select {
+	width: 262px;
+	border-radius: 3px;
+	border: 1px solid #ababab;
+	padding: 5px 5px 5px 5px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+}
+#pie_register .fields textarea {
+	border-radius: 3px;
+	border: 1px solid #ababab;
+	padding: 5px 5px 5px 5px;
+	margin-top: 7px;
+	margin-bottom: 10px;
+	resize: none;
+	font-family: arial;
+}
+#pie_register .fields .date_format_field img {
+	vertical-align:middle;
+	margin-left: 5px;
+}
+#pie_register .fields .inner_fields {
+	float:left;
+	margin-right:30px;
+}
+#pie_register .fields .inner_fields label {
+	width: auto;
+	float: none;
+	display: block;
+}
+#pie_register .fields .time {
+	float:left;
+	width:100%;
+}
+#pie_register .fields .time .colon {
+	float:left;
+	line-height: 48px;
+	margin-right: 10px;
+	margin-left: 0px;
+}
+#pie_register .fields .time .time_fields {
+	float:left;
+}
+#pie_register .fields .time .time_fields .input_fields {
+	width:70px;
+	margin-bottom:3px;
+	float: left;
+	margin-right:10px;
+}
+#pie_register .fields .time .time_fields label {
+	font-size:14px;
+	width: auto;
+	float: none;
+	display:block;
+}
+#pie_register .fields .time .time_fields:first-child select {
+	margin-left:0;
+}
+#pie_register .fields .time .time_fields select {
+	width:80px;
+	height:34px;
+	margin-left:10px;
+}
+#pie_register .fields .address {
+	float:left;
+	width: 60%;
+}
+#pie_register .fields .address label {
+	font-size:14px;
+	width: auto;
+}
+#pie_register .fields .address .input_fields {
+	width: 97%;
+}
+#pie_register .fields .address2 {
+	float:left;
+	width:49.6%;
+}
+#pie_register .fields .address2 .input_fields {
+	width: 92%;
+}
+#pie_register .fields .address2 select {
+	width:96%;
+}
+#recaptcha_area {
+	float:left;
+}
+.login_error {
+	margin: 0 0 0px 0px;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	color:#ffffff;
+	background:url(../images/err_msg.png) no-repeat 20px 13px #d22828;
+	padding-left: 40px;
+	border-radius: 8px;
+}
+.message {
+	margin: 0 0 0px 0px;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	background: url(../images/success_msg.png) no-repeat 20px 11px #6a9644;
+	padding-left: 44px;
+	border-radius: 8px;
+	color:#ffffff;
+}
+.warning {
+	margin: 0 0 0px 0px;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	background: url(../images/warning_msg.png) no-repeat 20px 9px #e98237;
+	padding-left: 44px;
+	border-radius: 8px;
+	color:#ffffff;
+}
+@font-face {
+	font-family: 'HelveticaRegular';
+	src: url('../fonts/helvetica-webfont.eot');
+	src: url('../fonts/helvetica-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/helvetica-webfont.woff') format('woff'),  url('../fonts/helvetica-webfont.ttf') format('truetype'),  url('../fonts/helvetica-webfont.svg#HelveticaRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'MyriadProRegular';
+	src: url('../fonts/myriadp2-webfont.eot');
+	src: url('../fonts/myriadp2-webfont.eot?#iefix') format('embedded-opentype'),  url('../fonts/myriadp2-webfont.woff') format('woff'),  url('../fonts/myriadp2-webfont.ttf') format('truetype'),  url('../fonts/myriadp2-webfont.svg#MyriadProRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+.ui-progressbar {
+	height: 2em;
+	text-align: left;
+	overflow: hidden;
+}
+.ui-progressbar .ui-progressbar-value {
+	margin: -1px;
+	height: 100%;
+}
+.ui-progressbar .ui-progressbar-overlay {
+	background: url("images/animated-overlay.gif");
+	height: 100%;
+	filter: alpha(opacity=25);
+	opacity: 0.25;
+}
+.ui-progressbar-indeterminate .ui-progressbar-value {
+	background-image: none;
+}
+.ui-widget-header {
+	border: 1px solid #aaaaaa;
+	background: #cccccc url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+	color: #222222;
+	font-weight: bold;
+}
+.ui-widget-header a {
+	color: #222222;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+	border-top-right-radius: 4px;
+}
+.ui-widget-content {
+	border: 1px solid #aaaaaa;
+	background: #ffffff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;
+	color: #222222;
+}
