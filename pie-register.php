@@ -1737,7 +1737,7 @@ function Unverified(){
 			$hash 		= $return_data[0];
 			$user_id 	= $return_data[1];				 
 			
-			mail("shujaathaider88@gmail.com","IPN chala",json_encode($_POST));
+		
 			
 			if(!is_numeric($user_id ))
 				return false;				
