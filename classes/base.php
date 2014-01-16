@@ -538,7 +538,7 @@ class Base
 			
 			if(empty($key) ||  $active != 1)
 			{
-				echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. ', 'piereg')."</strong></p></div>";	
+				echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. Click <a href="http://pieregister.genetech.co/license-generation-form/" target="_blank">here</a> to get your key. ', 'piereg')."</strong></p></div>";	
 			}
 		
 	}
