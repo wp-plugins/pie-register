@@ -69,8 +69,11 @@
       <input type="hidden" value="<?= admin_url()?>" name="redirect_to">
       <input type="hidden" value="1" name="testcookie">
     </p>
-   <? if(!is_page()) { ?>
+   <? if(!is_page() ) { ?>
     <p id="nav"> <a href="<?  echo site_url('/wp-login.php?action=register');?>">Register</a> | <a title="Password Lost and Found" href="<?  echo site_url('/wp-login.php?action=lostpassword');?>">Lost your password?</a> </p>
+    <? } ?>
+    
+    <? if($pagenow == 'wp-login.php'  ) { ?>
     <p id="backtoblog"><a title="Are you lost?" href="<? bloginfo("url"); ?>">← Back to Pie Register</a></p>
     <? } ?>
     

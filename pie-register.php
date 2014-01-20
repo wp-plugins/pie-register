@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration fo
 
 
 Author: Genetech Solutions
-Version: 2.0
+Version: 5.0
 Author URI: http://www.genetechsolutions.com/
 
 LOCALIZATION
@@ -15,13 +15,15 @@ LOCALIZATION
 CHANGELOG
 See readme.txt
 */
-//define( 'SHORTINIT', true );
-require_once('classes/base.php');
-require_once('classes/profile_admin.php');
-require_once('classes/profile_front.php');
-require_once('classes/registration_form.php');
-require_once('classes/edit_form.php');
-require_once('widget.php');
+//define( 'SHORTINIT', true );]
+$dir_path = dirname(__FILE__);
+
+require_once($dir_path.'/classes/base.php');
+require_once($dir_path.'/classes/profile_admin.php');
+require_once($dir_path.'/classes/profile_front.php');
+require_once($dir_path.'/classes/registration_form.php');
+require_once($dir_path.'/classes/edit_form.php');
+require_once($dir_path.'/widget.php');
 
 global $pagenow;
 global $action;
@@ -36,9 +38,11 @@ class PieRegister extends Base
 	function __construct()
 	{
 		
+		parent::__construct();
 		global $pagenow,$wp_version,$profile;
-		
+	
 		$errors = new WP_Error();
+		
 		
 		add_action('wp_ajax_get_meta_by_field', array($this,'getMeta'));
 		
@@ -312,7 +316,7 @@ class PieRegister extends Base
 	
 	function process_login_form()
  	{
-		global $errors;
+		global $errors,$pagenow;;
 		wp_register_style( 'prefix-style', plugins_url('css/front.css', __FILE__) );
 		wp_enqueue_style( 'prefix-style' );	
 		wp_enqueue_script( 'jquery' );
@@ -455,7 +459,7 @@ class PieRegister extends Base
 			$data 	= get_option( 'pie_fields_default' );	
 		}
 		
-		require_once('menus/PieRegEditForm.php');		
+		require_once($this->plugin_dir.'/menus/PieRegEditForm.php');		
 	}
 	
 	function addCustomScripts()
@@ -1001,23 +1005,23 @@ function Unverified(){
 			delete_option("pie_register_active");	
 		}
 		
-		require_once('menus/PieGeneralSettings.php');			
+		require_once($this->plugin_dir.'/menus/PieGeneralSettings.php');			
 	}
 	function PieRegPaymentGateway()
 	{
-		require_once('menus/PieRegPaymentGateway.php');				
+		require_once($this->plugin_dir.'/menus/PieRegPaymentGateway.php');				
 	}
 	function PieRegAdminNotification()
 	{
-		require_once('menus/PieRegAdminNotification.php');	
+		require_once($this->plugin_dir.'/menus/PieRegAdminNotification.php');	
 	}
 	function PieRegUserNotification()
 	{
-		require_once('menus/PieRegUserNotification.php');	
+		require_once($this->plugin_dir.'/menus/PieRegUserNotification.php');	
 	}
 	function PieRegCustomMessages()
 	{
-		require_once('menus/PieRegCustomMessages.php');		
+		require_once($this->plugin_dir.'/menus/PieRegCustomMessages.php');		
 	}
 	function PieRegInvitationCodes()
 	{
@@ -1055,7 +1059,7 @@ function Unverified(){
 			}	
 		}
 		
-		require_once('menus/PieRegInvitationCodes.php');		
+		require_once($this->plugin_dir.'/menus/PieRegInvitationCodes.php');		
 	}
 	function InsertCode($name)
 	{
@@ -1260,7 +1264,7 @@ function Unverified(){
 		
 		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-		require_once('menus/PieRegImportExport.php');		
+		require_once($this->plugin_dir.'/menus/PieRegImportExport.php');		
 	}
 	
 	
@@ -1855,7 +1859,7 @@ function Unverified(){
 	}
 	function showLoginForm()
 	{
-		global $errors;
+		global $errors,$pagenow;
 		
 		if ( !is_user_logged_in() ) 
 		{
