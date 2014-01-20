@@ -3,9 +3,15 @@ class Base
 {
 	var $user_table;		
 	var $user_meta_table; 
+	var $plugin_dir;
+	var	$plugin_url ;
+	
 	function __construct()
 	{
-			
+		$this->plugin_dir = dirname(dirname(__FILE__));
+		$this->plugin_url = plugins_url() .'/'. basename(dirname(dirname(__FILE__))) .'/';	
+		
+				
 	}
 	function getPieMeta()
 	{
