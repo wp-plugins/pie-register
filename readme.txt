@@ -3,7 +3,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.6
 Tested up to: 3.8
-Stable tag: 1.31.3
+Stable tag: 1.31.4
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
 # Welcome to Pie-Register by Genetech Solutions.
