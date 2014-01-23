@@ -4,7 +4,7 @@ Tags: register, registration, password, invitation, custom login, ajax login, cu
 Requires at least: 3.6
 Tested up to: 3.8
 Stable tag: 1.31.4
-Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
+Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation
 == Description ==
 __Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/ __
 
