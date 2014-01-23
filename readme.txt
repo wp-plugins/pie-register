@@ -1,11 +1,9 @@
 ﻿=== Pie Register ===
 Contributors: genetech
-
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
-Requires at least: 3.5
+Requires at least: 3.6
 Tested up to: 3.8
-Stable tag: 1.31.3
-
+Stable tag: 1.31.4
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
 # Welcome to Pie-Register by Genetech Solutions.
@@ -26,6 +24,7 @@ Use the free Pie-Register plugin to easily add features like these to your servi
 See the plugin features section for complete details.
 
 # Features:
+Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/
 
 Pie-Register has great features which you can’t find in any other free plugin.
 
@@ -48,21 +47,15 @@ Just follow the simple steps:
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Set the options in the Settings Panel
 
-
 == LOCALIZATION ==
 * Currently This feature is not available. We are working on it to improve.
-
 == Support ==
 * Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
-
 == CHANGELOG ==
-### v2.0.beta January 2 2014
-* A totally new look sporting an attractive New Interface
-* Revamped with a lot of New Features.
-* Built in intuitive Form Editor
-* Added Shortcodes.
-* and much much more..
-* Warning: This is Beta Release - NOT recommended to upgrade/install on Production sites, it still in beta, suggestions and bugs reporting are welcome
+
+### v1.31.4 January 23 2014
+* Fixed Custom Field deletion problem
+* Fixed Email Notification page "Send as HTML and Convert new lines to <br />tags (HTML only)"
 
 ### v1.31.3 November 06 2013
 * zxcvbn lib is added
@@ -85,19 +78,15 @@ Just follow the simple steps:
 * UTF-8 characters are now supported by necessary text fields.
 * reCaptcha Library has been upgraded.
 
-
 ### v1.30 July 11 2013
 #### New Features:
-
 * You can now specify the landing page on successful login.
 * Added Logo URL box for Login pages.
 * Added 'Reset to defaults' Button on Settings Page.
 * Replaced the static path for admin, includes and plugin folders with WP relative Path Functions
 * Replaced the WordPress Link and ALT text from login and registration page logo with site URL and NAME
 * Invitation code will now appear on the user profile page.
-
 #### Bugs Fixed:
-
 * Fixed Paypal issues and upgraded the IPN.
 * Fixed password strength meter error.
 * Fixed invitation code widget and auto delete problem.
@@ -110,7 +99,6 @@ Just follow the simple steps:
 ### v1.2.9a March 30 2012
 * Fixed Custom Fields Reseting problem
 * Fixed Invitation Code update problem
-
 
 ### v1.2.9 March 9 2012
 * Fixed Array problem on text fields.
@@ -129,7 +117,6 @@ Just follow the simple steps:
 
 ### v1.2.6 October 4 2011
 * Fixed Multiple Invitation Saving Problem
-
 =v1.2.5 October 3 2011=
 *Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
 *Added New Layout Pie-Register Menu built!
@@ -141,49 +128,38 @@ Just follow the simple steps:
 *Highlighted the Code to put on the wp-login.php at the plugin page.
 
 ### v1.2.2 February 20 2011
-
 * Fixed Settings Override.
 * Compatible to Wp 3.0.5
 
-
 ### v1.2.1 January 20 2011
-
 * Fixed Password strength meter.
 * Compatible to Wp 3.0.4
 
-
-=v1.2.0 June 25 2010=
-
+### v1.2.0 June 25 2010
 * Fixed Image uploads errors.
 * First step to Compatiblity to Wp 3.0
 
 ### v1.1.9a April 07 2010
-
 * Fixed Error after registration.
 
 ### v1.1.9 April 06 2010
-
 * Fixed Login box after verification.
 * Fixed diplaying invitation codes to the user dashboard.
 
 ### v1.1.8 March 03 2010
-
 * Fixed Payment link.
 * Fixed session errors/header errors.
 * And much much more..
 
 ### v1.1.7 Febraury 04 2010
-
 * Fixed Resend verification email.
 * Fixed resend payment link.
 
 ### v1.1.6 February 03 2010
-
 * Fixed Security updates for Paypal resend code.
 * Add Phone/Mobile number Field.
 
 ### v1.1.5 February 02 2010
-
 * Keep away Unverified/Un-paid users to get logged in.
 * Fixed Logo display and form fields.
 * Fixed short tags enabled.
@@ -191,26 +167,19 @@ Just follow the simple steps:
 * Changed Paypal Buy now to One -Time Subscription fee Button.
 
 ### v1.1.3** January 08 2010
-
 * Fixed User Registeration after Paypal Return.
 
-
 ### v1.1.2** January 07 2010
-
 * Fixed temp user id and email verification.
 
 ### v1.1.1** January 06 2010
-
 * Added Paypal Return and thank you URL.
 
 ### v1.0.1** January 04 2010
-
 * Fixed Password meter.
 * Added Paypal as shopping Cart
 
-
 == Screenshots ==
-
 1. Registration Page
 2. Pie Register Settings
 3. Invitation Tracking Dashboard Widget
