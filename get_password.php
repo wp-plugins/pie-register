@@ -23,24 +23,24 @@ $success	= "";
 ?>
 
 <div id="login">
-  <? if ($success != "") {
+  <?php if ($success != "") {
 	 	?>
   <p class="message">
-    <?=$success?>
+    <?php echo $success?>
   </p>
-  <?
+  <?php
 	} else if (isset($errors->errors['password_reset_mismatch'][0]) && !empty($errors->errors['password_reset_mismatch'][0])  ) {  
 		?>
   <p class="login_error">
-    <?  print_r($errors->errors['password_reset_mismatch'][0]); ?>
+    <?php  print_r($errors->errors['password_reset_mismatch'][0]); ?>
   </p>
-  <?
+  <?php
 	} else {
 ?>
   <p class="warning">
-    <?=$warning?>
+    <?php echo $warning?>
   </p>
-  <?	
+  <?php 
 	
 	}
   ?>
@@ -57,7 +57,7 @@ $success	= "";
     <p class="submit">
       <input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Reset Password">
     </p>
-     <p id="nav"> <a href="<?php echo wp_login_url(); ?>">Log in</a> | <a href="<?  echo site_url('/wp-login.php?action=register');?>">Register</a> </p>
-    <p id="backtoblog"><a title="Are you lost?" href="<? bloginfo("url"); ?>">← Back to Pie Register</a></p>
+     <p id="nav"> <a href="<?php echo wp_login_url(); ?>">Log in</a> | <a href="<?php  echo site_url('/wp-login.php?action=register');?>">Register</a> </p>
+    <p id="backtoblog"><a title="Are you lost?" href="<?php bloginfo("url"); ?>">← Back to Pie Register</a></p>
   </form>
 </div>

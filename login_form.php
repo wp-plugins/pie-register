@@ -1,4 +1,4 @@
-<?		
+<?php 	
   //If Registration contanis errors
 			
 			if(isset($errors->errors['login-error'][0]) > 0)
@@ -51,31 +51,31 @@
   <form method="post" action="" id="loginform" name="loginform">
     <p>
       <label for="user_login">Username </label>
-      <input type="text" size="20" value="" class="input validate[required]" id="user_login" name="log">
+      <input placeholder="Username" type="text" size="20" value="" class="input validate[required]" id="user_login" name="log">
     </p>
     <p>
       <label for="user_pass">Password </label>
-      <input type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
+      <input placeholder="Password" type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
     </p>
-   <? if(!is_page()) { ?>
+   <?php if(!is_page()) { ?>
     <p class="forgetmenot">
       <label for="rememberme">
         <input type="checkbox" value="forever" id="rememberme" name="rememberme">
         Remember Me</label>
     </p>
-    <? } ?>
+    <?php } ?>
     <p class="submit">
       <input type="submit" value="Log In" class="button button-primary button-large" id="wp-submit" name="wp-submit">
-      <input type="hidden" value="<?= admin_url()?>" name="redirect_to">
+      <input type="hidden" value="<?php echo  admin_url()?>" name="redirect_to">
       <input type="hidden" value="1" name="testcookie">
     </p>
-   <? if(!is_page() ) { ?>
-    <p id="nav"> <a href="<?  echo site_url('/wp-login.php?action=register');?>">Register</a> | <a title="Password Lost and Found" href="<?  echo site_url('/wp-login.php?action=lostpassword');?>">Lost your password?</a> </p>
-    <? } ?>
+   <?php if(!is_page() ) { ?>
+    <p id="nav"> <a href="<?php echo site_url('/wp-login.php?action=register');?>">Register</a> <a style="cursor:default;text-decoration:none;" href="javascript:;"> | </a> <a title="Password Lost and Found" href="<?php echo site_url('/wp-login.php?action=lostpassword');?>">Lost your password?</a> </p>
+    <?php } ?>
     
-    <? if($pagenow == 'wp-login.php'  ) { ?>
-    <p id="backtoblog"><a title="Are you lost?" href="<? bloginfo("url"); ?>">← Back to Pie Register</a></p>
-    <? } ?>
+    <?php if($pagenow == 'wp-login.php'  ) { ?>
+    <p id="backtoblog"><a title="Are you lost?" href="<?php bloginfo("url"); ?>">← Back to Pie Register</a></p>
+    <?php } ?>
     
   </form>
 </div>

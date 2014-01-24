@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('base.php');
 class Edit_form extends Base
 {
@@ -94,8 +94,7 @@ class Edit_form extends Base
 	{
 		$val = get_usermeta($this->user->data->ID , "first_name");
 		
-		echo '<div class="fieldset"><label>First Name</label>';
-		echo '<label>First Name</label>';
+		echo '<div class="fieldset"><label>First Name</label>';		
 		echo '<input id="'.$this->id.'_firstname" value="'.$val .'" name="first_name" class="'.$this->addClass().' input_fields" type="text"  />';				
 		
 		$val = get_usermeta($this->user->data->ID , "last_name");

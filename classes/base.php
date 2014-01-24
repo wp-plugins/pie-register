@@ -1,4 +1,4 @@
-<?
+<?php
 class Base
 {
 	var $user_table;		
@@ -127,6 +127,7 @@ class Base
 		
 		
 		$update['display_hints']			= 1;
+		$update['redirect_user']			= 1;
 		$update['subscriber_login']			= 0;
 		$update['block_wp_login']			= 0;
 		$update['alternate_login']			= $login_page_id;
@@ -518,11 +519,12 @@ class Base
 			
 		
 		
-		curl_setopt($ch, CURLOPT_URL,"http://pieregister.genetech.co/license.php");
+		curl_setopt($ch, CURLOPT_URL,"http://pieregister.genetechsolutions.com/license.php");
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,"domain=".get_bloginfo("url")."&key=".urlencode($key));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$server_output = curl_exec ($ch); 
+		
 		curl_close ($ch);	
 		if(strip_tags($server_output)=="True")
 		{

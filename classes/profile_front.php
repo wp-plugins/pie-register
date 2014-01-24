@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('base.php');
 class Profile_front extends Base
 {

@@ -52,10 +52,10 @@ jQuery(document).ready(function(e) {
 
 <div class="notifications">
   <h2>
-    <?  _e("Export/Import User Entries",'piereg') ?>
+    <?php  _e("Export/Import User Entries",'piereg') ?>
   </h2>
   <div class="export">
-    <?
+    <?php
    if(!empty( $_POST['error_message'] ))
 	echo '<p class="error">' . $_POST['error_message']  . "</p>";
 	
@@ -67,15 +67,15 @@ jQuery(document).ready(function(e) {
         <li>
           <div class="fields">
             <h2>
-              <?  _e("Export",'piereg'); ?>
+              <?php  _e("Export",'piereg'); ?>
             </h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</p>
+            <p><?php  _e("Now you can export all users with custom fields with a particular date range in a CSV file! Simply select your fields and select your Date Range. The Date Range feature is optional which means that if you do not select a date range then all entries will be exported. Click on the Download Export Files to complete the operation.",'piereg'); ?> </p>
           </div>
         </li>
         <li>
           <div class="fields select_checkbox">
             <h2>
-              <? _e("Select Fields",'piereg'); ?>
+              <?php _e("Select Fields",'piereg'); ?>
             </h2>
             <input id="field_selectall" type="checkbox" class="checkbox selectall" />
             <label for="field_selectall">Select All</label>
@@ -101,7 +101,7 @@ jQuery(document).ready(function(e) {
             <label for="field_jabber">Jabber / Google Talk</label>
             <input id="field_description" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[description]" value="Biographical Info" />
             <label for="field_description">Biographical Info</label>
-            <?
+            <?php
 			  
 				$fields = maybe_unserialize(get_option("pie_fields"));
 				if(sizeof($fields ) > 0)
@@ -132,11 +132,11 @@ jQuery(document).ready(function(e) {
 						
 						
 				?>
-            <input id="field_<?=$field_id?>" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[<?=$meta_key?>]" value="<?=$pie_fields_csv[$field_id]['label']?>" />
-            <label for="field_<?=$field_id?>" >
-              <?=$label?>
+            <input id="field_<?php echo $field_id?>" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[<?php echo $meta_key?>]" value="<?php echo $pie_fields_csv[$field_id]['label']?>" />
+            <label for="field_<?php echo $field_id?>" >
+              <?php echo $label?>
             </label>
-            <?	
+            <?php 
 					}
 				}
 				
@@ -168,10 +168,10 @@ jQuery(document).ready(function(e) {
         <li>
           <div class="fields">
             <h2>
-              <? _e("Import",'piereg'); ?>
+              <?php _e("Import",'piereg'); ?>
             </h2>
             <p>
-              <? _e("Select the  CSV file you would like to import. When you click the import button below, Pie Register will import the users. Please see the example of CSV file before the import operartion.",'piereg'); ?>
+              <?php _e("Select the  CSV file you would like to import. When you click the import button below, Pie Register will import the users. Please see the example of CSV file before the import operartion.",'piereg'); ?>
             </p>
           </div>
         </li>

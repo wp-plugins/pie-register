@@ -36,16 +36,16 @@ function changeStatus(id)
           <li>
             <div class="fields">
               <h2>Guideline</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse..</p>
+              <p><?php  _e("Protect your privacy. If you want your blog to be exclusive, enable Invitation Codes and keep track of your users.",'piereg'); ?></p>
             </div>
           </li>
           <li>
             <div class="fields">
               <label>Enable Invitation Codes</label>
               <div class="radio_fields">
-                <input id="enable_invitation_codes_yes" type="radio" value="1" name="enable_invitation_codes" <?=($piereg['enable_invitation_codes']=="1")?'checked="checked"':''?> />
+                <input id="enable_invitation_codes_yes" type="radio" value="1" name="enable_invitation_codes" <?php echo ($piereg['enable_invitation_codes']=="1")?'checked="checked"':''?> />
                 <label for="enable_invitation_codes_yes">Yes</label>
-                <input id="enable_invitation_codes_no" type="radio" value="0" name="enable_invitation_codes" <?=($piereg['enable_invitation_codes']=="0")?'checked="checked"':''?> />
+                <input id="enable_invitation_codes_no" type="radio" value="0" name="enable_invitation_codes" <?php echo ($piereg['enable_invitation_codes']=="0")?'checked="checked"':''?> />
                 <label for="enable_invitation_codes_no">No</label>
               </div>
               <span class="quotation">Set this to Yes if you want users to register only by your defined invitaion codes. You will have to add invitation code field in the form editor.</span> </div>
@@ -79,7 +79,7 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
           <th width="6%">Used</th>
           <th width="10%">Action</th>
         </tr>
-        <? 
+        <?php 
 	$codes = $wpdb->get_results( "SELECT * FROM $codetable order by name asc" );
 	if(count($codes) > 0)
 	{
@@ -88,13 +88,13 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
 		{
 		?>
         <tr>
-          <td align="center"><?=$a?></td>
-          <td align="left"><?=$c->name?></td>
-          <td align="center"><?=$c->usage?></td>
-          <td align="center"><?=$c->count?></td>
-          <td align="center"><a onclick="changeStatus(<?=$c->id?>);" href="javascript:;" class="<?=($c->status==1) ? "active"  : "inactive";?>"></a> <a class="delete" href="javascript:;" onclick="confirmDel(<?=$c->id?>);" title="Delete"></a></td>
+          <td align="center"><?php echo $a?></td>
+          <td align="left"><?php echo $c->name?></td>
+          <td align="center"><?php echo $c->usage?></td>
+          <td align="center"><?php echo $c->count?></td>
+          <td align="center"><a onclick="changeStatus(<?php echo $c->id?>);" href="javascript:;" class="<?php echo ($c->status==1) ? "active"  : "inactive";?>"></a> <a class="delete" href="javascript:;" onclick="confirmDel(<?php echo $c->id?>);" title="Delete"></a></td>
         </tr>
-        <?	
+        <?php 
 		$a++;
 		}	
 	}

@@ -195,6 +195,13 @@ class PieRegister extends Base
 			
 		}
 		
+		//Blocking access of users to default pages if redirect is on 
+		if(is_user_logged_in() && $pagenow == 'wp-login.php' && $option['redirect_user']==1   && $theaction != 'logout')
+		{	
+			$this->afterLoginPage();
+			
+		}
+		
 		
 			$page_id = get_option('page_for_posts');
    			 echo get_the_title($page_id);
@@ -301,7 +308,7 @@ class PieRegister extends Base
                 </div>
             </div>  
         </div>	
-	<?
+	<?php
     }
 	function getMeta()
 	{
@@ -516,7 +523,7 @@ class PieRegister extends Base
 		
 		?><script type="text/javascript">
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-</script><?
+</script><?php
 	}
 	function process_register_form()
 	{
@@ -1325,6 +1332,7 @@ function Unverified(){
 				
 				$update['display_hints'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['display_hints'],'HTML-ENTITIES','utf-8'));
 				$update['subscriber_login'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['subscriber_login'],'HTML-ENTITIES','utf-8'));
+				$update['redirect_user'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['redirect_user'],'HTML-ENTITIES','utf-8'));
 				$update['block_wp_login'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['block_wp_login'],'HTML-ENTITIES','utf-8'));
 				$update['alternate_register'] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['alternate_register'],'HTML-ENTITIES','utf-8'));
 				
@@ -1836,8 +1844,13 @@ function Unverified(){
 	function showForm()
 	{
 		global $errors;
-		
-		if (! is_user_logged_in())
+		$option 		= get_option( 'pie_register' );	
+		if(is_user_logged_in() && $option['redirect_user']==1 )
+		{
+			$this->afterLoginPage();
+			return "";	
+		}		
+		else
 		{
 				
 			add_filter( 'wp_mail_content_type', array($this,'set_html_content_type' ));
@@ -1850,42 +1863,42 @@ function Unverified(){
 			include("register_form.php");			
 					
 		}
-		else
-		{
-			
-			$this->afterLoginPage();
-			return "";	
-		}
+		
 	}
 	function showLoginForm()
 	{
 		global $errors,$pagenow;
+		$option 		= get_option( 'pie_register' );	
 		
-		if ( !is_user_logged_in() ) 
-		{
-			$this->forms_styles();			
-			include("login_form.php");
-		}
-		else
+		
+		if(is_user_logged_in() && $option['redirect_user']==1 )
 		{
 			$this->afterLoginPage();
 			return "";	
+		}	
+		
+		else
+		{	
+			$this->forms_styles();			
+			include("login_form.php");
 		}
 	}
 	function showForgotPasswordForm()
 	{
 		global $errors;
-		
-		if ( !is_user_logged_in() ) 
-		{
-			$this->forms_styles();			
-			include("forgot_password.php");
-		}
-		else
+		$option 		= get_option( 'pie_register' );	
+		if(is_user_logged_in() && $option['redirect_user']==1 )
 		{
 			$this->afterLoginPage();
 			return "";	
 		}	
+		
+		else
+		{
+			$this->forms_styles();			
+			include("forgot_password.php");
+		}
+			
 	}	
 	function showProfile()
 	{

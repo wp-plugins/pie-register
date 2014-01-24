@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 echo 'Username: ' . $current_user->user_login . "\n";
 echo 'User email: ' . $current_user->user_email . "\n";

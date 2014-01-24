@@ -1,4 +1,4 @@
-<?
+<?php
 //Printing Success Message
 if($_POST['success'] != "")
 	echo '<p class="message">'.$_POST['success'].'</p>';
@@ -25,19 +25,19 @@ if($form->countPageBreaks() > 1)
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
   jQuery(document).ready(function(e) {
   	 jQuery( "#progressbar" ).progressbar({
-      value:  1 /<?=$form->countPageBreaks()?> * 100
+      value:  1 /<?php echo $form->countPageBreaks()?> * 100
     });  
 });
  
  </script>
-<?	
+<?php 
 }
 ?>
 
 
 <form enctype="multipart/form-data" id="pie_regiser_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
 <ul id="pie_register">
-<?
+<?php
 	$form->printFields();
 ?>
 </ul>	
@@ -53,7 +53,7 @@ function wp_custom_login_remove_element(id)
 	var element = document.getElementById(id);
 	element.parentNode.removeChild(element);
 }
-<? 
+<?php 
 if($form->pages > 1)
 {
 ?>
@@ -90,7 +90,7 @@ function pieNextPage(pageNo)
 	
 	
  jQuery( "#progressbar" ).progressbar( "option", {
-          value: pageNo /<?=$form->pages?> * 100
+          value: pageNo /<?php echo $form->pages?> * 100
         }); 
 	 	
 }
@@ -103,5 +103,5 @@ function pieHideFields()
 	}
 }
 
-<? } ?>
+<?php } ?>
 </script>

@@ -61,24 +61,24 @@ if ($user_exists){
 ?>
 
 <div id="login">
-  <? if (is_array($error) && count($error) == 0 ) {
+  <?php if (is_array($error) && count($error) == 0 ) {
 	 	?>
   <p class="message">
-    <?=$success?>
+    <?php echo $success?>
   </p>
-  <?
+  <?php
 	} else if (is_array($error) && count($error) > 0 ) {  
 		?>
   <p class="login_error">
-    <?=$error[0]?>
+    <?php echo $error[0]?>
   </p>
-  <?
+  <?php
 	} else {
 ?>
  <p class="warning">
-    <?=$warning?>
+    <?php echo $warning?>
   </p>
-<?	
+<?php 
 	
 	}
   ?>
@@ -92,10 +92,10 @@ if ($user_exists){
       <?php do_action('login_form', 'resetpass'); ?>
       <input type="submit" value="<?php _e('Reset my password'); ?>" class="button button-primary button-large" id="wp-submit" name="user-submit">
     </p>
-    <? if(!is_page()) { ?>
-    <p id="nav"> <a href="<?php echo wp_login_url(); ?>">Log in</a> | <a href="<?  echo site_url('/wp-login.php?action=register');?>">Register</a> </p>
-    <p id="backtoblog"><a title="Are you lost?" href="<? bloginfo("url"); ?>">← Back to Pie Register</a></p>
-    <? } ?>
+    <?php if(!is_page()) { ?>
+    <p id="nav"> <a href="<?php echo wp_login_url(); ?>">Log in</a> | <a href="<?php  echo site_url('/wp-login.php?action=register');?>">Register</a> </p>
+    <p id="backtoblog"><a title="Are you lost?" href="<?php bloginfo("url"); ?>">← Back to Pie Register</a></p>
+    <?php } ?>
     
     <input type="hidden" name="reset_pass" value="1" />
     <input type="hidden" name="user-cookie" value="1" />

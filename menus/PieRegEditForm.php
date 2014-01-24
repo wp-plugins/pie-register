@@ -1,15 +1,15 @@
-<? $button = get_option("pie_register"); 
+<?php $button = get_option('piereg'); 
    $meta   = $this->getDefaultMeta();
 ?>
-<script type="text/javascript" src="<?=plugins_url();?>/pie-register/js/phpjs.js"></script>
-<script type="text/javascript" src="<?=plugins_url();?>/pie-register/js/drag.js"></script>
-<script type="text/javascript" src="<?=plugins_url();?>/pie-register/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?php echo plugins_url();?>/pie-register/js/phpjs.js"></script>
+<script type="text/javascript" src="<?php echo plugins_url();?>/pie-register/js/drag.js"></script>
+<script type="text/javascript" src="<?php echo plugins_url();?>/pie-register/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 var hintNum = 0;
 jQuery(document).ready(function(e) {
    
-    var displayhints = "<?=$button['display_hints']?>";
+    var displayhints = "<?php echo $button['display_hints']?>";
 	
 	if(displayhints=="1")
 	{
@@ -28,12 +28,12 @@ jQuery(document).ready(function(e) {
 	}
 });
 var defaultMeta = Array();
-<?
+<?php
 foreach($meta as $key=>$value)
 {
 ?>
-	defaultMeta["<?=$key?>"] = '<?=mysql_escape_string($value)?>';	
-<?	
+	defaultMeta["<?php echo $key?>"] = '<?php echo mysql_escape_string($value)?>';	
+<?php 
 }
 ?>
 
@@ -43,47 +43,47 @@ foreach($meta as $key=>$value)
 <div class="right_section">
   <div class="pie_wrap">
     <h2>
-      <? _e("Form Editor : Registration Form",'piereg');?>
+      <?php _e("Form Editor : Registration Form",'piereg');?>
     </h2>
     <form method="post" id="formeditor">
       <input type="hidden" name="field[form][type]" value="form">
       <input type="hidden" name="field[form][meta]" value="0">
-      <input type="submit" style="float: right;margin-top: 45px;margin-right: 85px;position:absolute;" class="button button-primary button-large" name="pie_form"  value="<? _e("Save Changes",'piereg');?>">
+      <input type="submit" style="float: right;margin-top: 45px;margin-right: 85px;position:absolute;" class="button button-primary button-large" name="pie_form"  value="<?php _e("Save Changes",'piereg');?>">
       
-        <a href="<?=get_bloginfo("url")?>?pr_preview=1" target="_blank" class="button button-primary button-large" name="pie_form"><? _e("Preview",'piereg');?></a>
+        <a href="<?php echo get_bloginfo("url")?>?pr_preview=1" target="_blank" class="button button-primary button-large" name="pie_form"><?php _e("Preview",'piereg');?></a>
       <!--Form Settings-->
       
       <ul>
         <li class="fields">
           <div class="fields_options" id="field_form_title"> <a href="#" class="edit_btn"></a>
             <label>
-              <?=$data['form']['label']?>
+              <?php echo $data['form']['label']?>
             </label>
             <br>
             <p id="paragraph_form">
-              <?=stripslashes($data['form']['desc'])?>
+              <?php echo stripslashes($data['form']['desc'])?>
             </p>
           </div>
           <div class="fields_main">
             <div class="advance_options_fields">
               <div class="advance_fields">
                 <label>Label</label>
-                <input id="form_title" value="<?=$data['form']['label']?>" type="text" name="field[form][label]" class="input_fields field_label">
+                <input id="form_title" value="<?php echo $data['form']['label']?>" type="text" name="field[form][label]" class="input_fields field_label">
               </div>
               <div class="advance_fields">
                 <label for="form_desc">Description</label>
-                <textarea onkeyup="changeParaText('form');" name="field[form][desc]" id="paragraph_textarea_form" rows="8" cols="16"><?=$data['form']['desc']?>
+                <textarea onkeyup="changeParaText('form');" name="field[form][desc]" id="paragraph_textarea_form" rows="8" cols="16"><?php echo $data['form']['desc']?>
 </textarea>
               </div>
               <div class="advance_fields">
                 <label>CSS Class Name</label>
-                <input type="text" name="field[form][css]" value="<?=$data['form']['css']?>" class="input_fields">
+                <input type="text" name="field[form][css]" value="<?php echo $data['form']['css']?>" class="input_fields">
               </div>
               <div class="advance_fields">
                 <label>Label Alignment</label>
                 <select class="swap_class" onchange="swapClass(this.value);" name="field[form][label_alignment]">
-                  <option <? if($data['form']['label_alignment']=='top') echo 'selected="selected"';?> value="top">Top</option>
-                  <option <? if($data['form']['label_alignment']=='left') echo 'selected="selected"';?> value="left">Left</option>
+                  <option <?php if($data['form']['label_alignment']=='top') echo 'selected="selected"';?> value="top">Top</option>
+                  <option <?php if($data['form']['label_alignment']=='left') echo 'selected="selected"';?> value="left">Left</option>
                 </select>
               </div>
               
@@ -110,7 +110,7 @@ foreach($meta as $key=>$value)
         
         <!--Form Fields-->
         <ul id="elements">
-          <?   
+          <?php   
 		 
 		if(sizeof($data) >  0) 
 		{
@@ -129,8 +129,8 @@ foreach($meta as $key=>$value)
 					
 					?>
           <li class="fields">
-            <div id="holder_<?=$field['id']?>" class="fields_options fields_optionsbg">
-            <?
+            <div id="holder_<?php echo $field['id']?>" class="fields_options fields_optionsbg">
+            <?php
         
 		if($field['type'] == "url" || $field['type'] == "aim" || $field['type'] == "yim" || $field['type'] == "jabber" || $field['type'] == "description") 
 		{
@@ -145,20 +145,20 @@ foreach($meta as $key=>$value)
           } 
 		  ?>
             <!--Adding Label-->
-            <div class="label_position"  id="field_label_<?=$field['id']?>">
-              <label><?=(empty($field['label']) ? ucfirst($field['type']):trim($field['label']))?></label>
+            <div class="label_position"  id="field_label_<?php echo $field['id']?>">
+              <label><?php echo (empty($field['label']) ? ucfirst($field['type']):trim($field['label']))?></label>
             </div>
-            <?
+            <?php
            //We can't remove Username, password and email fields
 		    if(!isset($field['remove']))					
 				  	echo '<a href="javascript:;" rel="'.$field['id'].'" class="delete_btn">X</a>';                
 			  	else
 			  		echo '<input  name="field['.$field['id'].'][remove]" value="0" type="hidden" /> '; 
             ?>
-            <input type="hidden" name="field[<?=$field['id']?>][id]" value="<?=$field['id']?>" id="id_<?=$field['id']?>">
-            <input type="hidden" name="field[<?=$field['id']?>][type]" id="type_<?=$field['id']?>" value="<?=$field['type']?>" >
-            <div class="fields_position" id="field_position_<?=$field['id']?>">
-              <?
+            <input type="hidden" name="field[<?php echo $field['id']?>][id]" value="<?php echo $field['id']?>" id="id_<?php echo $field['id']?>">
+            <input type="hidden" name="field[<?php echo $field['id']?>][type]" id="type_<?php echo $field['id']?>" value="<?php echo $field['type']?>" >
+            <div class="fields_position" id="field_position_<?php echo $field['id']?>">
+              <?php
 					
 										
 					
@@ -234,36 +234,36 @@ foreach($meta as $key=>$value)
 				 			  
 			 ?>
             </div>
-            <? 
+            <?php 
 			
 			echo str_replace("%d%",$field['id'],$meta[$field['type']]);
 		 
 		  		
 		  ?> </li>
-          <?		
+          <?php 	
 				
 			}	
 		}
 		
 		?>
-          <script type="text/javascript"><?
+          <script type="text/javascript"><?php
 		foreach($field_values as $key=>$value)
 		{
 		?>
-       		fillValues('<?=$value?>',<?=$key?>);
-        <?	
+       		fillValues('<?php echo $value?>',<?php echo $key?>);
+        <?php 
 		}
-		?>no = "<?=($no + 1)?>";</script>
-          <?
+		?>no = "<?php echo ($no + 1)?>";</script>
+          <?php
 	?>
         </ul>
       </fieldset>
       <ul id="submit_ul">
         <li class="fields">
           <div class="fields_options submit_field"> <a href="#" class="edit_btn"></a>
-            <input id="reset_btn" disabled="disabled" name="fields[reset]" type="reset" class="submit_btn" value="<?=$data['submit']['reset_text']?>" />
+            <input id="reset_btn" disabled="disabled" name="fields[reset]" type="reset" class="submit_btn" value="<?php echo $data['submit']['reset_text']?>" />
             
-            <input disabled="disabled" name="fields[submit]" type="submit" class="submit_btn" value="<?=$data['submit']['text']?>" />
+            <input disabled="disabled" name="fields[submit]" type="submit" class="submit_btn" value="<?php echo $data['submit']['text']?>" />
             <input  name="field[submit][label]" value="Submit"  type="hidden" />
             <input  name="field[submit][type]" value="submit" type="hidden" />
             <input  name="field[submit][remove]" value="0" type="hidden" />
@@ -273,51 +273,51 @@ foreach($meta as $key=>$value)
             <div class="advance_options_fields advance_options_submit">
               <div class="advance_fields">
                 <label>Submit Button Text</label>
-                <input type="text" class="input_fields" name="field[submit][text]" value="<?=$data['submit']['text']?>">
+                <input type="text" class="input_fields" name="field[submit][text]" value="<?php echo $data['submit']['text']?>">
               </div>
               
               <div class="advance_fields">
                 <label>Show Reset Button</label>
                 <select onchange="showHideReset();" id="show_reset" class="swap_reset" name="field[submit][reset]">
-                  <option <? if($data['submit']['reset']=='0') echo 'selected="selected"';?> value="0">No</option>
-                  <option <? if($data['submit']['reset']=='1') echo 'selected="selected"';?> value="1">Yes</option>
+                  <option <?php if($data['submit']['reset']=='0') echo 'selected="selected"';?> value="0">No</option>
+                  <option <?php if($data['submit']['reset']=='1') echo 'selected="selected"';?> value="1">Yes</option>
                 </select>
               </div>
               
               
                <div class="advance_fields">
                 <label>Reset Button Text</label>
-                <input type="text" class="input_fields" name="field[submit][reset_text]" value="<?=$data['submit']['reset_text']?>">
+                <input type="text" class="input_fields" name="field[submit][reset_text]" value="<?php echo $data['submit']['reset_text']?>">
               </div>
               <div class="advance_fields">
                 <label>Confirmation Message</label>
                 <div class="radio_fields">
-                  <input class="reg_success" type="radio" value="text" name="field[submit][confirmation]" <? if($data['submit']['confirmation']=='text') echo 'checked="checked"';?>>
+                  <input class="reg_success" type="radio" value="text" name="field[submit][confirmation]" <?php if($data['submit']['confirmation']=='text') echo 'checked="checked"';?>>
                   <label>Text</label>
-                  <input class="reg_success" type="radio" value="page" name="field[submit][confirmation]" <? if($data['submit']['confirmation']=='page') echo 'checked="checked"';?>>
+                  <input class="reg_success" type="radio" value="page" name="field[submit][confirmation]" <?php if($data['submit']['confirmation']=='page') echo 'checked="checked"';?>>
                   <label>Page</label>
-                  <input class="reg_success" type="radio" value="redirect" name="field[submit][confirmation]" <? if($data['submit']['confirmation']=='redirect') echo 'checked="checked"';?>>
+                  <input class="reg_success" type="radio" value="redirect" name="field[submit][confirmation]" <?php if($data['submit']['confirmation']=='redirect') echo 'checked="checked"';?>>
                   <label>Redirect</label>
                 </div>
               </div>
               <div class="advance_fields submit_meta submit_meta_redirect">
                 <label>Redirect URL</label>
-                <input type="text" class="input_fields" name="field[submit][redirect_url]" value="<?=$data['submit']['redirect_url']?>">
+                <input type="text" class="input_fields" name="field[submit][redirect_url]" value="<?php echo $data['submit']['redirect_url']?>">
               </div>
               <div class="advance_fields submit_meta submit_meta_page">
                 <label>Select Page</label>
-                <?  $args =  array("name"=>"field[submit][page]","selected"=>$data['submit']['page']);         wp_dropdown_pages( $args ); ?>
+                <?php  $args =  array("name"=>"field[submit][page]","selected"=>$data['submit']['page']);         wp_dropdown_pages( $args ); ?>
               </div>
               <div class="advance_fields submit_meta submit_meta_text">
                 <label>Registration Success Message</label>
-                <textarea name="field[submit][message]" rows="8" cols="16"><?=$data['submit']['message']?>
+                <textarea name="field[submit][message]" rows="8" cols="16"><?php echo $data['submit']['message']?>
 </textarea>
               </div>
             </div>
           </div>
         </li>
       </ul>
-      <?
+      <?php
 	 
 		if(!(empty($button['paypal_butt_id'])) && $button['enable_paypal']==1)
 	 	{
@@ -329,7 +329,7 @@ foreach($meta as $key=>$value)
           <!--<input  name="field[submit][type]" value="paypal" type="hidden" />--> 
         </li>
       </ul>
-      <?	
+      <?php 
 		}
 	  ?>
       <input type="submit" style="float: right;margin-right:85px;" class="button button-primary button-large" name="pie_form"  value="Save Changes">
@@ -379,9 +379,9 @@ foreach($meta as $key=>$value)
           <li class="standard_phone"><a name="phone" href="javascript:;">Phone</a></li>
           <li class="standard_upload"><a name="upload" href="javascript:;">Upload</a></li>
           <li class="standard_list"><a name="list" href="javascript:;">List</a></li>
-          <? if($button['enable_invitation_codes']==1) { ?> 
+          <?php if($button['enable_invitation_codes']==1) { ?> 
           <li class="standard_invitation"><a name="invitation" class="default" href="javascript:;">Invitation Code</a></li>
-          <? } ?>
+          <?php } ?>
         </ul>
       </li>
     </ul>

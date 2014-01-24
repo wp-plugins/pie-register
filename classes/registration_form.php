@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('base.php');
 class Registration_form extends Base
 {
@@ -1113,11 +1113,13 @@ class Registration_form extends Base
 	function countPageBreaks()
 	{
 		$pages = 1;
-		foreach($this->data as $field)
-		{
-			if($field['type']=="pagebreak")
-				$pages++;	
-		}
+		if(count($this->data) > 0):
+			foreach($this->data as $field)
+			{
+				if($field['type']=="pagebreak")
+					$pages++;	
+			}
+		endif;
 		return $pages ;
 	}					
 }

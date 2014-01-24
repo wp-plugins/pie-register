@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('classes/registration_form.php');
 class Pie_Register_Widget extends WP_Widget 
 {

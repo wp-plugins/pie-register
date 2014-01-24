@@ -19,9 +19,9 @@ if( $_POST['notice'] ){
         <div class="fields">
           <label>Enable Paypal</label>
           <div class="radio_fields" style="margin-left:85px;">
-            <input id="enable_paypal_yes" type="radio" value="1" name="enable_paypal" <?=($piereg['enable_paypal']=="1")?'checked="checked"':''?> />
+            <input id="enable_paypal_yes" type="radio" value="1" name="enable_paypal" <?php echo ($piereg['enable_paypal']=="1")?'checked="checked"':''?> />
             <label for="enable_paypal_yes">Yes</label>
-            <input id="enable_paypal_no" type="radio" value="0" name="enable_paypal" <?=($piereg['enable_paypal']=="0")?'checked="checked"':''?> />
+            <input id="enable_paypal_no" type="radio" value="0" name="enable_paypal" <?php echo ($piereg['enable_paypal']=="0")?'checked="checked"':''?> />
             <label for="enable_paypal_no">No</label>
           </div>
         </div>

@@ -23,18 +23,18 @@ if(!class_exists("PieRegister")){
 <html>
 <head>
 <title><?php _e("Form Preview", "pireg") ?></title>
-<link type="text/css" rel="stylesheet" href="<?=get_bloginfo('url')?>/wp-content/plugins/pie-register/css/front.css"  />
-<script type='text/javascript' src='<?=plugins_url("js/jquery.js",__FILE__)?>'></script>
+<link type="text/css" rel="stylesheet" href="<?php echo get_bloginfo('url')?>/wp-content/plugins/pie-register/css/front.css"  />
+<script type='text/javascript' src='<?php echo plugins_url("js/jquery.js",__FILE__)?>'></script>
 
-<script type='text/javascript' src='<?=plugins_url("js/validation.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?=plugins_url("js/jquery.validationEngine-en.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?=plugins_url("js/jquery-ui.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?=plugins_url("js/datepicker.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/validation.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/jquery.validationEngine-en.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/jquery-ui.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/datepicker.js",__FILE__)?>'></script>
 
 </head>
 <body class="preview_page">
 <div class="main_wrapper">
-<?
+<?php
 //Printing Success Message
 if($_POST['success'] != "")
 	echo '<p class="message">'.$_POST['success'].'</p>';
@@ -62,17 +62,17 @@ if($form->countPageBreaks() > 1)
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
   jQuery(document).ready(function(e) {
   	 jQuery( "#progressbar" ).progressbar({
-      value:  1 /<?=$form->countPageBreaks()?> * 100
+      value:  1 /<?php echo $form->countPageBreaks()?> * 100
     });  
 });
  
  </script>
-<?	
+<?php 
 }
 ?>
 <form enctype="multipart/form-data" id="pie_regiser_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
   <ul id="pie_register">
-    <?
+    <?php
 	$form->printFields();
 ?>
   </ul>
@@ -89,7 +89,7 @@ function wp_custom_login_remove_element(id)
 	var element = document.getElementById(id);
 	element.parentNode.removeChild(element);
 }
-<? 
+<?php 
 if($form->pages > 1)
 {
 ?>
@@ -122,7 +122,7 @@ function pieNextPage(pageNo)
 	
 	
  jQuery( "#progressbar" ).progressbar( "option", {
-          value: pageNo /<?=$form->pages?> * 100
+          value: pageNo /<?php echo $form->pages?> * 100
         }); 
 	 	
 }
@@ -135,7 +135,7 @@ function pieHideFields()
 	}
 }
 
-<? } ?>
+<?php } ?>
 </script>
 </div>
 </body>
