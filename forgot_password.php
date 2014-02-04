@@ -43,13 +43,13 @@ if ($user_exists){
     //create email message
     $message = __('Someone has asked to reset the password for the following site and username.','piereg') . "\r\n\r\n";
     $message .= get_option('siteurl') . "\r\n\r\n";
-    $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
+    $message .= sprintf(__('Username:','piereg')." %s ", $user_login) . "\r\n\r\n";
     $message .= __('To reset your password visit the following address, otherwise just ignore this email and nothing will happen.','piereg') . "\r\n\r\n";
    $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "&redirect_to=".urlencode(get_option('siteurl'))."\r\n";
  
 	//send email meassage
-    if (FALSE == wp_mail($user_email, sprintf(__('[%s] Password Reset'), get_option('blogname')), $message))
-    $error[] =  __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...','piereg') ;
+    if (FALSE == wp_mail($user_email, sprintf('[%s] ' . __('Password Reset','piereg'), get_option('blogname')), $message))
+    $error[] =  __('The e-mail could not be sent.','piereg') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...','piereg') ;
 }
 	if (count($error) == 0 )
 	{

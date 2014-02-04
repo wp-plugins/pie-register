@@ -93,7 +93,7 @@ foreach($meta as $key=>$value)
       </ul>
       <!--Form Settings End-->
       <fieldset>
-        <legend align="center">Drag Fields Here</legend>
+        <legend align="center"><?php echo _e("Drag Fields Here","piereg"); ?></legend>
         
       
        

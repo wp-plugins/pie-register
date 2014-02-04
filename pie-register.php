@@ -8,10 +8,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration fo
 Author: Genetech Solutions
 Version: 2.0
 Author URI: http://www.genetechsolutions.com/
-
-LOCALIZATION
-* Currently This feature is not available. We are working on it to improve.
-				
+			
 CHANGELOG
 See readme.txt
 */
@@ -42,6 +39,11 @@ class PieRegister extends Base
 		global $pagenow,$wp_version,$profile;
 	
 		$errors = new WP_Error();
+		
+			//LOCALIZATION
+		#Place your language file in the plugin folder and name it "piereg-{language}.mo"
+		#replace {language} with your language value from wp-config.php
+		load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/');
 		
 		
 		add_action('wp_ajax_get_meta_by_field', array($this,'getMeta'));
@@ -92,11 +94,7 @@ class PieRegister extends Base
 		register_activation_hook( __FILE__, array( $this, 'install_settings' ) );	
 		register_deactivation_hook( __FILE__, array( $this, 'uninstall_settings' ) );	
 		
-		add_action( 'widgets_init', function(){
-     			register_widget( 'Pie_Register_Widget' );
-				register_widget( 'Pie_Login_Widget' );
-				register_widget( 'Pie_Forgot_Widget' );
-		});
+		add_action( 'widgets_init', array($this,'initPieWidget'));
 		
 		 add_action('get_header', array($this,'add_ob_start'));
 		//It will redirect the User to the home page if the curren tpage is a alternate login page
@@ -107,6 +105,13 @@ class PieRegister extends Base
 			
 	//	$this->install_settings();			
 	}
+	function initPieWidget ()
+	{
+		register_widget( 'Pie_Register_Widget' );
+		register_widget( 'Pie_Login_Widget' );
+		register_widget( 'Pie_Forgot_Widget' );	
+	}
+	
 	//Plugin Menu LInk
 	function add_action_links( $links, $file ) 
 	{
@@ -821,7 +826,7 @@ function Unverified(){
         <tr id="user-1" class="<?php echo $alt;?>">
           <th scope="row" class="check-column"><input name="vusers[]" id="user_<?php echo $un->ID;?>" class="administrator" value="<?php echo $un->ID;?>" type="checkbox"></th>
           <td><strong><?php echo $un->user_login;?></strong></td>
-          <td><a href="mailto:<?php echo $un->user_email;?>" title="<?php _e('e-mail: ', 'piereg'); echo $un->user_email;?>"><?php echo $un->user_email;?></a></td>
+          <td><a href="mailto:<?php echo $un->user_email;?>" title="<?php _e('E-mail', 'piereg'); echo ": ".$un->user_email;?>"><?php echo $un->user_email;?></a></td>
           <td><?php echo ucwords($reg_type[0]);?></td>
           <td><?php echo ucwords($role);?></td>
           
@@ -867,7 +872,7 @@ function Unverified(){
 			$_POST['notice'] = __("User(s) has been activated");
 		}
 		else
-			$_POST['notice'] = __("<strong>Error:</strong> Please select a user to send emails to", "piereg");
+			$_POST['notice'] = "<strong>".__('Error','piereg').":</strong>".__("Please select a user to send emails to", "piereg");
 	}
 	function PaymentLink()
 	{
@@ -915,7 +920,7 @@ function Unverified(){
 			}
 			else
 			{
-				$_POST['notice'] = __("<strong>Error:</strong> Please select a user to send emails to", "piereg");
+				$_POST['notice'] = "<strong>".__('Error','piereg').":</strong>".__("Please select a user to send emails to", "piereg");
 			}
 			
 			
@@ -966,7 +971,7 @@ function Unverified(){
 					$_POST['notice'] = __("Invalid User Types", "piereg");
 			}
 			else
-			$_POST['notice'] = __("<strong>Error:</strong> Please select a user to send emails to", "piereg");
+			$_POST['notice'] = "<strong>".__('Error','piereg').":</strong>".__("Please select a user to send emails to", "piereg");
 			
 		}
 	function AdminDeleteUnvalidated()
@@ -1964,7 +1969,7 @@ function Unverified(){
 		}
 		else
 		{
-			_e('Please <a href="'.wp_login_url().'">login</a> to see your profile','piereg');	
+			echo __('Please','piereg').'<a href="'.wp_login_url().'">'. __('login','piereg').'</a>'.__('to see your profile','piereg');	
 		}	
 	}
 	function afterLoginPage()

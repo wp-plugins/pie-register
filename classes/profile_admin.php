@@ -402,22 +402,22 @@ class Profile_admin extends Base
             $rule               = $this->field['validation_rule'];
             $validation_message = (!empty($this->field['validation_message']) ? $this->field['validation_message'] : $this->field['label'] . " is required.");
             if ((!isset($field_name) || empty($field_name)) && $required) {
-                $errors->add($this->slug, '<strong>ERROR</strong>: ' . $validation_message);
+                $errors->add($this->slug, '<strong>'.__(ucwords('Error'),'piereg').'</strong>: ' . $validation_message);
             } else if ($rule == "number") {
                 if (!is_numeric($field_name)) {
-                    $errors->add($this->slug, '<strong>ERROR</strong>: ' . $this->field['label'] . " field must contain only numbers.");
-                }
+                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' field must contain only numbers.','piereg' ));	
+			    }
             } else if ($rule == "alphanumeric") {
                 if (!preg_match("/^([a-z0-9])+$/i", $field_name)) {
-                    $errors->add($this->slug, '<strong>ERROR</strong>: ' . $this->field['label'] . " field may only contain alpha-numeric characters.");
+                   	$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' field may only contain alpha-numeric characters.','piereg' ));	
                 }
             } else if ($rule == "email") {
                 if (!filter_var($field_name, FILTER_VALIDATE_EMAIL)) {
-                    $errors->add($this->slug, '<strong>ERROR</strong>: ' . $this->field['label'] . " field must contain a valid email address.");
+                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'].__(' field must contain a valid email address.','piereg' ));	
                 }
             } else if ($rule == "website") {
-                if (!filter_var($field_name, FILTER_VALIDATE_URL)) {
-                    $errors->add($this->slug, '<strong>ERROR</strong>: ' . $this->field['label'] . " must be a valid URL.");
+                if (!filter_var($field_name, FILTER_VALIDATE_URL)) {                   
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' must be a valid URL.','piereg' ));	
                 }
             }
         }

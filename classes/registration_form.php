@@ -932,20 +932,21 @@ class Registration_form extends Base
 		global $wpdb;
 		if ( empty( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>ERROR</strong>: Invalid Username' );		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Username','piereg' ));		
 		}
 		else if ( username_exists( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>ERROR</strong>: Username already exists' );		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Username already exists','piereg' ));		
 		}		
 		
 		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
-			$errors->add( $slug , '<strong>ERROR</strong>: Invalid E-mail address' );		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid E-mail address','piereg' ));		
 		}
 		else if ( email_exists( $_POST['e_mail'] ) )
 		{
-			$errors->add( $slug , '<strong>ERROR</strong>: E-mail address already exists' );		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' E-mail address already exists','piereg' ));
+					
 		}
 			
 		 foreach($this->data as $field)
@@ -976,14 +977,14 @@ class Registration_form extends Base
 				if((is_array($file_types) && in_array($ext,$file_types)) || empty($field['file_types']))
 				{
 					if(!move_uploaded_file($field_name['tmp_name'],$upload_dir['path']."/".$_FILES[$slug]['name']) && $required)
-						$errors->add( $slug , '<strong>ERROR</strong>: Fail to upload file.' );
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Fail to upload file.','piereg' ));
 					else
 						$_POST[$slug] = $upload_dir['url']."/".$_FILES[$slug]['name'];	
 					
 				}
 				else if($required)
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: Invalid File Type' );		
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid File Type.','piereg' ));		
 				}				
 				
 			} 
@@ -1004,11 +1005,12 @@ class Registration_form extends Base
 				
 				if(count($codes) != 1)
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: Invalid Invitation Code');		
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' ));		
+						
 				}
 				elseif($times_used >= $usage)
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: Invitation Code has expired');				
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' ));					
 				}		
 			}
 			else if($field['type']=="captcha")
@@ -1024,7 +1026,7 @@ class Registration_form extends Base
 												$_POST["recaptcha_response_field"]);
 				
 				if (!$resp->is_valid) {				 
-				  $errors->add('recaptcha_mismatch', __("<strong>ERROR:</strong>: Invalid Security COde ", 'pie-register'));				 
+				  $errors->add('recaptcha_mismatch',"<strong>". __(ucwords("Error"),"piereg").":</strong>:". __("Invalid Security Code ", 'piereg'));				 
 				}	
 			
 			}
@@ -1036,34 +1038,34 @@ class Registration_form extends Base
 			
 			if( (!isset($field_name) || empty($field_name)) && $required)
 			{
-				$errors->add( $slug , '<strong>ERROR</strong>: '.$validation_message );				
+				$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> " .$validation_message );				
 			}
 			else if($rule=="number")
 			{
 				if(!is_numeric($field_name))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field must contain only numbers." );		
+					$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field must contain only numbers." );		
 				}	
 			}
 			else if($rule=="alphanumeric")
 			{
 				if(! preg_match("/^([a-z0-9])+$/i", $field_name))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field may only contain alpha-numeric characters." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field may only contain alpha-numeric characters." );		
 				}	
 			}	
 			else if($rule=="email")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_EMAIL))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field must contain a valid email address." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field must contain a valid email address." );		
 				}	
 			}	
 			else if($rule=="website")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_URL))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." must be a valid URL." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." must be a valid URL." );		
 				}	
 			}				 
 		 }			

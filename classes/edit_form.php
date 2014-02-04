@@ -744,12 +744,12 @@ class Edit_form extends Base
 		
 		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
-			$errors->add( $slug , '<strong>ERROR</strong>: Invalid E-mail address' );		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__('Invalid E-mail address','piereg' ));		
 		}	
 		
 		 if($this->user->data->user_pass != $_POST['password'] && $_POST['password'] != $_POST['confirm_password'])
 		 {
-			$errors->add( $slug , '<strong>ERROR</strong>: Error in your password fields' );	 
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__('Error in your password fields','piereg' ));			
 		 }	
 		
 		 foreach($this->data as $field)
@@ -802,7 +802,8 @@ class Edit_form extends Base
 					if((is_array($file_types) && in_array($ext,$file_types)) || empty($field['file_types']))
 					{
 						if(!move_uploaded_file($field_name['tmp_name'],$upload_dir['path']."/".$_FILES[$slug]['name']) && $required)
-							$errors->add( $slug , '<strong>ERROR</strong>: Fail to upload file.' );
+						$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Fail to upload file.','piereg' ));
+							
 						else
 							$_POST[$slug] = $upload_dir['url']."/".$_FILES[$slug]['name'];		
 					}	
@@ -817,34 +818,36 @@ class Edit_form extends Base
 			
 			if( (!isset($field_name) || empty($field_name)) && $required)
 			{
-				$errors->add( $slug , '<strong>ERROR</strong>: '.$validation_message );				
+				$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$validation_message );				
+				
 			}
 			else if($rule=="number")
 			{
 				if(!is_numeric($field_name))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field must contain only numbers." );		
+										
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$field['label'] .__(' field must contain only numbers.','piereg' ));								
 				}	
 			}
 			else if($rule=="alphanumeric")
 			{
 				if(! preg_match("/^([a-z0-9])+$/i", $field_name))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field may only contain alpha-numeric characters." );		
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$field['label'] .__(' field may only contain alpha-numeric characters.','piereg' ));			
 				}	
 			}	
 			else if($rule=="email")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_EMAIL))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." field must contain a valid email address." );		
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$field['label'] .__(' field must contain a valid email address.','piereg' ));	
 				}	
 			}	
 			else if($rule=="website")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_URL))
 				{
-					$errors->add( $slug , '<strong>ERROR</strong>: '.$field['label'] ." must be a valid URL." );		
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$field['label'] .__(' must be a valid URL.','piereg' ));		
 				}	
 			}
 						

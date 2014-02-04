@@ -59,16 +59,16 @@ if( $_POST['notice'] ){
         <li>Click on Step3: Customize advance features (optional) Tab, select "Add advanced variables" checbox and add the following snippet:
           <ul>
             <li><strong>
-              <?php _e('rm=2', 'piereg');?>
+              rm=2
               </strong></li>
             <li><strong>
-              <?php _e('notify_url='.trailingslashit(get_bloginfo("url")).'?action=ipn_success', 'piereg');?>
+              notify_url=<?php echo trailingslashit(get_bloginfo("url")).'?action=ipn_success';?>
               </strong></li>
             <li><strong>
-              <?php _e('cancel_return='.trailingslashit(get_bloginfo("url")).'?action=payment_cancel', 'piereg');?>
+              <?php echo 'cancel_return='.trailingslashit(get_bloginfo("url")).'?action=payment_cancel';?>
               </strong></li>
             <li><strong>
-              <?php _e('return='.trailingslashit(get_bloginfo("url")).'?action=payment_success', 'piereg');?>
+              <?php echo 'return='.trailingslashit(get_bloginfo("url")).'?action=payment_success' ;?>
               </strong></li>
           </ul>
         </li>

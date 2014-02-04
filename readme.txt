@@ -49,9 +49,6 @@ Just follow the simple steps:
 3. Set the options in the Settings Panel
 
 
-== LOCALIZATION ==
-* Currently This feature is not available. We are working on it to improve.
-
 == Support ==
 * Please visit http://www.genetechsolutions.com/pie-register.html in order to get support regarding this plugin!
 

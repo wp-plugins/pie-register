@@ -179,7 +179,7 @@ jQuery(document).ready(function(e) {
           <div class="fields">
             <h2>Select File</h2>
             <input name="csvfile" type="file" class="input_fields" />
-            <span style="float:left"><?php echo sprintf( __( 'You may want to see <a target="_blank" href="%s">the example of the CSV file</a>.' , 'pie-register'), plugin_dir_url(__FILE__).'examples/example.csv'); ?></span>
+            <span style="float:left"><?php echo sprintf( __( 'You may want to see', 'pie-register').'<a target="_blank" href="%s">'.__('the example of the CSV file', 'pie-register').'</a>.' , plugin_dir_url(__FILE__).'examples/example.csv'); ?></span>
             <div class="clear"></div>
             <input type="submit" class="submit_btn submit_btn2" value="Import" />
           </div>

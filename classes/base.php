@@ -123,7 +123,7 @@ class Base
 		$update['admin_to_email'] 		= get_option( 'admin_email' );
 		$update['admin_bcc_email'] 		= get_option( 'admin_email' );
 		$update['admin_subject_email'] 	= __("New User Registration","piereg");
-		$update['admin_message_email'] 	= __('<div>&nbsp;%blogname% Registration&nbsp;</div><div>	&nbsp;---------------------------&nbsp;</div><div>	&nbsp;</div><div>	The following user has registered at&nbsp;&nbsp;%blogname%</div><div>	&nbsp;</div><div>	&nbsp;Username: %user_login%&nbsp;</div><div>	&nbsp;Password: %user_pass%&nbsp;</div><div>	&nbsp;</div>',"piereg");
+		$update['admin_message_email'] 	= '<div>&nbsp;%blogname% Registration&nbsp;</div><div>	&nbsp;---------------------------&nbsp;</div><div>	&nbsp;</div><div>	The following user has registered at&nbsp;&nbsp;%blogname%</div><div>	&nbsp;</div><div>	&nbsp;Username: %user_login%&nbsp;</div><div>	&nbsp;Password: %user_pass%&nbsp;</div><div>	&nbsp;</div>';
 		
 		
 		$update['display_hints']			= 1;
@@ -166,16 +166,16 @@ class Base
 		
 
 		
-		$update['user_message_email_admin_verification'] 	= __("Thank you for your registration at %blogname%. Your account is being moderated by the administrator.","piereg");
-		$update['user_message_email_email_verification'] 	= __("Thank you for your registration at %blogname%. Please click on the following link to confirm your registration. <br/><br/><a href='%activationurl%'>%activationurl%</a>");
-		$update['user_message_email_email_thankyou'] 		= __("Thank you for your registration at %blogname%.","piereg");
+		$update['user_message_email_admin_verification'] 	= "Thank you for your registration at %blogname%. Your account is being moderated by the administrator.";
+		$update['user_message_email_email_verification'] 	= "Thank you for your registration at %blogname%. Please click on the following link to confirm your registration. <br/><br/><a href='%activationurl%'>%activationurl%</a>";
+		$update['user_message_email_email_thankyou'] 		= "Thank you for your registration at %blogname%.";
 		//$update['user_message_email_email_forgotpassword'] 	= "";
-		$update['user_message_email_payment_success'] 		= __("Thank you for your registration at %blogname%.","piereg");
-		$update['user_message_email_pending_payment'] 		= __("Thank you for your registration at %blogname%. Please complete your payment to confirm your registration at %blogname%.","piereg");
-		$update['user_message_email_default_template'] 		= __("Thank you for your registration at %blogname%.","piereg");
+		$update['user_message_email_payment_success'] 		= "Thank you for your registration at %blogname%.";
+		$update['user_message_email_pending_payment'] 		= "Thank you for your registration at %blogname%. Please complete your payment to confirm your registration at %blogname%.";
+		$update['user_message_email_default_template'] 		= "Thank you for your registration at %blogname%.";
 		
-		$update['user_message_email_pending_payment_reminder'] 		= __("Thank you for your registration at %blogname%.","piereg");
-		$update['user_message_email_email_verification_reminder'] 	= __("Hello Unverified %user_login%, <br /><br /> Someday ago you have been signed up at Our Website, an email were sent to you to activate Your account. This is a reminder email that if you failed to activate in xx days, You account will be deleted from our system. You can follow the link below to activate your account.<br><br> Sincerely,The %blogname% Team.","piereg");
+		$update['user_message_email_pending_payment_reminder'] 		= "Thank you for your registration at %blogname%.";
+		$update['user_message_email_email_verification_reminder'] 	= "Hello Unverified %user_login%, <br /><br /> Someday ago you have been signed up at Our Website, an email were sent to you to activate Your account. This is a reminder email that if you failed to activate in xx days, You account will be deleted from our system. You can follow the link below to activate your account.<br><br> Sincerely,The %blogname% Team.";
 		
 						
 		update_option( 'pie_register', $update );
@@ -546,7 +546,7 @@ class Base
 			
 			if(empty($key) ||  $active != 1)
 			{
-				echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. Click <a href="http://pieregister.genetechsolutions.com/get-your-license-key" target="_blank">here</a> to get your key. ', 'piereg')."</strong></p></div>";	
+				echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. ','piereg').'<a href="http://pieregister.genetechsolutions.com/get-your-license-key" target="_blank">'.__('Click here','piereg').'</a>'.__(' to get your key. ', 'piereg')."</strong></p></div>";	
 			}
 		
 	}
