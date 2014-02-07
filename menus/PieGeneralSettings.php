@@ -175,7 +175,7 @@ if( $_POST['license_success'] ){
             <p><?php _e("Unverified Users will be automatically deleted after grace period expires",'piereg') ?></p>
           </div>
            <div class="fields">
-          <input type="submit" class="submit_btn" value="Save Settings" />
+          <input type="submit" class="submit_btn" value="<?php _e("Save Settings"); ?>" />
         </div>
         </div>
        
@@ -205,7 +205,7 @@ if( $_POST['license_success'] ){
           <input type="text" id="captcha_private" name="captcha_private" class="input_fields" value="<?php echo $piereg['captcha_private']?>" />
           <span class="quotation"><?php _e("Required Only if you decide to Use the reCAPTCHA field. Sign Up for a Free account to get the key.",'piereg') ?></span> </div>
         <div class="fields">
-          <input type="submit" class="submit_btn" value="Save Settings" />
+          <input type="submit" class="submit_btn" value="<?php _e("Save Settings"); ?>" />
         </div>
      
       

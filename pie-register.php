@@ -96,23 +96,24 @@ class PieRegister extends Base
 		
 		add_action( 'widgets_init', array($this,'initPieWidget'));
 		
-		 add_action('get_header', array($this,'add_ob_start'));
+		add_action('get_header', array($this,'add_ob_start'));
 		//It will redirect the User to the home page if the curren tpage is a alternate login page
 		add_filter('get_header', array($this,'checkLoginPage'));
-		
 		
 			
 			
 	//	$this->install_settings();			
 	}
-	function initPieWidget ()
+	
+	
+	function initPieWidget()
 	{
 		register_widget( 'Pie_Register_Widget' );
 		register_widget( 'Pie_Login_Widget' );
 		register_widget( 'Pie_Forgot_Widget' );	
 	}
 	
-	//Plugin Menu LInk
+	//Plugin Menu Link
 	function add_action_links( $links, $file ) 
 	{
    		 if ( $file != plugin_basename( __FILE__ ))
@@ -203,14 +204,8 @@ class PieRegister extends Base
 		//Blocking access of users to default pages if redirect is on 
 		if(is_user_logged_in() && $pagenow == 'wp-login.php' && $option['redirect_user']==1   && $theaction != 'logout')
 		{	
-			$this->afterLoginPage();
-			
+			$this->afterLoginPage();			
 		}
-		
-		
-			$page_id = get_option('page_for_posts');
-   			 echo get_the_title($page_id);
-		
 		
 		//Blocking wp admin for registered users
 		if($option['subscriber_login']==0)
@@ -328,7 +323,7 @@ class PieRegister extends Base
 	
 	function process_login_form()
  	{
-		global $errors,$pagenow;;
+		global $errors,$pagenow;
 		wp_register_style( 'prefix-style', plugins_url('css/front.css', __FILE__) );
 		wp_enqueue_style( 'prefix-style' );	
 		wp_enqueue_script( 'jquery' );
@@ -361,7 +356,7 @@ class PieRegister extends Base
 				$user = wp_signon( $creds, false );
 				if ( is_wp_error($user))
 				{					
-					$errors->add('login-error',__('There was a problem with your username or password.','piereg'));								
+					$errors->add('login-error',__('There was a problem with your username or password.','piereg'));												
 				}
 				else
 				{
@@ -381,7 +376,7 @@ class PieRegister extends Base
 						}
 						else
 						{
-							
+							do_action('pie_register_after_login',$user);
 							$this->afterLoginPage();
 							exit;	
 						}
@@ -426,7 +421,9 @@ class PieRegister extends Base
 		add_action( 'admin_print_styles-' . $page, array($this,'edit_form_style')) ;	
 		
 		//if( $update['verification'] == 1 || $update['verification'] == 2 )
-				add_users_page( 'Unverified Users', 'Unverified Users', 10, 'unverified-users', array($this, 'Unverified') );		
+		add_users_page( 'Unverified Users', 'Unverified Users', 10, 'unverified-users', array($this, 'Unverified') );
+		
+		do_action('pie_register_add_menu');		
 		
 	}
 	
@@ -458,7 +455,7 @@ class PieRegister extends Base
 				$_POST['field'] =  get_option( 'pie_fields_default' );				
 			
 			
-			//print_r($_POST['field']); die();
+			do_action("pie_fields_save");
 			update_option("pie_fields",serialize($_POST['field']));
 			wp_redirect("admin.php?page=pie-register");	
 	}
@@ -554,22 +551,27 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$errors 	= $form->validateRegistration($errors);
 			$option 	= get_option( 'pie_register' );	
 			
-			
+			 
 			//If Registration doesn't have errors
 			if(sizeof($errors->errors) == 0)
 			{
 				
+				do_action('pie_register_after_register_validate');	
+								 
 				 //Inserting User
-				 $pass = $_POST['pwd'];
+				 $pass = $_POST['password'];
 				 $user_data = array('user_pass' => $pass,'user_login' => $_POST['username'],'user_email' => $_POST['e_mail'],'role' => get_option('default_role'));
 				 if(isset($_POST['url']))
 				 {
 					$user_data["user_url"] =  $_POST['url'];	 
 				 }
-				 
+				
 				 $user_id = wp_insert_user( $user_data );    
-				 $form->addUser($user_id);			
-					
+				 $form->addUser($user_id);	
+				 $user 		= new WP_User($user_id);
+				 
+				do_action('pie_register_after_register_validate',$user);		
+				
 				//Checking verfication type and sending emails
 						
 				if(!(empty($option['paypal_butt_id'])) && $option['enable_paypal']==1)
@@ -578,7 +580,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$hash = md5( time() );
 					update_user_meta( $user_id, 'hash', $hash );
 					
-					$user 			= new WP_User($user_id);
+					
 					$subject 		= $option['user_subject_email_pending_payment'];				
 					$message		= $form->filterEmail($option['user_message_email_pending_payment'],$user, $pass );
 					$from_name		= $option['user_from_name_pending_payment'];
@@ -622,7 +624,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				{
 					update_user_meta( $user_id, 'active', 1);
 								
-					$user 			= new WP_User($user_id);
+					
 					$subject 		= $option['user_subject_email_default_template'];				
 					$message		= $form->filterEmail($option['user_message_email_default_template'],$user, $pass );
 					$from_name		= $option['user_from_name_default_template'];
@@ -645,7 +647,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				{
 					update_user_meta( $user_id, 'active', 0);
 					update_user_meta( $user_id, 'register_type', "admin_verify");
-					$user 	= new WP_User($user_id);
+					
 					
 					if($option['enable_admin_notifications']==1)
 					{
@@ -689,7 +691,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					update_user_meta( $user_id, 'register_type', "email_verify");
 					
 		
-					$user 			= new WP_User($user_id);
+					
 					$subject 		= $option['user_subject_email_email_verification'];				
 					$message		= $form->filterEmail($option['user_message_email_email_verification'],$user, $pass );
 					$from_name		= $option['user_from_name_email_verification'];
@@ -708,6 +710,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$_POST['success'] = __("Thank you for your registration. An activation link with your password has been sent to you.",'piereg');
 						
 				}		 
+				
+				do_action('pie_register_after_register',$user);
 				
 				$fields 			= maybe_unserialize(get_option("pie_fields"));
 				$confirmation_type 	= $fields['submit']['confirmation'];
@@ -1969,7 +1973,7 @@ function Unverified(){
 		}
 		else
 		{
-			echo __('Please','piereg').'<a href="'.wp_login_url().'">'. __('login','piereg').'</a>'.__('to see your profile','piereg');	
+			echo __('Please','piereg').' <a href="'.wp_login_url().'">'. __('login','piereg').'</a> '.__('to see your profile','piereg');	
 		}	
 	}
 	function afterLoginPage()

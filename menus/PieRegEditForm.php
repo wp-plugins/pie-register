@@ -1,5 +1,6 @@
-<?php $button = get_option('piereg'); 
-   $meta   = $this->getDefaultMeta();
+<?php 
+$button = get_option('pie_register'); 
+$meta   = $this->getDefaultMeta();  
 ?>
 <script type="text/javascript" src="<?php echo plugins_url();?>/pie-register/js/phpjs.js"></script>
 <script type="text/javascript" src="<?php echo plugins_url();?>/pie-register/js/drag.js"></script>

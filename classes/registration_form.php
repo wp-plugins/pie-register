@@ -195,7 +195,7 @@ class Registration_form extends Base
 	}
 	function addPhone()
 	{		
-		echo '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.$field['placeholder'].'" type="text" value="'.$field['default_value'].'" />';	
+		echo '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.$field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
 	}
 	function addList()
 	{

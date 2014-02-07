@@ -83,12 +83,12 @@
 				 "phone_standard": {
                     // credit: jquery.h5validate.js / orefalo
                     "regex": /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
-                    "alertText": "* Invalid phone number"
+                    "alertText": "* Allowed Format (xxx) xxx-xxxx"
                 },
 				"phone_international": {
                     // credit: jquery.h5validate.js / orefalo
-                    "regex": /^\d{3}\-?\d{3}\-?\d{4}$/,
-                    "alertText": "* Allowed Format (xxx-xxx-xxxx)"
+                    "regex": /^\d{10,16}$/,
+                    "alertText": "* Minimum 10 Digits starting with Country Code"
                 },
                 "email": {
                     // Shamelessly lifted from Scott Gonzalez via the Bassistance Validation plugin http://projects.scottsplayground.com/email_address_validation/

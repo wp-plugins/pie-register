@@ -548,7 +548,7 @@ jQuery(document).ready(function () {
 				
 				no++;
 				jQuery(".swap_class").trigger("change")
-				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "phone" || dragType == "description" || dragType == "url") {
+				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
 					jQuery('ul.controls li a[name="' + dragType + '"]').parent().hide();
 				}
 				dragType = "";
@@ -588,7 +588,7 @@ jQuery(document).ready(function () {
 		//currHTML = ui.helper.html();
 		endHtml = getStyle(dragType);
 		
-		if (dragType == "url" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "phone" || dragType == "description")
+		if (dragType == "url" || dragType == "aim" || dragType == "yim" || dragType == "jabber"  || dragType == "description")
 		{
 			
 		}
