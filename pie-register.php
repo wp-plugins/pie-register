@@ -873,6 +873,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	
 	function check_payment_method_paypal()
 	{
+		$user_id = $_POST['user_id'];
 		add_filter( 'wp_mail_content_type', array($this,'set_html_content_type' ));
 		global $errors;
 		$form 		= new Registration_form();
@@ -2089,9 +2090,9 @@ function Unverified(){
 			
 			
 			
-			$pass 		= wp_generate_password();
+			/*$pass 		= wp_generate_password();
 			$user_data 	= array('ID' => $user_id,'user_pass' => $pass);
-			$user_id 	= wp_update_user( $user_data ); 
+			$user_id 	= wp_update_user( $user_data ); */
 			$user 		= new WP_User($user_id);
 			$option 	= get_option('pie_register_2');
 
@@ -2114,8 +2115,6 @@ function Unverified(){
 			
 			if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 			$headers .= "From: ".$from_name." <".$from_email."> \r\n";	
-			
-			
 			
 			wp_mail($user_email, $subject, $message , $header);
 							
