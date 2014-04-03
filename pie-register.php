@@ -900,7 +900,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		update_user_meta( $user_id, 'register_type', "payment_verify");
 		
-		if($option['piereg_paypal_sandbox']=="no")
+		if($option['paypal_sandbox']=="no")
 		{
 			echo '<form id="paypal_form" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 			<input type="hidden" name="cmd" value="_s-xclick">
@@ -2378,7 +2378,7 @@ function Unverified(){
 		
 		update_user_meta( $user_id, 'register_type', "payment_verify");
 		
-		if($option['piereg_paypal_sandbox']=="no")
+		if($option['paypal_sandbox']=="no")
 		{
 			echo '<form id="paypal_form" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 			<input type="hidden" name="cmd" value="_s-xclick">
