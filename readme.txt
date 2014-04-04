@@ -6,44 +6,44 @@ Tested up to: 3.8
 Stable tag: 1.31.4
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation
 == Description ==
-=Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/ =
+**Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/ **
 
 
-=Welcome to Pie-Register by Genetech Solutions.=
+**Welcome to Pie-Register by Genetech Solutions.**
 
 So you want to have users register and login to your site before they interact with it? You need user registration and you don't have to build it from scratch. With Pie-Register you can use your logo and color scheme to brand your registration pages to your liking.  Use this plugin to quickly add custom user registration to your WordPress based blog or site.
 
 Want your customers to pay for the service you provide? The plugin allows you to charge the users when they register with PayPal integration.
 
 And there is more, you can:
-*Send Invitation Codes
-*Use CAPTCHA
-*Email Verification and Admin Moderation
-*Enhanced User Profile
-*Custom Registration Fields
+*   Send Invitation Codes
+*   Use CAPTCHA
+*   Email Verification and Admin Moderation
+*   Enhanced User Profile
+*   Custom Registration Fields
 
 Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. There are more features to come in the weeks ahead.
 
 See the plugin features section for complete details.
 
-=Features=
+**Features**
 Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/
 
 Pie-Register has great features which you can’t find in any other free plugin.
 
-1.**Custom Logo and Color Scheme** Use your own logo and color scheme and get your brand in the spotlight.
-2.**Password Field** Hate those forgettable auto-generated passwords? Allow your users to set their own passwords during registration.  The plugin includes that sweet Password Strength Meter.
-3.**Invitation Codes** Is your blog super exclusive? If so, you better require an invite to join your high end crew. Setup multiple codes and track where your new users are coming from with the optional Invitation Tracking Dashboard Widget.
-4.**Disclaimers** Worried about legal liabilities? Setup a general disclaimer, license agreement and/or privacy policy for new users to agree to during registration.
-5.**CAPTCHA Validation** If you don’t want those spam bots registering use CAPTCHA protection. The plugin includes a simple Captcha easy enough for real humans to read as well as the ability to add a re-CAPTCHA.
-6.**Email Validation** Ensure your users are registering with valid email accounts by forcing them to click a validation link that’s sent out with their registration email.  Email validation initially sets the username to a random generated string (something like: ‘unverified__h439herld3′). The user can’t login until they click on that validation link sent in the email. This will put their real username in place allowing them to login. 
-7.**Unverified registrations** have a defined grace period. They are automatically deleted after a specified period of time so you don’t get clogged up with those fakes. (Manage under Users > Unverified Users)
-8.**User Moderation** Want absolute control? Check out every new user yourself and hand pick who can stay and who gets the boot before they are able to login to your site. (Manage under Users > Unverified Users)
-9.**Profile Fields** Have new users fill out there entire profile or just some fields. Make fields optional or required as needed.
-10.**User Defined Fields** Add your own defined fields to the registration page for users to fill out. Includes ability to add date, selection, checkbox, radio and text area fields!
-11.**Duplicate Email Registration** Got multiple users using the same email address? Easily solve this predicament without forcing them to sign up with unneeded email accounts.  This is also useful for administrators to create another account with one email address.
-12.**Customized Admin & User Registration Email** Tired of the same old emails when someone new registers? Spice it up with your own From/Reply-To address, customized subject and customize the entire message! You can even disable those tiresome Admin notifications for new registrations.
-13.**Membership Fee** Charge your users for membership via Pie-Register’s built-in PayPal integration.
+1.   **Custom Logo and Color Scheme** Use your own logo and color scheme and get your brand in the spotlight.
+2.   **Password Field** Hate those forgettable auto-generated passwords? Allow your users to set their own passwords during registration.  The plugin includes that sweet Password Strength Meter.
+3.   **Invitation Codes** Is your blog super exclusive? If so, you better require an invite to join your high end crew. Setup multiple codes and track where your new users are coming from with the optional Invitation Tracking Dashboard Widget.
+4.   **Disclaimers** Worried about legal liabilities? Setup a general disclaimer, license agreement and/or privacy policy for new users to agree to during registration.
+5.   **CAPTCHA Validation** If you don’t want those spam bots registering use CAPTCHA protection. The plugin includes a simple Captcha easy enough for real humans to read as well as the ability to add a re-CAPTCHA.
+6.   **Email Validation** Ensure your users are registering with valid email accounts by forcing them to click a validation link that’s sent out with their registration email.  Email validation initially sets the username to a random generated string (something like: ‘unverified__h439herld3′). The user can’t login until they click on that validation link sent in the email. This will put their real username in place allowing them to login. 
+7.   **Unverified registrations** have a defined grace period. They are automatically deleted after a specified period of time so you don’t get clogged up with those fakes. (Manage under Users > Unverified Users)
+8.   **User Moderation** Want absolute control? Check out every new user yourself and hand pick who can stay and who gets the boot before they are able to login to your site. (Manage under Users > Unverified Users)
+9.   **Profile Fields** Have new users fill out there entire profile or just some fields. Make fields optional or required as needed.
+10.   **User Defined Fields** Add your own defined fields to the registration page for users to fill out. Includes ability to add date, selection, checkbox, radio and text area fields!
+11.   **Duplicate Email Registration** Got multiple users using the same email address? Easily solve this predicament without forcing them to sign up with unneeded email accounts.  This is also useful for administrators to create another account with one email address.
+12.   **Customized Admin & User Registration Email** Tired of the same old emails when someone new registers? Spice it up with your own From/Reply-To address, customized subject and customize the entire message! You can even disable those tiresome Admin notifications for new registrations.
+13.   **Membership Fee** Charge your users for membership via Pie-Register’s built-in PayPal integration.
 == Installation ==
 Just follow the simple steps:
 1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
