@@ -51,7 +51,6 @@ class Base
 	}
 	function install_settings()
 	{
-		
 		$this->activation_validation();
 		
 		//Alternate Pages
@@ -96,6 +95,7 @@ class Base
 		$_p['ping_status'] 		= 'closed';
 		$Profile_page_id 		= wp_insert_post( $_p );
 		
+		add_option("Profile_page_id",$Profile_page_id);
 		$pie_pages = array($login_page_id,$reg_page_id,$forPas_page_id,$Profile_page_id);
 		add_option("pie_pages",$pie_pages);
 		
@@ -500,6 +500,7 @@ class Base
 			}
 		}		
 		delete_option( 'pie_pages');
+		delete_option( 'Profile_page_id');
 			
 	}
 	function pluginURL($add = "")
@@ -701,7 +702,7 @@ class Base
 			{
 				$piereg = get_option("pie_register");
 				$piereg['support_license'] = "";
-				update_option("pie_register",$piereg);
+				update_option("pie_register_2",$piereg);
 				delete_option("pie_register_key");
 				delete_option("pie_register_active");
 				$notice = __($responce, 'piereg');

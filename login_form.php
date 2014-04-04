@@ -1,7 +1,7 @@
 <div class="piereg_entry-content entry-content">
 <div id="piereg_login">
 
-<?php 	
+<?php 
   //If Registration contanis errors
 global $wp_session,$errors;
 
@@ -84,7 +84,7 @@ global $wp_session,$errors;
       <input type="hidden" value="1" name="testcookie">
     </p>
    <?php if(!is_page() ) { ?>
-    <p id="nav"> <a href="<?php echo site_url('/wp-login.php?action=register');?>"><?php _e("Register","piereg") ?></a> <a style="cursor:default;text-decoration:none;" href="javascript:;"> | </a> <a title="Password Lost and Found" href="<?php echo site_url('/wp-login.php?action=lostpassword');?>">Lost your password?</a> </p>
+    <p id="nav"> <a href="<?php echo wp_registration_url();?>"><?php _e("Register","piereg") ?></a> <a style="cursor:default;text-decoration:none;" href="javascript:;"> | </a> <a title="Password Lost and Found" href="<?php echo wp_lostpassword_url(site_url());?>">Lost your password?</a> </p>
     <?php } ?>
     
     <?php if($pagenow == 'wp-login.php'  ) { ?>

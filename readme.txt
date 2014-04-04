@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.5
 Tested up to: 3.8
-Stable tag: 1.31.4
+Stable tag: 2.0.2
 
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
@@ -15,11 +15,12 @@ So you want to have users register and login to your site before they interact w
 Want your customers to pay for the service you provide? The plugin allows you to charge the users when they register with PayPal integration.
 
 And there is more, you can:
-*Customised Registration Form
-*Charge Users for Registration
-*Enable Email Verification or Admin Moderation
-*Create Custom Profile Pages
-*Use Shortcodes and Widgets
+
+*   **Customised Registration Form**
+*   **Charge Users for Registration**
+*   **Enable Email Verification or Admin Moderation**
+*   **Create Custom Profile Pages**
+*   **Use Shortcodes and Widgets**
 
 Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors.
 
@@ -29,31 +30,33 @@ See the plugin features section for complete details.
 
 Pie-Register has great features which you can’t find in any other free plugin.
 
-1.**New and Improved User Interface**
-2.**Custom Login/Registration Pages**
-3.**Invitation Codes**
-4.**Shortcodes**
-5.**CAPTCHA Validation**
-6.**Email Verification**
-7.**Admin Moderation**
-8.**Widgets**
-9.**Profile Pages**
-10.**Customized Admin & User Registration Email**
-11.**Paypal**
+1.   **New and Improved User Interface**
+2.   **Custom Login/Registration Pages**
+3.   **Invitation Codes**
+4.   **Shortcodes**
+5.   **CAPTCHA Validation**
+6.   **Email Verification**
+7.   **Admin Moderation**
+8.   **Widgets**
+9.   **Profile Pages**
+10.   **Customized Admin & User Registration Email**
+11.   **Paypal**
+
+
 == Installation ==
 Just follow the simple steps:
 1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
-Please follow our plugin [documentation](http://pieregister.genetechsolutions.com/documentation/ “Pie-Register Documentation”) on how to Create Registration Form, Login , Forgot Password and Profile Pages using Shortcodes and Widgets.
+Please follow our plugin [documentation](http://pieregister.genetechsolutions.com/documentation/ "Pie-Register Documentation") on how to Create Registration Form, Login , Forgot Password and Profile Pages using Shortcodes and Widgets.
 
 
 
-== Support ==
-Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie-Register Forum”) in order to get support regarding this plugin!
+== Support Forum ==
+Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
-### v2.0.1 April 3 2014
+### v2.0.1
 * Fixed layout issues
 * Fixed Jquery Conflicts
 * Fixed profile Edit page
@@ -65,7 +68,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * Updated Get Free License Option
 * and much more
 
-### v2.0.beta January 2 2014
+### v2.0.beta
 * A totally new look sporting an attractive New Interface
 * Revamped with a lot of New Features.
 * Built in intuitive Form Editor
@@ -73,13 +76,13 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * and much much more..
 * Warning: This is Beta Release - NOT recommended to upgrade/install on Production sites, it still in beta, suggestions and bugs reporting are welcome
 
-### v1.31.3 November 06 2013
+### v1.31.3
 * zxcvbn lib is added
 * Password Strength meter fix and compatible for future versions.
 * UTF character bug fixed
 * Login Enqueue function added.
 
-### v1.31.2 September 23 2013
+### v1.31.2
 * Stripslashes issue resolved
 * function mb_string has change to htmlentities with utf8_decode functions
 * wpdb_prepare replaced with sanitize function
@@ -87,7 +90,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * Custom Fields are now removeable.
 * Grace Period issue resolved.
 
-### v1.31 July 13 2013
+### v1.31
 * Backward Compatibility Issues fixed.
 * Plugin Conflict Issue fixed.
 * Input has been sanitized.
@@ -95,7 +98,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * reCaptcha Library has been upgraded.
 
 
-### v1.30 July 11 2013
+### v1.30
 #### New Features:
 
 * You can now specify the landing page on successful login.
@@ -113,19 +116,19 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * Fixed re-Captcha size issue on registration form.
 * Fixed some security issues.
 
-### v1.2.91 January 01 2013
+### v1.2.91
 * Fixed PHP Warning: Missing argument 2 for wpdb::prepare()
 
-### v1.2.9a March 30 2012
+### v1.2.9a
 * Fixed Custom Fields Reseting problem
 * Fixed Invitation Code update problem
 
 
-### v1.2.9 March 9 2012
+### v1.2.9
 * Fixed Array problem on text fields.
 * Compatible upto wp 3.3.*
 
-### v1.2.8 beta October 31 2011
+### v1.2.8
 * Invitation Code Section has been extended
 * Custom Email Notification on Admin/Email verification
 * deprecated Functions has been replaced
@@ -133,65 +136,65 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * and much much more..
 * Warning! This is the beta Version of the Pie-Register, Do not upgrade unless you've upgraded Wordpress to 3.2* Version.
 
-### v1.2.7 October 4 2011
+### v1.2.7
 * New ScreenShots Added
 
 ### v1.2.6 October 4 2011
 * Fixed Multiple Invitation Saving Problem
 
-=v1.2.5 October 3 2011=
+=v1.2.5
 *Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
 *Added New Layout Pie-Register Menu built!
 
-### v1.2.4 September 21 2011
+### v1.2.4
 *Fixed the "Backslash" problem on the admin Setting Page.
 
-### v1.2.3 August 8 2011
+### v1.2.3
 *Highlighted the Code to put on the wp-login.php at the plugin page.
 
-### v1.2.2 February 20 2011
+### v1.2.2
 
 * Fixed Settings Override.
 * Compatible to Wp 3.0.5
 
 
-### v1.2.1 January 20 2011
+### v1.2.1
 
 * Fixed Password strength meter.
 * Compatible to Wp 3.0.4
 
 
-=v1.2.0 June 25 2010=
+=v1.2.0
 
 * Fixed Image uploads errors.
 * First step to Compatiblity to Wp 3.0
 
-### v1.1.9a April 07 2010
+### v1.1.9a
 
 * Fixed Error after registration.
 
-### v1.1.9 April 06 2010
+### v1.1.9
 
 * Fixed Login box after verification.
 * Fixed diplaying invitation codes to the user dashboard.
 
-### v1.1.8 March 03 2010
+### v1.1.8
 
 * Fixed Payment link.
 * Fixed session errors/header errors.
 * And much much more..
 
-### v1.1.7 Febraury 04 2010
+### v1.1.7
 
 * Fixed Resend verification email.
 * Fixed resend payment link.
 
-### v1.1.6 February 03 2010
+### v1.1.6
 
 * Fixed Security updates for Paypal resend code.
 * Add Phone/Mobile number Field.
 
-### v1.1.5 February 02 2010
+### v1.1.5
 
 * Keep away Unverified/Un-paid users to get logged in.
 * Fixed Logo display and form fields.
@@ -199,20 +202,20 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie
 * Fixed Date fields.
 * Changed Paypal Buy now to One -Time Subscription fee Button.
 
-### v1.1.3** January 08 2010
+### v1.1.3**
 
 * Fixed User Registeration after Paypal Return.
 
 
-### v1.1.2** January 07 2010
+### v1.1.2**
 
 * Fixed temp user id and email verification.
 
-### v1.1.1** January 06 2010
+### v1.1.1**
 
 * Added Paypal Return and thank you URL.
 
-### v1.0.1** January 04 2010
+### v1.0.1**
 
 * Fixed Password meter.
 * Added Paypal as shopping Cart

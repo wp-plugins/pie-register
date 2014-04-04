@@ -87,7 +87,8 @@ class Profile_front extends Base
 					
 					case 'profile_pic':
 					echo '<tr><td class="fields fields2">'.$this->addLabel();
-					echo '</td><td class="fields"><img src="'.$this->getValue($this->type, $this->slug).'" style="max-width:150px;" /></td></tr>';
+					$imgPath = (trim($this->getValue($this->type, $this->slug)) != "")? $this->getValue($this->type, $this->slug) : plugins_url("../images/userImage.png",__FILE__);
+					echo '</td><td class="fields"><img src="'.$imgPath.'" style="max-width:150px;" /></td></tr>';
 					break;
 					case 'text' :
 					case 'textarea':

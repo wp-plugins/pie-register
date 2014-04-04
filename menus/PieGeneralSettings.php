@@ -5,6 +5,8 @@ wp_enqueue_style( 'pie-tooltip-style' );
 
 wp_register_script( 'pie-tooltip-script', plugins_url("../js/tooltip.js",__FILE__) );
 wp_enqueue_script( 'pie-tooltip-script' );
+
+
 ?>
 
 
@@ -144,7 +146,7 @@ if( $_POST['license_success'] ){
          <div class="fields">
           <label for="alternate_login"><?php _e("Login Page",'piereg') ?></label>
          
-            <?php  $args =  array("show_option_no_change"=>"None","id"=>"alternate_login","name"=>"alternate_login","selected"=>$piereg['alternate_login']);         
+            <?php  $args =  array("show_option_no_change"=>"None","id"=>"alternate_login","name"=>"alternate_login","selected"=>$piereg['alternate_login']);      
 			wp_dropdown_pages( $args ); ?>
         
            

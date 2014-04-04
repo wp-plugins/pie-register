@@ -1,4 +1,5 @@
 <?php
+
 $button = get_option('pie_register_2');
 //$buttonADN = get_option('pie_register_authorize_net'); 
 $meta   = $this->getDefaultMeta();  
@@ -256,8 +257,8 @@ foreach($meta as $key=>$value)
 				endswitch;				
 					
 				$field_values[$field['id']] = serialize($this->cleantext($field,$field['id']));
-				
-				  echo "</div>";
+				 
+				 echo "</div>";
 				 			  
 			 ?>
             </div>
@@ -271,11 +272,19 @@ foreach($meta as $key=>$value)
 				
 			}	
 		}
-		
 		?>
           <script type="text/javascript"><?php
 		foreach($field_values as $key=>$value)
 		{
+			$temp = unserialize($value);
+			if($temp['type'] == "html")
+			{
+				if(trim($temp['html']) != "")
+				{
+					$temp['html'] = html_entity_decode($temp['html']);
+					$value = serialize($temp);
+				}
+			}
 		?>
        		fillValues('<?php echo $value?>',<?php echo $key?>);
         <?php 

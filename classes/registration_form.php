@@ -237,7 +237,7 @@ class Registration_form extends Base
 	}
 	function addHTML()
 	{
-		echo $this->field['html'];
+		echo html_entity_decode($this->field['html']);
 	}
 	function addSectionBreak()
 	{

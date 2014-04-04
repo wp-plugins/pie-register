@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Pie Register
-Plugin URI: http://pieregister.genetechsolutions.com/
-Description: <strong>WordPress 3.5 + ONLY.</strong> Version 2.0 is here, Create Custom Registration Forms, Shortcode and Widget enabled, Invitation codes, Paypal, Captcha validation, Email verification and more.
+Plugin URI: http://genetechsolutions.com/pie-register.html
+Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 
 Author: Genetech Solutions
-Version: 2.0.1
+Version: 2.0.2
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -48,7 +48,7 @@ class PieRegister extends Base
 		#Place your language file in the plugin folder and name it "piereg-{language}.mo"
 		#replace {language} with your language value from wp-config.php
 		load_textdomain( 'piereg', ABS_PATH_TO_MO_FILE ); // OK
-		load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/',false);
+		load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/');
 			
 		
 		add_action('wp_ajax_get_meta_by_field', array($this,'getMeta'));
@@ -121,6 +121,13 @@ class PieRegister extends Base
 		
 		wp_register_style('prereg-style',plugins_url('css/piereg_menu_style.css', __FILE__));
 		wp_enqueue_style('prereg-style');
+		
+		add_filter('get_avatar',array($this,'custom_avatars'));
+		
+		add_filter( 'login_url', array($this,'pie_login_url'),88888,1);
+		add_filter( 'lostpassword_url', array($this,'pie_lostpassword_url'),88888,1);
+		add_filter( 'register_url', array($this,'pie_registration_url'),88888,1);
+		
 	}
 	
 	function modify_all_notices($notice)
@@ -177,7 +184,6 @@ class PieRegister extends Base
 		if(isset($_GET['action'])) 
 			$theaction = $_GET['action']; 
 		
-			
 		#Save Settings
 		if( isset($_POST['action']) && $_POST['action'] == 'pie_reg_update' )
 		{$this->SaveSettings();}
@@ -198,12 +204,9 @@ class PieRegister extends Base
 		if( isset($_POST['verifyit']) )		
 			$this->verifyUsers();
 			
-		
-			
 		#Admin Send Payment Link
 		if( isset($_POST['paymentl']) && !(empty($option['paypal_butt_id'])) && $option['enable_paypal']==1)
 			$this->PaymentLink();
-		
 		
 		#Admin Resend VerificatioN Email
 		if( isset($_POST['emailverifyit']) )
@@ -212,11 +215,10 @@ class PieRegister extends Base
 		#Admin Delete Unverified User
 		if( isset($_POST['vdeleteit']))			
 			$this->AdminDeleteUnvalidated();	
-	
+		
 		//Blocking wp admin for registered users
 		if($pagenow == 'wp-login.php' && $option['block_wp_login']==1 && $option['alternate_login'] > 0  && $theaction != 'logout')
-		{	
-			
+		{
 			if($theaction=="register")
 			{
 				wp_redirect(get_permalink($option['alternate_register']));	
@@ -237,11 +239,22 @@ class PieRegister extends Base
 		{
 			$this->afterLoginPage();			
 		}
+		if(trim($pagenow) == "profile.php")
+		{
+			$current_user = wp_get_current_user();
+			//$options = get_option("pie_register_2");
+			// and $options['subscriber_login'] == 0
+			if(trim($current_user->roles[0]) == "subscriber")
+			{
+				$profile_page = get_option("Profile_page_id");
+				wp_redirect(get_permalink($profile_page));
+			}
+		}
 		
 		//Blocking wp admin for registered users
-		if($option['subscriber_login']==0)
-			$this->block_wp_admin();
-		
+		/*if($option['subscriber_login']==0)
+			$this->block_wp_admin();*/
+			
 		if(isset($_POST['log']) && isset($_POST['pwd']))	
 		 	$this->checkLogin();
 		//else if(isset($_POST['log']) && isset($_POST['reset_pass']))
@@ -289,8 +302,20 @@ class PieRegister extends Base
 			}
 		}
 		
-		
+		$this->subscriber_show_admin_bar();
 	}
+	
+	function subscriber_show_admin_bar()
+	{
+		global $current_user;
+      	get_currentuserinfo();
+		if( user_can( $current_user, "subscriber" ) == 1)
+		{
+			show_admin_bar( false );
+		}
+		unset($current_user);
+	}
+	
 	//"Insert Form" button to the post/page edit screen
     function add_pie_form_button($context)
 	{
@@ -474,6 +499,7 @@ class PieRegister extends Base
 						}
 						else
 						{
+							//apply_filters('get_avatar',array($this,'custom_avatars'),$user->ID,"29");
 							$this->afterLoginPage();
 							exit;
 						}
@@ -483,7 +509,7 @@ class PieRegister extends Base
 		}
 			
 	}
-	/*function check_user_activation($user_id)
+	/*function check_user_activation($user_id)1
 	{
 		global $wpdb;
 		$result = $wpdb->get_result("SELECT `meta_key`,`meta_value` FROM `wp_usermeta` WHERE `user_id` = "$user_id" and `meta_key` = 'active'");
@@ -555,11 +581,23 @@ class PieRegister extends Base
 	}
 	function saveFields()
 	{
+		
+		foreach($_POST['field'] as $k=>$fv){
+			if($fv['type'] == 'html')
+			$fv['html'] = htmlentities(stripslashes($fv['html']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
+			
+			$updated_post[$k] = $fv;
+		}
+		/*echo "<pre>";
+		print_r($updated_post);
+		die();*/
+		
 		if(!$_POST['field'])
 				$_POST['field'] =  get_option( 'pie_fields_default' );
 	
 		do_action("pie_fields_save");
-		update_option("pie_fields",serialize($_POST['field']));
+		//update_option("pie_fields",serialize($_POST['field']));
+		update_option("pie_fields",serialize($updated_post));
 		$options = get_option("pie_register_2");
 		$options['pie_regis_set_user_role_'] = $_POST['set_user_role_'];
 		update_option("pie_register_2",$options);
@@ -696,6 +734,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$errors 	= $form->validateRegistration($errors);
 		$option 	= get_option( 'pie_register_2' );
 		//If Registration doesn't have errors
+		
 		if(sizeof($errors->errors) == 0)
 		{
 			do_action('pie_register_after_register_validate');	
@@ -2097,7 +2136,7 @@ function Unverified(){
 			$option 	= get_option('pie_register_2');
 
 			
-		//	mail("shujaat.haider@genetechsolutions.com","payment",implode(",", $user  ).",".$user_email );
+		//	mail("baqarsoft@gmail.com","payment",implode(",", $user  ).",".$user_email );
 		
 			update_user_meta( $user_id, 'active',1);
 					
@@ -2115,6 +2154,8 @@ function Unverified(){
 			
 			if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 			$headers .= "From: ".$from_name." <".$from_email."> \r\n";	
+			
+			
 			
 			wp_mail($user_email, $subject, $message , $header);
 							
@@ -2552,6 +2593,52 @@ function Unverified(){
 	  	}
 	}
 	
+	function custom_avatars($avatar="", $id_or_email="", $size="")
+	{
+		if(current_user_can( 'manage_options' ) != 1)
+		{
+		  if(is_user_logged_in())
+		  {
+			$current_user = wp_get_current_user();
+			
+			$profile_pic_array = get_user_meta($current_user->ID);
+			foreach($profile_pic_array as $key=>$val)
+			{
+				if(strpos($key,'profile_pic') !== false)
+				{
+					$profile_pic = trim($val[0]);
+				}
+			}
+			if(trim($profile_pic) == "")
+			{
+				$profile_pic = plugin_dir_url(__FILE__).'images/userImage.png';
+			}
+			if(trim($profile_pic) != "")
+			{
+			  return '<img src="'.$profile_pic.'" class="avatar photo" style="max-height:64px;max-width:64px;" width="'.$size.'" height="'.$size.'" alt="'.$current_user->display_name .'" />';
+			}
+		  }
+		}
+	}
+
+	function pie_registration_url($url)
+	{
+		$options = get_option("pie_register_2");
+		return get_permalink($options['alternate_register']);
+	}
+	function pie_login_url($url)
+	{
+		$options = get_option("pie_register_2");
+		return get_permalink($options['alternate_login']);
+	}
+	function pie_lostpassword_url($url)
+	{
+		$options = get_option("pie_register_2");
+		return get_permalink($options['alternate_forgotpass']);
+	}
+	
 }
 $pie = new PieRegister();
+
+
 ?>

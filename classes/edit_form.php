@@ -91,8 +91,9 @@ class Edit_form extends Base
 		$val = get_usermeta($this->user->data->ID , $this->slug);
 		echo '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'" type="file"  />';
 		echo '<input id="'.$this->id.'" name="'.$this->name.'_hidden" value="'.$val.'" type="hidden"  />';
-		$ext = basename($val);
-		echo '<br /><img src="'.$val.'" style="max-width:150px;" alt="Profile Pictuer Not Found" />';
+		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
+		$imgPath = (trim($val) != "")? $val : plugins_url("../images/userImage.png",__FILE__);
+		echo '<br /><img src="'.$imgPath.'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />';
 	}
 	function addTextArea()
 	{		
@@ -207,7 +208,7 @@ class Edit_form extends Base
 	}
 	function addHTML()
 	{
-		echo $this->field['html'];
+		echo html_entity_decode($this->field['html']);
 	}
 	function addSectionBreak()
 	{
