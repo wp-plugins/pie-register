@@ -17,11 +17,11 @@ Want your customers to pay for the service you provide? The plugin allows you to
 
 And there is more, you can:
 
-*   Send Invitation Codes
-*   Use CAPTCHA
-*   Email Verification and Admin Moderation
-*   Enhanced User Profile
-*   Custom Registration Fields
+*   **Send Invitation Codes**
+*   **Use CAPTCHA**
+*   **Email Verification and Admin Moderation**
+*   **Enhanced User Profile**
+*   **Custom Registration Fields**
 
 Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors. There are more features to come in the weeks ahead.
 
