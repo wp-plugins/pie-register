@@ -46,19 +46,19 @@ Pie-Register has great features which you can’t find in any other free plugin.
 11.   **Duplicate Email Registration** Got multiple users using the same email address? Easily solve this predicament without forcing them to sign up with unneeded email accounts.  This is also useful for administrators to create another account with one email address.
 12.   **Customized Admin & User Registration Email** Tired of the same old emails when someone new registers? Spice it up with your own From/Reply-To address, customized subject and customize the entire message! You can even disable those tiresome Admin notifications for new registrations.
 13.   **Membership Fee** Charge your users for membership via Pie-Register’s built-in PayPal integration.
+
+**Localization**
+
+This feature is available on Version 2.0
+
 == Installation ==
 Just follow the simple steps:
 1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Set the options in the Settings Panel
 
-**LOCALIZATION**
-
-This feature is available on Version 2.0
-
-
 == SUPPORT ==
-Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie-Register Forum”) in order to get support regarding this plugin!
+Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
 
