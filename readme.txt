@@ -56,6 +56,11 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.2
+* Major Release
+* First Stable version of 2.0 family
+* Fixed a lot of bugs in version 2.0.1
+
 ### v2.0.1
 * Fixed layout issues
 * Fixed Jquery Conflicts
