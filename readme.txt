@@ -16,6 +16,7 @@ So you want to have users register and login to your site before they interact w
 Want your customers to pay for the service you provide? The plugin allows you to charge the users when they register with PayPal integration.
 
 And there is more, you can:
+
 *   Send Invitation Codes
 *   Use CAPTCHA
 *   Email Verification and Admin Moderation
