@@ -6,7 +6,7 @@ Tested up to: 3.8
 Stable tag: 1.31.4
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation
 == Description ==
-**Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/ **
+**Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/ The version 1.0 is no longer supported!**
 
 
 **Welcome to Pie-Register by Genetech Solutions.**
@@ -26,7 +26,8 @@ Use the free Pie-Register plugin to easily add features like these to your servi
 
 See the plugin features section for complete details.
 
-**Features**
+**Some of it's Features**
+
 Pie-Register Version 2.0 has been released! The new version is in its Beta Testing Phase. For more info click on http://pieregister.genetechsolutions.com/pie-register-version-2-0-beta-has-arrived/
 
 Pie-Register has great features which you can’t find in any other free plugin.
@@ -50,9 +51,12 @@ Just follow the simple steps:
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Set the options in the Settings Panel
 
-=LOCALIZATION=
-* This feature is available on Version 2.0
-== Support ==
+**LOCALIZATION**
+
+This feature is available on Version 2.0
+
+
+== SUPPORT ==
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com “Pie-Register Forum”) in order to get support regarding this plugin!
 
 == CHANGELOG ==
