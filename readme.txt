@@ -228,7 +228,8 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 
 == Screenshots ==
 
-1. Registration Page
-2. Pie Register Settings
-3. Invitation Tracking Dashboard Widget
-4. Unverified User Management
+1. Pie-Register Front-end Registration Page
+2. Pie-Register Form Editor
+3. Pie Register Genereal Settings Page
+4. Pie-Register Front-end Login Page
+5. Pie-Register Front-end user Profile Page
