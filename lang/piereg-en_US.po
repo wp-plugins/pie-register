@@ -411,7 +411,7 @@ msgstr "No"
 
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:54
 msgid "Display Hints"
-msgstr "Display Hints US"
+msgstr "Display Hints"
 
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:61
 msgid "Set this to Yes if you would like to see the Tips on Form Editor Page ."
