@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration fo
 
 
 Author: Genetech Solutions
-Version: 2.0.2
+Version: 2.0.3
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -122,7 +122,7 @@ class PieRegister extends Base
 		wp_register_style('prereg-style',plugins_url('css/piereg_menu_style.css', __FILE__));
 		wp_enqueue_style('prereg-style');
 		
-		add_filter('get_avatar',array($this,'custom_avatars'));
+		//add_filter('get_avatar',array($this,'custom_avatars'));
 		
 		add_filter( 'login_url', array($this,'pie_login_url'),88888,1);
 		add_filter( 'lostpassword_url', array($this,'pie_lostpassword_url'),88888,1);
@@ -167,7 +167,10 @@ class PieRegister extends Base
 		
 		global $pagenow;
 		
-			
+		if($option['custom_css'] != "" || $option['tracking_code'] != "")
+		{
+			add_action('wp_footer', array($this,'addCustomScripts'));
+		}
 		
 		// check to prevent php "notice: undefined index" msg
 		$theaction ='';	
@@ -631,11 +634,7 @@ class PieRegister extends Base
 	function pieregister_login()
 	{
 		$option = get_option( 'pie_register_2' );
-				
-		if($option['custom_css'] != "" || $option['tracking_code'] != "")
-		{
-			add_action('wp_footer', array($this,'addCustomScripts'));
-		}
+		
 		global $errors;
 		if (isset($_REQUEST['action'])) :
 			$action = $_REQUEST['action'];

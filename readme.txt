@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
 Requires at least: 3.5
 Tested up to: 3.8
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 
 Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
@@ -56,6 +56,10 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.3
+* Disable Pie-Register to modify avatars
+* Made Custom CSS and Tracking Code appears across the site
+
 ### 2.0.2
 * Major Release
 * First Stable version of 2.0 family
