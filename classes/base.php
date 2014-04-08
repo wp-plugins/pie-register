@@ -53,6 +53,10 @@ class Base
 	{
 		$this->activation_validation();
 		
+		//////// Update DB to the Current version //////////
+		update_option('piereg_plugin_db_version',PIEREG_DB_VERSION);
+		//////////////////
+		
 		//Alternate Pages
 		
 		//Login

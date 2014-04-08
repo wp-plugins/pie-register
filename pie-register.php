@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration fo
 
 
 Author: Genetech Solutions
-Version: 2.0.3
+Version: 2.0.4
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -14,6 +14,9 @@ See readme.txt
 */
 //define( 'SHORTINIT', true );]
 $dir_path = dirname(__FILE__);
+
+if(!defined('PIEREG_DB_VERSION'))
+	define('PIEREG_DB_VERSION','2.0.4');
 
 function pr_licenseKey_errors()
 {
@@ -42,6 +45,12 @@ class PieRegister extends Base
 		/***********************/
 		parent::__construct();
 		global $pagenow,$wp_version,$profile;
+		
+		$pie_plugin_db_version = get_option('piereg_plugin_db_version');
+		
+		if($pie_plugin_db_version != PIEREG_DB_VERSION){
+			$this->install_settings();
+		}
 
 		$errors = new WP_Error();
 		//LOCALIZATION
