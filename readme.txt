@@ -71,7 +71,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 * Fixed Email sending issues.
 * Fixed CSS issues.
 * Added option to import version 1.0 Email templates.
-* Fixed lot or minor issues and much more..
+* Fixed lot of minor issues and much more..
 
 ### 2.0.4
 * Added DB Version
