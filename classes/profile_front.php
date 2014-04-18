@@ -1,6 +1,6 @@
 <?php
 require_once('base.php');
-class Profile_front extends Base
+class Profile_front extends PieReg_Base
 {
     var $field;
     var $user_id;
@@ -14,7 +14,7 @@ class Profile_front extends Base
     function __construct($user)
     {
         $this->data = $this->getCurrentFields();
-		$this->user = $user;	
+		$this->user = $user;
 		$this->user_id = $user->ID;			
     }
 	function createFieldName($text)
@@ -31,11 +31,13 @@ class Profile_front extends Base
     }   
 	function print_user_profile()
     {
+		$data .= "";
         if (sizeof($this->data) > 0) 
 		{
-          	echo '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
-            echo '<a class="piereg_edit_profile_link" href="?page_id='.$_GET['page_id'].'&edit_user=1"></a>';
-		    echo '<table border="0" cellpadding="0" cellspacing="0" class="pie_profile" id="pie_register">';
+          	$data .= '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
+			$data .= '<span><a href="'.wp_logout_url( site_url() ).'">Logout</a></span>';
+            $data .= '<a class="piereg_edit_profile_link" href="?page_id='.$_GET['page_id'].'&edit_user=1"></a>';
+		    $data .= '<table border="0" cellpadding="0" cellspacing="0" class="pie_profile" id="pie_register">';
            foreach ($this->data as $this->field) 
 		   {
              	$this->slug = $this->createFieldName($this->field['type']."_".$this->field['id']);
@@ -59,36 +61,43 @@ class Profile_front extends Base
 					
 					
 					case 'username' :
-					echo '<tr><td class="fields fields2">'.$this->addLabel();
-					echo '</td><td class="fields"><span>'.$this->user->data->user_login.'</span></td></tr>';
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
+					$data .= '</td><td class="fields"><span>'.$this->user->data->user_login.'</span></td></tr>';
 					break;
 					
 					case 'email' :
-					echo '<tr><td class="fields fields2">'.$this->addLabel();
-					echo '</td><td class="fields"><span>'.$this->user->data->user_email.'</span></td></tr>';
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
+					$data .= '</td><td class="fields"><span>'.$this->user->data->user_email.'</span></td></tr>';
 					break;
 					
 					case 'default' &&  $this->slug=="url":											
-					echo '<tr><td class="fields fields2">'.$this->addLabel();
-					echo '</td><td class="fields"><span>'.$this->user->data->user_url.'</span></td></tr>';
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
+					$data .= '</td><td class="fields"><span>'.$this->user->data->user_url.'</span></td></tr>';
 					break;
 					
 					
-					case 'name':											
-					$this->slug = "first_name";
-					echo '<tr><td class="fields fields2"><label>First Name</label>';
-					echo '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
-					
-					$this->slug = "last_name";
-					echo '<tr><td class="fields fields2"><label>Last Name</label>';
-					echo '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
+					case 'name':
+					//if($this->field['show_in_profile']){
+						$this->slug = "first_name";
+						$data .= '<tr><td class="fields fields2"><label>'.__("First Name","piereg").'</label>';
+						$data .= '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
+						
+						$this->slug = "last_name";
+						$data .= '<tr><td class="fields fields2"><label>'.__("Last Name","piereg").'</label>';
+						$data .= '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
+					//}
 					break;
 										
 					
 					case 'profile_pic':
-					echo '<tr><td class="fields fields2">'.$this->addLabel();
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
 					$imgPath = (trim($this->getValue($this->type, $this->slug)) != "")? $this->getValue($this->type, $this->slug) : plugins_url("../images/userImage.png",__FILE__);
-					echo '</td><td class="fields"><img src="'.$imgPath.'" style="max-width:150px;" /></td></tr>';
+					$data .= '</td><td class="fields"><img src="'.$imgPath.'" style="max-width:150px;" /></td></tr>';
+					break;			
+					case 'upload':
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
+					$upload_file_value = $this->getValue($this->type, $this->slug);
+					$data .= '</td><td class="fields"><a href="'.$upload_file_value.'" target="_blank">'.basename($upload_file_value).'</a></td></tr>';
 					break;
 					case 'text' :
 					case 'textarea':
@@ -97,22 +106,22 @@ class Profile_front extends Base
 					case 'number':
 					case 'radio':
 					case 'checkbox':													
-					case 'time':				
-					case 'upload':
+					case 'time':	
 					case 'address':							
 					case 'phone':				
 					case 'date':				
 					case 'list':
 					case "default":
-					echo '<tr><td class="fields fields2">'.$this->addLabel();
-					echo '</td><td class="fields"><span>'.$this->getValue($this->type, $this->slug).'</span></td></tr>';
+					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
+					$data .= '</td><td class="fields"><span>'.$this->getValue($this->type, $this->slug).'</span></td></tr>';
 					break;	
 									
 				endswitch; 
 			 }
-           echo '</table>';
+           $data .= '</table>';
 	
         }
+		return $data;
     }
 	function getValue()
 	{
@@ -147,20 +156,25 @@ class Profile_front extends Base
 		else if($this->type=="list")
 		{
 			if(!is_array($value))
-			return $value;			
+			return $value;
 			$list = "";
-			
+			$list = '<table class="piereg_custom_list '.$this->slug.'">';
 			for($a = 0 ; $a < sizeof($value) ; $a++)
 			{
+				if(array_filter($value[$a])){
+				$list .= '<tr>';
 				$row  = "";
 				for($b = 0 ; $b < sizeof($value[$a]) ; $b++)
 				{
-					$row 	.= $value[$a][$b];	
-					$list 	.= $value[$a][$b]." ";
+					$row 	.= $value[$a][$b];
+					$list 	.= '<td>'.$value[$a][$b]."</td>";
 				}
 				if(!empty($row))
-				$list .= "<br />";
+				//$list .= "<br />";
+				$list .= '</tr>';
+				}
 			}
+			$list .= '</table>';
 			
 			$value = $list ;	
 		}

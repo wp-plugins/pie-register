@@ -1,25 +1,42 @@
 <?php
-//$piereg['invitation_code_usage']
+global $dir_path;
+include_once( $dir_path."/classes/invitation_code_pagination.php");
 
 if( $_POST['notice'] ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 }
 ?>
 <script type="text/javascript">
-function confirmDel(id)
+function confirmDel(id,code)
 {
-	var conf = window.confirm("Are you sure?");
+	var conf = window.confirm("Are you sure to delete this ("+code+") code?");
 	if(conf)
 	{
 		document.getElementById("invi_del_id").value = id;
 		document.getElementById("del_form").submit();
 	}
 }
-function changeStatus(id)
+function changeStatus(id,code,status)
 {
-	document.getElementById("status_id").value = id;
-	document.getElementById("status_form").submit();	
+	if(status.trim() == "ACTIVE"){
+		status = "Unactive Code";
+	}
+	else{
+		status = "UNACTIVE";
+	}
+	var conf = window.confirm("Are you sure to "+status+" this ("+code+") code?");
+	if(conf)
+	{
+		document.getElementById("status_id").value = id;
+		document.getElementById("status_form").submit();
+	}
 }
+
+jQuery(document).ready(function(){
+	jQuery( document ).tooltip({
+		track: true
+	});
+});
 </script>
 <form method="post" action="" id="del_form">
   <input type="hidden" id="invi_del_id" name="invi_del_id" value="0" />
@@ -74,10 +91,140 @@ min-width: 113px;float:right;" value="<?php _e('Add Code','piereg');?>" type="su
 <style type="text/css">
 .widefat th, .widefat th a{ color:#fefefe !important;font-weight:normal !important; text-shadow:none !important;}
 .widefat th{background:#64727C !important;}
+.widefat th:nth-child(1){width:35px;}
+.name.column-name > input[type=text], .usage.column-usage > input[type=text]{width:100%;}
+.name.column-name > span, .usage.column-usage > span {cursor: pointer;}
 </style>
-      <?php
-	  include_once(dirname(__FILE__)."/invitaion_code_pagination.php");
-	  new B5F_WP_Table();
+
+<script type="text/javascript" language="javascript">
+function get_selected_box_ids()
+{
+	var checked_id = "";
+	jQuery(".invitaion_fields_class").each(function(i,obj){
+		if( (jQuery( obj ).prop('checked')) == true )
+		{
+			checked_id = checked_id + jQuery( obj ).attr("value") + ",";
+		}
+		
+	});
+	if(checked_id.trim() != "" && jQuery("#invitaion_code_bulk_option").val().trim() != "" && jQuery("#invitaion_code_bulk_option").val() != "0")
+	{
+		if(confirm("Are you sure to "+jQuery("#invitaion_code_bulk_option").val()+" selected invitation code(s).?") == true)
+		{
+			checked_id = checked_id.slice(0,-1);
+			jQuery("#select_invitaion_code_bulk_option").val(checked_id);
+			return true;
+		}
+		else{return false;}
+	}
+	else{
+		jQuery("#invitaion_code_error").css("display","block");
+		return false;
+	}
+}
+function select_all_invitaion_checkbox()
+{
+	var status = document.getElementById("select_all_invitaion_checkbox").value;
+	if(status.trim() == "true" ){
+		jQuery(".select_all_invitaion_checkbox").val("false");
+		jQuery(".invitaion_fields_class").attr("checked",false);
+		jQuery(".select_all_invitaion_checkbox").attr("checked",false);
+	}
+	else{
+		jQuery(".select_all_invitaion_checkbox").val("true");
+		jQuery(".invitaion_fields_class").attr("checked",true);
+		jQuery(".select_all_invitaion_checkbox").attr("checked",true);
+	}
+}
+function show_field(crnt,val)
+{
+	jQuery("#"+crnt.id).css("display","none");
+	jQuery("#"+val).css("display","block");
+	jQuery("#"+val).focus();
+}
+function hide_field(crnt,val)
+{
+	jQuery("#"+crnt.id).css("display","none");
+	jQuery("#"+val).css("display","block");
+	current = jQuery("#"+crnt.id).val();
+	value = jQuery("#"+val).html();
+	jQuery("#"+val).html("Please Wait...");
+	id = jQuery("#"+crnt.id).attr("data-id-invitationcode");
+	type = jQuery("#"+crnt.id).attr("data-type-invitationcode");
+	
+	var inv_code_data = {
+		method : "post",
+		action: 'pireg_update_invitation_code',
+		data: ({"value":jQuery("#"+crnt.id).val(),"id":id,"type":type})
+	};
+	jQuery.post(ajaxurl, inv_code_data, function(response) {
+		if(response.trim() == "done")
+		{
+			jQuery("#"+val).html(jQuery("#"+crnt.id).val());
+		}
+		else if(response.trim() == "duplicate")
+		{
+			if(current != value)
+			{
+				alert("This code ("+current+") already exist");
+			}
+			jQuery("#"+val).html(value);
+			jQuery("#"+crnt.id).val(value);
+		}
+		else/* if(response.trim() == "error")*/
+		{
+			jQuery("#"+val).html(value);
+			jQuery("#"+crnt.id).val(value);
+		}
+	});
+}
+
+jQuery(document).ready(function(){
+	jQuery("#invitation_code_per_page_items").change(function(){
+		jQuery("#form_invitation_code_per_page_items").submit();
+	});
+});
+</script>
+
+<div style="clear:both;float:left;border-right:#ccc 1px solid;padding-right:5px;margin-right:5px;">
+    <form method="post" id="form_invitation_code_per_page_items">
+    	<?php _e("Per-Page Item","piereg"); ?>
+        <select name="invitation_code_per_page_items" id="invitation_code_per_page_items" title="<?php _e("Select Per-Page Invitaion code","piereg"); ?>">
+        	<?php
+			$opt = get_option("pie_register_2");
+			$per_page = ( ((int)$opt['invitaion_codes_pagination_number']) != 0)? (int)$opt['invitaion_codes_pagination_number'] : 10;
+			
+			for($per_page_item = 10; $per_page_item <= 50; $per_page_item +=10)
+			{
+				$checked = ($per_page == $per_page_item)? 'selected="selected"':'';
+				echo '<option value="'.$per_page_item.'" '.$checked.'>'.$per_page_item.'</option>';
+			}
+			$checked = ($per_page == "100")? 'selected="selected"':'';
+				echo '<option value="100" '.$checked.'>100</option>';
+			?>
+        </select>
+    </form>
+</div>
+
+<div style="float:left;">
+    <form method="post" onsubmit="return get_selected_box_ids();" >
+    	<input type="hidden" value="" name="select_invitaion_code_bulk_option" id="select_invitaion_code_bulk_option">
+        <select name="invitaion_code_bulk_option" id="invitaion_code_bulk_option">
+            <option selected="selected" value="0"><?php _e("Bulk Actions","piereg"); ?></option>
+            <option value="delete"><?php _e("Delete","piereg"); ?></option>
+            <option value="active"><?php _e("Active","piereg"); ?></option>
+            <option value="unactive"><?php _e("Unactive","piereg"); ?></option>
+        </select>
+        <input type="submit" value="<?php _e("Apply","piereg"); ?>" class="button action" id="doaction" name="btn_submit_invitaion_code_bulk_option">
+    </form>
+    <span style="color:#F00;display:none;" id="invitaion_code_error"><?php _e("Select Bulk Option and also Invitation Code","piereg");?></span>
+</div>
+      <?php	
+			$Pie_Invitation_Table = new Pie_Invitation_Table();
+			$Pie_Invitation_Table->set_order();
+			$Pie_Invitation_Table->set_orderby();
+			$Pie_Invitation_Table->prepare_items();
+			$Pie_Invitation_Table->display();
 	  ?>
       
     </div>

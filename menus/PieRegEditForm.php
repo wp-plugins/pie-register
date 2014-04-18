@@ -8,10 +8,10 @@ $meta   = $this->getDefaultMeta();
 <style type="text/css">
 	.pie-content-ul{width:100%; max-height:200px; overflow:auto;}
 </style>
-<script type="text/javascript" src="<?php echo plugins_url("../js/phpjs.js",__FILE__);?>"></script>
-<script type="text/javascript" src="<?php echo plugins_url("../js/drag.js",__FILE__);?>"></script>
+<?php /*?><script type="text/javascript" src="<?php echo plugins_url("../js/phpjs.js",__FILE__);?>"></script>
+<script type="text/javascript" src="<?php echo plugins_url("../js/drag.js",__FILE__);?>"></script><?php */?>
 <script type="text/javascript" src="<?php echo plugins_url("../ckeditor/ckeditor.js",__FILE__);?>"></script>
-<script src="<?php echo plugins_url('../js/jquery.mCustomScrollbar.min.js',__FILE__); ?>"></script>
+<?php /*?><script src="<?php echo plugins_url('../js/jquery.mCustomScrollbar.min.js',__FILE__); ?>"></script><?php */?>
 
 <script type="text/javascript">
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
@@ -101,7 +101,10 @@ foreach($meta as $key=>$value)
 					<label id="set_user_role_"><?php echo __("Rgistering User Role"); ?></label>
 					<select id="set_user_role_" name="set_user_role_" >
 				  		<?php
-						$role = get_option("wp_user_roles");
+						global $wp_roles;
+						//$role = get_option("wp_user_roles");
+						$role = $wp_roles->roles;
+						
 						foreach($role as $value)
 						{
 							echo '<option value="'.strtolower($value['name']).'"';

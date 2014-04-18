@@ -1,10 +1,15 @@
 <?php
-class Base
+class PieReg_Base
 {
 	var $user_table;		
 	var $user_meta_table; 
 	var $plugin_dir;
-	var	$plugin_url ;
+	var	$plugin_url;
+	var	$pie_success;
+	var	$pie_error;
+	var	$pie_error_msg;
+	var	$pie_success_msg;
+	
 	
 	function __construct()
 	{
@@ -51,57 +56,85 @@ class Base
 	}
 	function install_settings()
 	{
-		$this->activation_validation();
-		
-		//////// Update DB to the Current version //////////
 		update_option('piereg_plugin_db_version',PIEREG_DB_VERSION);
-		//////////////////
+		
+		/*Get old settings from options*/
+		$old_options = get_option("pie_register");
+		$new_options = get_option("pie_register_2");
+		if($new_options == "" and $old_options != "")
+		{
+			update_option("pie_register_2",$old_options);
+			unset($old_options);
+			unset($new_options);
+		}
+		$this->activation_validation();
 		
 		//Alternate Pages
 		
-		//Login
-		$_p = array();
-		$_p['post_title'] 		= __("Pie Register - Login","piereg");
-		$_p['post_content'] 	= "[pie_register_login]";
-		$_p['post_status'] 		= 'publish';
-		$_p['post_type'] 		= 'page';
-		$_p['comment_status'] 	= 'closed';
-		$_p['ping_status'] 		= 'closed';
-		$login_page_id 			= wp_insert_post( $_p );
+		$get_pie_pages_from_db		= get_option("pie_pages");
+		if(is_array($get_pie_pages_from_db))
+		{
+			$piereg_login 		= (isset($get_pie_pages_from_db[0]) and $get_pie_pages_from_db != "")? get_post_status($get_pie_pages_from_db[0]) : "null";
+			$piereg_registrtion = (isset($get_pie_pages_from_db[1]) and $get_pie_pages_from_db != "")? get_post_status($get_pie_pages_from_db[1]) : "null";
+			$piereg_forgot_pass = (isset($get_pie_pages_from_db[2]) and $get_pie_pages_from_db != "")? get_post_status($get_pie_pages_from_db[2]) : "null";
+			$piereg_profile 	= (isset($get_pie_pages_from_db[3]) and $get_pie_pages_from_db != "")? get_post_status($get_pie_pages_from_db[3]) : "null";
+		}
 		
-		//Registration
-		$_p = array();
-		$_p['post_title'] 		= __("Pie Register - Registration","piereg");
-		$_p['post_content'] 	= "[pie_register_form]";
-		$_p['post_status'] 		= 'publish';
-		$_p['post_type'] 		= 'page';
-		$_p['comment_status'] 	= 'closed';
-		$_p['ping_status'] 		= 'closed';
-		$reg_page_id 			= wp_insert_post( $_p );
+		$pie_pages = get_option("pie_pages");
 		
-			//Forgot Password
-		$_p = array();
-		$_p['post_title'] 		= __("Pie Register - Forgot Password","piereg");
-		$_p['post_content'] 	= "[pie_register_forgot_password]";
-		$_p['post_status'] 		= 'publish';
-		$_p['post_type'] 		= 'page';
-		$_p['comment_status'] 	= 'closed';
-		$_p['ping_status'] 		= 'closed';
-		$forPas_page_id 		= wp_insert_post( $_p );
-	
-			//Profile Page
-		$_p = array();
-		$_p['post_title'] 		= __("Pie Register - Profile","piereg");
-		$_p['post_content'] 	= "[pie_register_profile]";
-		$_p['post_status'] 		= 'publish';
-		$_p['post_type'] 		= 'page';
-		$_p['comment_status'] 	= 'closed';
-		$_p['ping_status'] 		= 'closed';
-		$Profile_page_id 		= wp_insert_post( $_p );
+		if(trim($piereg_login) != "publish")//Login
+		{
+			$_p = array();
+			$_p['post_title'] 		= __("Pie Register - Login","piereg");
+			$_p['post_content'] 	= "[pie_register_login]";
+			$_p['post_status'] 		= 'publish';
+			$_p['post_type'] 		= 'page';
+			$_p['comment_status'] 	= 'closed';
+			$_p['ping_status'] 		= 'closed';
+			$login_page_id 			= wp_insert_post( $_p );
+			$pie_pages[0]			= $login_page_id;
+		}
 		
-		add_option("Profile_page_id",$Profile_page_id);
-		$pie_pages = array($login_page_id,$reg_page_id,$forPas_page_id,$Profile_page_id);
-		add_option("pie_pages",$pie_pages);
+		if(trim($piereg_registrtion) != "publish")//Registration
+		{
+			$_p = array();
+			$_p['post_title'] 		= __("Pie Register - Registration","piereg");
+			$_p['post_content'] 	= "[pie_register_form]";
+			$_p['post_status'] 		= 'publish';
+			$_p['post_type'] 		= 'page';
+			$_p['comment_status'] 	= 'closed';
+			$_p['ping_status'] 		= 'closed';
+			$reg_page_id 			= wp_insert_post( $_p );
+			$pie_pages[1]			= $reg_page_id;
+		}
+			
+		if(trim($piereg_forgot_pass) != "publish")//Forgot Password
+		{
+			$_p = array();
+			$_p['post_title'] 		= __("Pie Register - Forgot Password","piereg");
+			$_p['post_content'] 	= "[pie_register_forgot_password]";
+			$_p['post_status'] 		= 'publish';
+			$_p['post_type'] 		= 'page';
+			$_p['comment_status'] 	= 'closed';
+			$_p['ping_status'] 		= 'closed';
+			$forPas_page_id	 		= wp_insert_post( $_p );
+			$pie_pages[2]			= $forPas_page_id;
+		}
+		
+		if(trim($piereg_profile) != "publish")//Profile Page
+		{
+			$_p = array();
+			$_p['post_title'] 		= __("Pie Register - Profile","piereg");
+			$_p['post_content'] 	= "[pie_register_profile]";
+			$_p['post_status'] 		= 'publish';
+			$_p['post_type'] 		= 'page';
+			$_p['comment_status'] 	= 'closed';
+			$_p['ping_status'] 		= 'closed';
+			$Profile_page_id 		= wp_insert_post( $_p );
+			$pie_pages[3]			= $Profile_page_id;
+			update_option("Profile_page_id",$Profile_page_id);
+		}
+		update_option("pie_pages",$pie_pages);
 		
 		//Countries
 		$country = array(__("Afghanistan","piereg"),__("Albania","piereg"),__("Algeria","piereg"),__("American Samoa","piereg"),__("Andorra","piereg"),__("Angola","piereg"),__("Antigua and Barbuda","piereg"),__("Argentina","piereg"),__("Armenia","piereg"),__("Australia","piereg"),__("Austria","piereg"),__("Azerbaijan","piereg"),__("Bahamas","piereg"),__("Bahrain","piereg"),__("Bangladesh","piereg"),__("Barbados","piereg"),__("Belarus","piereg"),__("Belgium","piereg"),__("Belize","piereg"),__("Benin","piereg"),__("Bermuda","piereg"),__("Bhutan","piereg"),__("Bolivia","piereg"),__("Bosnia and Herzegovina","piereg"),__("Botswana","piereg"),__("Brazil","piereg"),__("Brunei","piereg"),__("Bulgaria","piereg"),__("Burkina Faso","piereg"),__("Burundi","piereg"),__("Cambodia","piereg"),__("Cameroon","piereg"),__("Canada","piereg"),__("Cape Verde","piereg"),__("Central African Republic","piereg"),__("Chad","piereg"),__("Chile","piereg"),__("China","piereg"),__("Colombia","piereg"),__("Comoros","piereg"),__("Congo","piereg"),__("Costa Rica","piereg"),__("Côte d'Ivoire","piereg"),__("Croatia","piereg"),__("Cuba","piereg"),__("Cyprus","piereg"),__("Czech Republic","piereg"),__("Denmark","piereg"),__("Djibouti","piereg"),__("Dominica","piereg"),__("Dominican Republic","piereg"),__("East Timor","piereg"),__("Ecuador","piereg"),__("Egypt","piereg"),__("El Salvador","piereg"),__("Equatorial Guinea","piereg"),__("Eritrea","piereg"),__("Estonia","piereg"),__("Ethiopia","piereg"),__("Fiji","piereg"),__("Finland","piereg"),__("France","piereg"),__("Gabon","piereg"),__("Gambia","piereg"),__("Georgia","piereg"),__("Germany","piereg"),__("Ghana","piereg"),__("Greece","piereg"),__("Greenland","piereg"),__("Grenada","piereg"),__("Guam","piereg"),__("Guatemala","piereg"),__("Guinea","piereg"),__("Guinea-Bissau","piereg"),__("Guyana","piereg"),__("Haiti","piereg"),__("Honduras","piereg"),__("Hong Kong","piereg"),__("Hungary","piereg"),__("Iceland","piereg"),__("India","piereg"),__("Indonesia","piereg"),__("Iran","piereg"),__("Iraq","piereg"),__("Ireland","piereg"),__("Israel","piereg"),__("Italy","piereg"),__("Jamaica","piereg"),__("Japan","piereg"),__("Jordan","piereg"),__("Kazakhstan","piereg"),__("Kenya","piereg"),__("Kiribati","piereg"),__("North Korea","piereg"),__("South Korea","piereg"),__("Kuwait","piereg"),__("Kyrgyzstan","piereg"),__("Laos","piereg"),__("Latvia","piereg"),__("Lebanon","piereg"),__("Lesotho","piereg"),__("Liberia","piereg"),__("Libya","piereg"),__("Liechtenstein","piereg"),__("Lithuania","piereg"),__("Luxembourg","piereg"),__("Macedonia","piereg"),__("Madagascar","piereg"),__("Malawi","piereg"),__("Malaysia","piereg"),__("Maldives","piereg"),__("Mali","piereg"),__("Malta","piereg"),__("Marshall Islands","piereg"),__("Mauritania","piereg"),__("Mauritius","piereg"),__("Mexico","piereg"),__("Micronesia","piereg"),__("Moldova","piereg"),__("Monaco","piereg"),__("Mongolia","piereg"),__("Montenegro","piereg"),__("Morocco","piereg"),__("Mozambique","piereg"),__("Myanmar","piereg"),__("Namibia","piereg"),__("Nauru","piereg"),__("Nepal","piereg"),__("Netherlands","piereg"),__("New Zealand","piereg"),__("Nicaragua","piereg"),__("Niger","piereg"),__("Nigeria","piereg"),__("Norway","piereg"),__("Northern Mariana Islands","piereg"),__("Oman","piereg"),__("Pakistan","piereg"),__("Palau","piereg"),__("Palestine","piereg"),__("Panama","piereg"),__("Papua New Guinea","piereg"),__("Paraguay","piereg"),__("Peru","piereg"),__("Philippines","piereg"),__("Poland","piereg"),__("Portugal","piereg"),__("Puerto Rico","piereg"),__("Qatar","piereg"),__("Romania","piereg"),__("Russia","piereg"),__("Rwanda","piereg"),__("Saint Kitts and Nevis","piereg"),__("Saint Lucia","piereg"),__("Saint Vincent and the Grenadines","piereg"),__("Samoa","piereg"),__("San Marino","piereg"),__("Sao Tome and Principe","piereg"),__("Saudi Arabia","piereg"),__("Senegal","piereg"),__("Serbia and Montenegro","piereg"),__("Seychelles","piereg"),__("Sierra Leone","piereg"),__("Singapore","piereg"),__("Slovakia","piereg"),__("Slovenia","piereg"),__("Solomon Islands","piereg"),__("Somalia","piereg"),__("South Africa","piereg"),__("Spain","piereg"),__("Sri Lanka","piereg"),__("Sudan","piereg"),__("Sudan, South","piereg"),__("Suriname","piereg"),__("Swaziland","piereg"),__("Sweden","piereg"),__("Switzerland","piereg"),__("Syria","piereg"),__("Taiwan","piereg"),__("Tajikistan","piereg"),__("Tanzania","piereg"),__("Thailand","piereg"),__("Togo","piereg"),__("Tonga","piereg"),__("Trinidad and Tobago","piereg"),__("Tunisia","piereg"),__("Turkey","piereg"),__("Turkmenistan","piereg"),__("Tuvalu","piereg"),__("Uganda","piereg"),__("Ukraine","piereg"),__("United Arab Emirates","piereg"),__("United Kingdom","piereg"),__("United States","piereg"),__("Uruguay","piereg"),__("Uzbekistan","piereg"),__("Vanuatu","piereg"),__("Vatican City","piereg"),__("Venezuela","piereg"),__("Vietnam","piereg"),__("Virgin Islands, British","piereg"),__("Virgin Islands, U.S.","piereg"),__("Yemen","piereg"),__("Zambia","piereg"),__("Zimbabwe","piereg"));
@@ -118,7 +151,7 @@ class Base
 		
 		//E-Mail TYpes
 		$email_type = array(
-							"default_template"							=> __("Default Template","piereg"),
+							"default_template"							=> __("Default User Registration Template","piereg"),
 							"admin_verification"						=> __("Admin Verification","piereg"),
 							"email_verification"						=> __("E-Mail Verification","piereg"),
 							"email_thankyou"							=> __("Thank You Message","piereg"),
@@ -127,60 +160,66 @@ class Base
 							"payment_faild"								=> __("Payment Faild","piereg"),
 							"pending_payment_reminder"					=> __("Pending Payment Reminder","piereg"),
 							"email_verification_reminder"				=> __("E-Mail Verification Reminder","piereg"),
-							"user_expiry_notice"						=> __("User Expiry Notice","piereg"),
-							"user_temp_blocked_notice"					=> __("User Temporary Blocked Notice","piereg"),
-							"user_renew_temp_blocked_account_notice"	=> __("User Renew Temporary Blocked Account Notice","piereg"),
-							"user_perm_blocked_notice"					=> __("User Permanent Blocked Notice","piereg")
+							"forgot_password_notification"				=> __("Forgot Password Notification","piereg")
 							);
 		//"email_forgotpassword"=>"Forgot Password"
-		add_option("pie_user_email_types",$email_type);
+		update_option("pie_user_email_types",$email_type);
 		
-		$update = get_option( 'pie_register_2' );
+		$current = get_option( 'pie_register_2' );
 		
-		$update["paypal_butt_id"] = "";
-		$update["paypal_pdt"]     = "";
-		$update["paypal_sandbox"] = "";			
-		$update['enable_admin_notifications'] = 1;
-		$update['enable_paypal'] = 0;
-		
-		
-		$update['admin_sendto_email'] 	= get_option( 'admin_email' );				
-		$update['admin_from_name'] 		= "Administrator";
-		$update['admin_from_email'] 	= get_option( 'admin_email' );
-		$update['admin_to_email'] 		= get_option( 'admin_email' );
-		$update['admin_bcc_email'] 		= get_option( 'admin_email' );
-		$update['admin_subject_email'] 	= __("New User Registration","piereg");
-		$update['admin_message_email'] 	= '<div>&nbsp;%blogname% Registration&nbsp;</div><div>	&nbsp;---------------------------&nbsp;</div><div>	&nbsp;</div><div>	The following user has registered at&nbsp;&nbsp;%blogname%</div><div>	&nbsp;</div><div>	&nbsp;Username: %user_login%&nbsp;</div><div>	&nbsp;Password: %user_pass%&nbsp;</div><div>	&nbsp;</div>';
+		$update["paypal_butt_id"] = ($current["paypal_butt_id"])?$current["paypal_butt_id"]:"";
+		$update["paypal_pdt"]     = ($current["paypal_pdt"])?$current["paypal_pdt"]:"";
+		$update["paypal_sandbox"] = ($current["paypal_sandbox"])?$current["paypal_sandbox"]:"";			
+		$update['enable_admin_notifications'] = ($current['enable_admin_notifications'])?$current['enable_admin_notifications']:1;
+		$update['enable_paypal'] = ($current['enable_paypal'])?$current['enable_paypal']:0;
 		
 		
-		$update['display_hints']			= 1;
-		$update['redirect_user']			= 1;
-		$update['subscriber_login']			= 0;
-		$update['block_wp_login']			= 0;
-		$update['alternate_login']			= $login_page_id;
-		$update['alternate_register']		= $reg_page_id;
-		$update['alternate_forgotpass']		= $forPas_page_id;		
-		$update['after_login']				= -1;
-		$update['support_license'] 			= "";
-		$update['outputcss'] 				= 1;
-		$update['theme_styles']				= 1;		
-		$update['outputhtml'] 				= 1;
-		$update['no_conflict']				= 0;
-		$update['currency'] 				= "USD";
-		$update['verification'] 			= 0;
-		$update['grace_period'] 			= 0;
-		$update['captcha_publc'] 			= "";
-		$update['captcha_private'] 			= "";
-		$update['paypal_button_id'] 		= "";
-		$update['paypal_pdt_token'] 		= "";
-		$update['custom_css'] 				= "";
-		$update['tracking_code'] 			= "";
-		$update['enable_invitation_codes'] 	= 0;
-		$update['invitation_codes'] 		= "";
+		$update['admin_sendto_email'] 	= ($current['admin_sendto_email'])?$current['admin_sendto_email']:get_option( 'admin_email' );				
+		$update['admin_from_name'] 		= ($current['admin_from_name'])?$current['admin_from_name']:"Administrator";
+		$update['admin_from_email'] 	= ($current['admin_from_email'])?$current['admin_from_email']:get_option( 'admin_email' );
+		$update['admin_to_email'] 		= ($current['admin_to_email'])?$current['admin_to_email']:get_option( 'admin_email' );
+		$update['admin_bcc_email'] 		= ($current['admin_bcc_email'])?$current['admin_bcc_email']:get_option( 'admin_email' );
+		$update['admin_subject_email'] 	= ($current['admin_subject_email'])?$current['admin_subject_email']:__("New User Registration","piereg");
+		$update['admin_message_email'] 	= ($current['admin_message_email'])?$current['admin_message_email']:'<div>&nbsp;%blogname% Registration&nbsp;</div><div>	&nbsp;---------------------------&nbsp;</div><div>	&nbsp;</div><div>	The following user has registered at&nbsp;&nbsp;%blogname%</div><div>	&nbsp;</div><div>	&nbsp;Username: %user_login%&nbsp;</div><div>	&nbsp;Password: %user_pass%&nbsp;</div><div>	&nbsp;</div>';
+		
+		
+		$update['display_hints']			= ($current['display_hints'])?$current['display_hints']:1;
+		$update['redirect_user']			= ($current['redirect_user'])?$current['redirect_user']:1;
+		$update['subscriber_login']			= ($current['subscriber_login'])?$current['subscriber_login']:0;
+		$update['login_form_in_website']	= ($current['login_form_in_website'])?$current['login_form_in_website']:1;
+		$update['registration_in_website']	= ($current['registration_in_website'])?$current['registration_in_website']:1;
+		$update['block_WP_profile']			= ($current['block_WP_profile'])?$current['block_WP_profile']:0;
+		$update['allow_pr_edit_wplogin']	= ($current['allow_pr_edit_wplogin'])?$current['allow_pr_edit_wplogin']:0;
+		
+		$update['modify_avatars']			= ($current['modify_avatars'])?$current['modify_avatars']:0;
+		$update['show_admin_bar']			= ($current['show_admin_bar'])?$current['show_admin_bar']:1;
+		$update['block_wp_login']			= ($current['block_wp_login'])?$current['block_wp_login']:0;
+		$update['alternate_login']			= $pie_pages[0];
+		$update['alternate_register']		= $pie_pages[1];
+		$update['alternate_forgotpass']		= $pie_pages[2];
+		$update['alternate_profilepage']	= $pie_pages[3];
+		//
+		$update['after_login']				= ($current['after_login'])?$current['after_login']:-1;
+		$update['support_license'] 			= ($current['support_license'])?$current['support_license']:"";
+		$update['outputcss'] 				= ($current['outputcss'])?$current['outputcss']:1;
+		$update['theme_styles']				= ($current['theme_styles'])?$current['theme_styles']:1;
+		$update['outputhtml'] 				= ($current['outputhtml'])?$current['outputhtml']:1;
+		$update['no_conflict']				= ($current['no_conflict'])?$current['no_conflict']:0;
+		$update['currency'] 				= ($current['currency'])?$current['currency']:"USD";
+		$update['verification'] 			= ($current['verification'])?$current['verification']:0;
+		$update['grace_period'] 			= ($current['grace_period'])?$current['grace_period']:0;
+		$update['captcha_publc'] 			= ($current['captcha_publc'])?$current['captcha_publc']:"";
+		$update['captcha_private'] 			= ($current['captcha_private'])?$current['captcha_private']:"";
+		$update['paypal_button_id'] 		= ($current['paypal_button_id'])?$current['paypal_button_id']:"";
+		$update['paypal_pdt_token'] 		= ($current['paypal_pdt_token'])?$current['paypal_pdt_token']:"";
+		$update['custom_css'] 				= ($current['custom_css'])?$current['custom_css']:"";
+		$update['tracking_code'] 			= ($current['tracking_code'])?$current['tracking_code']:"";
+		$update['enable_invitation_codes'] 	= ($current['enable_invitation_codes'])?$current['enable_invitation_codes']:0;
+		$update['invitation_codes'] 		= ($current['invitation_codes'])?$current['invitation_codes']:"";
 		// Payment Setting 
-		$update['payment_setting_amount']				= "10";
+		//$update['payment_setting_amount']				= ($current['payment_setting_amount'])?$current['payment_setting_amount']:"10";
 		//Role setting
-		$update['pie_regis_set_user_role_']				= "subscriber";
+		$update['pie_regis_set_user_role_']				= ($current['pie_regis_set_user_role_'])?$current['pie_regis_set_user_role_']:"subscriber";
 		/*$update['payment_setting_activation_cycle'] 	= "0";
 		$update['payment_setting_expiry_notice_days'] 	= "0";
 		$update['payment_setting_remove_user_days'] 	= "0";
@@ -191,29 +230,34 @@ class Base
 				
 		foreach ($pie_user_email_types as $val=>$type) 
 		{
-			$update['enable_user_notifications'] = 0;
+			$update['enable_user_notifications'] = ($current['enable_user_notifications'])?$current['enable_user_notifications']:0;
 			
-			$update['user_from_name_'.$val] 	= "Admin";
-			$update['user_from_email_'.$val] 	= get_option( 'admin_email' );
-			$update['user_to_email_'.$val]	 	= get_option( 'admin_email' );					
-			$update['user_subject_email_'.$val] = $type;			
+			$update['user_from_name_'.$val] 	= ($current['user_from_name_'.$val])?$current['user_from_name_'.$val]:"Admin";
+			$update['user_from_email_'.$val] 	= ($current['user_from_email_'.$val])?$current['user_from_email_'.$val]:get_option( 'admin_email' );
+			$update['user_to_email_'.$val]	 	= ($current['user_to_email_'.$val])?$current['user_to_email_'.$val]:get_option( 'admin_email' );
+			$update['user_subject_email_'.$val] = ($current['user_subject_email_'.$val])?$current['user_subject_email_'.$val]:$type;
 		}
 
-		$update['user_message_email_admin_verification']	 					= __("Thank you for your registration at","piereg").' %blogname%. '.__("Your account is being moderated by the administrator.","piereg");
-		$update['user_message_email_email_verification']			 			= __("Thank you for your registration at","piereg").' %blogname%. '.__("Please click on the following link to confirm your registration.","piereg")." <br /><br /><a href='%activationurl%'>%activationurl%</a>";
-		$update['user_message_email_email_thankyou'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
-		//$update['user_message_email_email_forgotpassword'] 	= "";
-		$update['user_message_email_payment_success'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
-		$update['user_message_email_payment_faild'] 							= __("Your registration faild at","piereg")." %blogname% because of payment.";
-		$update['user_message_email_pending_payment'] 							= __("Thank you for your registration at","piereg")." %blogname%. ".__("Please complete your payment to confirm your registration at","piereg")." %blogname%.";
-		$update['user_message_email_default_template'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
+		$update['user_message_email_admin_verification']	 					= ($current['user_message_email_admin_verification'])?$current['user_message_email_admin_verification']: __("Thank you for your registration at","piereg").' %blogname%. '.__("Your account is being moderated by the administrator.","piereg");
 		
-		$update['user_message_email_pending_payment_reminder'] 					= __("Thank you for your registration at","piereg")." %blogname%.";
-		$update['user_message_email_email_verification_reminder']			 	= __("Hello Unverified","piereg")." %user_login%, <br /><br /> ".__("Someday ago you have been signed up at Our Website, an email were sent to you to activate Your account. This is a reminder email that if you failed to activate in xx days, You account will be deleted from our system. You can follow the link below to activate your account.","piereg")."<br /><br /> ".__("Sincerely,The %blogname% Team.","piereg");
-		$update['user_message_email_user_expiry_notice'] 						= __("You will temporary block at","piereg")." %blogname%.";
-		$update['user_message_email_user_temp_blocked_notice']					= __("Now, You are temporary block at","piereg")." %blogname%";
-		$update['user_message_email_user_renew_temp_blocked_account_notice']	= __("Now, You are temporary block at","piereg")." %blogname%. ".__("And Please Renew your account.","piereg");
-		$update['user_message_email_user_perm_blocked_notice']					= __("Now, You are permanent block at","piereg")." %blogname%";
+		$update['user_message_email_email_verification']			 			= ($current['user_message_email_email_verification'])?$current['user_message_email_email_verification']:__("Thank you for your registration at","piereg").' %blogname%. '.__("Please click on the following link to confirm your registration.","piereg")." <br /><br /><a href='%activationurl%'>%activationurl%</a>";
+		
+		$update['user_message_email_email_thankyou'] 							= ($current['user_message_email_email_thankyou'])?$current['user_message_email_email_thankyou']:__("Thank you for your registration at","piereg")." %blogname%.";
+		
+		//$update['user_message_email_email_forgotpassword'] 	= "";
+		$update['user_message_email_payment_success'] 							= ($current['user_message_email_payment_success'])?$current['user_message_email_payment_success']:__("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_payment_faild'] 							= ($current['user_message_email_payment_faild'])?$current['user_message_email_payment_faild']:__("Your registration faild at","piereg")." %blogname% because of payment.";
+		
+		$update['user_message_email_pending_payment'] 							= ($current['user_message_email_pending_payment'])?$current['user_message_email_pending_payment']:__("Thank you for your registration at","piereg")." %blogname%. ".__("Please complete your payment to confirm your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_default_template'] 							= ($current['user_message_email_default_template'])?$current['user_message_email_default_template']: __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_pending_payment_reminder'] 					= ($current['user_message_email_pending_payment_reminder'])?$current['user_message_email_pending_payment_reminder']: __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_email_verification_reminder']			 	= ($current['user_message_email_email_verification_reminder'])?$current['user_message_email_email_verification_reminder']: __("Hello Unverified","piereg")." %user_login%, <br /><br /> ".__("Someday ago you have been signed up at Our Website, an email were sent to you to activate Your account. This is a reminder email that if you failed to activate in xx days, You account will be deleted from our system. You can follow the link below to activate your account.","piereg")."<br /><br /> ".__("Sincerely,The %blogname% Team.","piereg");
+		
+		$update['user_message_email_forgot_password_notification']					= ($current['user_message_email_forgot_password_notification'])?$current['user_message_email_forgot_password_notification']: __('Someone has asked to reset the password for the following site and username.','piereg') . "\r\n\r\n"."%siteurl%" . "\r\n\r\n".__('Username','piereg').": %user_login% "."\r\n\r\n".__("To reset your password visit the following address, otherwise just ignore this email and nothing will happen.","piereg")."\r\n\r\n"."%reset_password_url%" ."\r\n";
 						
 		update_option( 'pie_register_2', $update );
 		
@@ -224,60 +268,60 @@ class Base
 		$fields 					= array();
 		
 		
-		$fields['form']['label'] 				= __("Registration Form","piereg");
-		$fields['form']['desc'] 				= __("Please fill the form below to register.","piereg");
-		$fields['form']['label_alignment'] 		= "left";
-		$fields['form']['css']					= "";
-		$fields['form']['type']					= "form";
-		$fields['form']['meta']					= 0;
-		$fields['form']['reset']				= 0;
+		$fields['form']['label'] 				= ($current_fields['form']['label'])?$current_fields['form']['label']:__("Registration Form","piereg");
+		$fields['form']['desc'] 				= ($current_fields['form']['desc'])?$current_fields['form']['desc']:__("Please fill the form below to register.","piereg");
+		$fields['form']['label_alignment'] 		= ($current_fields['form']['label_alignment'])?$current_fields['form']['label_alignment']:"left";
+		$fields['form']['css']					= ($current_fields['form']['css'])?$current_fields['form']['css']:"";
+		$fields['form']['type']					= ($current_fields['form']['type'])?$current_fields['form']['type']:"form";
+		$fields['form']['meta']					= ($current_fields['form']['meta'])?$current_fields['form']['meta']:0;
+		$fields['form']['reset']				= ($current_fields['form']['reset'])?$current_fields['form']['reset']:0;
 		
 		
 		
-		$fields[0]['label'] 		= __("Username","piereg");
-		$fields[0]['type'] 			= "username";
-		$fields[0]['id'] 			= 0;
-		$fields[0]['remove'] 		= 0;
-		$fields[0]['required'] 		= 1;
-		$fields[0]['desc'] 			= "";
-		$fields[0]['length'] 		= "";
-		$fields[0]['default_value'] = "";
-		$fields[0]['placeholder'] 	= "";
-		$fields[0]['css'] 			= ""; 
-		$fields[0]['meta']			= 0;
+		$fields[0]['label'] 		= ($current_fields[0]['label'])?$current_fields[0]['label']:__("Username","piereg");
+		$fields[0]['type'] 			= ($current_fields[0]['type'])?$current_fields[0]['type']:"username";
+		$fields[0]['id'] 			= ($current_fields[0]['id'])?$current_fields[0]['id']:0;
+		$fields[0]['remove'] 		= ($current_fields[0]['remove'])?$current_fields[0]['remove']:0;
+		$fields[0]['required'] 		= ($current_fields[0]['required'])?$current_fields[0]['required']:1;
+		$fields[0]['desc'] 			= ($current_fields[0]['desc'])?$current_fields[0]['desc']:"";
+		$fields[0]['length'] 		= ($current_fields[0]['length'])?$current_fields[0]['length']:"";
+		$fields[0]['default_value'] = ($current_fields[0]['default_value'])?$current_fields[0]['default_value']:"";
+		$fields[0]['placeholder'] 	= ($current_fields[0]['placeholder'])?$current_fields[0]['placeholder']:"";
+		$fields[0]['css'] 			= ($current_fields[0]['css'])?$current_fields[0]['css']:""; 
+		$fields[0]['meta']			= ($current_fields[0]['meta'])?$current_fields[0]['meta']:0;
 		
-		$fields[1]['label'] 			= __("E-mail","piereg");
-		$fields[1]['type'] 				= "email";
-		$fields[1]['id'] 				= 1;
-		$fields[1]['remove'] 			= 0;
-		$fields[1]['required'] 			= 1;
-		$fields[1]['desc'] 				= "";
-		$fields[1]['length'] 			= "";
-		$fields[1]['default_value'] 	= "";
-		$fields[1]['placeholder'] 		= "";
-		$fields[1]['css'] 				= ""; 
-		$fields[1]['validation_rule'] 	= "email";
-		$fields[1]['meta']				= 0;
+		$fields[1]['label'] 			= ($current_fields[1]['label'])?$current_fields[1]['label']:__("E-mail","piereg");
+		$fields[1]['type'] 				= ($current_fields[1]['type'])?$current_fields[1]['type']:"email";
+		$fields[1]['id'] 				= ($current_fields[1]['id'])?$current_fields[1]['id']:1;
+		$fields[1]['remove'] 			= ($current_fields[1]['remove'])?$current_fields[1]['remove']:0;
+		$fields[1]['required'] 			= ($current_fields[1]['required'])?$current_fields[1]['required']:1;
+		$fields[1]['desc'] 				= ($current_fields[1]['desc'])?$current_fields[1]['desc']:"";
+		$fields[1]['length'] 			= ($current_fields[1]['length'])?$current_fields[1]['length']:"";
+		$fields[1]['default_value'] 	= ($current_fields[1]['default_value'])?$current_fields[1]['default_value']:"";
+		$fields[1]['placeholder'] 		= ($current_fields[1]['placeholder'])?$current_fields[1]['placeholder']:"";
+		$fields[1]['css'] 				= ($current_fields[1]['css'])?$current_fields[1]['css']:""; 
+		$fields[1]['validation_rule'] 	= ($current_fields[1]['validation_rule'])?$current_fields[1]['validation_rule']:"email";
+		$fields[1]['meta']				= ($current_fields[1]['meta'])?$current_fields[1]['meta']:0;
 		
-		$fields[2]['label'] 			= __("Password","piereg");
-		$fields[2]['type'] 				= "password";
-		$fields[2]['id'] 				= 2;
-		$fields[2]['remove'] 			= 0;
-		$fields[2]['required'] 			= 1;
-		$fields[2]['desc'] 				= "";
-		$fields[2]['length'] 			= "";
-		$fields[2]['default_value'] 	= "";
-		$fields[2]['placeholder'] 		= "";
-		$fields[2]['css'] 				= ""; 
-		$fields[2]['validation_rule'] 	= ""; 
-		$fields[2]['meta']				= 0;	
-		$fields[2]['show_meter']		= 1;		
+		$fields[2]['label'] 			= ($current_fields[2]['label'])?$current_fields[2]['label']:__("Password","piereg");
+		$fields[2]['type'] 				= ($current_fields[2]['type'])?$current_fields[2]['type']:"password";
+		$fields[2]['id'] 				= ($current_fields[2]['id'])?$current_fields[2]['id']:2;
+		$fields[2]['remove'] 			= ($current_fields[2]['remove'])?$current_fields[2]['remove']:0;
+		$fields[2]['required'] 			= ($current_fields[2]['required'])?$current_fields[2]['required']:1;
+		$fields[2]['desc'] 				= ($current_fields[2]['desc'])?$current_fields[2]['desc']:"";
+		$fields[2]['length'] 			= ($current_fields[2]['length'])?$current_fields[2]['length']:"";
+		$fields[2]['default_value'] 	= ($current_fields[2]['default_value'])?$current_fields[2]['default_value']:"";
+		$fields[2]['placeholder'] 		= ($current_fields[2]['placeholder'])?$current_fields[2]['placeholder']:"";
+		$fields[2]['css'] 				= ($current_fields[2]['css'])?$current_fields[2]['css']:""; 
+		$fields[2]['validation_rule'] 	= ($current_fields[2]['validation_rule'])?$current_fields[2]['validation_rule']:""; 
+		$fields[2]['meta']				= ($current_fields[2]['meta'])?$current_fields[2]['meta']:0;	
+		$fields[2]['show_meter']		= ($current_fields[2]['show_meter'])?$current_fields[2]['show_meter']:1;		
 		
 		
 		//Getting data from old plugins
 		$num = 3;
 		
-		if ($update['firstname'] || $update ['lastname'])
+		if ($current['firstname'] || $current ['lastname'])
 		{
 			$fields[$num]['type'] 			= "name";
 			$fields[$num]['label'] 			= __("First Name","piereg");	
@@ -286,7 +330,7 @@ class Base
 			$num++;		
 		}
 		
-		if ($update['website'])
+		if ($current['website'])
 		{
 			$fields[$num]['type'] 			= "default";
 			$fields[$num]['label'] 			= __("Website","piereg");	
@@ -294,7 +338,7 @@ class Base
 			$fields[$num]['id'] 			= $num;	
 			$num++;		
 		}
-		if ($update ['aim'])
+		if ($current ['aim'])
 		{
 			$fields[$num]['type'] 			= "default";
 			$fields[$num]['label'] 			= __("AIM","piereg");
@@ -302,7 +346,7 @@ class Base
 			$fields[$num]['id'] 			= $num;	
 			$num++;			
 		}
-		if ($update['yahoo'])
+		if ($current['yahoo'])
 		{
 			$fields[$num]['type'] 			= "default";
 			$fields[$num]['label'] 			= __("Yahoo IM","piereg");
@@ -310,7 +354,7 @@ class Base
 			$fields[$num]['id'] 			= $num;	
 			$num++;		
 		}
-		if ($update['jabber'])
+		if ($current['jabber'])
 		{
 			$fields[$num]['type'] 			= "default";
 			$fields[$num]['label'] 			= __("Jabber / Google Talk","piereg");
@@ -318,7 +362,7 @@ class Base
 			$fields[$num]['id'] 			= $num;	
 			$num++;		
 		}
-		if ($update['about'])
+		if ($current['about'])
 		{
 			$fields[$num]['type'] 			= "default";
 			$fields[$num]['label'] 			= __("About Yourself","piereg");	
@@ -362,11 +406,11 @@ class Base
 				if($fields[$num]['type']=="date")
 				{
 					$fields[$num]['date_type'] 	 	= "datepicker";
-					$fields[$num]['date_format'] 	= $update["dateformat"];
-					$fields[$num]['firstday'] 		= $update["firstday"];
-					$fields[$num]['startdate'] 		= $update["startdate"];
-					$fields[$num]['calyear'] 		= $update["calyear"];	
-					$fields[$num]['calmonth'] 		= $update["calmonth"];				
+					$fields[$num]['date_format'] 	= $current["dateformat"];
+					$fields[$num]['firstday'] 		= $current["firstday"];
+					$fields[$num]['startdate'] 		= $current["startdate"];
+					$fields[$num]['calyear'] 		= $current["calyear"];	
+					$fields[$num]['calmonth'] 		= $current["calmonth"];				
 					
 				}
 				
@@ -384,9 +428,9 @@ class Base
 	
 			
 		//if(!is_array($current_fields ) || sizeof($current_fields ) == 0)
-		{
+		//{
 			add_option( 'pie_fields', $fields  );
-		}	
+		//}	
 		
 		update_option( 'pie_fields_default', $fields  );
 		
@@ -398,8 +442,20 @@ class Base
 		global $wpdb;
 		$prefix=$wpdb->prefix."pieregister_";
 		$codetable=$prefix."code";
-		$wpdb->query("CREATE TABLE ".$codetable."(`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");	
-		
+		//$wpdb->query("CREATE TABLE ".$codetable."(`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");
+		$create_ctable_sql = "CREATE TABLE $codetable (
+			  id mediumint(9) NOT NULL AUTO_INCREMENT,
+			  created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			  modified datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+			  name text NOT NULL,
+			  count int(11) NOT NULL,
+			  code_usage int(11) NOT NULL,
+			  status mediumint(2) NOT NULL,
+			  UNIQUE KEY id (id)
+			);";
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $create_ctable_sql );
+		/*
 		$status = $wpdb->get_results("SHOW COLUMNS FROM ".$codetable."");
 		$check = 0;
 		foreach($status as $key=>$val)
@@ -412,13 +468,13 @@ class Base
 		if($check == 0)
 		{
 			$wpdb->query("alter table ".$codetable." add column `usage` int(11) NULL");
-		}
+		}*/
 		
 		//Adding active meta to existing users
 		 $blogusers = get_users();
    		 foreach ($blogusers as $user) 
 		 {
-        	update_user_meta( $user->ID, 'active', 1);
+        	add_user_meta( $user->ID, 'active', 1);
     	 }
 	}
 	function getDefaultMeta()
@@ -478,7 +534,7 @@ class Base
 		
 		$structure['hidden'] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="default_value_%d%">'.__("Default Value","piereg").'</label><input type="text" name="field[%d%][default_value]" id="default_value_%d%" class="input_fields field_default_value"></div></div></div>';
 		
-		$structure['invitation']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
+		$structure['invitation']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
 		
 		return $structure;	
 	}
@@ -515,14 +571,15 @@ class Base
 	{
 		return str_replace("-","_",sanitize_title($text));	
 	}
-	function filterEmail($text,$user,$user_pass="")
+	function filterEmail($text,$user,$user_pass="",$key=false)
 	{
 		if(!is_object($user))
 		{
 			global $wpdb;
-			$user = $wpdb->get_results("SELECT `ID`, `user_login`, `user_nicename`, `user_email`, `user_registered` FROM `wp_users` WHERE `user_email` = '".stripslashes(mysql_real_escape_string( $user ) )."'");
-			$user = $user[0];
+			$user_data = $wpdb->get_results("SELECT `ID`, `user_login`, `user_nicename`, `user_email`, `user_registered`,`user_activation_key` FROM `wp_users` WHERE `user_email` = '".$wpdb->escape( $user )."' || `user_login` = '".$wpdb->escape( $user )."'");
+			$user = $user_data[0];
 		}
+		if(!$user) return false;
 		$text					= $this->replaceMetaKeys($text,$user->ID);
 		
 		$user_login 			= stripslashes($user->user_login);
@@ -540,13 +597,21 @@ class Base
 		
 		
 		$hash 			= get_user_meta( $user->ID, 'hash' );
-		$activationurl	= home_url('/').'wp-login.php?action=activate&id='.$user_login.'&activation_key='.$hash[0];
+		//$activationurl	= $this->pie_login_url().'?action=activate&id='.$user_login.'&activation_key='.$hash[0];
+		
+		$activationurl	= $this->pie_modify_custom_url($this->pie_login_url(),"action=activate").'&id='.$user_login.'&activation_key='.$hash[0];
+																																		  
 		$all_field = $this->get_all_field($user->user_email);
 		
+		$password_reset_key = $key;
 		$user_registration_date = $user->user_registered;
+		//$reset_password_url = $this->pie_modify_custom_url($this->pie_login_url())."?action=rp&key={$password_reset_key}&login=" . $user_login;
 		
-		$keys 	= array("%user_login%","%user_pass%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%" );
-		$values = array($user_login ,$user_pass,$user_email,$blog_name, $site_url,$activationurl,$first_name[0],$last_name[0],$user_url[0],$user_aim[0],$user_yim[0],$user_jabber[0],$user_biographical_nfo[0], $all_field,$user_registration_date);
+		$reset_password_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=rp")."&key={$password_reset_key}&login=" . $user_login;
+		
+		
+		$keys 	= array("%user_login%","%user_pass%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" );
+		$values = array($user_login ,$user_pass,$user_email,$blog_name, $site_url,$activationurl,$first_name[0],$last_name[0],$user_url[0],$user_aim[0],$user_yim[0],$user_jabber[0],$user_biographical_nfo[0], $all_field,$user_registration_date,$reset_password_url);
 		return str_replace($keys,$values,$text);
 	}
 	function get_all_field($user)
@@ -627,32 +692,41 @@ class Base
 	
 	function Check_license_key_form_API($key)
 	{
-		//$post_url = "http://192.168.14.3/pie/Requesthandler.ashx";
 		$post_url = "http://achnawachna.com/PieRegisterService_new/requesthandler.ashx";
 		$domain_name = get_bloginfo("url");
 		$post_string_url	= "type=checkdomainkey&domainname=".$domain_name."&key=".trim($key);
 
-		$request = curl_init($post_url);
-		curl_setopt($request, CURLOPT_HEADER, 0);
-		curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($request, CURLOPT_POSTFIELDS, $post_string_url);
-		curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
-		$post_response = curl_exec($request);
-		curl_close ($request);
+		$post_response = "";
+		if(function_exists('curl_version')){
+			$request = curl_init($post_url);
+			curl_setopt($request, CURLOPT_HEADER, 0);
+			curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($request, CURLOPT_POSTFIELDS, $post_string_url);
+			curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+			$post_response = curl_exec($request);
+			curl_close ($request);
+		}else{
+			$url = $post_url."?".$post_string_url;
+			$post_response = @file_get_contents($url);
+		}
 		$rresponce_code = trim(strip_tags($post_response));// get response code from http://pieregister.genetechsolutions.com/
 		
 		$error = "";
 		if($rresponce_code == "1001")
 			{$error = __("Both key and domain doesn't exist. Please try gain later","piereg");}
-		if($rresponce_code == "1002")
+		else if($rresponce_code == "1002")
 			{$error = __("This Domain doesn't exist. Please try gain later","piereg");}
-		if($rresponce_code == "1003")
+		else if($rresponce_code == "1003")
 			{$error = __("This key doesn't exist. Please try gain later","piereg");}
-		if($rresponce_code == "1004")
+		else if($rresponce_code == "1004")
 			{$error = __("Key and domain exist but a cross match (not related to each other). Please try gain later","piereg");}
-		if($rresponce_code == "")
+		else if($rresponce_code == "")
 			{$error = __("Server is down please try again later.","piereg");}
-		
+		else if($rresponce_code == "1000")
+		{
+			$error = array('key'=>$key);
+		}
+			
 		return $error;
 	}
 	
@@ -814,4 +888,245 @@ class Base
 	}
 	function activation_validation()
 	{}
+	 
+	function piereg_default_settings()
+	{
+		$pie_pages_id = get_option("pie_pages");
+		
+		$update = get_option( 'pie_register_2' );
+		//E-Mail TYpes
+		$email_type = array(
+							"default_template"							=> __("Default Template","piereg"),
+							"admin_verification"						=> __("Admin Verification","piereg"),
+							"email_verification"						=> __("E-Mail Verification","piereg"),
+							"email_thankyou"							=> __("Thank You Message","piereg"),
+							"pending_payment"							=> __("Pending Payment","piereg"),
+							"payment_success"							=> __("Payment Success","piereg"),
+							"payment_faild"								=> __("Payment Faild","piereg"),
+							"pending_payment_reminder"					=> __("Pending Payment Reminder","piereg"),
+							"email_verification_reminder"				=> __("E-Mail Verification Reminder","piereg"),
+							"forgot_password_notification"				=> __("Forgot Password Notification","piereg")
+							);
+		//"email_forgotpassword"=>"Forgot Password"
+		add_option("pie_user_email_types",$email_type);
+		
+		$update = get_option( 'pie_register_2' );
+		
+		$update["paypal_butt_id"] = "";
+		$update["paypal_pdt"]     = "";
+		$update["paypal_sandbox"] = "";
+		$update['enable_admin_notifications'] = 1;
+		$update['enable_paypal'] = 0;
+		$update['admin_sendto_email'] 	= get_option( 'admin_email' );				
+		$update['admin_from_name'] 		= "Administrator";
+		$update['admin_from_email'] 	= get_option( 'admin_email' );
+		$update['admin_to_email'] 		= get_option( 'admin_email' );
+		$update['admin_bcc_email'] 		= get_option( 'admin_email' );
+		$update['admin_subject_email'] 	= __("New User Registration","piereg");
+		$update['admin_message_email'] 	= '<div>&nbsp;%blogname% Registration&nbsp;</div><div>	&nbsp;---------------------------&nbsp;</div><div>	&nbsp;</div><div>	The following user has registered at&nbsp;&nbsp;%blogname%</div><div>	&nbsp;</div><div>	&nbsp;Username: %user_login%&nbsp;</div><div>	&nbsp;Password: %user_pass%&nbsp;</div><div>	&nbsp;</div>';
+		
+		
+		$update['display_hints']			= 1;
+		$update['redirect_user']			= 0;
+		$update['subscriber_login']			= 0;
+		$update['allow_pr_edit_wplogin']	= 0;
+		$update['block_WP_profile']			= 0;
+		$update['modify_avatars']			= 0;
+		$update['show_admin_bar']			= 1;
+		$update['block_wp_login']			= 0;
+		$update['alternate_login']			= $pie_pages_id[0];
+		$update['alternate_register']		= $pie_pages_id[1];
+		$update['alternate_forgotpass']		= $pie_pages_id[2];
+		$update['alternate_profilepage']	= $pie_pages_id[3];
+		
+		$update['after_login']				= -1;
+		$update['support_license'] 			= "";
+		$update['outputcss'] 				= 1;
+		$update['theme_styles']				= 1;
+		$update['outputhtml'] 				= 1;
+		$update['no_conflict']				= 0;
+		$update['currency'] 				= "USD";
+		$update['verification'] 			= 0;
+		$update['grace_period'] 			= 0;
+		$update['captcha_publc'] 			= "";
+		$update['captcha_private'] 			= "";
+		$update['paypal_button_id'] 		= "";
+		$update['paypal_pdt_token'] 		= "";
+		$update['custom_css'] 				= "";
+		$update['tracking_code'] 			= "";
+		$update['enable_invitation_codes'] 	= 0;
+		$update['invitation_codes'] 		= "";
+		//$update['payment_setting_amount']	= "10";
+		$update['pie_regis_set_user_role_']	= "subscriber";
+		
+		
+		$pie_user_email_types 	= get_option( 'pie_user_email_types'); 
+				
+		foreach ($pie_user_email_types as $val=>$type) 
+		{
+			$update['enable_user_notifications'] = 0;
+			
+			$update['user_from_name_'.$val] 	= "Admin";
+			$update['user_from_email_'.$val] 	= get_option( 'admin_email' );
+			$update['user_to_email_'.$val]	 	= get_option( 'admin_email' );
+			$update['user_subject_email_'.$val] = $type;
+		}
+
+		$update['user_message_email_admin_verification']	 					= __("Thank you for your registration at","piereg").' %blogname%. '.__("Your account is being moderated by the administrator.","piereg");
+		
+		$update['user_message_email_email_verification']			 			= __("Thank you for your registration at","piereg").' %blogname%. '.__("Please click on the following link to confirm your registration.","piereg")." <br /><br /><a href='%activationurl%'>%activationurl%</a>";
+		
+		$update['user_message_email_email_thankyou'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		//$update['user_message_email_email_forgotpassword'] 	= "";
+		$update['user_message_email_payment_success'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_payment_faild'] 							= __("Your registration faild at","piereg")." %blogname% because of payment.";
+		
+		$update['user_message_email_pending_payment'] 							= __("Thank you for your registration at","piereg")." %blogname%. ".__("Please complete your payment to confirm your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_default_template'] 							= __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_pending_payment_reminder'] 					= __("Thank you for your registration at","piereg")." %blogname%.";
+		
+		$update['user_message_email_email_verification_reminder']			 	= __("Hello Unverified","piereg")." %user_login%, <br /><br /> ".__("Someday ago you have been signed up at Our Website, an email were sent to you to activate Your account. This is a reminder email that if you failed to activate in xx days, You account will be deleted from our system. You can follow the link below to activate your account.","piereg")."<br /><br /> ".__("Sincerely,The %blogname% Team.","piereg");
+		
+		$update['user_message_email_user_expiry_notice'] 						= __("You will temporary block at","piereg")." %blogname%.";
+		
+		$update['user_message_email_user_temp_blocked_notice']					= __("Now, You are temporary block at","piereg")." %blogname%";
+		
+		$update['user_message_email_user_renew_temp_blocked_account_notice']	= __("Now, You are temporary block at","piereg")." %blogname%. ".__("And Please Renew your account.","piereg");
+		
+		$update['user_message_email_user_perm_blocked_notice']					= __("Now, You are permanent block at","piereg")." %blogname%";
+		
+		$update['user_message_email_forgot_password_notification']				= __('Someone has asked to reset the password for the following site and username.','piereg') . "\r\n\r\n"."%siteurl%" . "\r\n\r\n".__('Username','piereg').": %user_login% "."\r\n\r\n".__("To reset your password visit the following address, otherwise just ignore this email and nothing will happen.","piereg")."\r\n\r\n"."%reset_password_url%" ."\r\n";
+		
+
+		update_option( 'pie_register_2', $update );
+	}
+	function pie_registration_url($url=false)
+	{
+		$options = get_option("pie_register_2");
+		$pie_registration_url = get_permalink($options['alternate_register']);
+		return ($pie_registration_url)? $pie_registration_url : wp_registration_url();
+	}
+	function pie_login_url($url=false)
+	{
+		$options = get_option("pie_register_2");
+		$pie_login_url = get_permalink($options['alternate_login']);
+		return ($pie_login_url)? $pie_login_url : wp_login_url();
+	}
+	function pie_lostpassword_url($url=false)
+	{
+		$options = get_option("pie_register_2");
+		$pie_lostpass_url = get_permalink($options['alternate_forgotpass']);
+		return ($pie_lostpass_url)? $pie_lostpass_url : wp_lostpassword_url();
+	}
+	function pie_modify_custom_url($get_url,$query_string=false){
+		$get_url = trim($get_url);
+		if(!$get_url) return false;
+		
+		if(strpos($get_url,"?"))
+			$url = $get_url."&".$query_string;
+		else
+			$url = $get_url."?".$query_string;
+			
+		return $url;
+	}
+	function piereg_validate_files($file_info,$extantion_array = array())
+	{
+		$result = false;
+		if (function_exists('finfo_open')) {
+			$finfo = finfo_open(FILEINFO_MIME);
+			$mimetype = finfo_file($finfo, $file_info);
+			finfo_close($finfo);
+			$result = in_array($mimetype,$extantion_array);
+		}else{
+			$result = in_array(pathinfo($file_info,PATHINFO_EXTENSION),$extantion_array);
+		}
+		$result = (trim($result))? $result : false;
+		return $result;
+	}
+	
+	function pie_profile_pictures_upload($user_id,$field,$field_slug){
+		global $errors;
+		$errors = new WP_Error();
+		if($_FILES[$field_slug]['name'] != ''){
+			//echo $_FILES[$field_slug]['name'];
+			//die('pie_profile_pictures_upload');
+			////////////////////////////UPLOAD PROFILE PICTURE//////////////////////////////
+			$allowedExts = array("gif", "jpeg", "jpg", "png");
+			$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],array("gif","jpeg","jpg","png","bmp"));
+			if($result)
+			{
+				$temp = explode(".", $_FILES[$field_slug]["name"]);
+				$extension = end($temp);
+				$upload_dir = wp_upload_dir();
+				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
+				wp_mkdir_p($temp_dir);
+				$temp_file_name = "profile_pic_".crc32($user_id."_".$extension."_".time()).".".$extension;
+				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
+				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));
+					/*$_POST['error'] = ('<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));*/
+				}else{
+					//$_POST[$field_slug] = $temp_file_url;
+					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
+				}
+				
+			}else{
+				$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));
+				/*$_POST['error'] = ('<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));*/
+			}
+		}
+	}
+	function pie_upload_files($user_id,$field,$field_slug){
+		global $errors;
+		$errors = new WP_Error();
+		$result = false;
+		if($_FILES[$field_slug]['name'] != ''){
+			///////////////////UPLOAD ALL FILES//////////////////////////
+			
+			if($field['file_types'] != ""){
+				$filter_string = stripcslashes($field['file_types']);
+				$filter_array = explode(",",$filter_string);
+				$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],$filter_array);
+				
+				if($result){
+					$temp = explode(".", $_FILES[$field_slug]["name"]);
+					$extension = end($temp);
+					$upload_dir = wp_upload_dir();
+					$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
+					wp_mkdir_p($temp_dir);
+					$temp_file_name = "file_".crc32($user_id."_".$extension."_".time()).".".$extension;
+					$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
+					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+						$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					}else{
+						//$_POST[$field_slug] = $temp_file_url;
+						update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
+					}
+				}else{
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));
+					/*$_POST['error'] = ('<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));*/
+				}
+			}
+			elseif($field['file_types'] == ""){
+				$temp = explode(".", $_FILES[$field_slug]["name"]);
+				$extension = end($temp);
+				$upload_dir = wp_upload_dir();
+				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
+				wp_mkdir_p($temp_dir);
+				$temp_file_name = "file_".crc32($user_id."_".$extension."_".time()).".".$extension;
+				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
+				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+				}else{
+					//$_POST[$field_slug] = $temp_file_url;
+					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
+				}
+			}
+		}
+	}
+	
 }

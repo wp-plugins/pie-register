@@ -62,7 +62,7 @@ if( $_POST['notice'] ){
           <li>
             <div class="fields">
               <label><?php _e("Message",'piereg');?></label>
-            <p><strong>Replacement Keys:</strong> &nbsp; %user_login%  &nbsp; %user_pass% &nbsp; %user_email% &nbsp; %blogname% &nbsp; %siteurl%  &nbsp; %activationurl%  &nbsp; %firstname% &nbsp; %lastname%&nbsp; %user_url%&nbsp; %user_aim%&nbsp; %user_yim%&nbsp; %user_jabber%&nbsp; %user_biographical_nfo%  <?php 
+            <p><strong><?php _e("Replacement Keys","piereg"); ?>:</strong> &nbsp; %user_login%  &nbsp; %user_pass% &nbsp; %user_email% &nbsp; %blogname% &nbsp; %siteurl%  &nbsp; %activationurl%  &nbsp; %firstname% &nbsp; %lastname%&nbsp; %user_url%&nbsp; %user_aim%&nbsp; %user_yim%&nbsp; %user_jabber%&nbsp; %user_biographical_nfo% <?php 
 			   	
 				$fields = maybe_unserialize(get_option("pie_fields"));
 				if(sizeof($fields ) > 0)

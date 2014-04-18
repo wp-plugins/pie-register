@@ -1,6 +1,6 @@
 <script type="text/javascript">
 jQuery(document).ready(function(e) {
-  jQuery(".selectall").change(function () {
+  jQuery(".selectall").change(function (){
 		if(jQuery(this).attr("checked")=="checked")
 		{
 			jQuery(".meta_key").attr("checked","checked")
@@ -77,70 +77,51 @@ jQuery(document).ready(function(e) {
             <h2>
               <?php _e("Select Fields",'piereg'); ?>
             </h2>
-            <input id="field_selectall" type="checkbox" class="checkbox selectall" />
-            <label for="field_selectall"><?php _e("Select All","piereg"); ?></label>
-            <input id="field_user_login" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_login]" value="Username"  />
-            <label for="field_user_login"><?php _e("Username","piereg"); ?></label>
-            <input id="field_first_name" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[first_name]" value="First Name" />
-            <label for="field_first_name"><?php _e("First Name","piereg"); ?></label>
-            <input id="field_last_name" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[last_name]" value="Last Name" />
-            <label for="field_last_name"><?php _e("Last Name","piereg"); ?></label>
-            <input id="field_nickname" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[nickname]" value="Nickname" />
-            <label for="field_nickname"><?php _e("Nickname","piereg"); ?></label>
-            <input id="field_display_name" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[display_name]" value="Display name" />
-            <label for="field_display_name"><?php _e("Display name","piereg"); ?></label>
-            <input id="field_user_email" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_email]" value="E-mail" />
-            <label for="field_user_email"><?php _e("E-mail","piereg"); ?></label>
-            <input id="field_user_url" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_url]" value="Website" />
-            <label for="field_user_url"><?php _e("Website","piereg"); ?></label>
-            <input id="field_aim" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[aim]" value="AIM" />
-            <label for="field_aim"><?php _e("AIM","piereg"); ?></label>
-            <input id="field_yim" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[yim]" value="Yahoo IM" />
-            <label for="field_yim"><?php _e("Yahoo IM","piereg"); ?></label>
-            <input id="field_jabber" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[jabber]" value="Jabber / Google Talk" />
-            <label for="field_jabber"><?php _e("Jabber / Google Talk","piereg"); ?></label>
-            <input id="field_description" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[description]" value="Biographical Info" />
-            <label for="field_description"><?php _e("Biographical Info","piereg"); ?></label>
-            <?php
-			  
-				$fields = maybe_unserialize(get_option("pie_fields"));
-				if(sizeof($fields ) > 0)
-				{
-					
-					foreach($fields as $pie_fields)	
-					{
-						
-			
-					switch($pie_fields['type']) :
-					case 'default' :
-					case 'form' :					
-					case 'submit' :
-					case 'username' :
-					case 'email' :
-					case 'password' :
-					case 'upload' :	
-					case 'captcha' :	
-					case 'name' :			
-					continue 2;
-					break;
-					endswitch;
-					
-								
-					$field_id 	= $pie_fields['id'];
-					$label 		= $pie_fields['label'];
-					$meta_key	= "pie_".$pie_fields['type']."_".$pie_fields['id'];
-						
-						
-				?>
-            <input id="field_<?php echo $field_id?>" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[<?php echo $meta_key?>]" value="<?php echo $pie_fields_csv[$field_id]['label']?>" />
-            <label for="field_<?php echo $field_id?>" >
-              <?php echo $label?>
-            </label>
-            <?php 
-					}
-				}
-				
-			  ?>
+            
+            <div class="export_field">
+	            <input id="field_selectall" type="checkbox" class="checkbox selectall" />
+    	        <label for="field_selectall"><?php _e("Select All","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_user_login" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_login]" value="Username"  />
+                <label for="field_user_login"><?php _e("Username","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_first_name" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[first_name]" value="First Name" />
+                <label for="field_first_name"><?php _e("First Name","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_last_name" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[last_name]" value="Last Name" />
+                <label for="field_last_name"><?php _e("Last Name","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_nickname" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[nickname]" value="Nickname" />
+                <label for="field_nickname"><?php _e("Nickname","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_display_name" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[display_name]" value="Display name" />
+                <label for="field_display_name"><?php _e("Display name","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_user_email" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_email]" value="E-mail" />
+                <label for="field_user_email"><?php _e("E-mail","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_user_url" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_url]" value="Website" />
+                <label for="field_user_url"><?php _e("Website","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_description" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[description]" value="Biographical Info" />
+                <label for="field_description"><?php _e("Biographical Info","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_role" type="checkbox" class="checkbox meta_key" name="pie_meta_csv[wp_capabilities]" value="Role" />
+                <label for="field_role"><?php _e("Role","piereg"); ?></label>
+            </div>
+            <div class="export_field">
+                <input id="field_user_registered" type="checkbox" class="checkbox meta_key" name="pie_fields_csv[user_registered]" value="User Registered" />
+                <label for="field_user_registered"><?php _e("User Registered","piereg"); ?></label>
+            </div>
           </div>
         </li>
         <li>
@@ -176,13 +157,27 @@ jQuery(document).ready(function(e) {
           </div>
         </li>
         <li>
-          <div class="fields">
-            <h2><?php _e("Select File","piereg"); ?></h2>
-            <input name="csvfile" type="file" class="input_fields" />
-            <span style="float:left"><?php echo sprintf( __( 'You may want to see', 'pie-register').'<a target="_blank" href="%s">'.__('the example of the CSV file', 'pie-register').'</a>.' , plugin_dir_url(__FILE__).'examples/example.csv'); ?></span>
-            <div class="clear"></div>
-            <input type="submit" class="submit_btn submit_btn2" value="Import" />
-          </div>
+          	<div class="fields">
+                <h2><?php _e("Select File","piereg"); ?></h2>
+                <input name="csvfile" type="file" class="input_fields" />
+            </div>
+        </li>
+        <li>
+          	<div class="fields">
+            	<input type="checkbox" id="update_existing_users" value="yes" name="update_existing_users" />
+	            <label for="update_existing_users" ><?php _e("Update Existing Users","piereg"); ?></label>
+            </div>
+        </li>
+        <li>
+          	<div class="fields">
+                <span style="float:left"><?php echo sprintf( __( 'You may want to see', 'pie-register').' <a target="_blank" href="%s"> '.__('the example of the CSV file', 'pie-register').'</a>.' , plugin_dir_url(__FILE__).'examples/example.csv'); ?></span>
+                <div class="clear"></div>
+            </div>
+        </li>
+        <li>
+          	<div class="fields">
+                <input type="submit" class="submit_btn submit_btn2" value="Import" />
+            </div>
         </li>
       </ul>
     </form>

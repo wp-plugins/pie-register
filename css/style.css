@@ -107,7 +107,7 @@ body{margin:0;}
 .pie_wrap .fields .fields_options .address2 .input_fields{width: 92%;}
 .pie_wrap .fields .fields_options .address2 select{width:96%;}
 
-.notifications{float:left;width: 99%;margin-left: 19px;padding-bottom: 40px;}
+.notifications{float:left;/*width: 99%;*/margin-left: 19px;padding-bottom: 40px;}
 .notifications h2{font-family: 'HelveticaRegular'; color:#111111; font-size:24px; font-weight:normal; background:url(../images/form_editor.png) no-repeat top left;float: left;height: 37px;width: 78%;padding-left: 59px;}
 .notifications ul{margin:0; padding:0; list-style:none;}
 .notifications .fields{float:left; width: 95%; font-family:arial; color:#66696b; font-size: 14px;position: relative;margin-top: 9px;}
@@ -130,14 +130,21 @@ body{margin:0;}
 .notifications .export .date .end_date{float:left; width:50%;}
 .notifications .export .date .calendar_img{position:absolute;margin: 13px 0px 0px -30px;cursor: pointer;}
 .notifications .export .date .submit_btn{float:left; background:#464646; color:#ffffff;border: 0;cursor: pointer; height:26px; margin-top:15px;}
+.notifications .export .export_field{width:100%; overflow:hidden; display:inline-block;}
 
 .notifications .import{float:left; width: 48%;margin-left: 20px;}
 .notifications .import h2{font-family: 'MyriadProRegular'; font-size:20px;height: auto;margin-bottom: 7px;}
 .notifications .import li:first-child .fields{margin-top:0;}
-.notifications .import .input_fields{width: 52%;float: left;}
+.notifications .import .input_fields{width:auto;/*width: 52%;float: left;*/}
 .notifications .import .submit_btn{float:left; background:#464646; color:#ffffff;border: 0;cursor: pointer; height: 29px; margin-top: 9px;min-width: 100px;margin-left: 8px;}
 .notifications .import .submit_btn2{float:left; background:#464646; color:#ffffff;border: 0;cursor: pointer; height: 29px; margin-top: 0px;min-width: 70px;margin-left: 0;}
+.notifications .import .fields input[type=checkbox]{float:left;margin:1px 5px 0 0;width: 4%;}
+.notifications .import .fields label{float:left;width:80%;}
 
+@media (max-width : 980px){
+	.notifications .export{width: auto;border:0px;border-bottom:1px solid #9f9f9f;padding-bottom: 20px;margin-bottom:20px; }
+	.notifications .import{margin-left:0px;width:auto;}
+}
 
 .right_menu{float:left; width: 13%;background: #2d2f30; /*margin-top: 16%;*/ position:fixed;left:81%; /*right:45px;*/ z-index:1;}
 .right_menu ul{list-style:none; margin:0; padding:0; width:100%;float: left;background: #2d2f30;}
@@ -266,6 +273,9 @@ body{margin:0;}
 .invitation table tr td .delete{background:url(../images/invitation_action_icon.png) no-repeat -42px 0px; width:10px; height:10px; display:inline-block; margin:0px 5px;}
 .invitation table tr td .active{background:url(../images/invitation_action_icon.png) no-repeat -21px 0px; width:10px; height:10px; display:inline-block; margin:0px 5px;}
 .invitation table tr td .inactive{background:url(../images/invitation_action_icon.png) no-repeat 0px 0px; width:10px; height:10px; display:inline-block; margin:0px 5px;}
+.invitation table tbody tr{transition:background 400ms;-webkit-transition:background 400ms;-o-transition:background 400ms;-moz-transition:background 400ms;}
+.invitation table tbody tr:hover{background:#EDEAEA;}
+
 .invitation .pagination{width: 95%; background:#e9e9e9; font-family:arial; font-size: 14px;text-align:center; display:inline-block; min-height:39px;margin-top: 40px;}
 .invitation .pagination ul{margin:0; padding:0;text-align: center;width: 100%;}
 .invitation .pagination ul li{display:inline-block;margin: 0px 0px 0px 0px;}
@@ -304,29 +314,9 @@ div.pieHelpTicket_input_fileds input[type=submit]{background: none repeat scroll
     padding: 5px 0;
     width: 100px;}
 
-
-/*#adminmenu a.toplevel_page_pie-register {
-  background-color: #FFFFFF !important;
-  color: rgb(205, 35, 43) !important;
-  font-size: 18px !important;
-  font-weight: bold !important;
-  text-shadow: 0.05em 0.01em 0.1em #D6D7D5 !important;
+#recaptcha_widget_div{
+	float:left;
 }
-
-#adminmenu li.toplevel_page_pie-register li:last-child a {
-	color:#F00 !important;
-	font-size:14px;
+#pie_register .fields .fieldset{
+	padding:5px 10px;
 }
-
-ul#adminmenu li#toplevel_page_pie-register ul.wp-submenu
-{
-	background-color: #FFFFFF !important;
-}
-ul#adminmenu li#toplevel_page_pie-register ul.wp-submenu li.current a
-{
-	color: #FF0000 !important;
-}
-ul#adminmenu li#toplevel_page_pie-register ul.wp-submenu li.current
-{
-	background: rgba(200, 200, 200,0.5) !important;
-}*/

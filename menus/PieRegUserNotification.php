@@ -135,7 +135,7 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
           <li class="<?php echo $val?>">
             <div class="fields">
               <label><?php _e("Message",'piereg') ?></label>    
-              <p><strong>Replacement Keys:</strong> &nbsp; %user_login%  &nbsp; %user_pass% &nbsp; %user_email% &nbsp; %blogname% &nbsp; %siteurl%  &nbsp; %activationurl%  &nbsp; %firstname% &nbsp; %lastname%&nbsp; %forgot_pass_link%&nbsp; %user_url%&nbsp; %user_aim%&nbsp; %user_yim%&nbsp; %user_jabber%&nbsp; %user_biographical_nfo% &nbsp;  %all_field% &nbsp; %user_registration_date%
+              <p><strong><?php _e("Replacement Keys","piereg");?>:</strong> &nbsp; %user_login%  &nbsp; %user_pass% &nbsp; %user_email% &nbsp; %blogname% &nbsp; %siteurl%  &nbsp; %activationurl%  &nbsp; %firstname% &nbsp; %lastname%&nbsp; %forgot_pass_link%&nbsp; %user_url%&nbsp; %user_aim%&nbsp; %user_yim%&nbsp; %user_jabber%&nbsp; %user_biographical_nfo% &nbsp;  %all_field% &nbsp; %user_registration_date% %&nbsp; %reset_password_url%
                <?php echo $replacement_fields?>          
                </p>         
               <textarea name="user_message_email_<?php echo $val?>" class="ckeditor"><?php echo $piereg['user_message_email_'.$val]?></textarea>
@@ -151,6 +151,25 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
 min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type="submit" />
         </p>
       </form>
+      
+<?php 
+		$old_ver_options = get_option("pie_register");
+		if($old_ver_options['adminvmsg'] != "" || $old_ver_options['emailvmsg'] != "" || $old_ver_options['msg'] )
+		{
+?>
+            <div class="fields">
+                <form method="post">
+                    <label><?php _e("Click here to import version 1.x email template","piereg"); ?></label>                
+                    <p class="submit"><input name="import_email_template_from_version_1" style="background: #464646;color: #ffffff;border: 0;cursor: pointer;padding: 5px;margin-top: 15px;" value=" <?php _e('Import email template','piereg');?> " type="submit" /></p>
+                    <input type="hidden" name="old_version_emport" value="yes" />
+                </form>
+            </div>
+<?php
+		}
+		unset($old_ver_options);
+?>
+      
+      
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 <?php
+
 require_once('base.php');
-class Profile_admin extends Base
+class Profile_admin extends PieReg_Base
 {
     var $field;
     var $user_id;
@@ -14,6 +15,8 @@ class Profile_admin extends Base
     {
         $this->data = $this->getCurrentFields();
 		$this->default_fields = FALSE;
+		
+		add_action( 'user_edit_form_tag', array($this,"piereg_wp_admin_form_tag") );
     }
     function addTextField()
     {
@@ -30,21 +33,36 @@ class Profile_admin extends Base
         $sel_options = get_usermeta($this->user_id, $this->slug);
         $multiple    = "";
         if ($this->type == "multiselect") {
-            $multiple = 'multiple';
-            $this->slug .= "[]";
-        }
-        echo '<select ' . $multiple . ' id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '" >';
-        if (sizeof($this->field['value']) > 0) {
-            for ($a = 0; $a < sizeof($this->field['value']); $a++) {
-                $selected = '';
-                if (in_array($this->field['value'][$a], $sel_options)) {
-                    $selected = 'selected="selected"';
-                }
-                if ($this->field['value'][$a] != "" && $this->field['display'][$a] != "")
-                    echo '<option ' . $selected . ' value="' . $this->field['value'][$a] . '">' . $this->field['display'][$a] . '</option>';
-            }
-        }
-        echo '</select>';
+				$multiple = 'multiple';
+				$this->slug .= "[]";
+			
+			echo '<select ' . $multiple . ' id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '" >';
+			if (sizeof($this->field['value']) > 0) {
+				for ($a = 0; $a < sizeof($this->field['value']); $a++) {
+					$selected = '';
+					if (in_array($this->field['value'][$a], $sel_options)) {
+						$selected = 'selected="selected"';
+					}
+					if ($this->field['value'][$a] != "" && $this->field['display'][$a] != "")
+						echo '<option ' . $selected . ' value="' . $this->field['value'][$a] . '">' . $this->field['display'][$a] . '</option>';
+				}
+			}
+			echo '</select>';
+		}elseif ($this->type == "dropdown"){
+			echo '<select id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '" >';
+			if (sizeof($this->field['value']) > 0) {
+				for ($a = 0; $a < sizeof($this->field['value']); $a++) {
+					$selected = '';
+					if ( $this->field['value'][$a] == $sel_options ) {
+						$selected = 'selected="selected"';
+					}
+					if ($this->field['value'][$a] != "" && $this->field['display'][$a] != "")
+						echo '<option ' . $selected . ' value="' . $this->field['value'][$a] . '">' . $this->field['display'][$a] . '</option>';
+				}
+			}
+			echo '</select>';
+		}
+		
     }
     function addNumberField()
     {
@@ -73,9 +91,20 @@ class Profile_admin extends Base
 	{
 		$val = get_usermeta($this->user_id, $this->slug);
 				
-		echo '<input name="' . $this->slug . '" type="text" value="'.$val .'">';
+		echo '<input name="' . $this->slug . '" type="file" value="'.$val .'">';
+		echo (trim($val) != "")? '<br /><a href="'.$val.'" target="_blank">'.basename($val).'</a>' : "";
 	}
-   
+    function addProfilePic()
+	{
+		$data = "";
+		$val = get_usermeta($this->user_id , $this->slug);
+		$data .= '<input id="'.$this->id.'" name="'.$this->slug.'" type="file" class=" validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]" />';
+		$data .= '<input id="'.$this->id.'" name="'.$this->slug.'_hidden" value="'.$val.'" type="hidden"  />';
+		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
+		$imgPath = (trim($val) != "")? $val : plugins_url("../images/userImage.png",__FILE__);
+		$data .= '<br /><img src="'.$imgPath.'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />';
+		echo $data;
+	}
     function addAddress()
     {
         $address = get_usermeta($this->user_id, $this->slug);
@@ -151,8 +180,8 @@ class Profile_admin extends Base
         if ($this->field['time_type'] == "12") {
             $time_format = $time['time_format'];
             echo '<select name="' . $this->slug . '[time_format]" >			
-			<option ' . ($time_format == "am" ? 'selected="selected"' : "") . ' value="am">'.__("AM","piereg").'</option>
-			<option ' . ($time_format == "pm" ? 'selected="selected"' : "") . ' value="pm">'.__("PM","piereg").'</option>			
+			<option ' . (($time_format == "am") ? 'selected="selected"' : "") . ' value="am">'.__("AM","piereg").'</option>
+			<option ' . (($time_format == "pm") ? 'selected="selected"' : "") . ' value="pm">'.__("PM","piereg").'</option>			
 			</select>';
         }
         echo '</div>';
@@ -264,23 +293,18 @@ class Profile_admin extends Base
 		$list = get_usermeta($this->user_id, $this->slug);		
 		$width  = 90 /  $this->field['cols']; 
 		
-			for($a = 1 ,$c=0; $a <= $this->field['cols'] ; $a++,$c++)
+		for($a = 1 ,$c=0; $a <= $this->field['rows'] ; $a++,$c++)
+		{
+			echo '<div>';
+			for($b = 1,$d=0 ; $b <= $this->field['cols'] ;$b++,$d++)
 			{
+				if(!is_array($list))
+				$list[$c][$d] = "";
 				
-					echo '<div>';
-					
-					for($b = 1,$d=0 ; $b <= $this->field['cols'] ;$b++,$d++)
-					{
-						if(!is_array($list))
-						$list[$c][$d] = "";
-						
-						echo '<input value="'.$list[$c][$d].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->slug.'['.$c.'][]" class="input_fields"> ';
-					}
-					
-					echo '</div>';		
-				
-				
+				echo '<input value="'.$list[$c][$d].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->slug.'['.$c.'][]" class="input_fields"> ';
 			}
+			echo '</div>';
+		}
 		
 		
 	}
@@ -299,7 +323,6 @@ class Profile_admin extends Base
     function printFields()
     {
         $update     = get_option('pie_register_2');
-              
         switch ($this->type):
             case 'text':           
                 $this->addTextField();
@@ -328,6 +351,9 @@ class Profile_admin extends Base
             case 'upload':
                 $this->addUpload();
                 break;
+            case 'profile_pic':
+                $this->addProfilePic();
+                break;
             case 'address':
                 $this->addAddress();
                 break;
@@ -347,7 +373,7 @@ class Profile_admin extends Base
     }
     function edit_user_profile($user)
     {
-        if (sizeof($this->data) > 0) 
+        if (sizeof($this->data) > 0)
 		{
             $this->user_id = $user->ID;			
             echo '<table class="form-table">';
@@ -356,18 +382,23 @@ class Profile_admin extends Base
              	$this->slug = $this->createFieldName($this->field['type']."_".$this->field['id']);
                 $this->type = $this->field['type'];
                 $this->id   = $this->createFieldID();	   
+			   	
+				if((isset($this->field['show_in_profile']) and $this->field['show_in_profile'] == 0 ) && !is_admin())
+					continue;
+			   	
 			   
 				//When to add label
-				switch($this->type) :				
+				switch($this->type) :												
+					case 'time':
 					case 'text' :
 					case 'textarea':
 					case 'dropdown':
 					case 'multiselect':
 					case 'number':
 					case 'radio':
-					case 'checkbox':													
-					case 'time':				
+					case 'checkbox':					
 					case 'upload':				
+					case 'profile_pic':				
 					case 'address':							
 					case 'phone':				
 					case 'date':				
@@ -405,19 +436,19 @@ class Profile_admin extends Base
                 $errors->add($this->slug, '<strong>'.__(ucwords('Error'),'piereg').'</strong>: ' . $validation_message);
             } else if ($rule == "number") {
                 if (!is_numeric($field_name)) {
-                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' field must contain only numbers.','piereg' ));	
+                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__(' field must contain only numbers.','piereg' )));
 			    }
             } else if ($rule == "alphanumeric") {
                 if (!preg_match("/^([a-z0-9])+$/i", $field_name)) {
-                   	$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' field may only contain alpha-numeric characters.','piereg' ));	
+                   	$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_field_may_only_contain_alpha_numeric_characters",__(' field may only contain alpha-numeric characters.','piereg' )));
                 }
             } else if ($rule == "email") {
                 if (!filter_var($field_name, FILTER_VALIDATE_EMAIL)) {
-                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'].__(' field must contain a valid email address.','piereg' ));	
+                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'].apply_filters("piereg_field_must_contain_a_valid_email_address",__(' field must contain a valid email address.','piereg' )));
                 }
             } else if ($rule == "website") {
                 if (!filter_var($field_name, FILTER_VALIDATE_URL)) {                   
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .__(' must be a valid URL.','piereg' ));	
+					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(' must be a valid URL.','piereg' )));
                 }
             }
         }
@@ -428,31 +459,150 @@ class Profile_admin extends Base
     }
     function updateProfile($user_id)
     {
-        foreach ($this->data as $this->field) {
-            
-			//When to add label
-				switch($this->field['type']) :				
-					case 'text' :
-					case 'textarea':
-					case 'dropdown':
-					case 'multiselect':
-					case 'number':
-					case 'radio':
-					case 'checkbox':
-					case 'html':								
-					case 'time':				
-					case 'upload':				
-					case 'address':							
-					case 'phone':				
-					case 'date':				
-					case 'list':					
-					$slug       = $this->createFieldName($this->field['type']."_".$this->field['id']);
-            		$field_name = $_POST[$slug];         
-		    		update_user_meta($user_id,$slug, $field_name);				
-					break;							
-				endswitch; 	
+		global $errors;
+		$errors = new WP_Error();
+        foreach ($this->data as $this->field){
+		//When to add label
+			$slug       = $this->createFieldName($this->field['type']."_".$this->field['id']);
+			/*if($this->field['type']=="upload" )
+			{
+				$this->pie_upload_files($this->field,$slug);
+			}elseif($this->field['type']=="profile_pic")
+				$this->pie_profile_pictures_upload($this->field,$slug);*/
 			
-        }	  
+			switch($this->field['type']) :
+				case 'time':
+					
+					if($_POST[$slug]['time_format'])
+					{
+						$_POST[$slug]['hh'] = intval($_POST[$slug]['hh']);
+						if($_POST[$slug]['hh'] > 12)
+							$_POST[$slug]['hh'] = "12";
+						
+						$_POST[$slug]['mm'] = intval($_POST[$slug]['mm']);
+						if($_POST[$slug]['mm'] > 59)
+							$_POST[$slug]['mm'] = "59";
+						$field_name			= $_POST[$slug];
+						update_user_meta($user_id, $slug, $_POST[$slug]);
+					}else{
+						$_POST[$slug]['hh'] = intval($_POST[$slug]['hh']);
+						if($_POST[$slug]['hh'] > 23)
+							$_POST[$slug]['hh'] = "23";
+						
+						$_POST[$slug]['mm'] = intval($_POST[$slug]['mm']);
+						if($_POST[$slug]['mm'] > 59)
+							$_POST[$slug]['mm'] = "59";
+						
+						$field_name			= $_POST[$slug];
+						update_user_meta($user_id, $slug, $_POST[$slug]);
+					}
+				break;
+				case 'upload':
+					$this->pie_upload_files($user_id,$this->field,$slug);
+					break;
+				case 'profile_pic':
+					$this->pie_profile_pictures_upload($user_id,$this->field,$slug);
+					break;				
+				case 'text' :
+				case 'textarea':
+				case 'dropdown':
+				case 'multiselect':
+				case 'number':
+				case 'radio':
+				case 'checkbox':
+				case 'html':
+				case 'address':
+				case 'phone':
+				case 'date':
+				case 'list':
+					$field_value = $_POST[$slug];
+					update_user_meta($user_id,$slug, $field_value);
+				break;
+			endswitch;
+        }
 		
     }
+	function pie_profile_pictures_upload($user_id,$field,$field_slug){
+		
+		
+		global $errors;
+		$errors = new WP_Error();
+		if($_FILES[$field_slug]['name'] != ''){
+			////////////////////////////UPLOAD PROFILE PICTURE//////////////////////////////
+			$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],array("gif","jpeg","jpg","png","bmp"));
+			if($result)
+			{
+				$temp = explode(".", $_FILES[$field_slug]["name"]);
+				$extension = end($temp);
+				$upload_dir = wp_upload_dir();
+				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$_POST['user_id'];
+				wp_mkdir_p($temp_dir);
+				$temp_file_name = "profile_pic_".crc32($_POST['user_id']."_".$extension."_".time()).".".$extension;
+				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$_POST['user_id']."/".$temp_file_name;
+				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+				}else{
+					//$_POST[$field_slug] = $temp_file_url;
+					update_user_meta($user_id,$field_slug, $temp_file_url);
+				}
+			}else{
+				$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_profile_picture",__('Invalid profile picture','piereg' )));
+			}
+		}
+	
+	
+	}
+	function pie_upload_files($user_id,$field,$field_slug)
+	{
+		
+		global $errors;
+		$errors = new WP_Error();
+		if($_FILES[$field_slug]['name'] != ''){
+			if($field['file_types'] != ""){
+				$filter_string = stripcslashes($field['file_types']);
+				$filter_array = explode(",",$filter_string);
+				$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],$filter_array);
+				if($result){
+					$temp = explode(".", $_FILES[$field_slug]["name"]);
+					$extension = end($temp);
+					$upload_dir = wp_upload_dir();
+					$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
+					wp_mkdir_p($temp_dir);
+					$temp_file_name = "file_".crc32($user_id."_".$extension."_".time()).".".$extension;
+					$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
+					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+						$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					}else{
+						//$_POST[$field_slug] = $temp_file_url;
+						update_user_meta($user_id,$field_slug, $temp_file_url);
+					}
+				}
+				else{
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Invlid_upload_file",__('Invalid upload file.','piereg' )));
+				}
+			}else{
+				$temp = explode(".", $_FILES[$field_slug]["name"]);
+				$extension = end($temp);
+				$upload_dir = wp_upload_dir();
+				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$_POST['user_id'];
+				wp_mkdir_p($temp_dir);
+				$temp_file_name = "file_".crc32($_POST['user_id']."_".$extension."_".time()).".".$extension;
+				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$_POST['user_id']."/".$temp_file_name;
+				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+				}else{
+					//$_POST[$field_slug] = $temp_file_url;
+					update_user_meta($user_id,$field_slug, $temp_file_url);
+				}
+			}
+		}/*else{
+			$_POST[$field_slug] = $_POST[$field_slug.'_hidden'];
+		}*/
+	}
+	
+	function piereg_wp_admin_form_tag(){
+		echo ' enctype="multipart/form-data" ';
+	}
+	
 }
+?>

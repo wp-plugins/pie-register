@@ -42,7 +42,7 @@
 }
 
 .formError .formErrorContent {
-	width: 100%;
+	/*width: 100%;*/
 	background: #ee0101;
 	position:relative;
 	color: #fff;

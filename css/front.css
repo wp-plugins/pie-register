@@ -17,7 +17,7 @@
 	width: 100%;
 }
 
-#piereg_login form#piereg_loginform .input,#login form#piereg_lostpasswordform .input{width: 262px;
+#piereg_login form#piereg_loginform .input,#login form#piereg_lostpasswordform .input{
 	border-radius: 3px;
 	border: 1px solid #d5d5d5;
 	height:32px;
@@ -28,12 +28,27 @@
 	float: left;
 	color:#848484;
 }
+.widget #piereg_login form#piereg_loginform .input,.widget #login form#piereg_lostpasswordform .input{
+	border-radius: 3px;
+	border: 1px solid #d5d5d5;
+	padding: 0px 5px 0px 5px;
+	margin-top: 0px;
+	margin-bottom: 0;
+	width: 100%;
+	display:block;
+	float: none;
+	color:#848484;
+}
 
 
 
 #piereg_login form#piereg_loginform {
 	margin: auto;
 	width: 300px;
+}
+.widget #piereg_login form#piereg_loginform {
+	margin: auto;
+	width: 100%;
 }
 #piereg_login form#piereg_loginform p {
 	float: left;
@@ -52,6 +67,11 @@
 	margin: auto;
 	width: 300px;
 }
+.widget #piereg_login form#piereg_lostpasswordform {
+  margin: auto;
+  width: auto;
+}
+.widget .pieregForgotPassword .forgot_pass_links{text-align:center;}
 #piereg_login form#piereg_lostpasswordform p {
 	float: left;
 	margin: 16px 0 0;
@@ -62,6 +82,10 @@
 	margin: 10px 0 10px;
 	min-width: 100px;
 }
+.widget .pieregForgotPassword label {
+  float: none;
+  width: 100%;
+}
 .piereg_edit_profile_link{float:right; margin-top:-47px; background: url(../images/edit_profile.png) no-repeat right 2px; text-decoration: none; width:15px; height:18px;}
 /*footer{float:left;width:100%;}*/
 
@@ -69,22 +93,29 @@
 .piereg_form_wrapper{width:700px;}
 #piereg_pie_form_heading{font-size: 1.285714286rem;line-height: 1.6;font-family: "Open Sans", Helvetica, Arial, sans-serif; color:#444444;}
 #piereg_pie_form_desc{font-family: "Open Sans", Helvetica, Arial, sans-serif;color: #444; font-size:14px;}
-ul#pie_register {
-	
+.pieregWrapper ul {
 	padding:0;
 	list-style:none;
-	float:left;
-	width: 90%;
-	margin:0 5%;
+	width: 100%;
+	margin:5% 0;
 }
-#pie_register .fields .fieldset
-{
-	padding: 3% 5% 4% 5%;
-	float:left; 
-	width: 90%;
-	margin-left: -4%;
+.pieregWrapper .fields .fieldset{
+	padding: 8px 10px;
+	overflow:hidden;
 }
-#pie_register .fields .legend_txt{position: absolute;bottom: -10px;float: left;width: 100%;text-align: center;left: -3.5%;}
+.widget #pie_register .fields .fieldset {
+  float: none;
+  margin-left: 0;
+  padding: 0;
+  width: 97%;
+}
+#pie_register .fields .legend_txt{text-align: center}
+.widget #pie_register .fields .legend_txt{
+  bottom: 0;
+  float: none;
+  left: 0;
+  position: relative;
+}
 #pie_register .fields .fieldset.error
 {
 	border:#c84040 1px solid;
@@ -150,18 +181,24 @@ ul#pie_register {
 	margin-bottom: 10px;
 }
 #pie_register .fields .pie_list{float:right; width: 70.5%; position:relative;}
+.widget #pie_register .fields .pie_list{float:right; width: 87%; position:relative;}
+.widget .pie_list .input_fields {
+  float: left !important;
+  width: 48% !important;
+}
 #pie_register .fields .pie_list img{position:absolute; left:-20px;top: 0%; cursor:pointer;}
 #pie_register .fields .pie_list input.input_fields{margin-bottom: 10px;}
 #pie_register .fields {
 	width: 100%;
 	padding: 0% 0% 0px 0%;
-	float:left;	
 	font-family:arial;
 	color:#262626;
 	font-size: 14px;
 	position: relative;
 	margin-top: 9px;
 	margin-bottom: 8px;
+	clear:both;
+	overflow:hidden;
 }
 #pie_register .fields #piereg_pie_form_heading{font-size:24px; font-weight:bold; color:#262626;}
 #pie_register .fields .submit_field {
@@ -203,6 +240,12 @@ ul#pie_register {
 	float: left;
 	word-break: break-word;
 }
+.widget #pie_register .fields label{
+	float:none;
+	display:block;
+	margin: 0 0 10px;
+	width:auto;
+}
 
 #pie_register .fields .submit_field .edit_btn {
 	left: -15px;
@@ -212,17 +255,28 @@ ul#pie_register {
 #pie_register .fields .input_fields {
 	border-radius: 3px;
 	border: 1px solid #d5d5d5;
-	height: 20px;
-	padding: 0px 2% 0px 2%;
+	padding: 2px 5px;
 	margin-top: 0px;
 	margin-bottom: 0;
 	width: 60%;
 	display:inline-block;
 	color:#848484;
 }
+.widget #pie_register .fields .input_fields {
+	float:none;
+	display:block;
+	margin:5px 0;
+	width:100%;
+}
 #pie_register .fields .radio_wrap {
 	float: none;
 	width: 62%;
+	margin-top: 0px;
+	display: inline-flex;
+}
+.widget #pie_register .fields .radio_wrap {
+	float: none;
+	width: 100%;
 	margin-top: 0px;
 	display: inline-flex;
 }
@@ -272,6 +326,9 @@ ul#pie_register {
 	display: inline-block;
 	float: none;
 }
+.widget #pie_register .fields textarea {
+	width:100%;
+}
 #pie_register .fields .date_format_field img {
 	vertical-align:middle;
 	/*margin-left: 5px;
@@ -295,6 +352,9 @@ ul#pie_register {
 #pie_register .fields .time {
 	display: inline-block;
 	width: 71%;
+}
+.widget #pie_register .fields .time{
+	width:100%;
 }
 #pie_register .fields .time .input_fields{width: 98%;}
 #pie_register .fields .time .colon {
@@ -328,12 +388,24 @@ ul#pie_register {
 	margin-left: 6%;
 	margin-top: 0px;
 }
+.widget #pie_register .fields select{
+	margin-top:5px !important;
+}
 #pie_register .fields .address_main{display:inline-block; width: 71%;float: right;}
+.widget #pie_register .fields .address_main{
+	display:block;
+	width:100%;
+	float:none;
+}
 #pie_register .fields .address {
 	float: left;
 	width: 87%;
 	margin-right: 0;
 	margin-bottom: 6px;
+}
+.widget #pie_register .fields .address {
+	width:100%;
+	float:none;
 }
 #pie_register .fields .address label {
 	font-size:14px;
@@ -359,35 +431,37 @@ ul#pie_register {
 	float:left;
 }
 .piereg_login_error {
-	margin: 0 0 0px 0px !important;
-	padding: 12px !important;
-	border-width: 1px !important;
-	border-style: solid !important;
-	color:#ffffff !important;
-	background:url(../images/err_msg.png) no-repeat 20px 18px #d22828 !important;
-	padding-left: 40px !important;
-	border-radius: 8px !important;
+	margin: 0 0 0px 0px ;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	color:#ffffff;
+	background:url(../images/err_msg.png) no-repeat 20px 18px #d22828;
+	padding-left: 40px;
+	border-radius: 8px;
+	margin: 0 0 10px;
 }
 .piereg_message {
-	margin: 0 0 0px 0px !important;
-	padding: 12px 10px 12px 50px !important;
-	border-width: 1px !important;
-	border-style: solid !important;
-	background: url(../images/success_msg.png) no-repeat 20px 11px #6a9644 !important;
-	padding-left: 44px !important;
-	border-radius: 8px !important;
-	color:#ffffff !important;
+	margin: 0 0 0px 0px;
+	padding: 12px 10px 12px 50px;
+	border-width: 1px;
+	border-style: solid ;
+	background: url(../images/success_msg.png) no-repeat 20px 11px #6a9644;
+	padding-left: 44px;
+	border-radius: 8px;
+	color:#ffffff;
+	margin: 0 0 10px;
 }
 .piereg_warning {
-	margin: 0px 0px 0px 0px !important;
-	padding: 12px 10px 12px 50px !important;
-	border-width: 1px !important;
-	border-style: solid !important;
-	background: url(../images/warning_msg.png) no-repeat 20px 14px #e98237 !important;
-	padding-left: 44px !important;
-	border-radius: 8px !important;
-	color:#ffffff !important;
-	float:left !important;
+	margin: 0px 0px 0px 0px;
+	padding: 12px 10px 12px 50px;
+	border-width: 1px;
+	border-style: solid;
+	background: url(../images/warning_msg.png) no-repeat 20px 14px #e98237;
+	padding-left: 44px;
+	border-radius: 8px;
+	color:#ffffff;
+	margin: 0 0 10px;
 }
 @font-face {
 	font-family: 'HelveticaRegular';
@@ -478,8 +552,7 @@ ul#pie_register {
 .preview_page{background:#cccccc;}
 #password_meter
 {
-	float: right;
-	width: 97%;	
+	overflow:hidden;
 }
 #pie_register .label_top #password_meter{width:100%;}
 #passwordDescription
@@ -536,6 +609,42 @@ ul#pie_register {
 {
 	background:#399800;
 	width:60%;
+}
+
+.widget .piereg_strength0,.widget .strength0
+{
+	width:100%;
+	background:#cccccc;
+}
+
+.widget .strength1
+{
+	width:20%;
+	background:#ff0000;
+}
+
+.widget .strength2
+{
+	width:40%;	
+	background:#ff5f5f;
+}
+
+.widget .strength3
+{
+	width:60%;
+	background:#56e500;
+}
+
+.widget .strength4
+{
+	width:80%;
+	background:#4dcd00;	
+}
+
+.widget .strength5
+{
+	background:#399800;
+	width:100%;
 }
 
 /*
@@ -1036,3 +1145,65 @@ div.piereg_entry-content{
 	max-width: 604px;
 	width: 100%;
 }
+.widget #pie_register input[type="submit"], .widget #pie_register input[type="button"], .widget #pie_register input[type="reset"]{
+	padding-left:8px;
+	padding-right:8px;
+}
+.widget .piereg_strength0, .widget .strength0{
+	width:100%;
+}
+.piereg_progressbar {
+  border: 1px solid #AAAAAA;
+  background-color:#fff;
+  border-radius:5px;
+  height:35px;
+  transition: all 500ms;
+	-moz-transition: all 500ms;
+	-o-transition: all 500ms;
+	-webkit-transition: all 500ms;
+}
+.pieregWrapper .pie_next {
+  float: right;
+  margin-left: 5px;
+  margin-right: 0;
+}
+.piereg_container
+{
+	width:100%;
+}
+.piereg_container p{
+	margin:0;
+}
+/**************************** LOGIN & FORGOT PASSWORD CSS **************************************/
+.piereg_login_container{
+	display:block;
+	/*width:350px;*/
+}
+.widget .piereg_login_container{
+	display:block;
+	width:100%;
+}
+.piereg_login_container .piereg_login_wrapper{
+	padding:0;
+	margin:10px 15px;
+}
+.widget .piereg_login_container .piereg_login_wrapper{
+	margin:10px 0;
+}
+.piereg_login_container .piereg_login_wrapper label{
+	display:block;
+	width:100%;
+	margin:0 0 10px;
+}
+.piereg_login_container .piereg_login_wrapper .input_field{
+	margin: 0 0 10px;
+	width:100%;
+}
+.piereg_login_container .piereg_login_wrapper .pie_submit{
+	margin:10px 0;
+}
+/**************************END FORGOT PASSWORD CSS *************************************/
+
+/**************************** REGISTRATION CSS **************************************/
+
+/**************************** end REGISTRATION CSS **********************************/

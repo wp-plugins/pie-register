@@ -376,16 +376,16 @@
 						destination += scrollContainerScroll + scrollContainerPos - 5;
 						var scrollContainer = $(options.overflownDIV + ":not(:animated)");
 
-						scrollContainer.animate({ scrollTop: destination }, 1100, function(){
+						//scrollContainer.animate({ scrollTop: destination }, 1100, function(){
 							if(options.focusFirstField) first_err.focus();
-						});
+						//});
 					} else {
-						$("body,html").stop().animate({
-							scrollTop: destination,
-							scrollLeft: fixleft
-						}, 1100, function(){
+						//$("body,html").stop().animate({
+							//scrollTop: destination,
+							//scrollLeft: fixleft
+						//}, 1100, function(){
 							if(options.focusFirstField) first_err.focus();
-						});
+						//});
 					}
 
 				} else if(options.focusFirstField)
@@ -2078,5 +2078,6 @@ function addList(total,classname)
 }
 function removeList(total,classname,a)
 {
-	document.getElementsByClassName("list_"+classname+"_"+a)[0].style.display = "none";		
+	document.getElementsByClassName("list_"+classname+"_"+a)[0].style.display = "none";
+	jQuery(".list_"+classname+"_"+a+" input[type=text]").val("");
 }

@@ -50,30 +50,19 @@ if(sizeof($errors->errors) > 0)
 $form->addFormData();
 
 
-if($form->countPageBreaks() > 1)
-{
-	
-	wp_enqueue_script("jquery-ui",plugins_url('js/jquery-ui.js',__FILE__),array(),false,true );	
+if($form->countPageBreaks() > 1){
 		
 ?>
-<div class="piereg_form_wrapper">
-<div id="progressbar"></div>
-<script type="text/javascript">
-var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-  jQuery(document).ready(function(e) {
-  	 jQuery( "#progressbar" ).progressbar({
-      value:  1 /<?php echo $form->countPageBreaks()?> * 100
-    });  
-});
- 
- </script>
-<?php 
+<div class="pieregformWrapper">
+<div class="piereg_progressbar"></div>
+<?php
+echo PieRegister::piereg_ProgressBarScripts($form->countPageBreaks());
 }
 ?>
 <form enctype="multipart/form-data" id="pie_regiser_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
   <ul id="pie_register">
     <?php
-	$form->printFields();
+	echo $form->printFields();
 ?>
   </ul>
 </form>
@@ -111,29 +100,7 @@ else
 		elms[a].style.display = "";	
 	}   
 }
-function pieNextPage(pageNo)
-{
-	pieHideFields();	
-	var elms = document.getElementsByClassName('pageFields_'+pageNo);
-	for(a = 0 ; a < elms.length ; a++)
-	{
-		elms[a].style.display = "";	
-	} 
-	
-	
- jQuery( "#progressbar" ).progressbar( "option", {
-          value: pageNo /<?php echo $form->pages?> * 100
-        }); 
-	 	
-}
-function pieHideFields()
-{
-	var elms = document.getElementsByClassName('fields');
-	for(a = 0 ; a < elms.length ; a++)
-	{
-		elms[a].style.display = "none";	
-	}
-}
+
 
 <?php } ?>
 </script>

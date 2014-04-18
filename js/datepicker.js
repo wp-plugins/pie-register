@@ -1,6 +1,42 @@
+
+function pieNextPage(elem)
+{
+	//pieHideFields();
+	jQuery(elem).closest('.pieregformWrapper').find('form .fields').css('display','none');
+	var id 		= jQuery(elem).attr("id");
+	//var pageNo 	= jQuery("#"+id+"_curr").val();
+	var pageNo = jQuery(elem).closest('form').find("#"+id+"_curr").val();
+	var totalPages = jQuery(elem).closest('form').find('.piereg_regform_total_pages').val();
+	//var pageNo = jQuery("#"+id+"_curr").val();
+	//var elms = document.getElementsByClassName('pageFields_'+pageNo);
+	jQuery(elem).closest('form').find('.pageFields_'+pageNo).css('display','block');/*
+	for(a = 0 ; a < elms.length ; a++)
+	{
+		elms[a].style.display = "";	
+	} */
+	
+	/*jQuery('html, body').animate({
+        scrollTop: jQuery(".piereg_progressbar").offset().top
+    }, 0);*/
+	//alert("pageno"+pageNo+" Total Pages:"+totalPages);
+	jQuery(elem).closest('.pieregformWrapper').find(".piereg_progressbar" ).progressbar( "option", {
+		
+          value: pageNo / totalPages * 100
+        }); 
+	 	
+}
+function pieHideFields()
+{
+	/*var elms = document.getElementsByClassName('fields');
+	for(a = 0 ; a < elms.length ; a++)
+	{
+		elms[a].style.display = "none";	
+	}*/
+	jQuery('.pieregformWrapper .fields').css('display','none');
+}
 jQuery(document).ready(function(e) {
  	
-	jQuery("#pie_regiser_form").validationEngine();
+	jQuery(".pieregformWrapper form").validationEngine();
 	jQuery("#lostpasswordform").validationEngine();
 	jQuery("#resetpassform").validationEngine();	
 	jQuery("#loginform").validationEngine();
@@ -40,25 +76,28 @@ jQuery(document).ready(function(e) {
 	});  
 	jQuery(".pie_next").click(function () 
 	{  
-		var validate = jQuery("#pie_regiser_form").validationEngine('validate');
+		var validate = jQuery(this).closest('.pieregformWrapper').find('form').validationEngine('validate')
+		//var validate = jQuery("#pie_regiser_form").validationEngine('validate');
 
 		if(validate)
 		{
-			var id 		= jQuery(this).attr("id");
-			var pageNo 	= jQuery("#"+id+"_curr").val();		
-			pieNextPage(pageNo);	
+			//var id 		= jQuery(this).attr("id");
+			//var pageNo 	= jQuery("#"+id+"_curr").val();		
+			//pieNextPage(pageNo);
+			pieNextPage(this);	
 		}  
 	}); 
 	
 	jQuery(".pie_prev").click(function () 
 	   {  
-		var id 		= jQuery(this).attr("id");
+		/*var id 		= jQuery(this).attr("id");
 		var pageNo 	= jQuery("#"+id+"_curr").val();
-		pieNextPage(pageNo);	
+		pieNextPage(pageNo);*/
+		pieNextPage(this);
 		  
 	}); 
 	
-	jQuery("#comments,.entry-meta").hide();
+	//jQuery("#comments,.entry-meta").hide();
 	
 });
 function passwordStrength(password)

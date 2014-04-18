@@ -7,42 +7,72 @@ class Pie_Register_Widget extends WP_Widget
 		parent::__construct(
 			'pie_widget', // Base ID
 			__('Pie Register - Registration Form', 'pie_register'), // Name
-			array( 'description' => __( 'Registration Form', 'pie_register' ), ) // Args
+			array( 'description' => __( 'Display Your Pie-Register Registration Form on Sidebar', 'pie_register' ), ) // Args
 		);		
 		
 	}
 	
-	public function widget( $args, $instance ) 
-	{
-		global $errors;		
-		$form 		= new Registration_form();
-		$success 	= '' ;
-		$title = apply_filters( 'widget_title', $instance['title'] );
-
-		echo $args['before_widget'];
+	public function widget( $args, $instance ){
+		$option = get_option( 'pie_register_2' );
+		if(is_user_logged_in() && $option['redirect_user']==1 ){
+			//do nothing here
+		}else{
+			global $errors;		
+			//$form 		= new Registration_form();
+			$success 	= '' ;
+			$title = apply_filters( 'widget_title', $instance['title'] );
+	
+			echo $args['before_widget'];
+			
+			//$this->pie_frontend_enqueu_scripts();				
 		
-		$this->forms_styles();				
-	
-		include("register_form.php");
-		echo $args['after_widget'];		
+			include_once("register_form.php");
+			$output = '';
+			if($_POST['success'] != "")
+			$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
+			if($_POST['error'] != "")
+			$output .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';
+			if(sizeof($errors->errors) > 0)
+			{
+				foreach($errors->errors as $key=>$err)
+				{
+					if($key != "login-error")
+						$error .= $err[0] . "<br />";	
+				}
+				if(!empty($error))
+					$output .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($error,"piereg")).'</p>';
+			}
+			$output .= outputRegForm(true);
+			echo $output;
+			echo $args['after_widget'];
+		}
 	}
-	function forms_styles()
-	{
-		wp_register_style( 'prefix-style', plugins_url('css/front.css', __FILE__) );
-		wp_enqueue_style( 'prefix-style' );	
-		wp_enqueue_script( 'jquery' );	
-		wp_enqueue_script('jquery-ui-datepicker');	
-		wp_enqueue_script("validation",plugins_url('js/validation.js', __FILE__) );
-		wp_enqueue_script("validation-lang",plugins_url('js/jquery.validationEngine-en.js', __FILE__) ,array(),false,true);		
-		wp_register_style( 'validation', plugins_url('css/validation.css', __FILE__) );
-		wp_enqueue_style( 'validation' );
-		wp_enqueue_script("datepicker",plugins_url('js/datepicker.js',__FILE__) );	
-		add_action("wp_head",array($this,"addUrl"));
+	// Widget Backend 
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+		$title = $instance[ 'title' ];
+		}
+		else {
+		$title = __( 'Pie Registration Form', 'pie_forgot' );
+		}
+		// Widget admin form
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<?php 
 	}
-	
+		
+	// Updating widget replacing old instances with new
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		return $instance;
+	}
 }
-class Pie_Login_Widget extends WP_Widget 
-{/**
+class Pie_Login_Widget extends WP_Widget {
+	/**
 	 * Register widget with WordPress.
 	 */
 	function __construct() 
@@ -50,56 +80,95 @@ class Pie_Login_Widget extends WP_Widget
 		parent::__construct(
 			'pie_login_widget', // Base ID
 			__('Pie Register - Login Form', 'pie_login'), // Name
-			array( 'description' => __( 'Login Form', 'pie_login' ), ) // Args
+			array( 'description' => __( 'Display Pie-Register Login Form on Sidebar', 'pie_login' ), ) // Args
 		);		
 		
 	}
-	public function widget( $args, $instance ) 
-	{
-		echo $args['before_widget'];
+	public function widget( $args, $instance ){
+		$option = get_option( 'pie_register_2' );
 		global $errors;
-		wp_register_style( 'prefix-style', plugins_url('css/front.css', __FILE__) );
-		wp_enqueue_style( 'prefix-style' );	
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script('jquery-ui-datepicker');	
-		wp_enqueue_script("validation",plugins_url('js/validation.js', __FILE__) );
-		wp_enqueue_script("validation-lang",plugins_url('js/jquery.validationEngine-en.js', __FILE__) );		
-		wp_register_style( 'validation', plugins_url('css/validation.css', __FILE__) );
-		wp_enqueue_style( 'validation' );
-		wp_enqueue_script("datepicker",plugins_url('js/datepicker.js',__FILE__) );
-	
+		
+		echo $args['before_widget'];
+		$before_title = apply_filters( 'widget_title', $instance['before_title'] );
+		$after_title = apply_filters( 'widget_title', $instance['after_title'] );
+		
 		
 		if ( !is_user_logged_in() ) 
 		{
-			echo '<h4 class="widget-title widgettitle">Member Login</h4>';
-			include("login_form.php");
-		}
-		else
-		{
+			if ( ! empty( $before_title ) )
+			echo $args['before_title'] . $before_title . $args['after_title'];
+			include_once("login_form.php");
+			$output = pieOutputLoginForm();
+			echo $output;
+		}else{
 			$current_user = wp_get_current_user();
-			echo '<h4 class="widget-title widgettitle">Member Login</h4>';
+			if ( ! empty( $after_title ) )
+			echo $args['before_title'] . $after_title . $args['after_title'];
 			
 			$profile_pic_array = get_user_meta($current_user->ID);
 			
 			foreach($profile_pic_array as $key=>$val)
 			{
-				if(strpos($key,'profile_pic') !== false)
-				{
+				if(strpos($key,'profile_pic') !== false){
 					$profile_pic = trim($val[0]);
 				}
 			}
-			if(trim($profile_pic) == "")
-			{
+			
+			if(!preg_match('/(http|https):\/\/(www\.)?[\w-_\.]+\.[a-zA-Z]+\/((([\w-_\/]+)\/)?[\w-_\.]+\.(png|gif|jpg|jpeg|xpng|bmp))/',$profile_pic)){
 				$profile_pic = plugin_dir_url(__FILE__).'images/userImage.png';
 			}
 			
 			//echo '<div class="logged-In"><img src="'.plugin_dir_url(__FILE__).'images/userImage.png"/>';
-			echo '<div class="logged-In"><img src="'.$profile_pic.'" style="max-width:75px;max-height:75px;"/>';
-			echo '<div class="member_div"><h4><a href="javascript:;">' . $current_user->user_login . '</a></h4>';
-			echo '<a href="'.wp_logout_url( ).'" class="logout-link" title="Logout">Logout</a></div></div>';	
+			echo '<div class="logged-In">';
+			$profile_link = get_permalink($option['alternate_profilepage']);
+			$profile_image_html = '<a href="'.$profile_link.'"><img src="'.$profile_pic.'" style="max-width:75px;max-height:75px;"/></a>';
+			echo apply_filters('pie_profile_image_frontend_widget',$profile_image_html,$profile_link,$profile_pic);
+			////////////////////////////
+			$profile_text = $current_user->user_login;
+			$profile_text_html = '<a href="'.$profile_link .'">' . $profile_text . '</a>';
+			
+			
+			
+			echo '';
+			echo '<div class="member_div"><h4>';
+			echo apply_filters('pie_profile_username_frontend_widget',$profile_text_html,$profile_link,$profile_text);
+			echo '</h4>';
+			echo '<a href="'.wp_logout_url().'" class="logout-link" title="Logout">Logout</a></div></div>';	
 		}
 		echo $args['after_widget'];
 			
+	}
+	// Widget Backend 
+	public function form( $instance ) {
+		if ( isset( $instance[ 'before_title' ] ) ) {
+		$before_title = $instance[ 'before_title' ];
+		}
+		else {
+		$before_title = __( 'Pie Login', 'pie_login' );
+		}
+		if ( isset( $instance[ 'after_title' ] ) ) {
+		$after_title = $instance[ 'after_title' ];
+		}
+		else {
+		$after_title = __( 'Welcome User', 'pie_login' );
+		}
+		// Widget admin form
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'before_title' ); ?>"><?php _e( 'Before Login Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'before_title' ); ?>" name="<?php echo $this->get_field_name( 'before_title' ); ?>" type="text" value="<?php echo esc_attr( $before_title ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'after_title' ); ?>"><?php _e( 'After Login Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'after_title' ); ?>" name="<?php echo $this->get_field_name( 'after_title' ); ?>" type="text" value="<?php echo esc_attr( $after_title ); ?>" />
+		</p>
+		<?php 
+	}
+		
+	// Updating widget replacing old instances with new
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['before_title'] = ( ! empty( $new_instance['before_title'] ) ) ? strip_tags( $new_instance['before_title'] ) : '';
+		$instance['after_title'] = ( ! empty( $new_instance['after_title'] ) ) ? strip_tags( $new_instance['after_title'] ) : '';
+		return $instance;
 	}
 	
 }
@@ -115,20 +184,44 @@ class Pie_Forgot_Widget extends WP_Widget
 	}
 	public function widget( $args, $instance ) 
 	{
-		echo $args['before_widget'];
-		global $errors;
-		wp_register_style( 'prefix-style', plugins_url('css/front.css', __FILE__) );
-		wp_enqueue_style( 'prefix-style' );	
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script('jquery-ui-datepicker');	
-		wp_enqueue_script("validation",plugins_url('js/validation.js', __FILE__) );
-		wp_enqueue_script("validation-lang",plugins_url('js/jquery.validationEngine-en.js', __FILE__) );		
-		wp_register_style( 'validation', plugins_url('css/validation.css', __FILE__) );
-		wp_enqueue_style( 'validation' );
-		wp_enqueue_script("datepicker",plugins_url('js/datepicker.js',__FILE__) );	
-		include("forgot_password.php");	
-		echo $args['after_widget'];
+		$option = get_option( 'pie_register_2' );
+		if(is_user_logged_in() && $option['redirect_user']==1 ){
+			//do nothing here
+		}else{
+			global $errors;
+			$title = ($instance['title'])?$instance['title']:__( 'Forgot password', 'piereg' );
+			echo $args['before_widget'];
+			if ( ! empty( $title ) )
+				echo $args['before_title'] . $title . $args['after_title'];
 			
+			include_once("forgot_password.php");
+			echo pieResetFormOutput();
+			echo $args['after_widget'];
+		}
+			
+	}
+	// Widget Backend 
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+		$title = $instance[ 'title' ];
+		}
+		else {
+		$title = __( 'Forgot password', 'piereg' );
+		}
+		// Widget admin form
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<?php 
+	}
+		
+	// Updating widget replacing old instances with new
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		return $instance;
 	}
 	
 }

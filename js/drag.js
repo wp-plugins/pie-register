@@ -548,6 +548,7 @@ jQuery(document).ready(function () {
 				var id = jQuery(this).attr("id");
 				id = id.replace("label_", "");
 				var type = jQuery("#type_" + id).val();
+				if(type != "html" )
 				jQuery(this).val(type);
 			}
 		});

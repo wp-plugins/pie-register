@@ -1,15 +1,3 @@
-
-<?php
-wp_register_style( 'pie-tooltip-style', plugins_url("../css/tooltip.css",__FILE__) );
-wp_enqueue_style( 'pie-tooltip-style' );
-
-wp_register_script( 'pie-tooltip-script', plugins_url("../js/tooltip.js",__FILE__) );
-wp_enqueue_script( 'pie-tooltip-script' );
-
-
-?>
-
-
 <script type="text/javascript">
 function validateSettings()
 {
@@ -79,6 +67,10 @@ if( $_POST['license_success'] ){
             <input type="text" style="width:58%;" 
             <?php echo (isset($piereg['support_license']) and $piereg['support_license'] != "")? 'readonly="readonly"' : ""; ?>
             name="support_license" id="support_license" class="input_fields" value="<?php echo $piereg['support_license']?>" />
+            
+            <?php if(isset($piereg['support_license']) and $piereg['support_license'] == ""){ ?>
+	            <input type="hidden" name="empty_license_key" value="yes"/>
+            <?php } ?>
             
         <?php if(isset($piereg['support_license'])	and $piereg['support_license'] != "")
         {?> 
@@ -171,11 +163,22 @@ if( $_POST['license_success'] ){
         
            
           <span class="quotation"><?php _e("This page must contain the Pie Register Forgot Password form short code.",'piereg') ?></span> 
+        </div>
+        <div class="fields">
+          <label for="alternate_profilepage"><?php _e("Profile Page",'piereg') ?></label>
+         
+            <?php  $args =  array("show_option_no_change"=>"None","id"=>"alternate_profilepage","name"=>"alternate_profilepage","selected"=>$piereg['alternate_profilepage']);         
+			wp_dropdown_pages( $args ); ?>
+        
+           
+          <span class="quotation"><?php _e("This page must contain the Pie Register Forgot Password form short code.",'piereg') ?></span> 
         </div> 
+        
+        
      
      
         <div class="fields">
-          <label><?php _e("Subscriber Redirect",'piereg') ?></label>
+          <label><?php _e("Redirect Logged-in Users",'piereg') ?></label>
           <div class="radio_fields">
             <input type="radio" value="1" name="redirect_user" id="redirect_user_yes" <?php echo ($piereg['redirect_user']=="1")?'checked="checked"':''?> />
             <label for="redirect_user_yes"><?php _e("Yes",'piereg') ?></label>
@@ -183,29 +186,60 @@ if( $_POST['license_success'] ){
             <label for="redirect_user_no"><?php _e("No",'piereg') ?></label>
           </div>
           <span class="quotation"><?php _e("Set this to Yes if you would like to block Login, Registration & Forgot Password pages for loggged in users.",'piereg') ?></span> </div>
-       
-       
-       
-       
-        <div class="fields">
-          <label><?php _e("Subscibers Access",'piereg') ?></label>
+        
+       <?php /*?> <div class="fields">
+          <label><?php _e("Modify Avatars",'piereg') ?></label>
           <div class="radio_fields">
-            <input type="radio" value="1" name="subscriber_login" id="subscriber_login_yes" <?php echo ($piereg['subscriber_login']=="1")?'checked="checked"':''?> />
-            <label for="subscriber_login_yes"><?php _e("Yes",'piereg') ?></label>
-            <input type="radio" value="0" name="subscriber_login" id="subscriber_login_no" <?php echo ($piereg['subscriber_login']=="0")?'checked="checked"':''?> />
-            <label for="subscriber_login_no"><?php _e("No",'piereg') ?></label>
+            <input type="radio" value="1" name="modify_avatars" id="modify_avatars_yes" <?php echo ($piereg['modify_avatars']=="1")?'checked="checked"':''?> />
+            <label for="modify_avatars_yes"><?php _e("Yes",'piereg') ?></label>
+            <input type="radio" value="0" name="modify_avatars" id="modify_avatars_no" <?php echo ($piereg['modify_avatars']=="0")?'checked="checked"':''?> />
+            <label for="modify_avatars_no"><?php _e("No",'piereg') ?></label>
           </div>
-          <span class="quotation"><?php _e("Set this to No if you would like to disable the wp-admin login for subscribers.",'piereg') ?></span> </div>
+          <span class="quotation"><?php _e("Use Profile Picture as Avatars (if available)",'piereg') ?></span>
+        </div><?php */?>
        
        
        <div class="fields">
-          <label for="after_login"><?php _e("After Login Page",'piereg') ?></label>
+          <label><?php _e("Show Admin Bar",'piereg') ?></label>
+          <div class="radio_fields">
+            <input type="radio" value="1" name="show_admin_bar" id="show_admin_bar_yes" <?php echo ($piereg['show_admin_bar']=="1")?'checked="checked"':''?> />
+            <label for="show_admin_bar_yes"><?php _e("Yes",'piereg') ?></label>
+            <input type="radio" value="0" name="show_admin_bar" id="show_admin_bar_no" <?php echo ($piereg['show_admin_bar']=="0")?'checked="checked"':''?> />
+            <label for="show_admin_bar_no"><?php _e("No",'piereg') ?></label>
+          </div>
+          <span class="quotation"><?php _e("Show Admin Bar for Subscriber.",'piereg') ?></span>
+       </div>
+       <div class="fields">
+          <label><?php _e("Modify WP-LOGIN",'piereg') ?></label>
+          <div class="radio_fields">
+            <input type="radio" value="1" name="allow_pr_edit_wplogin" id="allow_pr_edit_wplogin_yes" <?php echo ($piereg['allow_pr_edit_wplogin']=="1")?'checked="checked"':''?> />
+            <label for="allow_pr_edit_wplogin_yes"><?php _e("Yes",'piereg') ?></label>
+            <input type="radio" value="0" name="allow_pr_edit_wplogin" id="allow_pr_edit_wplogin_no" <?php echo ($piereg['allow_pr_edit_wplogin']=="0")?'checked="checked"':''?> />
+            <label for="allow_pr_edit_wplogin_no"><?php _e("No",'piereg') ?></label>
+          </div>
+          <span class="quotation"><?php _e("Allow Pie-Register to Add header Footer on wp-login.php.",'piereg') ?></span>
+       </div>
+       
+       <div class="fields">
+          <label><?php _e("Override WP-Profile",'piereg') ?></label>
+          <div class="radio_fields">
+            <input type="radio" value="1" name="block_WP_profile" id="block_WP_profile_yes" <?php echo ($piereg['block_WP_profile']=="1")?'checked="checked"':''?> />
+            <label for="block_WP_profile_yes"><?php _e("Yes",'piereg') ?></label>
+            <input type="radio" value="0" name="block_WP_profile" id="block_WP_profile_no" <?php echo ($piereg['block_WP_profile']=="0")?'checked="checked"':''?> />
+            <label for="block_WP_profile_no"><?php _e("No",'piereg') ?></label>
+          </div>
+          <span class="quotation"><?php _e("Redirect Your Subscriber to Custom Profile Page (if Exists)",'piereg') ?></span>
+       </div>
+       
+       
+       <div class="fields">
+          <label for="after_login"><?php _e("After Sign-in Page",'piereg') ?></label>
          
             <?php  $args =  array("show_option_no_change"=>"Default","id"=>"after_login","name"=>"after_login","selected"=>$piereg['after_login']);         
 			wp_dropdown_pages( $args ); ?>
         
            
-          <span class="quotation"><?php _e("Only valid for subscribers.",'piereg') ?></span> 
+          <span class="quotation"><?php _e("Subscriber level users will redirect to this page after signing in.",'piereg') ?></span> 
         </div>
        
        
@@ -218,7 +252,7 @@ if( $_POST['license_success'] ){
             <input type="radio" value="0" name="outputcss" id="outputcss_no" <?php echo ($piereg['outputcss']=="0")?'checked="checked"':''?> />
             <label for="outputcss_no"><?php _e("No",'piereg') ?></label>
           </div>
-          <span class="quotation"><?php _e("Set this to No if you would like to disable the plugin from outputting the form CSS.",'piereg') ?></span> </div>
+          <span class="quotation"><?php _e("Set this to No if you would like to disable Pie-Register from outputting the form CSS.",'piereg') ?></span> </div>
         
         
         <div class="fields">
@@ -260,7 +294,7 @@ if( $_POST['license_success'] ){
 		  else
 		  {
 			  echo '<span class="installation_status_faild">'.phpversion().'</span>';
-			  echo '<span class="quotation">Sorry, Pie-Register requires PHP 5.0 or higher. Please deactivate Pie-Register</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires PHP 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
 		  }
 		  ?>
         </div>
@@ -273,7 +307,7 @@ if( $_POST['license_success'] ){
 		  else
 		  {
 			  echo '<span class="installation_status_faild">'.mysql_get_server_info().'</span>';
-			  echo '<span class="quotation">Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
 		  }
 		  ?>
         </div>
@@ -286,10 +320,24 @@ if( $_POST['license_success'] ){
 		  else
 		  {
 			  echo '<span class="installation_status_faild">'.get_bloginfo('version').'</span>';
-			  echo '<span class="quotation">Sorry, Pie-Register requires Wordpress 3.5 or higher. Please deactivate Pie-Register</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires Wordpress 3.5 or higher. Please deactivate Pie-Register","piereg").'</span>';
 		  }
 		  ?>
         </div>
+        <div class="fields">
+          <label><?php _e("Enable Curl",'piereg') ?></label>
+          <?php if(function_exists('curl_version'))
+		  {
+			  echo '<span class="installation_status">'.__("CURL Enable","piereg").'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.__("CURL Enable","piereg").'</span>';
+			  echo '<span class="quotation">'.__("Please install CURL on server","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        
         <h3><?php _e("reCAPTCHA Settings",'piereg') ?></h3>
         <div class="fields">
           <p><?php _e("Pie Register integrates with reCAPTCHA, a free CAPTCHA services that helps to digitize Books while Protecting your forms from spam bots. Readmore about reCAPTCHA.",'piereg') ?></p>
@@ -320,7 +368,7 @@ if( $_POST['license_success'] ){
           <input type="submit" class="submit_btn" value="Save Changes" />
         </div>
         
-        <h3><?php _e("Payment Setting",'piereg'); ?></h3>
+        <?php /*?><h3><?php _e("Payment Setting",'piereg'); ?></h3>
         <!-- Payment Setting-->
                 <div class="fields">
                     <label for="payment_setting_amount" style="min-width:291px;"><?php echo __("Activation Amount",'piereg'); ?></label>
@@ -373,27 +421,8 @@ if( $_POST['license_success'] ){
                 
                 <div class="fields">
                     <input name="submit_btn" style="margin:0;" class="submit_btn" value="Save Changes" type="submit" />
-                </div>
+                </div><?php */?>
         
-        <!-- end Payment Setting-->
-        <?php if( $this->check_enable_social_site_method() == "true")
-		{
-		?>
-        <h3><?php _e("Social Site Setting",'piereg'); ?></h3>
-        <!-- Social Site Setting-->
-                <div class="fields">
-                    <label for="social_site_popup_setting" style="min-width:291px;"><?php echo __("Authentication flow","piereg"); ?></label>
-                    <select name="social_site_popup_setting" id="social_site_popup_setting" >
-						<option value="0" <?php echo (trim($piereg['social_site_popup_setting']) == "0")? 'selected="selected"':'' ?> >No popup window</option>
-						<option value="1" <?php echo (trim($piereg['social_site_popup_setting']) == "1")? 'selected="selected"':'' ?> >Using popup window</option>
-					</select>
-                </div>
-        		<div class="fields">
-                    <input name="submit_btn" style="margin:0;" class="submit_btn" value="Save Changes" type="submit" />
-                </div>
-        <?php
-		}
-		?>
         <div class="fields fields2">
           <input type="submit" class="submit_btn" value="Save Changes" />
           <a href="javascript:;" onclick="jQuery('#frm_default').submit();" class="restore"><?php _e("Reset to Default",'piereg'); ?></a> </div>
@@ -404,5 +433,5 @@ if( $_POST['license_success'] ){
   </div>
 </div>
 <form id="frm_default" method="post" onsubmit="return window.confirm('Are you sure? It will restore all the plugin settings to default.');">
-<input type="hidden" value="1" name="default_settings" />
+<input type="hidden" value="1" name="piereg_default_settings" />
 </form>

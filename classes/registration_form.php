@@ -1,6 +1,6 @@
 <?php
 require_once('base.php');
-class Registration_form extends Base
+class Registration_form extends PieReg_Base
 {
 	var $id;
 	var $name;
@@ -20,51 +20,55 @@ class Registration_form extends Base
 	}
 	function addFormData()
 	{
-		
-		echo '<h2 id="piereg_pie_form_heading">'.$this->data['form']['label'].'</h2>';	
-		echo '<p id="piereg_pie_form_desc" class="'.$this->addClass("").'" >'.$this->data['form']['desc'].'</p>';		
+		$data = "";
+		$data .= '<h2 id="piereg_pie_form_heading">'.$this->data['form']['label'].'</h2>';	
+		$data .= '<p id="piereg_pie_form_desc" class="'.$this->addClass("").'" >'.$this->data['form']['desc'].'</p>';		
+		return $data;
 	
 	}
 	function addDefaultField()
 	{
+		$data = "";
 		$this->name = $this->field['field_name'];
 		if($this->field['field_name']=="description")
 		{
-			echo '<textarea name="description" id="description" rows="5" cols="80">'.$this->getDefaultValue().'</textarea>';	
+			$data .= '<textarea name="description" id="description" rows="5" cols="80">'.$this->getDefaultValue().'</textarea>';	
 		}
 		else
 		{
-			echo '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
+			$data .= '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
 		}	
+		return $data;
 	}
 	function addTextField()
 	{
-		echo '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';
 	}
 	function addHiddenField()
 	{
-		echo '<input id="'.$this->id.'" name="'.$this->name.'"  type="hidden" value="'.$this->getDefaultValue().'" />';		
+		return '<input id="'.$this->id.'" name="'.$this->name.'"  type="hidden" value="'.$this->getDefaultValue().'" />';		
 	}
 	function addUsername()
 	{
-		echo '<input id="username" name="username" class="input_fields validate[required]" placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue('username').'" data-errormessage-value-missing="'.$this->field['validation_message'].'"  />';	
+		return '<input id="username" name="username" class="input_fields validate[required]" placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue('username').'" data-errormessage-value-missing="'.$this->field['validation_message'].'"  />';	
 		
 	}
 	function addPassword()
 	{
 		$style = "";
+		$data = "";
 		if($this->label_alignment=="left")
 			$style = 'class = "wdth-lft mrgn-lft"';
 		
 		
-		echo '<input '; 
+		$data .= '<input '; 
 		
 		if($this->field['show_meter']==1)
 		{
-			echo 'onkeyup="passwordStrength(this.value)" ';
+			$data .= 'onkeyup="passwordStrength(this.value)" ';
 		}
 		
-		echo 'id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" />';
+		$data .= 'id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" />';
 				
 		
 			$class = '';
@@ -74,15 +78,16 @@ class Registration_form extends Base
 			if($this->label_alignment=="top")
 				$topclass = "label_top"; 
 			
-			echo '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>Confirm Password</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="input_fields validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" />';	
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>Confirm Password</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="input_fields validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" />';	
 			
 				
-			
+			return $data;
 			
 	}	
 	function addEmail()
 	{
-		echo '<input id="'.$this->id.'" name="e_mail" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue("e_mail").'" />';
+		$data = "";
+		$data .='<input id="'.$this->id.'" name="e_mail" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue("e_mail").'" />';
 		
 		if(isset($this->field['confirm_email']))
 		{
@@ -94,84 +99,101 @@ class Registration_form extends Base
 				$topclass = "label_top"; 	
 		
 			
-			echo '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>Confirm E-Mail</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields validate[required,equals['.$this->id.']]">';
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>Confirm E-Mail</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields validate[required,equals['.$this->id.']]">';
 			
 			
 			
 		}	
+		return $data;
 	}
 	function addUpload()
 	{
-		echo '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().' type="file"  />';	
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().' type="file"  />';	
 	}
 	function addProfilePicUpload()
 	{
-		echo '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().' type="file"  />';	
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().' validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]"  '.$this->addValidation().' type="file"  />';	
 	}
 	function addTextArea()
 	{
-		echo '<textarea id="'.$this->id.'" name="'.$this->name.'" rows="'.$this->field['rows'].'" cols="'.$this->field['cols'].'"  class="'.$this->addClass("").'"  placeholder="'.$this->field['placeholder'].'">'.$this->getDefaultValue().'</textarea>';		
+		return '<textarea id="'.$this->id.'" name="'.$this->name.'" rows="'.$this->field['rows'].'" cols="'.$this->field['cols'].'"  class="'.$this->addClass("").'"  placeholder="'.$this->field['placeholder'].'">'.$this->getDefaultValue().'</textarea>';		
 	}
 	function addName()
 	{
-				
-			echo '<div class="fieldset"><label>'.__("First Name","piereg").'</label>';
-			echo '<input value="'.$this->getDefaultValue('first_name').'" id="'.$this->id.'_firstname" name="first_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  />';				
-			
-			$topclass = "";
-			if($this->label_alignment=="top")
-				$topclass = "label_top"; 					
+		$data = "";
+		$data .= '<div class="fieldset"><label>'.__("First Name","piereg").'</label>';
+		$data .= '<input value="'.$this->getDefaultValue('first_name').'" id="'.$this->id.'_firstname" name="first_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  />';				
 		
-			echo '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
-				
-			echo '<div class="fieldset"><label>'.__("Last Name","piereg").'</label>';
-			echo '<input value="'.$this->getDefaultValue('last_name').'" id="'.$this->id.'_lastname" name="last_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  /></div>';		
+		$topclass = "";
+		if($this->label_alignment=="top")
+			$topclass = "label_top"; 					
+	
+		$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
+			
+		$data .= '<div class="fieldset"><label>'.__("Last Name","piereg").'</label>';
+		$data .= '<input value="'.$this->getDefaultValue('last_name').'" id="'.$this->id.'_lastname" name="last_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  /></div>';	
+		return $data;
 		
 	}
 	function addTime()
 	{
-		
+		$data = "";
 		$this->field['hours'] = TRUE;
-		echo '<div class="time"><div class="time_fields"><input value="'.$this->getDefaultValue($this->name.'[hh]').'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
+		$name = $this->name;
+		
+		$time_this_values = $this->getDefaultValue($name);
+		
+		$data .= '<div class="time"><div class="time_fields"><input value="'.$time_this_values["hh"].'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
 		$this->field['hours'] = FALSE;
 		
 		$this->field['mins'] = TRUE;
-		echo '<span class="colon">:</span><div class="time_fields"><input value="'.$this->getDefaultValue($this->name.'[mm]').'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
+		$data .= '<span class="colon">:</span><div class="time_fields"><input value="'.$time_this_values["mm"].'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
 		$this->field['mins'] = FALSE;
 		
 		if($this->field['time_type']=="12")
 		{
-			echo '<div class="time_fields"><select name="'.$this->name.'[time_format]" ><option value="am">AM</option><option value="pm">PM</option></select></div>';
+			$time_format_val = $time_this_values["time_format"];
+			$data .= '<div class="time_fields"><select name="'.$this->name.'[time_format]" >
+				<option value="am" ';
+				$data .=($time_format_val == "am")?'selected=""':'';
+				$data .='>AM</option>';
+				$data .='<option value="pm"  ';
+				$data .=($time_format_val == "pm")?'selected=""':'';
+				$data .='>PM</option>
+			</select></div>';
 		}
 		
-		echo '</div>';
+		$data .= '</div>';
+		return $data;
 	}	
 	function addDropdown()
 	{
+		$data = "";
 		$multiple = "";
 		$name = $this->name."[]";
+		$thispostedvalue = $this->getDefaultValue();
 		
 		if($this->field['type']=="multiselect")
 		{
 			$multiple 	= 'multiple';			
 		}		
-		echo '<select '.$multiple.' id="'.$name.'" name="'.$name.'" class="'.$this->addClass("").'" '.$this->addValidation().'  >';
+		$data .= '<select '.$multiple.' id="'.$name.'" name="'.$name.'" class="'.$this->addClass("").'" '.$this->addValidation().'  >';
 	
 		if($this->field['list_type']=="country")
 		{
 			 $countries = get_option("pie_countries");			 
-			echo $this->createDropdown($countries);			   	
+			$data .= $this->createDropdown($countries);			   	
 		}
 		else if($this->field['list_type']=="us_states")
 		{
 			 $us_states = get_option("pie_us_states");
 			 $options 	= $this->createDropdown($us_states);				 
-			  echo $options;						   	
+			 $data .= $options;						   	
 		}
 		else if($this->field['list_type'] == "can_states")
 		{
 			$can_states = get_option("pie_can_states");			
-			echo $options 	= $this->createDropdown($can_states);					
+			$data .= $options 	= $this->createDropdown($can_states);					
 		}
 		else if(sizeof($this->field['value']) > 0)
 			{	for($a = 0 ; $a < sizeof($this->field['value']) ; $a++)
@@ -180,64 +202,87 @@ class Registration_form extends Base
 					if(is_array($this->field['selected']) && in_array($a,$this->field['selected']))
 					{
 						$selected = 'selected="selected"';	
-					}				
+					}
+					if(is_array($thispostedvalue)){
+						foreach($thispostedvalue as $thissinglepostedval){
+							if($thissinglepostedval == $this->field['value'][$a])
+								$selected = 'selected="selected"';
+							//$checked = 'checked="checked"';){
+						}
+					}
 					if($this->field['value'][$a] !="" && $this->field['display'][$a] != "")
-					echo '<option '.$selected.' value="'.$this->field['value'][$a].'">'.$this->field['display'][$a].'</option>';	
+					$data .= '<option '.$selected.' value="'.$this->field['value'][$a].'">'.$this->field['display'][$a].'</option>';	
 				}		
 			}
-		echo '</select>';	
+		$data .= '</select>';	
+		return $data;
 	}
 	function addNumberField()
 	{
-		echo '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="number" value="'.$this->getDefaultValue().'"' ;
+		$data = "";
+		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().'  placeholder="'.$this->field['placeholder'].'" type="number" value="'.$this->getDefaultValue().'"' ;
 		
 		if(!empty($this->field['min']))
-		echo 'min="'.$this->field['min'].'"';
+		$data .= 'min="'.$this->field['min'].'"';
 		
 		if(!empty($this->field['max']))
-		echo 'max="'.$this->field['max'].'"';
+		$data .= 'max="'.$this->field['max'].'"';
 		
-		echo '/>';	
+		$data .= '/>';	
+		return $data;
 	}
 	function addPhone()
 	{		
-		echo '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.$field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
+		return '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.$field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
 	}
 	function addList()
 	{
+		$data = "";
 		$width  = 85 /  $this->field['cols']; 
+		$name = $this->name;
+		
+		$list_this_values = $this->getDefaultValue($name);
+
+		
 		for($a = 1 ,$c=0; $a <= $this->field['rows'] ; $a++,$c++)
 		{
 			if($a==1)
 			{
-				echo '<div class="'.$this->id.'_'.$a.' pie_list">';
+				$data .= '<div class="'.$this->id.'_'.$a.' pie_list">';
+				
 				
 				for($b = 1 ; $b <= $this->field['cols'] ;$b++)
 				{
-					echo '<input style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields"> ';
+					$data .= '<input value="'.$list_this_values[$c][$b-1].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields"> ';
 				}
 				if( ((int)$this->field['rows']) > 1)
 				{
-					echo ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/plus.png" onclick="addList('.$this->field['rows'].','.$this->field['id'].');" alt="add" /></div>';		
+					$data .= ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/plus.png" onclick="addList('.$this->field['rows'].','.$this->field['id'].');" alt="add" /></div>';		
 				}
 			}
 			else
 			{
-				echo '<div style="display:none;" class="'.$this->id.'_'.$a.' pie_list">';
+				if(isset($list_this_values[$c]) != false)
+					$display_list_style = (!array_filter($list_this_values[$c]))? "display:none;" : "display:block;";
+				else
+					$display_list_style = "display:none;";
+					
+				$data .= '<div style="'.$display_list_style.'" class="'.$this->id.'_'.$a.' pie_list">';
 				for($b = 1 ; $b <= $this->field['cols'] ;$b++)
 				{
-					echo '<input style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields">';
+					$data .= '<input value="'.$list_this_values[$c][$b-1].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields">';
 				}
 				
-					echo ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/minus.gif" onclick="removeList('.$this->field['rows'].','.$this->field['id'].','.$a.');" alt="add" /></div>';
+					$data .= ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/minus.gif" onclick="removeList('.$this->field['rows'].','.$this->field['id'].','.$a.');" alt="add" /></div>';
 				
 				
 			}
 		}
+		return $data;
 	}
 	function addHTML()
 	{
-		echo html_entity_decode($this->field['html']);
+		return html_entity_decode($this->field['html']);
 	}
 	function addSectionBreak()
 	{
@@ -248,55 +293,71 @@ class Registration_form extends Base
 		
 		$class .= "sectionBreak";
 		
-		echo '<div class="'.$class.'"></div>';	
+		return '<div class="'.$class.'"></div>';	
 	}
 	function addCheckRadio()
 	{
+		$data = "";
 		if(sizeof($this->field['value']) > 0)
 		{
-			echo '<div class="radio_wrap">';
+			$data .= '<div class="radio_wrap">';
+			$thispostedvalue = $this->getDefaultValue();
 			for($a = 0 ; $a < sizeof($this->field['value']) ; $a++)
 			{
 				$checked = '';
+				
+					
 				if(is_array($this->field['selected']) && in_array($a,$this->field['selected']))
-				{
 					$checked = 'checked="checked"';	
-				}				
+				else
+					$checked = '';
+				
+				if(is_array($thispostedvalue)){
+					foreach($thispostedvalue as $thissinglepostedval){
+						if($thissinglepostedval == $this->field['value'][$a])
+							$checked = 'checked="checked"';
+						//$checked = 'checked="checked"';){
+					}
+				}
+				
 				
 				//if(!empty($this->field['display'][$a]))
-				{	
+				//{	
 					
-					echo "<label>";
-					echo $this->field['display'][$a];	
-					echo "</label>";
-					echo '<input '.$checked.' value="'.$this->field['value'][$a].'" type="'.$this->field['type'].'" '.$multiple.' name="'.$this->name.'[]" class="'.$this->addClass("").' radio_fields" '.$this->addValidation().'  >';
+					$data .= "<label>";
+					$data .= $this->field['display'][$a];	
+					$data .= "</label>";
+					$data .= '<input '.$checked.' value="'.$this->field['value'][$a].'" type="'.$this->field['type'].'" '.$multiple.' name="'.$this->name.'[]" class="'.$this->addClass("").' radio_fields" '.$this->addValidation().'  >';
 					
 					
-				}
+				//}
 			}
-			echo "</div>";		
-		}				
+			$data .= "</div>";		
+		}
+		return $data;
 	}
 	function addAddress()
 	{
-		echo '<div class="address_main">';
-		echo '<div class="address">
-		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().'>
+		$address_values = $this->getDefaultValue($this->name);
+		$data = "";
+		$data .= '<div class="address_main">';
+		$data .= '<div class="address">
+		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['address'].'">
 		  <label>'.__("Street Address","piereg").'</label>
 		</div>';
 		
 		 if(!$this->field['hide_address2'])
 		 {
 		
-			echo '<div class="address">
-			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  '.$this->addValidation().'>
+			$data .= '<div class="address">
+			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['address2'].'">
 			  <label>'.__("Address Line 2","piereg").'</label>
 			</div>';
 		 }
 		
-		echo '<div class="address">
+		$data .= '<div class="address">
 		  <div class="address2">
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().'>
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['city'].'">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
@@ -305,17 +366,18 @@ class Registration_form extends Base
 		 {
 			 	if($this->field['address_type'] == "International")
 				{
-					echo '<div class="address2"  >
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().'>
+					$data .= '<div class="address2"  >
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['state'].'">
 					<label>'.__("State / Province / Region","piereg").'</label>
 				 	 </div>';		
 				}
 				else if($this->field['address_type'] == "United States")
 				{
 				  $us_states = get_option("pie_us_states");
-				  $options 	= $this->createDropdown($us_states,$this->field['us_default_state']);	
+				  $selectedoption = ($address_values['state'])?$address_values['state']:$this->field['us_default_state'];
+				  $options 	= $this->createDropdown($us_states,$selectedoption);	
 				 
-				  echo '<div class="address2"  >
+				  $data .= '<div class="address2"  >
 					<select id="state_'.$this->id.'" name="'.$this->name.'[state]" class="'.$this->addClass("").'">
 					 '.$options.' 
 					</select>
@@ -326,8 +388,9 @@ class Registration_form extends Base
 				{
 					
 					$can_states = get_option("pie_can_states");
-				  	$options 	= $this->createDropdown($can_states,$this->field['canada_default_state']);
-					echo '<div class="address2">
+					$selectedoption = ($address_values['state'])?$address_values['state']:$this->field['canada_default_state'];
+				  	$options 	= $this->createDropdown($can_states,$selectedoption);
+					$data .= '<div class="address2">
 						<select id="state_'.$this->id.'" class="'.$this->addClass("").'" name="'.$this->name.'[state]">
 						  '.$options.'
 						</select>
@@ -339,21 +402,22 @@ class Registration_form extends Base
 		
 		 
 		 
-		echo '</div>';
+		$data .= '</div>';
 		
-		echo '<div class="address">';	
+		$data .= '<div class="address">';	
 		
-		echo ' <div class="address2">
-		<input id="zip_'.$this->id.'" name="'.$this->name.'[zip]" type="text" class="'.$this->addClass().'"  '.$this->addValidation().'>
+		$data .= ' <div class="address2">
+		<input id="zip_'.$this->id.'" name="'.$this->name.'[zip]" type="text" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['zip'].'">
 		<label>'.__("Zip / Postal Code","piereg").'</label>
 		 </div>';	 
 		
 		
 		 if($this->field['address_type'] == "International")
 		 {
-			 $countries = get_option("pie_countries");			 
-			 $options 	= $this->createDropdown($countries,$this->field['default_country']);  
-			 echo '<div  class="address2" >
+			 $countries = get_option("pie_countries");
+			 $selectedoption = ($address_values['country'])?$address_values['country']:$this->field['default_country'];		 
+			 $options 	= $this->createDropdown($countries,$selectedoption);  
+			 $data .= '<div  class="address2" >
 					<select id="country_'.$this->id.'" name="'.$this->name.'[country]" class="'.$this->addClass("").'"   '.$this->addValidation().'>
                     <option>'.__("Select Country","piereg").'</option>
 					'. $options .'
@@ -363,12 +427,19 @@ class Registration_form extends Base
 		 }
 		 
 		 
-		echo '</div>';
-		echo '</div>';
+		$data .= '</div>';
+		$data .= '</div>';
+		return $data;
 	}	
 	function addDate()
 	{			
-			
+		$data = "";
+		$date_this_values = $this->getDefaultValue($this->name);
+		if($date_this_values != ""){
+			$date_this_values['date']['mm']="";
+			$date_this_values['date']['dd']="";
+			$date_this_values['date']['yy']="";
+		}
 		
 		if($this->field['date_type'] == "datefield")
 		{
@@ -376,51 +447,51 @@ class Registration_form extends Base
 			if($this->field['date_format']=="mm/dd/yy")
 			{
 			
-			echo '<div class="time date_format_field">
+			$data .= '<div class="time date_format_field">
 				  <div class="time_fields">
-					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().'>
+					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['mm'].'">
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" '.$this->addValidation().'>
+					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['dd'].'">
 					<label>'.__("DD","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" '.$this->addValidation().'>
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['yy'].'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				</div>';
 			} 
 			else if($this->field['date_format']=="yy/mm/dd" || $this->field['date_format']=="yy.mm.dd")
 			{
-				echo '<div class="time date_format_field">
+				$data .= '<div class="time date_format_field">
 				 <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" value="'.$date_this_values['date']['yy'].'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().'>
+					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['mm'].'">
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
+					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" value="'.$date_this_values['date']['dd'].'">
 					<label>'.__("DD","piereg").'</label>
 				  </div>				  
 				</div>';	
 			}
 			else
 			{
-				echo '<div class="time date_format_field">
+				$data .= '<div class="time date_format_field">
 				 <div class="time_fields">
-					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
+					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" value="'.$date_this_values['date']['dd'].'">
 					<label>'.__("DD","piereg").'</label>
 				  </div>	
 				 <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" value="'.$date_this_values['date']['yy'].'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().'">
+					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().'" value="'.$date_this_values['date']['mm'].'">
 					<label>'.__("MM","piereg").'</label>
 				  </div>				  			  
 				</div>';	
@@ -430,24 +501,26 @@ class Registration_form extends Base
 		{
 		
 						
-				echo	'<div class="time date_format_field">
-				  <input id="'.$this->id.'" name="'.$this->name.'[date][]" readonly="readonly" type="text" class="'.$this->addClass().' date_start" title="'.$this->field['date_format'].'">';
+				$data .=	'<div class="time date_format_field">
+				  <input id="'.$this->id.'" name="'.$this->name.'[date][]" readonly="readonly" type="text" class="'.$this->addClass().' date_start" title="'.$this->field['date_format'].'" value="';
+				$data .=	(isset($date_this_values['date'][0]))?$date_this_values['date'][0] : "";
+				$data .=	'">';
 				  
-				 echo '<input id="'.$this->id.'_format" type="hidden"  value="'.$this->field['date_format'].'">';
-				 echo '<input id="'.$this->id.'_firstday" type="hidden"  value="'.$this->field['firstday'].'">';
+				 $data .= '<input id="'.$this->id.'_format" type="hidden"  value="'.$this->field['date_format'].'">';
+				 $data .= '<input id="'.$this->id.'_firstday" type="hidden"  value="'.$this->field['firstday'].'">';
 				
-				 echo '<input id="'.$this->id.'_startdate" type="hidden"  value="'.$this->field['startdate'].'">';
+				 $data .= '<input id="'.$this->id.'_startdate" type="hidden"  value="'.$this->field['startdate'].'">';
 				  
 				if($this->field['calendar_icon'] == "calendar")
 				{
-					 echo  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.get_bloginfo("url").'/wp-content/plugins/pie-register/images/calendar.png"  />'; 
+					 $data .=  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.get_bloginfo("url").'/wp-content/plugins/pie-register/images/calendar.png"  />'; 
 				}
 				else if($this->field['calendar_icon'] == "custom")
 				{
-					 echo  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.$this->field['calendar_icon_url'].'"  />'; 
+					 $data .=  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.$this->field['calendar_icon_url'].'"  />'; 
 				}
 				  
-				 echo '</div>';	
+				 $data .= '</div>';	
 		}
 		else if($this->field['date_type'] == "datedropdown")
 		{
@@ -455,58 +528,88 @@ class Registration_form extends Base
 			if($this->field['date_format']=="mm/dd/yy")
 			{
 			
-					echo '<div class="time date_format_field">
+					$data .= '<div class="time date_format_field">
 				  <div class="time_fields">
 					<select id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Month","piereg").'</option>';
-					  for($a=1;$a<=12;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=12;$a++){
+						  if($date_this_values['date']['mm'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .= '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .= '
 					</select>
 				  </div>
 				  <div class="time_fields">
 					<select id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Day","piereg").'</option>';
-					  for($a=1;$a<=31;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=31;$a++){
+						  if($date_this_values['date']['dd'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .= '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .= '
 					</select>
 				  </div>
 				  <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+						  if($date_this_values['date']['yy'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .= '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .= '
 					</select>
 				  </div>
 				</div>';
 			}
 			else if($this->field['date_format']=="yy/mm/dd" || $this->field['date_format']=="yy.mm.dd")
 			{
-					echo '<div class="time date_format_field">
+					$data .= '<div class="time date_format_field">
 					 <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+						  if($date_this_values['date']['yy'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>
 				  <div class="time_fields">
 					<select id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Month","piereg").'</option>';
-					  for($a=1;$a<=12;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=12;$a++){
+						  if($date_this_values['date']['mm'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>
 				  <div class="time_fields">
 					<select id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Day","piereg").'</option>';
-					  for($a=1;$a<=31;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=31;$a++){
+						  if($date_this_values['date']['dd'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>				 
 				</div>';
@@ -514,40 +617,56 @@ class Registration_form extends Base
 			}
 			else
 			{
-				echo '<div class="time date_format_field">
+				$data .= '<div class="time date_format_field">
 				
 				  
 				  <div class="time_fields">
 					<select id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Day","piereg").'</option>';
-					  for($a=1;$a<=31;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=31;$a++){
+						  if($date_this_values['date']['dd'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>	
 				  <div class="time_fields">
 					<select id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Month","piereg").'</option>';
-					  for($a=1;$a<=12;$a++)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=1;$a<=12;$a++){
+						  if($date_this_values['date']['mm'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>
 				  	 <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--)
-					  	echo '<option value="'.$a.'">'.__($a,"piereg").'</option>';
-					  echo '
+					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+						  if($date_this_values['date']['yy'] == $a)
+						  	$sel = ' selected=""';
+						  else
+						  $sel = '';	
+						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
+					  }
+					  $data .=  '
 					</select>
 				  </div>			 
 				</div>';	
 			}			
-		}	
+		}
+		return $data;
 	}
 	function addInvitationField()
 	{
-			echo '<input id="'.$this->id.'" name="invitation" class="'.$this->addClass("input_fields",array("required")).'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';		
+			return '<input id="'.$this->id.'" name="invitation" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';		
 	}	
 		
 	function createFieldName($text)
@@ -699,21 +818,26 @@ class Registration_form extends Base
 	
 	function addCaptcha()
 	{
+		$data = "";
 		 $settings  	=  get_option("pie_register_2");
 		 $publickey		= $settings['captcha_publc'] ;
 		 
 		 if($publickey)
 		 {
+			$data .= '<div id="recaptcha_widget_div">';
 		 	require_once('wp-content/plugins/pie-register/recaptchalib.php');		
- 			 echo recaptcha_get_html($publickey);
+ 			$data .= recaptcha_get_html($publickey);
+			$data .= '</div>';
 		 }
+		 return $data;
 	}
 	function addSubmit()
 	{
+		$data = "";
 		if($this->pages > 1)
 		{
-			echo '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="Previous" />';
-			echo '<input id="pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';						
+			$data .= '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="Previous" />';
+			$data .= '<input id="pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';						
 		}
 		$check_payment = get_option("pie_register_2");
 		
@@ -721,68 +845,74 @@ class Registration_form extends Base
 		if($this->check_enable_payment_method() == "true")
 		{
 			do_action("add_select_payment_script"); // Add script
-			echo "<label>".__("Select Payment","piereg")."</label>";
-			echo '<select name="select_payment_method" id="select_payment_method">';
-			echo '<option value="">'.__("Select","piereg").'</option>';
+			$data .= "<label>".__("Select Payment","piereg")."</label>";
+			$data .= '<select name="select_payment_method" id="select_payment_method">';
+			$data .= '<option value="">'.__("Select","piereg").'</option>';
 			do_action('Add_payment_option');
-			echo "</select>";
+			$data .= "</select>";
 			do_action("get_payment_content_area");
-			echo '<input name="pie_submit" type="submit" value="'.$this->field['text'].'" />';	
+			$data .= '<input name="pie_submit" type="submit" value="'.$this->field['text'].'" />';	
 		}
 		else
 		{
-			echo '<input name="pie_submit" type="submit" value="'.$this->field['text'].'" />';	
+			$data .= '<input name="pie_submit" type="submit" value="'.$this->field['text'].'" />';	
 		}
-		
-		
 		if($this->field['reset']==1)
 		{
-			echo '<input name="pie_reset" type="reset" value="'.$this->field['reset_text'].'" />';		
+			$data .= '<input name="pie_reset" type="reset" value="'.$this->field['reset_text'].'" />';		
 		}
+		return $data;
 	}
 	
 	function addPaypal()
 	{
-		echo '<input name="pie_submit" value="paypal" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" />';	
+		return '<input name="pie_submit" value="paypal" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" />';	
 	}
-	function addPagebreak()
+	function addPagebreak($fromwidget = false)
 	{
-		if($this->pages > 1)
-		{
-			echo '<input id="pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';		
+		$data = "";
+		if($fromwidget)
+		$cl = 'piewid_';
+		else
+		$cl = '';
+		
+		$data .= '<input id="'.$cl.'total_pages" class="piereg_regform_total_pages" name="pie_total_pages" type="hidden" value="'.$this->countPageBreaks().'" />';
+		if($this->pages > 1){
+			
+			$data .= '<input id="'.$cl.'pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';		
 			
 			if($this->field['prev_button']=="text")
 			{
-				echo '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="'.$this->field['prev_button_text'].'" />';	
+				$data .= '<input class="pie_prev" name="pie_prev" id="'.$cl.'pie_prev_'.$this->pages.'" type="button" value="'.$this->field['prev_button_text'].'" />';	
 			}
 			else if($this->field['prev_button']=="url")
 			{
-				echo '<img class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" src="'.$this->field['prev_button_url'].'"  />';		
+				$data .= '<img class="pie_prev" name="pie_prev" id="'.$cl.'pie_prev_'.$this->pages.'" src="'.$this->field['prev_button_url'].'"  />';		
 			}
 		}
 		
-		echo '<input id="pie_next_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages+1).'" />';	
+		
+		$data .= '<input id="'.$cl.'pie_next_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages+1).'" />';	
 		if($this->field['next_button']=="text")
 		{
-			echo '<input class="pie_next" name="pie_next" id="pie_next_'.$this->pages.'" type="button" value="'.__($this->field['next_button_text'],"piereg").'" />';			
+			$data .= '<input class="pie_next" name="pie_next" id="'.$cl.'pie_next_'.$this->pages.'" type="button" value="'.__($this->field['next_button_text'],"piereg").'" />';			
 		}
 		else if($this->field['next_button']=="url")
 		{
-			echo '<img style="cursor:pointer;" src="'.$this->field['next_button_url'].'" class="pie_next" name="pie_next" id="pie_next_'.$this->pages.'" />';	
+			$data .= '<img style="cursor:pointer;" src="'.$this->field['next_button_url'].'" class="pie_next" name="pie_next" id="'.$cl.'pie_next_'.$this->pages.'" />';	
 		}
-		
-		
-			
+		return $data;	
 	}
-	function printFields()
+	function printFields($fromwidget = false)
 	{
+		$pie_reg_fields = "";
 		$update = get_option( 'pie_register_2' );	
-		wp_enqueue_script( 'jquery' );
-		if($update['outputcss']==1)//Output Form CSS
+		//wp_enqueue_script( 'jquery' );
+		/*if($update['outputcss']==1)//Output Form CSS
 		{
 			wp_register_style( 'prefix-style', $this->pluginURL("css/front.css") );
 			wp_enqueue_style( 'prefix-style' );	
-		}
+		}*/
 		foreach($this->data as $this->field)
 		{
 			if ($this->field['type']=="")
@@ -802,7 +932,7 @@ class Registration_form extends Base
 			//We don't need to print li for hidden field
 			if ($this->field['type'] == "hidden")
 			{
-				$this->addHiddenField();
+				$pie_reg_fieldsa .= $this->addHiddenField();
 				continue;
 			}
 			
@@ -810,7 +940,7 @@ class Registration_form extends Base
 			if($this->label_alignment=="top")
 				$topclass = "label_top"; 
 			
-			echo '<li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
+			$pie_reg_fields .= '<li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 			
 			//When to add label
 			switch($this->field['type']) :				
@@ -836,8 +966,8 @@ class Registration_form extends Base
 				case 'list':								
 				case 'sectionbreak':				
 				case 'default':
-				case 'invitation':			
-				echo '<div class="fieldset">'.$this->addLabel();								
+				case 'invitation':
+				$pie_reg_fields .= '<div class="fieldset">'.$this->addLabel();							
 				break;							
 			endswitch;
 			
@@ -845,83 +975,81 @@ class Registration_form extends Base
 			
 			if($this->field['type'] == "pagebreak")
 			{
-				$this->addPagebreak();	
+				$pie_reg_fields .= $this->addPagebreak($fromwidget);	
 				$this->pages++;			
 			}
 			//Printting Field
 			switch($this->field['type']) :				
 				case 'text' :								
 				case 'website' :
-				$this->addTextField();
+				$pie_reg_fields .= $this->addTextField();
 				break;				
 				case 'username' :
-				$this->addUsername();
+				$pie_reg_fields .= $this->addUsername();
 				break;
 				case 'password' :
-				$this->addPassword();
+				$pie_reg_fields .= $this->addPassword();
 				break;
 				case 'email' :
-				$this->addEmail();
+				$pie_reg_fields .= $this->addEmail();
 				break;
 				case 'textarea':
-				$this->addTextArea();
+				$pie_reg_fields .= $this->addTextArea();
 				break;
 				case 'dropdown':
 				case 'multiselect':
-				$this->addDropdown();
+				$pie_reg_fields .= $this->addDropdown();
 				break;
 				case 'number':
-				$this->addNumberField();			
+				$pie_reg_fields .= $this->addNumberField();			
 				break;
 				case 'radio':
 				case 'checkbox':
-				$this->addCheckRadio();
+				$pie_reg_fields .= $this->addCheckRadio();
 				break;
 				case 'html':
-				$this->addHTML();
+				$pie_reg_fields .= $this->addHTML();
 				break;
 				case 'name':
-				$this->addName();
+				$pie_reg_fields .= $this->addName();
 				break;
 				case 'time':
-				$this->addTime();
+				$pie_reg_fields .= $this->addTime();
 				break;
 				case 'upload':
-				$this->addUpload();
+				$pie_reg_fields .= $this->addUpload();
 				break;
 				case 'profile_pic':
-				$this->addProfilePicUpload();
+				$pie_reg_fields .= $this->addProfilePicUpload();
 				break;
 				case 'address':
-				$this->addAddress();
+				$pie_reg_fields .= $this->addAddress();
 				break;
 				case 'captcha':
-				$this->addCaptcha();
+				$pie_reg_fields .= $this->addCaptcha();
 				break;
 				case 'phone':
-				$this->addPhone();
+				$pie_reg_fields .= $this->addPhone();
 				break;
 				case 'date':
-				$this->addDate();			
+				$pie_reg_fields .= $this->addDate();			
 				break;
 				case 'list':
-				$this->addList();
+				$pie_reg_fields .= $this->addList();
 				break;
 				case 'submit':
-				$this->addSubmit();
+				$pie_reg_fields .= $this->addSubmit();
 				break;				
 				case 'sectionbreak':
-				$this->addSectionBreak();
+				$pie_reg_fields .= $this->addSectionBreak();
 				break;	
 				case 'default':
-				$this->addDefaultField();
+				$pie_reg_fields .= $this->addDefaultField();
 				break;
 				case 'invitation':
-				$this->addInvitationField();
+				$pie_reg_fields .= $this->addInvitationField();
 				break;							
 			endswitch;
-			
-			
 			
 				switch($this->field['type']) :				
 				case 'text' :								
@@ -946,23 +1074,24 @@ class Registration_form extends Base
 				case 'list':		
 				case 'default':
 				case 'invitation':				
-				echo $this->addDesc();
-				echo '</div>';					
+				$pie_reg_fields .= $this->addDesc();
+				$pie_reg_fields .= '</div>';					
 				break;							
 			endswitch;
 					
-			echo '</li>';
+			$pie_reg_fields .=  '</li>';
 			
 			if($this->field['type'] == "password" && $this->field['show_meter']==1)
 			{		
-				echo '<li class="fields pageFields_'.$this->pages.'">';
-				echo "<div id='password_meter' class='fieldset' ".$style.">";
-				echo '<label id="piereg_passwordDescription">'.__("Password not entered","piereg").'</label>
+				$pie_reg_fields .=  '<li class="fields pageFields_'.$this->pages.'">';
+				$pie_reg_fields .=  "<div id='password_meter' class='fieldset' ".$style.">";
+				$pie_reg_fields .=  '<label id="piereg_passwordDescription">'.__("Password not entered","piereg").'</label>
 				<div id="piereg_passwordStrength" class="piereg_strength0">&nbsp;</div>';
-				echo "</div>";
-				echo '</li>';
+				$pie_reg_fields .=  "</div>";
+				$pie_reg_fields .=  '</li>';
 			}
 		}		
+		return $pie_reg_fields;
 	}
 	function validateRegistration($errors)
 	{
@@ -974,20 +1103,20 @@ class Registration_form extends Base
 		global $wpdb;
 		if ( empty( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Username','piereg' ));		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_Username",__(' Invalid Username','piereg' )));
 		}
 		else if ( username_exists( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Username already exists','piereg' ));		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Username_already_exists",__(' Username already exists','piereg' )));
 		}		
 		
 		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid E-mail address','piereg' ));		
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_Email_address",__(' Invalid E-mail address','piereg' )));
 		}
 		else if ( email_exists( $_POST['e_mail'] ) )
 		{
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' E-mail address already exists','piereg' ));
+			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Email_address_already_exists",__(' E-mail address already exists','piereg' )));
 					
 		}
 			
@@ -1005,63 +1134,46 @@ class Registration_form extends Base
 			$validation_message	= (!empty($field['validation_message']) ? $field['validation_message'] : $field['label'] ." is required.");
 			
 			//Handling File Field
-			if($field['type']=="upload" || $field['type']=="profile_pic")
+			if($field['type']=="profile_pic")
 			{
-				$field_name			= $_FILES[$slug];
-				
-				if(!empty($field['file_types']))
-				
-				if($field['type']=="profile_pic")
-				{
-					$file_types			= explode(",","jpg,jpeg,png,gif,bmp");
+				if($_FILES[$slug]['name'] != ''){
+					$result = $this->piereg_validate_files($_FILES[$slug]['name'],array("gif","jpeg","jpg","png","bmp"));
+					if(!$result){
+						$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_File_Type_In_Profile_Picture",__(' Invalid File Type In Profile Picture.','piereg' )));
+					}
 				}
-				else
-				{
-					$file_types			= explode(",",$field['file_types']);
+			}
+			elseif($field['type']=="upload"){
+				if($_FILES[$slug]['name'] != '' and $field['file_types'] != ""){
+					$filter_array = stripcslashes($field['file_types']);
+					$filter_array = explode(",",$filter_array);
+					$result = $this->piereg_validate_files($_FILES[$slug]['name'],$filter_array);
+					if(!$result){
+						$errors->add( $slug , apply_filters("piereg_invalid_file",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_File_Type",__(' Invalid File Type','piereg' ))));
+					}
 				}
-				$ext 				= pathinfo($_FILES[$slug]['name'], PATHINFO_EXTENSION);	
-				$upload_dir = wp_upload_dir();
-				
-				
-				
-				if((is_array($file_types) && in_array($ext,$file_types)) || empty($field['file_types']))
-				{
-					if(!move_uploaded_file($field_name['tmp_name'],$upload_dir['path']."/".$_FILES[$slug]['name']) && $required)
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Fail to upload file.','piereg' ));
-					else
-						$_POST[$slug] = $upload_dir['url']."/".$_FILES[$slug]['name'];	
-				
-				}
-				else if($required)
-				{
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid File Type.','piereg' ));		
-				}
-				
-			} 
-			else if($field['type']=="invitation"  && $piereg["enable_invitation_codes"]=="1")
+			}
+			else if($field['type']=="invitation"  && $piereg["enable_invitation_codes"]=="1" && $required != "")
 			{
-				
-				
-				$code = $_POST['invitation'];
+				$field_name = $code = $_POST['invitation'];
 				
 				$codetable	= $this->codeTable();				
 				$codes = $wpdb->get_results( "SELECT * FROM $codetable where name = '$code' and status = 1");
 				foreach($codes as $c)
 				{
 					$times_used = $c->count;
-					$usage 		= $c->usage;	
+					$usage 		= $c->code_usage;	
 				}
-			
-				
 				if(count($codes) != 1)
 				{
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' ));		
+					$errors->add( $slug , apply_filters("piereg_invalid_invitaion_code",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' )));		
 						
 				}
-				elseif($times_used >= $usage)
+				elseif($times_used >= $usage and $usage != 0)
 				{
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' ));					
-				}		
+					$errors->add( $slug , apply_filters("piereg_invitaion_code_expired",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' )));
+				}
+				
 			}
 			else if($field['type']=="captcha")
 			{
@@ -1076,7 +1188,7 @@ class Registration_form extends Base
 												$_POST["recaptcha_response_field"]);
 				
 				if (!$resp->is_valid) {				 
-				  $errors->add('recaptcha_mismatch',"<strong>". __(ucwords("Error"),"piereg").":</strong>:". __("Invalid Security Code ", 'piereg'));				 
+				  $errors->add('recaptcha_mismatch',"<strong>". __(ucwords("Error"),"piereg")."</strong>: ". apply_filters("piereg_Invalid_Security_Code",__("Invalid Security Code.", 'piereg')));
 				}	
 			
 			}
@@ -1094,28 +1206,28 @@ class Registration_form extends Base
 			{
 				if(!is_numeric($field_name))
 				{
-					$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field must contain only numbers." );		
+					$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__(" field must contain only numbers." ,"piereg")));		
 				}	
 			}
 			else if($rule=="alphanumeric")
 			{
 				if(! preg_match("/^([a-z0-9])+$/i", $field_name))
 				{
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field may only contain alpha-numeric characters." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_may__alpha_numeric_characters",__(" field may only contain alpha-numeric characters."  ,"piereg")));		
 				}	
 			}	
 			else if($rule=="email")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_EMAIL))
 				{
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." field must contain a valid email address." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_valid_email",__(" field must contain a valid email address." ,"piereg")));		
 				}	
 			}	
 			else if($rule=="website")
 			{
 				if(!filter_var($field_name,FILTER_VALIDATE_URL))
 				{
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] ." must be a valid URL." );		
+					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(" must be a valid URL." ,"piereg")));
 				}	
 			}				 
 		 }
@@ -1129,8 +1241,9 @@ class Registration_form extends Base
 			//Some form fields which we can't save like paypal, submit,formdata
 			if(!isset($field['meta']))
 			{
-				if($field['type']=="default" && $field['field_name'] != 'url')
+				if($field['type']=="default")
 				{
+					/* && $field['field_name'] != 'url'*/
 					$slug 				= $field['field_name'];				
 					$value				= $_POST[$slug];
 					update_user_meta($user_id, $slug, $value);	
@@ -1153,14 +1266,26 @@ class Registration_form extends Base
 					$value				= $_POST[$slug];
 					update_user_meta($user_id, $slug, $value);	
 				}
+				else if($field['type']=="profile_pic")
+				{
+					$slug 			= $this->createFieldName($field['type']."_".$field['id']);
+					$field_name		= $_POST[$slug];
+					$this->pie_profile_pictures_upload($user_id,$field,$slug);
+				}
+				else if($field['type']=="upload")
+				{
+					$slug 			= $this->createFieldName($field['type']."_".$field['id']);
+					$field_name		= $_POST[$slug];
+					$this->pie_upload_files($user_id,$field,$slug);
+				}
 				else
 				{
-					$slug 				= $this->createFieldName($field['type']."_".$field['id']);				
+					$slug 				= $this->createFieldName($field['type']."_".$field['id']);
 					$field_name			= $_POST[$slug];
 					update_user_meta($user_id, "pie_".$slug, $field_name);
 				}
 			}
-		}		
+		}
 	} 
 	function countPageBreaks()
 	{

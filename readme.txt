@@ -1,12 +1,12 @@
 ﻿=== Pie Register ===
 Contributors: genetech
 
-Tags: register, registration, password, invitation, custom login, ajax login, custom registration, enhance login, enhance profile, custom  logo screen, user registration
+Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
-Tested up to: 3.8.1
-Stable tag: 2.0.4
+Tested up to: 3.9
+Stable tag: 2.0.5
 
-Enhance default Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
+Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
 **Welcome to Pie-Register by Genetech Solutions.**
 
@@ -56,6 +56,23 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.5
+* Added Invitation Code Dashboard Widget
+* Added Return and Reply Path on All Emails sent via Pie-Register
+* Removed Option to Modify Avatar
+* Stopped PR pages if already exist.
+* Added option to Override WP Profile Page
+* Added Option to Override WP Login/Registration/Forgot Password Pages.
+* Enhanced Invitation Code Module
+* Fixed Shortcodes related issues.
+* Display Error when CURL or FOPEN library not installed on Server.
+* Updated User Role Function.
+* Fixed Upgrading issues.
+* Fixed Email sending issues.
+* Fixed CSS issues.
+* Added option to import version 1.0 Email templates.
+* Fixed lot or minor issues and much more..
+
 ### 2.0.4
 * Added DB Version
 * Fixed Upgrading to version 2.0 issues from older version
