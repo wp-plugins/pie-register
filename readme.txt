@@ -57,7 +57,8 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 
 == CHANGELOG ==
 ### 2.0.6
-* Uploaded missing file `invitation_code_pagination.php` into the package.
+* Upload missing file `invitation_code_pagination.php` into the package.
+* Fixed File Upload issues.
 
 ### 2.0.5
 * Added Invitation Code Dashboard Widget

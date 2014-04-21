@@ -1040,6 +1040,10 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					
 						
 				wp_mail($_POST['e_mail'], $subject, $message , $headers);
+				/*$fields 			= maybe_unserialize(get_option("pie_fields"));
+				$confirmation_type 	= $fields['submit']['confirmation'];
+				$_POST['success']	= __($fields['submit']['message'],"piereg");*/
+				
 			}
 			
 			do_action('pie_register_after_register',$user);
@@ -1047,30 +1051,15 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$fields 			= maybe_unserialize(get_option("pie_fields"));
 			$confirmation_type 	= $fields['submit']['confirmation'];
 			
-			if(trim($wp_session['payment_error']) != "")
-			{
-				$_POST['error'] = __($wp_session['payment_error'],"piereg");
-				$wp_session['payment_error'] = "";
-				$wp_session['payment_sussess'] = "";
-			}
-			else if(trim($wp_session['payment_sussess']) != "")
-			{
-				$_POST['success'] = apply_filters("piereg_payment_sussess",__($wp_session['payment_sussess'],"piereg"));
-				$wp_session['payment_error'] = "";
-				$wp_session['payment_sussess'] = "";
-			}
-			else if($confirmation_type == "" || $confirmation_type== "text" )
-			{
-				$_POST['success']	= __($fields['submit']['message'],"piereg");
-			}
-			else if($confirmation_type== "page")
+			if($confirmation_type== "page")
 			{
 				/*?>
                 <script type="text/javascript" language="javascript">
 					location.replace("<?php echo get_permalink($fields['submit']['page']); ?>");
 				</script>
                 <?php*/
-				wp_redirect(get_permalink($fields['submit']['page']));
+				wp_safe_redirect(get_permalink($fields['submit']['page']));
+				exit;
 			}
 			else if($confirmation_type == "redirect")
 			{
@@ -1080,7 +1069,13 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				</script>
                 <?php*/
 				wp_redirect($fields['submit']['redirect_url']);
-			}	
+				exit;
+			}
+			else
+			{
+				$_POST['success']	= __($fields['submit']['message'],"piereg");
+			}
+			
 		}
 	}
 	
@@ -2493,7 +2488,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			//$this->pie_frontend_enqueu_scripts();			
 			//ob_start();
 			$output = '';
-			
 			if($_POST['success'] != "")
 			$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
 			if($_POST['error'] != "")

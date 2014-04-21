@@ -1036,14 +1036,8 @@ class PieReg_Base
 	function piereg_validate_files($file_info,$extantion_array = array())
 	{
 		$result = false;
-		if (function_exists('finfo_open')) {
-			$finfo = finfo_open(FILEINFO_MIME);
-			$mimetype = finfo_file($finfo, $file_info);
-			finfo_close($finfo);
-			$result = in_array($mimetype,$extantion_array);
-		}else{
-			$result = in_array(pathinfo($file_info,PATHINFO_EXTENSION),$extantion_array);
-		}
+		$extantion_array = array_map("trim",$extantion_array);
+		$result = in_array(pathinfo($file_info,PATHINFO_EXTENSION),$extantion_array);
 		$result = (trim($result))? $result : false;
 		return $result;
 	}

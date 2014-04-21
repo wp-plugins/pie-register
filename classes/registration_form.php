@@ -774,7 +774,7 @@ class Registration_form extends PieReg_Base
 			if(!empty($this->field['file_types']))
 			{
 				$val[] = "funcCall[checkExtensions]";	
-				$val[] = "ext[".str_replace(",","|",$this->field['file_types'])."]";			
+				$val[] = "ext[".str_replace(array(","," "),array("|",""),$this->field['file_types'])."]";
 			}
 		}
 		
@@ -806,7 +806,6 @@ class Registration_form extends PieReg_Base
 			$val[] = 'data-errormessage-range-underflow="'.$this->field['validation_message'].'"';	
 			$val[] = 'data-errormessage-range-overflow="'.$this->field['validation_message'].'"';
 		}
-		
 		
 		if(sizeof($val) > 0)
 		{
@@ -1136,6 +1135,7 @@ class Registration_form extends PieReg_Base
 			//Handling File Field
 			if($field['type']=="profile_pic")
 			{
+				$field_name = $_FILES[$slug]['name'];
 				if($_FILES[$slug]['name'] != ''){
 					$result = $this->piereg_validate_files($_FILES[$slug]['name'],array("gif","jpeg","jpg","png","bmp"));
 					if(!$result){
@@ -1144,6 +1144,7 @@ class Registration_form extends PieReg_Base
 				}
 			}
 			elseif($field['type']=="upload"){
+				$field_name = $_FILES[$slug]['name'];
 				if($_FILES[$slug]['name'] != '' and $field['file_types'] != ""){
 					$filter_array = stripcslashes($field['file_types']);
 					$filter_array = explode(",",$filter_array);
@@ -1153,27 +1154,28 @@ class Registration_form extends PieReg_Base
 					}
 				}
 			}
-			else if($field['type']=="invitation"  && $piereg["enable_invitation_codes"]=="1" && $required != "")
+			else if($field['type']=="invitation"  && $piereg["enable_invitation_codes"]=="1")
 			{
 				$field_name = $code = $_POST['invitation'];
-				
-				$codetable	= $this->codeTable();				
-				$codes = $wpdb->get_results( "SELECT * FROM $codetable where name = '$code' and status = 1");
-				foreach($codes as $c)
+				if($required != "")
 				{
-					$times_used = $c->count;
-					$usage 		= $c->code_usage;	
+					$codetable	= $this->codeTable();				
+					$codes = $wpdb->get_results( "SELECT * FROM $codetable where name = '$code' and status = 1");
+					foreach($codes as $c)
+					{
+						$times_used = $c->count;
+						$usage 		= $c->code_usage;	
+					}
+					if(count($codes) != 1)
+					{
+						$errors->add( $slug , apply_filters("piereg_invalid_invitaion_code",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' )));		
+							
+					}
+					elseif($times_used >= $usage and $usage != 0)
+					{
+						$errors->add( $slug , apply_filters("piereg_invitaion_code_expired",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' )));
+					}
 				}
-				if(count($codes) != 1)
-				{
-					$errors->add( $slug , apply_filters("piereg_invalid_invitaion_code",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' )));		
-						
-				}
-				elseif($times_used >= $usage and $usage != 0)
-				{
-					$errors->add( $slug , apply_filters("piereg_invitaion_code_expired",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' )));
-				}
-				
 			}
 			else if($field['type']=="captcha")
 			{
@@ -1197,9 +1199,9 @@ class Registration_form extends PieReg_Base
 				$field_name	= $_POST["first_name"];	
 			}
 			
-			
 			if( (!isset($field_name) || empty($field_name)) && $required)
 			{
+				
 				$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> " .$validation_message );				
 			}
 			else if($rule=="number")
