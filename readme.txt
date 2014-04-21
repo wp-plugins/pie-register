@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
 Tested up to: 3.9
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
 == Description ==
