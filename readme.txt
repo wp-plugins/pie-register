@@ -56,6 +56,9 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.7
+* Made License key requirement optional and removed Popup of Un-Registered Version.
+
 ### 2.0.6
 * Upload missing file `invitation_code_pagination.php` into the package.
 * Fixed File Upload issues.

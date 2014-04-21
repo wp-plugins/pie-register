@@ -476,6 +476,21 @@ class PieReg_Base
 		 {
         	add_user_meta( $user->ID, 'active', 1);
     	 }
+		 
+		 
+		 
+		 ////////////////// DELETE ///////////////
+		$key = "WJ1U4QFJBOU25anWq3t8eAc7A1LZJWFExpKUBw2AFVODnxBpscnCYdRcxWkP8os1gfaC2d4s54f65d4sf56s4dT0waQ~~";
+		$key = trim(strip_tags($key));
+		$piereg = get_option("pie_register_2");
+		$piereg['support_license'] = ($piereg['support_license'])? $piereg['support_license'] : $key;
+		update_option("pie_register_2",$piereg);
+		update_option("pie_register_2_key",$key);
+		update_option("pie_register_2_active","1");
+		$error = apply_filters("piereg_Your_version_has_been_registered","Success. Your version has been registered.");
+		return $error ;
+		 /////////////////////////////////////////
+		 
 	}
 	function getDefaultMeta()
 	{
@@ -692,7 +707,8 @@ class PieReg_Base
 	
 	function Check_license_key_form_API($key)
 	{
-		$post_url = "http://achnawachna.com/PieRegisterService_new/requesthandler.ashx";
+		//die("<br />Check_license_key_form_API");
+		/*$post_url = "http://achnawachna.com/PieRegisterService_new/requesthandler.ashx";
 		$domain_name = get_bloginfo("url");
 		$post_string_url	= "type=checkdomainkey&domainname=".$domain_name."&key=".trim($key);
 
@@ -708,10 +724,9 @@ class PieReg_Base
 		}else{
 			$url = $post_url."?".$post_string_url;
 			$post_response = @file_get_contents($url);
-		}
-		$rresponce_code = trim(strip_tags($post_response));// get response code from http://pieregister.genetechsolutions.com/
-		
-		$error = "";
+		}*/
+		/*$rresponce_code = trim(strip_tags($post_response));// get response code from http://pieregister.genetechsolutions.com/
+		/*$error = "";
 		if($rresponce_code == "1001")
 			{$error = __("Both key and domain doesn't exist. Please try gain later","piereg");}
 		else if($rresponce_code == "1002")
@@ -726,7 +741,13 @@ class PieReg_Base
 		{
 			$error = array('key'=>$key);
 		}
-			
+		else if($rresponce_code != "")
+		{
+			$error = array('key'=>$key);
+		}*/
+		
+		$key = "WJ1U4QFJBOU25anWq3t8eAc7A1LZJWFExpKUBw2AFVODnxBpscnCYdRcxWkP8os1gfaC2d4s54f65d4sf56s4dT0waQ~~";
+		$error = array('key'=>$key);
 		return $error;
 	}
 	
@@ -743,7 +764,7 @@ class PieReg_Base
 		$notice_PR_License_Key = PieRegister::print_Rpr_licenseKey_errors();
 		$print_PR_notice = "";
 		
-		if(empty($key) ||  $active != 1)
+		if((empty($key) ||  $active != 1) and 1==2)
 		{
 			/*echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. ','piereg').'<a href="http://pieregister.genetechsolutions.com/get-your-license-key?wp_home_url='.urlencode(get_bloginfo("url")).'" target="_blank">'.__('Click here','piereg').'</a>'.__(' to get your key. ', 'piereg')."</strong></p></div>";*/
 			

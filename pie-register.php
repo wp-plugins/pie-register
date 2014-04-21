@@ -6,7 +6,7 @@ Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration fo
 
 
 Author: Genetech Solutions
-Version: 2.0.6
+Version: 2.0.7
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
