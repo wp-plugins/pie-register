@@ -6,7 +6,7 @@ Requires at least: 3.5
 Tested up to: 3.9
 Stable tag: 2.0.7
 
-Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Captcha validation, Email verification, user moderation & more.
+Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
 **Welcome to Pie-Register by Genetech Solutions.**
 
