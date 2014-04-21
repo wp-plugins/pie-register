@@ -45,8 +45,9 @@ Pie-Register has great features which you can’t find in any other free plugin.
 
 == Installation ==
 Just follow the simple steps:
-1. Upload the `pie-register` directory to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+
+1.   **Upload the `pie-register` directory to the `/wp-content/plugins/` directory**
+2.   **Activate the plugin through the 'Plugins' menu in WordPress**
 
 Please follow our plugin [documentation](http://pieregister.genetechsolutions.com/documentation/ "Pie-Register Documentation") on how to Create Registration Form, Login , Forgot Password and Profile Pages using Shortcodes and Widgets.
 
