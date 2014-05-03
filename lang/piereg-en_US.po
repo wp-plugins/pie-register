@@ -1,197 +1,123 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
-"POT-Creation-Date: 2014-02-03 18:13+0500\n"
-"PO-Revision-Date: 2014-04-19 00:27+0500\n"
+"POT-Creation-Date: 2014-05-03 23:12+0500\n"
+"PO-Revision-Date: 2014-05-03 23:12+0500\n"
 "Last-Translator: Genetech Solutions <info@genetechsolutions.com>\n"
 "Language-Team: \n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.4\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
-"Language: en_US\n"
 "X-Poedit-SearchPath-0: \\\\genetech002\\projects\\pie_new\\wp-content"
 "\\plugins\\pie-register\n"
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/register_form_preview.php:25
-msgid "Form Preview"
-msgstr "Form Preview"
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:125
+msgid "New User Registration"
+msgstr "New User Registration"
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:260
-msgid "Add Pie Register Form"
-msgstr "Add Pie Register Form"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:280
-msgid "Please select a form"
-msgstr "Please select a form"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:293
-msgid "Select A Form"
-msgstr "Select A Form"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:295
-msgid "Select a form below to add it to your post or page."
-msgstr "Select a form below to add it to your post or page."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:311
-msgid "Cancel"
-msgstr "Cancel"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:353
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:364
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:380
-msgid "There was a problem with your username or password."
-msgstr "There was a problem with your username or password."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:641
-msgid "Thank you for your registration. Your password has been emailed to you."
-msgstr ""
-"Thank you for your registration. Your password has been emailed to you."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:681
-msgid ""
-"Thank you for your registration. You will be notified once the admin "
-"approves your account."
-msgstr ""
-"Thank you for your registration. You will be notified once the admin "
-"approves your account."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:708
-msgid ""
-"Thank you for your registration. An activation link with your password has "
-"been sent to you."
-msgstr ""
-"Thank you for your registration. An activation link with your password has "
-"been sent to you."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:782
-msgid "Unverified Users"
-msgstr "Unverified Users"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:788
-msgid "Verify Checked Users"
-msgstr "Verify Checked Users"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:791
-msgid "Resend Pending Payment E-mail"
-msgstr "Resend Pending Payment E-mail"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:794
-msgid "Resend Verification E-mail"
-msgstr "Resend Verification E-mail"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:797
-msgid "Delete"
-msgstr "Delete"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:807
-msgid "User Name"
-msgstr "User Name"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:808
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:829
-msgid "E-mail"
-msgstr "E-mail"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:809
-msgid "Registration Type"
-msgstr "Registration Type"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:810
-msgid "Role"
-msgstr "Role"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:872
-msgid "User(s) has been activated"
-msgstr "User(s) has been activated"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:875
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:923
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:974
-msgid "Error"
-msgstr "Error"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:875
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:923
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:974
-msgid "Please select a user to send emails to"
-msgstr "Please select a user to send emails to"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:916
-msgid "Payment Link Emails have been re-sent"
-msgstr "Payment Link Emails have been re-sent"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:918
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:971
-msgid "Invalid User Types"
-msgstr "Invalid User Types"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:969
-msgid "Verification Emails have been re-sent"
-msgstr "Verification Emails have been re-sent"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:992
-msgid "User(s) has been deleted"
-msgstr "User(s) has been deleted"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1193
-msgid "You did not select a file to import users"
-msgstr "You did not select a file to import users"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1199
-msgid "Invalid CSV file."
-msgstr "Invalid CSV file."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1227
-msgid "Invalid CSV File. It must contain all the default user fields."
-msgstr "Invalid CSV File. It must contain all the default user fields."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1335
-msgid "Your plugin has been registered"
-msgstr "Your plugin has been registered"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1367
-msgid "Settings Saved"
-msgstr "Settings Saved"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1972
-msgid "Please"
-msgstr "Please"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1972
-msgid "login"
-msgstr "login"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1972
-msgid "to see your profile"
-msgstr "to see your profile"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:9
-msgid "Pie Register - Registration Form"
-msgstr "Pie Register - Registration Form"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:10
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:190
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:10
 msgid "Registration Form"
 msgstr "Registration Form"
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:52
-msgid "Pie Register - Login Form"
-msgstr "Pie Register - Login Form"
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:191
+msgid "Please fill the form below to register."
+msgstr "Please fill the form below to register."
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:53
-msgid "Login Form"
-msgstr "Login Form"
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:537
+msgid ""
+"Pie-Register is only compatible with WordPress v3.5 and up. You are "
+"currently using WordPress v."
+msgstr ""
+"Pie-Register is only compatible with WordPress v3.5 and up. You are "
+"currently using WordPress v."
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:96
-msgid "Pie Register - Forgot Password Form"
-msgstr "Pie Register - Forgot Password Form"
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:544
+#, fuzzy
+msgid "Your are using the unregistered version of Pie Register. "
+msgstr "Your are using the unregistered version of Pie Register."
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:97
-msgid "Forgot Password Form"
-msgstr "Forgot Password Form"
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:544
+msgid "Click here"
+msgstr "Click here"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:544
+#, fuzzy
+msgid " to get your key. "
+msgstr "to get your key. "
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:747
+msgid "Invalid E-mail address"
+msgstr "Invalid E-mail address"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:752
+msgid "Error in your password fields"
+msgstr "Error in your password fields"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:805
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:980
+msgid " Fail to upload file."
+msgstr " Fail to upload file."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:829
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:408
+msgid " field must contain only numbers."
+msgstr " field must contain only numbers."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:836
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:412
+msgid " field may only contain alpha-numeric characters."
+msgstr " field may only contain alpha-numeric characters."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:843
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:416
+msgid " field must contain a valid email address."
+msgstr " field must contain a valid email address."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:850
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:420
+msgid " must be a valid URL."
+msgstr " must be a valid URL."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:935
+msgid " Invalid Username"
+msgstr " Invalid Username"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:939
+msgid " Username already exists"
+msgstr " Username already exists"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:944
+msgid " Invalid E-mail address"
+msgstr " Invalid E-mail address"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:948
+msgid " E-mail address already exists"
+msgstr " E-mail address already exists"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:987
+msgid " Invalid File Type."
+msgstr " Invalid File Type."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1008
+msgid " Invalid Invitation Code."
+msgstr " Invalid Invitation Code."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1013
+msgid " Invitation Code has expired."
+msgstr " Invitation Code has expired."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1029
+msgid "Invalid Security Code "
+msgstr "Invalid Security Code "
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/dash_widget.php:21
+msgid " Code Tracking"
+msgstr " Code Tracking"
 
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/forgot_password.php:4
 msgid ""
@@ -243,10 +169,6 @@ msgstr "A message will be sent to your email address."
 msgid "Reset my password"
 msgstr "Reset my password"
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/dash_widget.php:21
-msgid " Code Tracking"
-msgstr " Code Tracking"
-
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/get_password.php:4
 msgid "Enter your new password below."
 msgstr "Enter your new password below."
@@ -258,118 +180,6 @@ msgstr "The passwords do not match."
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/get_password.php:20
 msgid "Your password has been reset."
 msgstr "Your password has been reset."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:935
-msgid " Invalid Username"
-msgstr " Invalid Username"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:939
-msgid " Username already exists"
-msgstr " Username already exists"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:944
-msgid " Invalid E-mail address"
-msgstr " Invalid E-mail address"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:948
-msgid " E-mail address already exists"
-msgstr " E-mail address already exists"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:980
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:805
-msgid " Fail to upload file."
-msgstr " Fail to upload file."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:987
-msgid " Invalid File Type."
-msgstr " Invalid File Type."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1008
-msgid " Invalid Invitation Code."
-msgstr " Invalid Invitation Code."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1013
-msgid " Invitation Code has expired."
-msgstr " Invitation Code has expired."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/registration_form.php:1029
-msgid "Invalid Security Code "
-msgstr "Invalid Security Code "
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:747
-msgid "Invalid E-mail address"
-msgstr "Invalid E-mail address"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:752
-msgid "Error in your password fields"
-msgstr "Error in your password fields"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:829
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:408
-msgid " field must contain only numbers."
-msgstr " field must contain only numbers."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:836
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:412
-msgid " field may only contain alpha-numeric characters."
-msgstr " field may only contain alpha-numeric characters."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:843
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:416
-msgid " field must contain a valid email address."
-msgstr " field must contain a valid email address."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/edit_form.php:850
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/profile_admin.php:420
-msgid " must be a valid URL."
-msgstr " must be a valid URL."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:125
-msgid "New User Registration"
-msgstr "New User Registration"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:191
-msgid "Please fill the form below to register."
-msgstr "Please fill the form below to register."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:542
-msgid ""
-"Pie-Register is only compatible with WordPress v3.5 and up. You are "
-"currently using WordPress v."
-msgstr ""
-"Pie-Register is only compatible with WordPress v3.5 and up. You are "
-"currently using WordPress v."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:549
-msgid "Your are using the unregistered version of Pie Register."
-msgstr "Your are using the unregistered version of Pie Register."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:549
-msgid "Click here"
-msgstr "Click here"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/classes/base.php:549
-#, fuzzy
-msgid " to get your key. "
-msgstr "to get your key. "
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegInvitationCodes.php:39
-msgid ""
-"Protect your privacy. If you want your blog to be exclusive, enable "
-"Invitation Codes and keep track of your users."
-msgstr ""
-"Protect your privacy. If you want your blog to be exclusive, enable "
-"Invitation Codes and keep track of your users."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegInvitationCodes.php:69
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:51
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:46
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:91
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegAdminNotification.php:106
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:76
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:149
-msgid "Save Changes"
-msgstr "Save Changes"
 
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:36
 msgid "Settings"
@@ -538,6 +348,12 @@ msgid ""
 msgstr ""
 "Unverified Users will be automatically deleted after grace period expires"
 
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:178
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:208
+#, fuzzy
+msgid "Save Settings"
+msgstr "Settings"
+
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:185
 msgid "Installation Status"
 msgstr "Installation Status"
@@ -601,82 +417,6 @@ msgstr "Tracking Code"
 msgid "Reset to Default"
 msgstr "Reset to Default"
 
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:46
-msgid "Form Editor : Registration Form"
-msgstr "Form Editor : Registration Form"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:53
-msgid "Preview"
-msgstr "Preview"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:96
-msgid "Drag Fields Here"
-msgstr "Drag Fields Here"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:13
-msgid "Payment Gateway Settings"
-msgstr "Payment Gateway Settings"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:30
-msgid "Enter Your Paypal hosted button ID."
-msgstr "Enter Your Paypal hosted button ID."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:39
-msgid "Paypal Mode"
-msgstr "Paypal Mode"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:53
-msgid "Please follow the steps below to create and set the required Options."
-msgstr "Please follow the steps below to create and set the required Options."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:55
-msgid "Export/Import User Entries"
-msgstr "Export/Import User Entries"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:70
-msgid "Export"
-msgstr "Export"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:72
-msgid ""
-"Now you can export all users with custom fields with a particular date range "
-"in a CSV file! Simply select your fields and select your Date Range. The "
-"Date Range feature is optional which means that if you do not select a date "
-"range then all entries will be exported. Click on the Download Export Files "
-"to complete the operation."
-msgstr ""
-"Now you can export all users with custom fields with a particular date range "
-"in a CSV file! Simply select your fields and select your Date Range. The "
-"Date Range feature is optional which means that if you do not select a date "
-"range then all entries will be exported. Click on the Download Export Files "
-"to complete the operation."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:78
-msgid "Select Fields"
-msgstr "Select Fields"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:171
-msgid "Import"
-msgstr "Import"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:174
-msgid ""
-"Select the  CSV file you would like to import. When you click the import "
-"button below, Pie Register will import the users. Please see the example of "
-"CSV file before the import operartion."
-msgstr ""
-"Select the  CSV file you would like to import. When you click the import "
-"button below, Pie Register will import the users. Please see the example of "
-"CSV file before the import operartion."
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:182
-msgid "You may want to see"
-msgstr "You may want to see"
-
-#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:182
-msgid "the example of the CSV file"
-msgstr "the example of the CSV file"
-
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegAdminNotification.php:15
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:72
 msgid "Notifications : Registration Form"
@@ -734,6 +474,100 @@ msgstr "Subject"
 msgid "Message"
 msgstr "Message"
 
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegAdminNotification.php:106
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:52
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegInvitationCodes.php:69
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:46
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:91
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:76
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:149
+msgid "Save Changes"
+msgstr "Save Changes"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:47
+msgid "Form Editor : Registration Form"
+msgstr "Form Editor : Registration Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:54
+msgid "Preview"
+msgstr "Preview"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegEditForm.php:97
+msgid "Drag Fields Here"
+msgstr "Drag Fields Here"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:55
+msgid "Export/Import User Entries"
+msgstr "Export/Import User Entries"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:70
+msgid "Export"
+msgstr "Export"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:72
+msgid ""
+"Now you can export all users with custom fields with a particular date range "
+"in a CSV file! Simply select your fields and select your Date Range. The "
+"Date Range feature is optional which means that if you do not select a date "
+"range then all entries will be exported. Click on the Download Export Files "
+"to complete the operation."
+msgstr ""
+"Now you can export all users with custom fields with a particular date range "
+"in a CSV file! Simply select your fields and select your Date Range. The "
+"Date Range feature is optional which means that if you do not select a date "
+"range then all entries will be exported. Click on the Download Export Files "
+"to complete the operation."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:78
+msgid "Select Fields"
+msgstr "Select Fields"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:171
+msgid "Import"
+msgstr "Import"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:174
+msgid ""
+"Select the  CSV file you would like to import. When you click the import "
+"button below, Pie Register will import the users. Please see the example of "
+"CSV file before the import operartion."
+msgstr ""
+"Select the  CSV file you would like to import. When you click the import "
+"button below, Pie Register will import the users. Please see the example of "
+"CSV file before the import operartion."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:182
+msgid "You may want to see"
+msgstr "You may want to see"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegImportExport.php:182
+msgid "the example of the CSV file"
+msgstr "the example of the CSV file"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegInvitationCodes.php:39
+msgid ""
+"Protect your privacy. If you want your blog to be exclusive, enable "
+"Invitation Codes and keep track of your users."
+msgstr ""
+"Protect your privacy. If you want your blog to be exclusive, enable "
+"Invitation Codes and keep track of your users."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:13
+msgid "Payment Gateway Settings"
+msgstr "Payment Gateway Settings"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:30
+msgid "Enter Your Paypal hosted button ID."
+msgstr "Enter Your Paypal hosted button ID."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:39
+msgid "Paypal Mode"
+msgstr "Paypal Mode"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegPaymentGateway.php:53
+msgid "Please follow the steps below to create and set the required Options."
+msgstr "Please follow the steps below to create and set the required Options."
+
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:81
 msgid "Notifications to Users"
 msgstr "Notifications to Users"
@@ -741,6 +575,179 @@ msgstr "Notifications to Users"
 #: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/menus/PieRegUserNotification.php:89
 msgid "Messsage Type"
 msgstr "Messsage Type"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:255
+msgid "Add Pie Register Form"
+msgstr "Add Pie Register Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:275
+msgid "Please select a form"
+msgstr "Please select a form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:288
+msgid "Select A Form"
+msgstr "Select A Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:290
+msgid "Select a form below to add it to your post or page."
+msgstr "Select a form below to add it to your post or page."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:306
+msgid "Cancel"
+msgstr "Cancel"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:348
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:359
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:375
+msgid "There was a problem with your username or password."
+msgstr "There was a problem with your username or password."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:643
+msgid "Thank you for your registration. Your password has been emailed to you."
+msgstr ""
+"Thank you for your registration. Your password has been emailed to you."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:683
+msgid ""
+"Thank you for your registration. You will be notified once the admin "
+"approves your account."
+msgstr ""
+"Thank you for your registration. You will be notified once the admin "
+"approves your account."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:710
+msgid ""
+"Thank you for your registration. An activation link with your password has "
+"been sent to you."
+msgstr ""
+"Thank you for your registration. An activation link with your password has "
+"been sent to you."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:786
+msgid "Unverified Users"
+msgstr "Unverified Users"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:792
+msgid "Verify Checked Users"
+msgstr "Verify Checked Users"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:795
+msgid "Resend Pending Payment E-mail"
+msgstr "Resend Pending Payment E-mail"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:798
+msgid "Resend Verification E-mail"
+msgstr "Resend Verification E-mail"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:801
+msgid "Delete"
+msgstr "Delete"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:811
+msgid "User Name"
+msgstr "User Name"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:812
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:833
+msgid "E-mail"
+msgstr "E-mail"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:813
+msgid "Registration Type"
+msgstr "Registration Type"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:814
+msgid "Role"
+msgstr "Role"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:876
+msgid "User(s) has been activated"
+msgstr "User(s) has been activated"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:879
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:927
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:978
+msgid "Error"
+msgstr "Error"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:879
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:927
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:978
+msgid "Please select a user to send emails to"
+msgstr "Please select a user to send emails to"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:920
+msgid "Payment Link Emails have been re-sent"
+msgstr "Payment Link Emails have been re-sent"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:922
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:975
+msgid "Invalid User Types"
+msgstr "Invalid User Types"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:973
+msgid "Verification Emails have been re-sent"
+msgstr "Verification Emails have been re-sent"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:996
+msgid "User(s) has been deleted"
+msgstr "User(s) has been deleted"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1197
+msgid "You did not select a file to import users"
+msgstr "You did not select a file to import users"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1203
+msgid "Invalid CSV file."
+msgstr "Invalid CSV file."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1231
+msgid "Invalid CSV File. It must contain all the default user fields."
+msgstr "Invalid CSV File. It must contain all the default user fields."
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1339
+msgid "Your plugin has been registered"
+msgstr "Your plugin has been registered"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1371
+msgid "Settings Saved"
+msgstr "Settings Saved"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1976
+msgid "Please"
+msgstr "Please"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1976
+msgid "login"
+msgstr "login"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/pie-register.php:1976
+msgid "to see your profile"
+msgstr "to see your profile"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/register_form_preview.php:25
+msgid "Form Preview"
+msgstr "Form Preview"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:9
+msgid "Pie Register - Registration Form"
+msgstr "Pie Register - Registration Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:52
+msgid "Pie Register - Login Form"
+msgstr "Pie Register - Login Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:53
+msgid "Login Form"
+msgstr "Login Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:96
+msgid "Pie Register - Forgot Password Form"
+msgstr "Pie Register - Forgot Password Form"
+
+#: \\genetech002\projects\pie_new\wp-content\plugins\pie-register/widget.php:97
+msgid "Forgot Password Form"
+msgstr "Forgot Password Form"
 
 #~ msgid "ERROR"
 #~ msgstr "ERROR"
