@@ -276,8 +276,10 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 
 == Screenshots ==
 
-1. Pie-Register Front-end Registration Page
-2. Pie-Register Form Editor
-3. Pie Register Genereal Settings Page
-4. Pie-Register Front-end Login Page
-5. Pie-Register Front-end user Profile Page
+1. Pie-Register Form Editor
+2. Pie-Register Invitation Code
+3. Pie Register User Notifications Settings
+4. Pie-Register Admin Notification Settings
+5. Pie-Register Genereal Settings Page
+6. Pie-Register User Import/Export
+7. Pie-Register Paypal Settings Page
