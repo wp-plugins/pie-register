@@ -1,4 +1,4 @@
-
+var piereg = jQuery.noConflict();
 
 function pieNextPage(elem)
 
@@ -6,21 +6,21 @@ function pieNextPage(elem)
 
 	//pieHideFields();
 
-	jQuery(elem).closest('.pieregformWrapper').find('form .fields').css('display','none');
+	piereg(elem).closest('.pieregformWrapper').find('form .fields').css('display','none');
 
-	var id 		= jQuery(elem).attr("id");
+	var id 		= piereg(elem).attr("id");
 
-	//var pageNo 	= jQuery("#"+id+"_curr").val();
+	//var pageNo 	= piereg("#"+id+"_curr").val();
 
-	var pageNo = jQuery(elem).closest('form').find("#"+id+"_curr").val();
+	var pageNo = piereg(elem).closest('form').find("#"+id+"_curr").val();
 
-	var totalPages = jQuery(elem).closest('form').find('.piereg_regform_total_pages').val();
+	var totalPages = piereg(elem).closest('form').find('.piereg_regform_total_pages').val();
 
-	//var pageNo = jQuery("#"+id+"_curr").val();
+	//var pageNo = piereg("#"+id+"_curr").val();
 
 	//var elms = document.getElementsByClassName('pageFields_'+pageNo);
 
-	jQuery(elem).closest('form').find('.pageFields_'+pageNo).css('display','block');/*
+	piereg(elem).closest('form').find('.pageFields_'+pageNo).css('display','block');/*
 
 	for(a = 0 ; a < elms.length ; a++)
 
@@ -32,15 +32,15 @@ function pieNextPage(elem)
 
 	
 
-	/*jQuery('html, body').animate({
+	/*piereg('html, body').animate({
 
-        scrollTop: jQuery(".piereg_progressbar").offset().top
+        scrollTop: piereg(".piereg_progressbar").offset().top
 
     }, 0);*/
 
 	//alert("pageno"+pageNo+" Total Pages:"+totalPages);
 
-	jQuery(elem).closest('.pieregformWrapper').find(".piereg_progressbar" ).progressbar( "option", {
+	piereg(elem).closest('.pieregformWrapper').find(".piereg_progressbar" ).progressbar( "option", {
 
 		
 
@@ -66,25 +66,25 @@ function pieHideFields()
 
 	}*/
 
-	jQuery('.pieregformWrapper .fields').css('display','none');
+	piereg('.pieregformWrapper .fields').css('display','none');
 
 }
 
-jQuery(document).ready(function(e) {
+piereg(document).ready(function(e) {
 
  	
 
-	jQuery(".pieregformWrapper form").validationEngine();
+	piereg(".pieregformWrapper form").validationEngine();
 
-	jQuery("#lostpasswordform").validationEngine();
+	piereg("#lostpasswordform").validationEngine();
 
-	jQuery("#resetpassform").validationEngine();	
+	piereg("#resetpassform").validationEngine();	
 
-	jQuery("#loginform").validationEngine();
+	piereg("#loginform").validationEngine();
 
 	
 
-	jQuery('.date_start').datepicker({
+	piereg('.date_start').datepicker({
 
         dateFormat : 'yy-mm-dd',
 
@@ -96,11 +96,11 @@ jQuery(document).ready(function(e) {
 
 	
 
-	jQuery('.date_start').each(function(index, element) {
+	piereg('.date_start').each(function(index, element) {
 
        
 
-	    var id = jQuery(this).attr("id");
+	    var id = piereg(this).attr("id");
 
 		
 
@@ -108,9 +108,9 @@ jQuery(document).ready(function(e) {
 
 		var formatid = id + "_format";
 
-		var format = jQuery("#"+formatid).val();
+		var format = piereg("#"+formatid).val();
 
-		jQuery( "#"+id ).datepicker( "option", "dateFormat", format );
+		piereg( "#"+id ).datepicker( "option", "dateFormat", format );
 
 		
 
@@ -118,9 +118,9 @@ jQuery(document).ready(function(e) {
 
 		var formatid = id + "_firstday";
 
-		var format = jQuery("#"+formatid).val();
+		var format = piereg("#"+formatid).val();
 
-		jQuery( "#"+id ).datepicker( "option", "firstDay", format );
+		piereg( "#"+id ).datepicker( "option", "firstDay", format );
 
 		
 
@@ -128,35 +128,35 @@ jQuery(document).ready(function(e) {
 
 		var formatid = id + "_startdate";
 
-		var format = jQuery("#"+formatid).val();
+		var format = piereg("#"+formatid).val();
 
-		jQuery( "#"+id ).datepicker( "option", "minDate", format );
+		piereg( "#"+id ).datepicker( "option", "minDate", format );
 
 		
 
-		jQuery("#ui-datepicker-div").hide();
+		piereg("#ui-datepicker-div").hide();
 
     });
 
 	
 
-	jQuery(".calendar_icon").on("click", function() {
+	piereg(".calendar_icon").on("click", function() {
 
-    	var id = jQuery(this).attr("id");		
+    	var id = piereg(this).attr("id");		
 
 		id = id.replace("_icon","");		
 
-		jQuery("#"+id).datepicker("show");
+		piereg("#"+id).datepicker("show");
 
 	});  
 
-	jQuery(".pie_next").click(function () 
+	piereg(".pie_next").click(function () 
 
 	{  
 
-		var validate = jQuery(this).closest('.pieregformWrapper').find('form').validationEngine('validate')
+		var validate = piereg(this).closest('.pieregformWrapper').find('form').validationEngine('validate')
 
-		//var validate = jQuery("#pie_regiser_form").validationEngine('validate');
+		//var validate = piereg("#pie_regiser_form").validationEngine('validate');
 
 
 
@@ -164,9 +164,9 @@ jQuery(document).ready(function(e) {
 
 		{
 
-			//var id 		= jQuery(this).attr("id");
+			//var id 		= piereg(this).attr("id");
 
-			//var pageNo 	= jQuery("#"+id+"_curr").val();		
+			//var pageNo 	= piereg("#"+id+"_curr").val();		
 
 			//pieNextPage(pageNo);
 
@@ -178,13 +178,13 @@ jQuery(document).ready(function(e) {
 
 	
 
-	jQuery(".pie_prev").click(function () 
+	piereg(".pie_prev").click(function () 
 
 	   {  
 
-		/*var id 		= jQuery(this).attr("id");
+		/*var id 		= piereg(this).attr("id");
 
-		var pageNo 	= jQuery("#"+id+"_curr").val();
+		var pageNo 	= piereg("#"+id+"_curr").val();
 
 		pieNextPage(pageNo);*/
 
@@ -196,13 +196,13 @@ jQuery(document).ready(function(e) {
 
 	
 
-	//jQuery("#comments,.entry-meta").hide();
+	//piereg("#comments,.entry-meta").hide();
 
 	
 
 });
 
-function passwordStrength(password)
+/*function passwordStrength(password)
 
 {
 
@@ -260,4 +260,157 @@ function passwordStrength(password)
 
 	 document.getElementById("piereg_passwordStrength").className = "strength" + score;
 
+}*/
+
+
+
+
+
+
+/**************************************************************************************/
+
+
+ piereg(document).ready(function(){
+      if(piereg("#pie_widget-2 #piereg_passwordStrength").length > 0){
+            piereg("#pie_widget-2 #password_2").bind("keyup", function(){
+				var pass1 = piereg("#pie_widget-2 #password_2").val();
+				var pass2 = "";
+				if(piereg("#pie_widget-2 #confirm_password_password_2").val().trim() != ""){
+					pass2 = piereg("#pie_widget-2 #confirm_password_password_2").val();
+				}
+				
+				var username = "";
+				if(piereg("#pie_widget-2 #username").val() != ""){
+					username = piereg("#pie_widget-2 #username").val();
+				}
+				
+				var strength = passwordStrength(pass1,username,pass2);
+				widget_updateStrength(strength,pass1,pass2);
+            });
+            piereg("#pie_widget-2 #confirm_password_password_2").bind("keyup", function(){
+				var pass1 = piereg("#pie_widget-2 #password_2").val();
+				var pass2 = piereg("#pie_widget-2 #confirm_password_password_2").val();
+				var username = "";
+				if(piereg("#pie_widget-2 #username").val().trim() != "")
+					username = piereg("#pie_widget-2 #username").val();
+				
+				var strength = passwordStrength(pass1, username, pass2);
+				
+				widget_updateStrength(strength,pass1,pass2);
+            });
+        }
+    });
+
+function widget_updateStrength(strength,pass1,pass2){
+    //var status = new Array('short', 'bad', 'good', 'strong', 'mismatch');
+	//piereg_pass_v_week,piereg_pass_week,piereg_pass_medium,piereg_pass_strong
+    var status = new Array('piereg_pass','piereg_pass_v_week', 'piereg_pass_week', 'piereg_pass_medium', 'piereg_pass_strong', 'piereg_pass_v_week');
+    var dom = piereg("#pie_widget-2 #piereg_passwordStrength");
+
+
+
+
+	if(pass1 == "" && pass2 == ""){
+		dom.removeClass().addClass(status[0]).text(piereg_pass_str_meter_string[0]);
+		return false;
+	}
+	
+    switch(strength){
+    case 1:
+      dom.removeClass().addClass(status[1]).text(piereg_pass_str_meter_string[1]);
+      break;
+    case 2:
+      dom.removeClass().addClass(status[2]).text(piereg_pass_str_meter_string[2]);
+      break;
+    case 3:
+      dom.removeClass().addClass(status[3]).text(piereg_pass_str_meter_string[3]);
+      break;
+    case 4:
+     dom.removeClass().addClass(status[4]).text(piereg_pass_str_meter_string[4]);
+      break;
+    case 5:
+      dom.removeClass().addClass(status[5]).text(piereg_pass_str_meter_string[5]);
+      break;
+    default:
+      dom.removeClass().addClass(status[1]).text(piereg_pass_str_meter_string[1]);
+      break;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+ piereg(document).ready(function(){
+      if(piereg("#piereg_passwordStrength").length > 0){
+            piereg("#password_2").bind("keyup", function(){
+				var pass1 = piereg("#password_2").val();
+				var pass2 = "";
+				if(piereg("#confirm_password_password_2").val().trim() != ""){
+					pass2 = piereg("#confirm_password_password_2").val();
+				}
+				
+				var username = "";
+				if(piereg("#username").val() != ""){
+					username = piereg("#username").val();
+				}
+				var strength = passwordStrength(pass1,username,pass2);
+				updateStrength(strength,pass1,pass2,"");
+				
+				
+            });
+            piereg("#confirm_password_password_2").bind("keyup", function(){
+				var pass1 = piereg("#password_2").val();
+				var pass2 = piereg("#confirm_password_password_2").val();
+				var username = "";
+				if(piereg("#username").val().trim() != "")
+					username = piereg("#username").val();
+				
+				var strength = passwordStrength(pass1, username, pass2);
+				updateStrength(strength,pass1,pass2,"");
+            });
+        }
+    });
+
+function updateStrength(strength,pass1,pass2,widje){
+    //var status = new Array('short', 'bad', 'good', 'strong', 'mismatch');
+	//piereg_pass_v_week,piereg_pass_week,piereg_pass_medium,piereg_pass_strong
+	
+    var status = new Array('piereg_pass','piereg_pass_v_week', 'piereg_pass_week', 'piereg_pass_medium', 'piereg_pass_strong', 'piereg_pass_v_week');
+    var dom = piereg("#piereg_passwordStrength");//piereg_pass
+	
+	
+	
+				
+	if(pass1 == "" && pass2 == ""){
+		dom.removeClass().addClass(status[0]).text(piereg_pass_str_meter_string[0]);
+		return false;
+	}
+	
+    switch(strength){
+    case 1:
+      dom.removeClass().addClass(status[1]).text(piereg_pass_str_meter_string[1]);
+      break;
+    case 2:
+      dom.removeClass().addClass(status[2]).text(piereg_pass_str_meter_string[2]);
+      break;
+    case 3:
+      dom.removeClass().addClass(status[3]).text(piereg_pass_str_meter_string[3]);
+      break;
+    case 4:
+     dom.removeClass().addClass(status[4]).text(piereg_pass_str_meter_string[4]);
+      break;
+    case 5:
+      dom.removeClass().addClass(status[5]).text(piereg_pass_str_meter_string[5]);
+      break;
+    default:
+      dom.removeClass().addClass(status[1]).text(piereg_pass_str_meter_string[1]);
+      break;
+    }
+}
+

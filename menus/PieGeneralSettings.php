@@ -80,13 +80,13 @@ function validateSettings()
 
 }
 
+var piereg = jQuery.noConflict();
+
+piereg(document).ready(function(){
 
 
-jQuery(document).ready(function(){
 
-
-
-	if(jQuery("#support_license").val().trim() == "")
+	if(piereg("#support_license").val().trim() == "")
 
 
 
@@ -94,7 +94,7 @@ jQuery(document).ready(function(){
 
 
 
-		jQuery("#support_license").focus();
+		piereg("#support_license").focus();
 
 
 
@@ -106,7 +106,7 @@ jQuery(document).ready(function(){
 
 
 
-	jQuery( document ).tooltip({
+	piereg( document ).tooltip({
 
 
 
@@ -234,7 +234,7 @@ if( $_POST['license_success'] ){
 
 
 
-            <label for="support_email"><?php _e("Email Address",'piereg') ?></label>
+            <label for="support_email"><?php _e("E-mail Address",'piereg') ?></label>
 
 
 
@@ -302,11 +302,11 @@ if( $_POST['license_success'] ){
 
 
 
-            <img src="<?php echo plugins_url("../images/registerd.png",__FILE__);?>" style="margin:3px;float:left;" title="<?php _e("You have been using registered version of pie-register","piereg"); ?>" />
+            <img src="<?php echo plugins_url("images/registerd.png",dirname(__FILE__));?>" style="margin:3px;float:left;" title="<?php _e("You have been using registered version of pie-register","piereg"); ?>" />
 
 
 
-            <input type="image" name="Remove_license" src="<?php echo plugins_url("../images/key_remove.png",__FILE__);?>" value="&nbsp;&nbsp; <?php _e("Remove License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to de-activate your license key","piereg"); ?>" />
+            <input type="image" name="Remove_license" src="<?php echo plugins_url("images/key_remove.png",dirname(__FILE__));?>" value="&nbsp;&nbsp; <?php _e("Remove License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to de-activate your license key","piereg"); ?>" />
 
 
 
@@ -326,7 +326,7 @@ if( $_POST['license_success'] ){
 
 
 
-            <input type="submit" name="Remove_license" class="submit_btn" style="margin-top:0px;" value="&nbsp;&nbsp; <?php _e("Remove License Key"); ?> &nbsp;&nbsp;" />-->
+            <input type="submit" name="Remove_license" class="submit_btn" style="margin-top:0px;" value="&nbsp;&nbsp; <?php _e("Remove License Key","piereg"); ?> &nbsp;&nbsp;" />-->
 
 
 
@@ -338,7 +338,7 @@ if( $_POST['license_success'] ){
 
 
 
-        	<img src="<?php echo plugins_url("../images/help.png",__FILE__);?>" style="margin:7px 0px;float:left;" title="<?php _e("Please Click on the license icon to get and auto-filled your free license key","piereg"); ?>" />
+        	<img src="<?php echo plugins_url("images/help.png",dirname(__FILE__));?>" style="margin:7px 0px;float:left;" title="<?php _e("Please Click on the license icon to get and auto-filled your free license key","piereg"); ?>" />
 
 
 
@@ -346,7 +346,7 @@ if( $_POST['license_success'] ){
 
 
 
- <input type="image" src="<?php echo plugins_url("../images/key.png",__FILE__);?>" value="&nbsp;&nbsp; <?php _e("Get Free License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to get your free license key","piereg"); ?>" />
+ <input type="image" src="<?php echo plugins_url("images/key.png",dirname(__FILE__));?>" value="&nbsp;&nbsp; <?php _e("Get Free License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to get your free license key","piereg"); ?>" />
 
 
 
@@ -731,24 +731,24 @@ if( $_POST['license_success'] ){
         
 
         <div class="fields">
-
             <label for="alternate_logout"><?php _e("After Logout Page",'piereg') ?></label>
-
-            
-
-            <?php  $args =  array("show_option_no_change"=>"None","id"=>"alternate_logout","name"=>"alternate_logout","selected"=>$piereg['alternate_logout']);      
-
-            
-
+            <?php  $args =  array("show_option_no_change"=>"None","id"=>"alternate_logout","name"=>"alternate_logout","selected"=>$piereg['alternate_logout']);
             wp_dropdown_pages( $args ); ?>
-
-            
-
             <span class="quotation"><?php _e("After logout will redirect to this page after Logout page.",'piereg') ?></span> 
-
+        </div>
         
-
-        </div> 
+        <div class="fields">
+            <center><strong><?php _e("OR","piereg"); ?></strong></center>
+        </div>
+        
+        <div class="fields">
+            <label for="alternate_logout_url"><?php _e("After Logout URL",'piereg') ?></label>
+            <input type="url" name="alternate_logout_url" id="alternate_logout_url" value="<?php echo $piereg['alternate_logout_url']; ?>" class="input_fields" />
+            
+            <span class="quotation"><?php _e("After logout will redirect to this url after Logout.",'piereg') ?></span> 
+        </div>
+        
+        
 
 
 
@@ -1160,7 +1160,7 @@ if( $_POST['license_success'] ){
 
 
 
-          <input type="submit" class="submit_btn" value="<?php _e("Save Settings"); ?>" />
+          <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
 
 
 
@@ -1444,7 +1444,7 @@ if( $_POST['license_success'] ){
 
 
 
-          <input type="submit" class="submit_btn" value="<?php _e("Save Settings"); ?>" />
+          <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
 
 
 
@@ -1792,7 +1792,7 @@ wp_enqueue_script('thickbox');
 
 ///////////////// CUSTOM LOGO /////////////////////
 
-jQuery(document).on("click", "#pie_custom_logo_button", function() {
+piereg(document).on("click", "#pie_custom_logo_button", function() {
 
 
 
@@ -1800,7 +1800,7 @@ jQuery(document).on("click", "#pie_custom_logo_button", function() {
 
 	var $Height = window.innerHeight - 100;
 
-	formfield = jQuery("#pie_custom_logo_url").prop("name");
+	formfield = piereg("#pie_custom_logo_url").prop("name");
 
 
 
@@ -1814,7 +1814,7 @@ jQuery(document).on("click", "#pie_custom_logo_button", function() {
 
 window.send_to_editor = function(html) {
 
-	jQuery("#pie_custom_logo_url").val(jQuery("img", html).attr("src"));
+	piereg("#pie_custom_logo_url").val(piereg("img", html).attr("src"));
 
 	tb_remove();
 
@@ -1834,13 +1834,13 @@ window.send_to_editor = function(html) {
 
 
 
- if($piereg['custom_logo_url'] == '' && $piereg['logo'] != '')
+ if( ( isset($piereg['custom_logo_url']) && $piereg['custom_logo_url'] == '') && (isset($piereg['logo']) && $piereg['logo'] != '') )
 
 			$piereg['custom_logo_url'] = $piereg['logo'];?>
 
 <input id="pie_custom_logo_url" type="text" name="custom_logo_url" value="<?php echo $piereg['custom_logo_url'];?>" placeholder="<?php _e("Please enter Logo URL","piereg"); ?>" class="input_fields" style="width:50%;" />
 
-&nbsp;<sub><span style="font-size:16px;"><?php _e( 'or', 'piereg' ); ?></span></sub>&nbsp;
+&nbsp;<sub><span style="font-size:16px;"><?php _e( 'OR', 'piereg' ); ?></span></sub>&nbsp;
 <?php add_thickbox();?>
 <button id="pie_custom_logo_button" class="button" type="button" value="1" name="pie_custom_logo_button">
 

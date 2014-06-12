@@ -1,14 +1,14 @@
 var currHTML, endHtml, dragType,fieldMeta;
 
 var no = 3;
-
+var piereg = jQuery.noConflict();
 
 
 function getStyle(type) {
 
 	var meta = "";
 
-	var html = jQuery('<div/>').addClass("fields_options fields_optionsbg").html('<a href="javascript:;" class="edit_btn"></a><div class="label_position"  id="field_label_' + no + '"><label>Untitled ' + type + '</label></div><a rel="' + no + '" href="javascript:;" class="delete_btn">X</a><input type="hidden" name="field[' + no + '][id]" value="' + no + '" id = "id_' + no + '"><div id="field_position_' + no + '" class="fields_position"></div>');
+		var html = piereg('<div/>').addClass("fields_options fields_optionsbg").html('<a href="javascript:;" class="edit_btn"></a><div class="label_position"  id="field_label_' + no + '"><label><!--Untitled -->' + type + '</label></div><a rel="' + no + '" href="javascript:;" class="delete_btn">X</a><input type="hidden" name="field[' + no + '][id]" value="' + no + '" id = "id_' + no + '"><div id="field_position_' + no + '" class="fields_position"></div>');
 
 	
 
@@ -56,7 +56,7 @@ function getStyle(type) {
 
 	if (type == "pagebreak") {
 
-		html.find("#field_position_" + no).html('<img src="../wp-content/plugins/pie-register/images/pagebreak.png" style="max-width:100%;" />');
+		html.find("#field_position_" + no).html('<img src="'+piereg_wp_pie_register_url+'/images/pagebreak.png" style="max-width:100%;" />');
 
 	} else if (type == "time") {
 
@@ -82,7 +82,7 @@ function getStyle(type) {
 
 	} else if (type == "captcha") {
 
-		html.find("#field_position_" + no).html('<img id="captcha_img" src="../wp-content/plugins/pie-register/images/recatpcha.jpg" />');
+		html.find("#field_position_" + no).html('<img id="captcha_img" src="'+piereg_wp_pie_register_url+'/images/recatpcha.jpg" />');
 
 	} else if (type == "upload" || type == "profile_pic") {
 
@@ -98,11 +98,11 @@ function getStyle(type) {
 
 	} else if (type == "date") {
 
-		html.find("#field_position_" + no).html('<div class="time date_format_field" id="datefield_' + no + '">  <div class="time_fields" id="mm_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>MM</label>  </div>  <div class="time_fields" id="dd_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>DD</label>  </div>  <div class="time_fields" id="yy_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>YY</label>  </div></div><div class="time date_format_field" id="datepicker_' + no + '"  style="display:none;">  <input type="text" class="input_fields">  <img src="../wp-content/plugins/pie-register/images/calendar.png" id="calendar_image_' + no + '" style="display:none;" /> </div><div class="time date_format_field" id="datedropdown_' + no + '"  style="display:none;">  <div class="time_fields" id="month_' + no + '"><select disabled="disabled">      <option>Month</option>    </select></div>    <div class="time_fields" id="day_' + no + '"><select disabled="disabled">      <option>Day</option>    </select>  </div>   <div class="time_fields" id="year_' + no + '"><select disabled="disabled">      <option>Year</option>    </select> </div></div>');
+		html.find("#field_position_" + no).html('<div class="time date_format_field" id="datefield_' + no + '">  <div class="time_fields" id="mm_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>MM</label>  </div>  <div class="time_fields" id="dd_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>DD</label>  </div>  <div class="time_fields" id="yy_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>YY</label>  </div></div><div class="time date_format_field" id="datepicker_' + no + '"  style="display:none;">  <input type="text" class="input_fields">  <img src="'+ piereg_wp_pie_register_url +'/images/calendar.png" id="calendar_image_' + no + '" style="display:none;" /> </div><div class="time date_format_field" id="datedropdown_' + no + '"  style="display:none;">  <div class="time_fields" id="month_' + no + '"><select disabled="disabled">      <option>Month</option>    </select></div>    <div class="time_fields" id="day_' + no + '"><select disabled="disabled">      <option>Day</option>    </select>  </div>   <div class="time_fields" id="year_' + no + '"><select disabled="disabled">      <option>Year</option>    </select> </div></div>');
 
 	} else if (type == "list") {
 
-		html.find("#field_position_" + no).html('<img src="../wp-content/plugins/pie-register/images/plus.png" /><input type="text" id="field_' + no + '" class="input_fields" disabled="disabled">');
+		html.find("#field_position_" + no).html('<img src="'+piereg_wp_pie_register_url+'/images/plus.png" /><input type="text" id="field_' + no + '" class="input_fields" disabled="disabled">');
 
 	} else if (type == "invitation") {
 
@@ -110,7 +110,7 @@ function getStyle(type) {
 
 	} else if (type == "url" || type == "aim" || type == "yim" || type == "jabber" || type == "phone" || type == "description") {
 
-		var label = jQuery('a[name="' + type + '"]').html();
+		var label = piereg('a[name="' + type + '"]').html();
 
 		if (type == "description") {
 
@@ -124,7 +124,7 @@ function getStyle(type) {
 
 		html.find("#field_label_" + no + " label").html(label);
 
-		html.find(".edit_btn").remove();
+		//html.find(".edit_btn").remove();
 
 		meta = '<input type="hidden" name="field[' + no + '][id]" value="' + no + '" id="id_' + no + '">';
 
@@ -136,7 +136,7 @@ function getStyle(type) {
 
 	}
 
-	return jQuery("<div/>").append(html.clone()).html() + meta;
+	return piereg("<div/>").append(html.clone()).html() + meta;
 
 }
 
@@ -144,7 +144,7 @@ function getStyle(type) {
 
 function getOptions(no, optionType) {
 
-	var html = jQuery('<div class="advance_fields  sel_options_' + no + '"/>');
+	var html = piereg('<div class="advance_fields  sel_options_' + no + '"/>');
 
 	html.append('<label for="display_' + no + '">Display Value</label>');
 
@@ -158,9 +158,9 @@ function getOptions(no, optionType) {
 
 	html.append('<input type="' + optionType + '" value="0" id="check_' + no + '" name = "field[' + no + '][selected][]" class="select_option_checked">');
 
-	html.append('<a style="color:white" href="javascript:;" onclick="addOptions(' + no + ',\'' + optionType + '\',jQuery(this));">+</a><a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="jQuery(this).parent().remove();">x</a></div>');
+	html.append('<a style="color:white" href="javascript:;" onclick="addOptions(' + no + ',\'' + optionType + '\',piereg(this));">+</a><a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="piereg(this).parent().remove();">x</a></div>');
 
-	jQuery("#field_" + no).append("<option></option>");
+	piereg("#field_" + no).append("<option></option>");
 
 	return html;
 
@@ -170,10 +170,10 @@ function getOptions(no, optionType) {
 
 function getEditor() {
 
-	var html = jQuery('<div class="advance_fields"/>');
+	var html = piereg('<div class="advance_fields"/>');
 
 	html.append('<textarea rows="8" id="htmlbox_' + no + '" class="ckeditor" name="field[' + no + '][html]" cols="16"></textarea>');
-
+	
 	return html;
 
 }
@@ -182,9 +182,9 @@ function getEditor() {
 
 function changeParaText(id) {
 
-	var textarea = jQuery("#paragraph_textarea_" + id).val();
+	var textarea = piereg("#paragraph_textarea_" + id).val();
 
-	jQuery("#paragraph_" + id).html(textarea);
+	piereg("#paragraph_" + id).html(textarea);
 
 }
 
@@ -192,15 +192,15 @@ function changeParaText(id) {
 
 function addOptions(id, type, elem) {
 
-	var html = jQuery("<div/>").append(getOptions(id, type).clone()).html();
+	var html = piereg("<div/>").append(getOptions(id, type).clone()).html();
 
 	if (!elem) {
 
-		jQuery(".sel_options_" + id).last().after(html);
+		piereg(".sel_options_" + id).last().after(html);
 
 	} else {
 
-		jQuery(elem).parent().after(html);
+		piereg(elem).parent().after(html);
 
 	}
 
@@ -232,19 +232,19 @@ function changeDropdown(elm) {
 
 	id = id.replace("check_", "");
 
-	jQuery("#field_" + id).html("");
+	piereg("#field_" + id).html("");
 
-	jQuery('.sel_options_' + id).each(function (a, b) {
+	piereg('.sel_options_' + id).each(function (a, b) {
 
-		var html = jQuery('.sel_options_' + id).eq(a).find("input.select_option_display").val();
+		var html = piereg('.sel_options_' + id).eq(a).find("input.select_option_display").val();
 
-		var val = jQuery('.sel_options_' + id).eq(a).find("input.select_option_value").val();
+		var val = piereg('.sel_options_' + id).eq(a).find("input.select_option_value").val();
 
-		jQuery('.sel_options_' + id).eq(a).find("input.select_option_checked").val(a);
+		piereg('.sel_options_' + id).eq(a).find("input.select_option_checked").val(a);
 
-		var option = jQuery("<option/>").attr("value", val).html(html);
+		var option = piereg("<option/>").attr("value", val).html(html);
 
-		if (jQuery('.sel_options_' + id).eq(a).find("input.select_option_checked").is(':checked')) {
+		if (piereg('.sel_options_' + id).eq(a).find("input.select_option_checked").is(':checked')) {
 
 			option.attr('selected', 'selected');
 
@@ -262,15 +262,15 @@ function checkEvents(elm, target) {
 
 	if (elm.checked) {
 
-		jQuery("#" + target).hide();
+		piereg("#" + target).hide();
 
-		jQuery("." + target).hide();
+		piereg("." + target).hide();
 
 	} else {
 
-		jQuery("#" + target).show();
+		piereg("#" + target).show();
 
-		jQuery("." + target).show();
+		piereg("." + target).show();
 
 	}
 
@@ -278,11 +278,11 @@ function checkEvents(elm, target) {
 
 var pie_scroll_counter1 = false,pie_scroll_counter2 = false,pie_scroll_counter3 = false;
 
-function add_scroll_dragable_area(id) // for jQuery scroll in right side accordion
+function add_scroll_dragable_area(id) // for piereg scroll in right side accordion
 
 {
 
-	jQuery(id).mCustomScrollbar({
+	piereg(id).mCustomScrollbar({
 
 		scrollButtons:{
 
@@ -298,21 +298,21 @@ function bindButtons() {
 
 	//Adding Functionalities to right menu
 
-	jQuery(".right_menu_heading").live("click", function (e) {
+	piereg(".right_menu_heading").live("click", function (e) {
 
-		if (jQuery(this).parent().find("ul").is(':visible')) {
+		if (piereg(this).parent().find("ul").is(':visible')) {
 
-			jQuery(this).parent().find("ul").slideUp();
+			piereg(this).parent().find("ul").slideUp();
 
 			return;
 
 		}
 
-		jQuery("ul.picker").slideUp();
+		piereg("ul.picker").slideUp();
 
-		jQuery(this).parent().find("ul").slideDown().promise().done(function(){
+		piereg(this).parent().find("ul").slideDown().promise().done(function(){
 
-			 var id = jQuery(this).attr("id");
+			 var id = piereg(this).attr("id");
 
 			 if(pie_scroll_counter1 == false && id == "content_1")
 
@@ -358,9 +358,9 @@ function bindButtons() {
 
 	//Adding Functionalities to Edit buttons
 
-	jQuery(".edit_btn").live("click", function (e) {
+	piereg(".edit_btn").live("click", function (e) {
 
-		jQuery(this).parents(".fields").find(".fields_main").toggle();
+		piereg(this).parents(".fields").find(".fields_main").toggle();
 
 		e.preventDefault();
 
@@ -368,23 +368,27 @@ function bindButtons() {
 
 	//Adding Functionalities to delete (X) buttons
 
-	jQuery(".delete_btn").live("click", function () {
+	piereg(".delete_btn").live("click", function () {
 
-		var delId = jQuery(this).attr("rel");
+		var delId = piereg(this).attr("rel");
 
-		var delType = jQuery("#type_" + delId).val();
+		var delType = piereg("#type_" + delId).val();
 
-		var field = jQuery("input[name='field[" + delId + "][field_name]']").val();
+		var field = piereg("input[name='field[" + delId + "][field_name]']").val();
 
-		jQuery(this).parents("li").fadeOut(function () {
+		piereg(this).parents("li").fadeOut(function () {
 
-			jQuery(this).remove();
-
+			piereg(this).remove();
+			var piereg_ckeditorid = piereg(this).closest('li').find('textarea.ckeditor').attr('id');
+			
+			if(piereg_ckeditorid.length > 0){
+				CKEDITOR.remove(CKEDITOR.instances[piereg_ckeditorid]);
+			}
 			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "invitation") {
 
-				jQuery("ul.controls li a[name='" + field + "']").parent().show();
+				piereg("ul.controls li a[name='" + field + "']").parent().show();
 
-				jQuery("ul.controls li a[name='" + delType + "']").parent().show();
+				piereg("ul.controls li a[name='" + delType + "']").parent().show();
 
 			}
 
@@ -394,15 +398,31 @@ function bindButtons() {
 
 	//Change Label ehile editing label field
 
-	jQuery(".field_label").live("keyup", function () {
+	piereg(".field_label").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val != "") {
 
-			jQuery('#field_' + id + ' label').html(jQuery(this).val());
+			piereg('#field_' + id + ' label').html(piereg(this).val());
+
+		}
+
+	});
+	
+	
+
+	piereg(".field_label2").live("keyup", function () {
+
+		var id = piereg(this).attr("id");
+
+		var val = piereg(this).val();
+
+		if (val != "") {
+
+			piereg('#field_' + id + ' label').html(piereg(this).val());
 
 		}
 
@@ -410,21 +430,21 @@ function bindButtons() {
 
 	//Change Field length
 
-	jQuery(".field_length").live("keyup", function () {
+	piereg(".field_length").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("length_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val != "") {
 
-			jQuery('#field_' + id).attr("maxlength", val);
+			piereg('#field_' + id).attr("maxlength", val);
 
 		} else {
 
-			jQuery('#field_' + id).removeAttr("maxlength");
+			piereg('#field_' + id).removeAttr("maxlength");
 
 		}
 
@@ -432,69 +452,69 @@ function bindButtons() {
 
 	//Change Field default value
 
-	jQuery(".field_default_value").live("keyup", function () {
+	piereg(".field_default_value").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("default_value_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery('#field_' + id).val(val);
+		piereg('#field_' + id).val(val);
 
 	});
 
 	//Change Field placeholder
 
-	jQuery(".field_placeholder").live("keyup", function () {
+	piereg(".field_placeholder").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("placeholder_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery('#field_' + id).attr("placeholder", val);
+		piereg('#field_' + id).attr("placeholder", val);
 
 	});
 
 	//Change Field rows
 
-	jQuery(".field_rows").live("keyup", function () {
+	piereg(".field_rows").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("rows_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery('textarea#field_' + id).attr("rows", val);
+		piereg('textarea#field_' + id).attr("rows", val);
 
 	});
 
 	//Change Field Cols
 
-	jQuery(".field_cols").live("keyup", function () {
+	piereg(".field_cols").live("keyup", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("cols_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery('textarea#field_' + id).attr("cols", val);
+		piereg('textarea#field_' + id).attr("cols", val);
 
 	});
 
 	//Next Button
 
-	jQuery(".next_button").live("change", function () {
+	piereg(".next_button").live("change", function () {
 
-		if (jQuery(this).attr('checked')) {
+		if (piereg(this).attr('checked')) {
 
-			var val = jQuery(this).val();
+			var val = piereg(this).val();
 
-			var id = jQuery(this).attr("id");
+			var id = piereg(this).attr("id");
 
 			id = id.replace("next_button_", "");
 
@@ -502,15 +522,15 @@ function bindButtons() {
 
 			if (val == "text") {
 
-				jQuery("#next_button_url_container_" + id).hide();
+				piereg("#next_button_url_container_" + id).hide();
 
-				jQuery("#next_button_text_container_" + id).show();
+				piereg("#next_button_text_container_" + id).show();
 
 			} else if (val == "url") {
 
-				jQuery("#next_button_url_container_" + id).show();
+				piereg("#next_button_url_container_" + id).show();
 
-				jQuery("#next_button_text_container_" + id).hide();
+				piereg("#next_button_text_container_" + id).hide();
 
 			}
 
@@ -520,13 +540,13 @@ function bindButtons() {
 
 	//Previous Button
 
-	jQuery(".prev_button").live("change", function () {
+	piereg(".prev_button").live("change", function () {
 
-		if (jQuery(this).attr('checked')) {
+		if (piereg(this).attr('checked')) {
 
-			var val = jQuery(this).val();
+			var val = piereg(this).val();
 
-			var id = jQuery(this).attr("id");
+			var id = piereg(this).attr("id");
 
 			id = id.replace("prev_button_", "");
 
@@ -534,15 +554,15 @@ function bindButtons() {
 
 			if (val == "text") {
 
-				jQuery("#prev_button_url_container_" + id).hide();
+				piereg("#prev_button_url_container_" + id).hide();
 
-				jQuery("#prev_button_text_container_" + id).show();
+				piereg("#prev_button_text_container_" + id).show();
 
 			} else if (val == "url") {
 
-				jQuery("#prev_button_url_container_" + id).show();
+				piereg("#prev_button_url_container_" + id).show();
 
-				jQuery("#prev_button_text_container_" + id).hide();
+				piereg("#prev_button_text_container_" + id).hide();
 
 			}
 
@@ -552,13 +572,13 @@ function bindButtons() {
 
 	//Calendar Icon
 
-	jQuery(".calendar_icon").live("change", function () {
+	piereg(".calendar_icon").live("change", function () {
 
-		if (jQuery(this).attr('checked')) {
+		if (piereg(this).attr('checked')) {
 
-			var val = jQuery(this).val();
+			var val = piereg(this).val();
 
-			var id = jQuery(this).attr("id");
+			var id = piereg(this).attr("id");
 
 			id = id.replace("calendar_icon_", "");
 
@@ -566,21 +586,21 @@ function bindButtons() {
 
 			if (val == "none") {
 
-				jQuery("#icon_url_container_" + id).hide();
+				piereg("#icon_url_container_" + id).hide();
 
-				jQuery("#calendar_image_" + id).hide();
+				piereg("#calendar_image_" + id).hide();
 
 			} else if (val == "calendar") {
 
-				jQuery("#icon_url_container_" + id).hide();
+				piereg("#icon_url_container_" + id).hide();
 
-				jQuery("#calendar_image_" + id).show();
+				piereg("#calendar_image_" + id).show();
 
 			} else if (val == "custom") {
 
-				jQuery("#icon_url_container_" + id).show();
+				piereg("#icon_url_container_" + id).show();
 
-				jQuery("#calendar_image_" + id).hide();
+				piereg("#calendar_image_" + id).hide();
 
 			}
 
@@ -588,35 +608,35 @@ function bindButtons() {
 
 	});
 
-	jQuery("select.date_type").live("change", function () {
+	piereg("select.date_type").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("date_type_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery("#datefield_" + id).hide();
+		piereg("#datefield_" + id).hide();
 
-		jQuery("#datepicker_" + id).hide();
+		piereg("#datepicker_" + id).hide();
 
-		jQuery("#datedropdown_" + id).hide();
+		piereg("#datedropdown_" + id).hide();
 
-		jQuery("#icon_div_" + id).hide();
+		piereg("#icon_div_" + id).hide();
 
 		if (val == "datefield") {
 
-			jQuery("#datefield_" + id).show();
+			piereg("#datefield_" + id).show();
 
 		} else if (val == "datepicker") {
 
-			jQuery("#datepicker_" + id).show();
+			piereg("#datepicker_" + id).show();
 
-			jQuery("#icon_div_" + id).show();
+			piereg("#icon_div_" + id).show();
 
 		} else if (val == "datedropdown") {
 
-			jQuery("#datedropdown_" + id).show();
+			piereg("#datedropdown_" + id).show();
 
 		}
 
@@ -624,43 +644,43 @@ function bindButtons() {
 
 	//Change Date Format
 
-	jQuery("select.date_format").live("change", function () {
+	piereg("select.date_format").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("date_format_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val.charAt(0) == "m" && val.charAt(val.length - 1) == "y") {
 
-			jQuery("#dd_" + id).insertBefore(jQuery("#yy_" + id));
+			piereg("#dd_" + id).insertBefore(piereg("#yy_" + id));
 
-			jQuery("#mm_" + id).insertBefore(jQuery("#dd_" + id));
+			piereg("#mm_" + id).insertBefore(piereg("#dd_" + id));
 
-			jQuery("#day_" + id).insertBefore(jQuery("#year_" + id));
+			piereg("#day_" + id).insertBefore(piereg("#year_" + id));
 
-			jQuery("#month_" + id).insertBefore(jQuery("#day_" + id));
+			piereg("#month_" + id).insertBefore(piereg("#day_" + id));
 
 		} else if (val.charAt(0) == "d" && val.charAt(val.length - 1) == "y") {
 
-			jQuery("#mm_" + id).insertBefore(jQuery("#yy_" + id));
+			piereg("#mm_" + id).insertBefore(piereg("#yy_" + id));
 
-			jQuery("#dd_" + id).insertBefore(jQuery("#mm_" + id));
+			piereg("#dd_" + id).insertBefore(piereg("#mm_" + id));
 
-			jQuery("#month_" + id).insertBefore(jQuery("#year_" + id));
+			piereg("#month_" + id).insertBefore(piereg("#year_" + id));
 
-			jQuery("#day_" + id).insertBefore(jQuery("#month_" + id));
+			piereg("#day_" + id).insertBefore(piereg("#month_" + id));
 
 		} else if (val.charAt(0) == "y" && val.charAt(val.length - 1) == "d") {
 
-			jQuery("#mm_" + id).insertBefore(jQuery("#dd_" + id));
+			piereg("#mm_" + id).insertBefore(piereg("#dd_" + id));
 
-			jQuery("#yy_" + id).insertBefore(jQuery("#mm_" + id));
+			piereg("#yy_" + id).insertBefore(piereg("#mm_" + id));
 
-			jQuery("#month_" + id).insertBefore(jQuery("#day_" + id));
+			piereg("#month_" + id).insertBefore(piereg("#day_" + id));
 
-			jQuery("#year_" + id).insertBefore(jQuery("#month_" + id));
+			piereg("#year_" + id).insertBefore(piereg("#month_" + id));
 
 		}
 
@@ -668,91 +688,91 @@ function bindButtons() {
 
 	//Change Time Format
 
-	jQuery("select.time_format").live("change", function () {
+	piereg("select.time_format").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("time_type_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val == "12")
 
-			jQuery("#time_format_field_" + id).show();
+			piereg("#time_format_field_" + id).show();
 
 		else if (val == "24")
 
-			jQuery("#time_format_field_" + id).hide();
+			piereg("#time_format_field_" + id).hide();
 
 	});
 
 	//Change Address Type
 
-	jQuery("select.address_type").live("change", function () {
+	piereg("select.address_type").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("address_type_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val == "International") {
 
-			jQuery("#default_country_div_" + id).show();
+			piereg("#default_country_div_" + id).show();
 
-			jQuery("#address_country_" + id).show();
+			piereg("#address_country_" + id).show();
 
-			jQuery("#state_" + id).show();
+			piereg("#state_" + id).show();
 
-			jQuery("#state_us_" + id).hide();
+			piereg("#state_us_" + id).hide();
 
-			jQuery("#state_canada_" + id).hide();
+			piereg("#state_canada_" + id).hide();
 
-			jQuery("#default_state_div_" + id).hide();
+			piereg("#default_state_div_" + id).hide();
 
 		} else if (val == "United States") {
 
-			jQuery("#default_country_div_" + id).hide();
+			piereg("#default_country_div_" + id).hide();
 
-			jQuery("#address_country_" + id).hide();
+			piereg("#address_country_" + id).hide();
 
-			jQuery("#state_" + id).hide();
+			piereg("#state_" + id).hide();
 
-			jQuery("#state_us_" + id).show();
+			piereg("#state_us_" + id).show();
 
-			jQuery("#state_canada_" + id).hide();
+			piereg("#state_canada_" + id).hide();
 
-			jQuery("#default_state_div_" + id).show();
+			piereg("#default_state_div_" + id).show();
 
-			jQuery(".can_states_" + id).hide();
+			piereg(".can_states_" + id).hide();
 
-			jQuery(".us_states_" + id).show();
+			piereg(".us_states_" + id).show();
 
 		} else if (val == "Canada") {
 
-			jQuery("#default_country_div_" + id).hide();
+			piereg("#default_country_div_" + id).hide();
 
-			jQuery("#address_country_" + id).hide();
+			piereg("#address_country_" + id).hide();
 
-			jQuery("#state_" + id).hide();
+			piereg("#state_" + id).hide();
 
-			jQuery("#state_us_" + id).hide();
+			piereg("#state_us_" + id).hide();
 
-			jQuery("#state_canada_" + id).show();
+			piereg("#state_canada_" + id).show();
 
-			jQuery("#default_state_div_" + id).show();
+			piereg("#default_state_div_" + id).show();
 
-			jQuery(".can_states_" + id).show();
+			piereg(".can_states_" + id).show();
 
-			jQuery(".us_states_" + id).hide();
+			piereg(".us_states_" + id).hide();
 
 		}
 
 		if (document.getElementById("hide_state_" + id).checked) {
 
-			jQuery(".state_div_" + id).hide();
+			piereg(".state_div_" + id).hide();
 
-			jQuery("#default_state_div_" + id).hide();
+			piereg("#default_state_div_" + id).hide();
 
 		}
 
@@ -760,43 +780,43 @@ function bindButtons() {
 
 	//Change Default Country
 
-	jQuery("select.default_country").live("change", function () {
+	piereg("select.default_country").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("default_country_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery("#address_country_" + id + " select").html('<option>' + val + '<option>');
+		piereg("#address_country_" + id + " select").html('<option>' + val + '<option>');
 
 	});
 
 	//Change Name Format 
 
-	jQuery("select.name_format").live("change", function () {
+	piereg("select.name_format").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("name_format", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
 		if (val == "normal") {
 
-			jQuery("#field_label" + id + " label").hide();
+			piereg("#field_label" + id + " label").hide();
 
-			jQuery('#first_name_field input').appendTo('#first_name_field');
+			piereg('#first_name_field input').appendTo('#first_name_field');
 
-			jQuery('#last_name_field input').appendTo('#last_name_field');
+			piereg('#last_name_field input').appendTo('#last_name_field');
 
 		} else if (val == "extended") {
 
-			jQuery("#field_label" + id + " label").show();
+			piereg("#field_label" + id + " label").show();
 
-			jQuery('#first_name_field label').appendTo('#first_name_field');
+			piereg('#first_name_field label').appendTo('#first_name_field');
 
-			jQuery('#last_name_field label').appendTo('#last_name_field');
+			piereg('#last_name_field label').appendTo('#last_name_field');
 
 		}
 
@@ -804,55 +824,55 @@ function bindButtons() {
 
 	//Adding option Display Value
 
-	jQuery("input.select_option_display,input.select_option_value").live("keyup", function () {
+	piereg("input.select_option_display,input.select_option_value").live("keyup", function () {
 
-		changeDropdown(jQuery(this));
-
-	});
-
-	jQuery("input.select_option_checked").live("click", function () {
-
-		changeDropdown(jQuery(this));
+		changeDropdown(piereg(this));
 
 	});
 
-	jQuery(".paypal").live("click", function () {
+	piereg("input.select_option_checked").live("click", function () {
 
-		jQuery("#paypal_button").remove();
-
-		jQuery("#submit_ul").hide();
-
-		jQuery("#submit_ul").after('<ul id="paypal_button"><li class="fields"><div class="fields_options submit_field"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" /></div> <input  name="field[submit][type]" value="paypal" type="hidden" /></li></ul>');
+		changeDropdown(piereg(this));
 
 	});
 
-	jQuery(".submit_button").live("click", function () {
+	piereg(".paypal").live("click", function () {
 
-		jQuery("#paypal_button").remove();
+		piereg("#paypal_button").remove();
 
-		jQuery("#submit_ul").show();
+		piereg("#submit_ul").hide();
 
-	});
-
-	jQuery("ul.controls li a.default").live("click", function () {
-
-		jQuery(this).parent().hide();
+		piereg("#submit_ul").after('<ul id="paypal_button"><li class="fields"><div class="fields_options submit_field"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" /></div> <input  name="field[submit][type]" value="paypal" type="hidden" /></li></ul>');
 
 	});
 
-	jQuery("ul.controls li a.default").each(function () {
+	piereg(".submit_button").live("click", function () {
 
-		var type = jQuery(this).attr("name");
+		piereg("#paypal_button").remove();
+
+		piereg("#submit_ul").show();
+
+	});
+
+	piereg("ul.controls li a.default").live("click", function () {
+
+		piereg(this).parent().hide();
+
+	});
+
+	piereg("ul.controls li a.default").each(function () {
+
+		var type = piereg(this).attr("name");
 
 		if (document.getElementById("default_" + type))
 
-			jQuery(this).parent().hide();
+			piereg(this).parent().hide();
 
 	});
 
 	//Allow only numeric on Length, Rows, Cols, Length Field 
 
-	jQuery(".numeric").live("keydown", function (event) {
+	piereg(".numeric").live("keydown", function (event) {
 
 		if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||
 
@@ -884,17 +904,17 @@ function bindButtons() {
 
 	//Submit Button Properties Icon
 
-	jQuery(".reg_success").live("change", function () {
+	piereg(".reg_success").live("change", function () {
 
-		jQuery(".submit_meta").hide();
+		piereg(".submit_meta").hide();
 
-		jQuery(".reg_success").each(function (index, element) {
+		piereg(".reg_success").each(function (index, element) {
 
-			if (jQuery(this).attr('checked')) {
+			if (piereg(this).attr('checked')) {
 
-				var val = jQuery(this).val();
+				var val = piereg(this).val();
 
-				jQuery(".submit_meta_" + val).show();
+				piereg(".submit_meta_" + val).show();
 
 			}
 
@@ -904,89 +924,89 @@ function bindButtons() {
 
 	//default state
 
-	jQuery(".default_state").live("change", function () {
+	piereg(".default_state").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("can_states_", "");
 
 		id = id.replace("us_states_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery("#state_canada_field_" + id).html('<option>' + val + '</option>');
+		piereg("#state_canada_field_" + id).html('<option>' + val + '</option>');
 
-		jQuery("#state_us_field_" + id).html('<option>' + val + '</option>');
+		piereg("#state_us_field_" + id).html('<option>' + val + '</option>');
 
 	});
 
-	jQuery(".hide_state").live("change", function () {
+	piereg(".hide_state").live("change", function () {
 
-		var id = jQuery(this).attr("id");
+		var id = piereg(this).attr("id");
 
 		id = id.replace("hide_state_", "");
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		if (jQuery(this).attr('checked')) {
+		if (piereg(this).attr('checked')) {
 
-			jQuery(".state_div_" + id).hide();
+			piereg(".state_div_" + id).hide();
 
-			jQuery("#default_state_div_" + id).hide();
+			piereg("#default_state_div_" + id).hide();
 
 		} else {
 
-			var val = jQuery("#address_type_" + id).val();
+			var val = piereg("#address_type_" + id).val();
 
 			if (val == "International") {
 
-				jQuery("#default_country_div_" + id).show();
+				piereg("#default_country_div_" + id).show();
 
-				jQuery("#address_country_" + id).show();
+				piereg("#address_country_" + id).show();
 
-				jQuery("#state_" + id).show();
+				piereg("#state_" + id).show();
 
-				jQuery("#state_us_" + id).hide();
+				piereg("#state_us_" + id).hide();
 
-				jQuery("#state_canada_" + id).hide();
+				piereg("#state_canada_" + id).hide();
 
-				jQuery("#default_state_div_" + id).hide();
+				piereg("#default_state_div_" + id).hide();
 
 			} else if (val == "United States") {
 
-				jQuery("#default_country_div_" + id).hide();
+				piereg("#default_country_div_" + id).hide();
 
-				jQuery("#address_country_" + id).hide();
+				piereg("#address_country_" + id).hide();
 
-				jQuery("#state_" + id).hide();
+				piereg("#state_" + id).hide();
 
-				jQuery("#state_us_" + id).show();
+				piereg("#state_us_" + id).show();
 
-				jQuery("#state_canada_" + id).hide();
+				piereg("#state_canada_" + id).hide();
 
-				jQuery("#default_state_div_" + id).show();
+				piereg("#default_state_div_" + id).show();
 
-				jQuery(".can_states_" + id).hide();
+				piereg(".can_states_" + id).hide();
 
-				jQuery(".us_states_" + id).show();
+				piereg(".us_states_" + id).show();
 
 			} else if (val == "Canada") {
 
-				jQuery("#default_country_div_" + id).hide();
+				piereg("#default_country_div_" + id).hide();
 
-				jQuery("#address_country_" + id).hide();
+				piereg("#address_country_" + id).hide();
 
-				jQuery("#state_" + id).hide();
+				piereg("#state_" + id).hide();
 
-				jQuery("#state_us_" + id).hide();
+				piereg("#state_us_" + id).hide();
 
-				jQuery("#state_canada_" + id).show();
+				piereg("#state_canada_" + id).show();
 
-				jQuery("#default_state_div_" + id).show();
+				piereg("#default_state_div_" + id).show();
 
-				jQuery(".can_states_" + id).show();
+				piereg(".can_states_" + id).show();
 
-				jQuery(".us_states_" + id).hide();
+				piereg(".us_states_" + id).hide();
 
 			}
 
@@ -994,41 +1014,41 @@ function bindButtons() {
 
 	});
 
-	jQuery("#confirm_email").live("change", function () {
+	piereg("#confirm_email").live("change", function () {
 
-		if (jQuery(this).attr('checked')) {
+		if (piereg(this).attr('checked')) {
 
-			jQuery("#confirm_email_label_1").show();
+			piereg("#confirm_email_label_1").show();
 
-			jQuery("#confirm_email_field_1").show();
+			piereg("#confirm_email_field_1").show();
 
 		} else {
 
-			jQuery("#confirm_email_label_1").hide();
+			piereg("#confirm_email_label_1").hide();
 
-			jQuery("#confirm_email_field_1").hide();
+			piereg("#confirm_email_field_1").hide();
 
 		}
 
 	});
 
-	jQuery(".right_menu_heading").parent().find("ul").slideUp();
+	piereg(".right_menu_heading").parent().find("ul").slideUp();
 
 }
 
-jQuery(document).ready(function () {
+piereg(document).ready(function () {
 
 	//Hiding Advanced Options By default	
 
-	jQuery(".fields_main").hide();
+	piereg(".fields_main").hide();
 
 	//Click functions on control
 
-	jQuery(".controls li a").click(function () {
+	piereg(".controls li a").click(function () {
 
-		dragType = jQuery(this).attr("name");
+		dragType = piereg(this).attr("name");
 
-		jQuery(this).parent().addClass("fields");
+		piereg(this).parent().addClass("fields");
 
 		
 
@@ -1060,7 +1080,7 @@ jQuery(document).ready(function () {
 
 			endHtml = '<li class="fields">' + endHtml + '</li>';
 
-			jQuery("#elements").append(endHtml);
+			piereg("#elements").append(endHtml);
 
 			if (dragType == "html") {
 
@@ -1068,7 +1088,7 @@ jQuery(document).ready(function () {
 
 			}
 
-			jQuery(".swap_class").trigger("change");
+			piereg(".swap_class").trigger("change");
 
 			no++;
 
@@ -1086,21 +1106,25 @@ jQuery(document).ready(function () {
 
 	});
 
-	jQuery("form#formeditor").submit(function (e) {
+	piereg("form#formeditor").submit(function (e) {
 
-		jQuery(".field_label").each(function (index, element) {
+		piereg(".field_label").each(function (index, element) {
+			
+			/*if (dragType == "url" || dragType == "aim" || dragType == "yim" || dragType == "jabber"  || dragType == "description")
+			{
+				
+			}*/
 
-			if (jQuery.trim(jQuery(this).val()) == '') {
+			if (piereg.trim(piereg(this).val()) == '') {
 
-				var id = jQuery(this).attr("id");
+				var id = piereg(this).attr("id");
 
 				id = id.replace("label_", "");
 
-				var type = jQuery("#type_" + id).val();
-
-				if(type != "html" )
-
-				jQuery(this).val(type);
+				var type = piereg("#type_" + id).val();
+				
+				if(type != "html")
+					piereg(this).val(type);
 
 			}
 
@@ -1108,15 +1132,15 @@ jQuery(document).ready(function () {
 
 		
 
-		jQuery(".greaterzero").each(function (index, element) 
+		piereg(".greaterzero").each(function (index, element) 
 
 		{
 
-			if (jQuery.trim(jQuery(this).val()) == '' || jQuery.trim(jQuery(this).val()) < 1 || jQuery.trim(jQuery(this).val()) == "0") {
+			if (piereg.trim(piereg(this).val()) == '' || piereg.trim(piereg(this).val()) < 1 || piereg.trim(piereg(this).val()) == "0") {
 
 				
 
-				jQuery(this).val("1");
+				piereg(this).val("1");
 
 			}	
 
@@ -1130,7 +1154,7 @@ jQuery(document).ready(function () {
 
 	//This will handle sorting and after drop changes		
 
-	jQuery("#elements").droppable({
+	piereg("#elements").droppable({
 
 		// accept: ".controls li p",
 
@@ -1154,11 +1178,11 @@ jQuery(document).ready(function () {
 
 				no++;
 
-				jQuery(".swap_class").trigger("change")
+				piereg(".swap_class").trigger("change")
 
 				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
 
-					jQuery('ul.controls li a[name="' + dragType + '"]').parent().hide();
+					piereg('ul.controls li a[name="' + dragType + '"]').parent().hide();
 
 				}
 
@@ -1190,9 +1214,9 @@ jQuery(document).ready(function () {
 
 		stop: function (event, ui) {
 
-			jQuery('.ckeditor').each(function () {
+			piereg('.ckeditor').each(function () {
 
-				var id = jQuery(this).attr("id");
+				var id = piereg(this).attr("id");
 
 				CKEDITOR.replace(id, {});
 
@@ -1208,7 +1232,7 @@ jQuery(document).ready(function () {
 
 	//Selecting and Dragging control from the list
 
-	jQuery(".controls li").draggable({
+	piereg(".controls li").draggable({
 
 		connectToSortable: "#elements",
 
@@ -1222,7 +1246,7 @@ jQuery(document).ready(function () {
 
 	//This will change the html of a control while dragging
 
-	jQuery(".controls li").on("dragstart", function (event, ui) {
+	piereg(".controls li").on("dragstart", function (event, ui) {
 
 		ui.helper.attr("class", "");
 
@@ -1239,15 +1263,15 @@ jQuery(document).ready(function () {
 		if (dragType == "url" || dragType == "aim" || dragType == "yim" || dragType == "jabber"  || dragType == "description")
 
 		{
+			fieldMeta 	  = defaultMeta[dragType];		
 
-			
+			fieldMeta	  = fieldMeta.split("%d%").join(no);
 
 		}
 
 		else
 
 		{
-
 			fieldMeta 	  = defaultMeta[dragType];		
 
 			fieldMeta	  = fieldMeta.split("%d%").join(no);	
@@ -1282,7 +1306,7 @@ jQuery(document).ready(function () {
 
 	//This will change the html of a control while dragging
 
-	jQuery(".controls li").on("drag", function (event, ui) {
+	piereg(".controls li").on("drag", function (event, ui) {
 
 		ui.helper.attr("class", "");	
 
@@ -1302,27 +1326,27 @@ jQuery(document).ready(function () {
 
 });
 
-jQuery(window).load(function () {
+piereg(window).load(function () {
 
-	jQuery("select.date_type").trigger("change");
+	piereg("select.date_type").trigger("change");
 
-	jQuery("select.date_format").trigger("change");
+	piereg("select.date_format").trigger("change");
 
-	jQuery(".calendar_icon").trigger("change");
+	piereg(".calendar_icon").trigger("change");
 
-	jQuery(".swap_class").trigger("change");
+	piereg(".swap_class").trigger("change");
 
-	jQuery(".submit_meta").hide();
+	piereg(".submit_meta").hide();
 
-	jQuery(".reg_success").trigger("change");
+	piereg(".reg_success").trigger("change");
 
-	jQuery("select.address_type").trigger("change");
+	piereg("select.address_type").trigger("change");
 
-	jQuery(".next_button").trigger("change");
+	piereg(".next_button").trigger("change");
 
-	jQuery(".prev_button").trigger("change");
+	piereg(".prev_button").trigger("change");
 
-	//jQuery(".name_format").trigger("change");
+	//piereg(".name_format").trigger("change");
 
 });
 
@@ -1336,7 +1360,7 @@ function fillValues(data, num) //Function to fill meta data
 
 	var mt = "field[" + num + "][type]";
 
-	var maintype = jQuery('*[name="' + mt + '"]').val();
+	var maintype = piereg('*[name="' + mt + '"]').val();
 
 	for (index in field) {
 
@@ -1344,15 +1368,15 @@ function fillValues(data, num) //Function to fill meta data
 
 		var fieldvalue = field[index];
 
-		var fieldtag = jQuery('*[name="' + fieldname + '"]').prop('tagName');
+		var fieldtag = piereg('*[name="' + fieldname + '"]').prop('tagName');
 
-		var fieldtype = jQuery('*[name="' + fieldname + '"]').prop('type');
+		var fieldtype = piereg('*[name="' + fieldname + '"]').prop('type');
 
 		if (fieldtag == "SELECT" || fieldtag == "TEXTAREA" || (fieldtag == "INPUT" && (fieldtype == "text" || fieldtype == "hidden"))) //For textfields , select textareas
 
 		{
 
-			jQuery('*[name="' + fieldname + '"]').val(fieldvalue);
+			piereg('*[name="' + fieldname + '"]').val(fieldvalue);
 
 		} else if (fieldtag == "INPUT" && (fieldtype == "radio" || fieldtype == "checkbox")) //For Radio && checkbox
 
@@ -1360,11 +1384,11 @@ function fillValues(data, num) //Function to fill meta data
 
 			if (fieldvalue != "") {
 
-				jQuery('*[name="' + fieldname + '"][value="' + fieldvalue + '"]').attr('checked', 'checked');
+				piereg('*[name="' + fieldname + '"][value="' + fieldvalue + '"]').attr('checked', 'checked');
 
 			} else {
 
-				jQuery('*[name="' + fieldname + '"]').attr('checked', 'checked');
+				piereg('*[name="' + fieldname + '"]').attr('checked', 'checked');
 
 			}
 
@@ -1388,15 +1412,15 @@ function fillValues(data, num) //Function to fill meta data
 
 				var fieldname = "field[" + num + "][value][]";
 
-				jQuery('input[name="' + fieldname + '"]').eq(a).val(field['value'][a]);
+				piereg('input[name="' + fieldname + '"]').eq(a).val(field['value'][a]);
 
 				var fieldname = "field[" + num + "][display][]";
 
-				jQuery('input[name="' + fieldname + '"]').eq(a).val(field['display'][a]);
+				piereg('input[name="' + fieldname + '"]').eq(a).val(field['display'][a]);
 
 				var fieldname = "field[" + num + "][selected][]";
 
-				jQuery('input[name="' + fieldname + '"]').eq(a).val(a);
+				piereg('input[name="' + fieldname + '"]').eq(a).val(a);
 
 			}
 
@@ -1406,7 +1430,7 @@ function fillValues(data, num) //Function to fill meta data
 
 				var fieldname = "field[" + num + "][selected][]";
 
-				fieldname = jQuery('input[name="' + fieldname + '"]');
+				fieldname = piereg('input[name="' + fieldname + '"]');
 
 				for (a = 0; a < fieldname.length; a++) {
 
@@ -1434,7 +1458,7 @@ function fillValues(data, num) //Function to fill meta data
 
 function createckeditor() {
 
-	jQuery(".ckeditor").ckeditor();
+	piereg(".ckeditor").ckeditor();
 
 }
 
@@ -1444,23 +1468,23 @@ function swapClass(val) {
 
 	if (val == "top") {
 
-		jQuery(".fields_position").addClass("fields_position_top");
+		piereg(".fields_position").addClass("fields_position_top");
 
-		jQuery(".fields_position_top").removeClass("fields_position");
+		piereg(".fields_position_top").removeClass("fields_position");
 
-		jQuery(".label_position").addClass("label_position_top");
+		piereg(".label_position").addClass("label_position_top");
 
-		jQuery(".label_position_top").removeClass("label_position");
+		piereg(".label_position_top").removeClass("label_position");
 
 	} else if (val == "left") {
 
-		jQuery(".fields_position_top").addClass("fields_position");
+		piereg(".fields_position_top").addClass("fields_position");
 
-		jQuery(".fields_position").removeClass("fields_position_top");
+		piereg(".fields_position").removeClass("fields_position_top");
 
-		jQuery(".label_position_top").addClass("label_position");
+		piereg(".label_position_top").addClass("label_position");
 
-		jQuery(".label_position").removeClass("label_position_top");
+		piereg(".label_position").removeClass("label_position_top");
 
 	}
 
@@ -1470,9 +1494,9 @@ function showHideReset()
 
 {
 
-	var val = jQuery("#show_reset").val();
+	var val = piereg("#show_reset").val();
 
-	var elm = jQuery("#reset_btn");
+	var elm = piereg("#reset_btn");
 
 	if(val == 0 )
 

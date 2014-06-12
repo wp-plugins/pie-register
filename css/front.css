@@ -1113,7 +1113,7 @@
 
 }
 
-#passwordStrength,#piereg_passwordStrength
+/*#passwordStrength,#piereg_passwordStrength
 
 {
 
@@ -1133,7 +1133,7 @@
 
 	-webkit-transition: all 500ms;
 
-}
+}*/
 
 .piereg_strength0,.strength0
 
@@ -2342,3 +2342,42 @@ div.piereg_entry-content{
 
 
 /**************************** END REGISTRATION CSS **********************************/
+
+#piereg_passwordStrength{
+	padding :5px 0px;
+	height:auto;
+	margin-top:0px;
+	width:60%;
+	text-align:center;
+	display:block;
+	float:left;
+	transition: all 500ms;
+	-moz-transition: all 500ms;
+	-o-transition: all 500ms;
+	-webkit-transition: all 500ms;
+}
+.widget #piereg_passwordStrength{
+	width:100%;
+}
+.piereg_pass{
+	background: #EEEEEE;
+	border:#D6D6D6 1px solid;
+}
+.piereg_pass_v_week{
+	background: #FFA0A0;
+	border:#F04040 1px solid;
+}
+.piereg_pass_week{
+	background: #FFB78C;
+	border:#FF853C 1px solid;
+}
+.piereg_pass_medium{
+	background: #FFEC8B;
+	border:#FFCC00 1px solid;
+}
+.piereg_pass_strong{
+	background: #C3FF88;
+	border:#8DFF1C 1px solid;
+}
+
+.piereg_submit_button{margin-right:10%;}

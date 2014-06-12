@@ -6,7 +6,7 @@ $piereg = get_option( 'pie_register_2' );
 
 
 
-if( $_POST['notice'] ){
+if(isset($_POST['notice']) && $_POST['notice'] ){
 
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 
@@ -16,7 +16,7 @@ if( $_POST['notice'] ){
 
 ?>
 
-<script type="text/javascript" src="<?php echo plugins_url("../ckeditor/ckeditor.js",__FILE__);?>"></script>
+<script type="text/javascript" src="<?php echo plugins_url("ckeditor/ckeditor.js",dirname(__FILE__));?>"></script>
 
 
 <div id="container">
@@ -122,13 +122,13 @@ if( $_POST['notice'] ){
           <li>
 
             <div class="fields">
-              <label style="width:auto;margin-right:20px;"><?php _e("Send HTML Formate",'piereg');?></label>
+              <label style="width:auto;margin-right:20px;"><?php _e("Send HTML Format",'piereg');?></label>
                 <div class="radio_fields">
                     <input type="radio" id="admin_message_email_formate_yes" name="admin_message_email_formate" value="1" <?php echo ($piereg['admin_message_email_formate'] == "1")? ' checked="checked" ' : '' ?>>
-                    <label for="admin_message_email_formate_yes" style="float:none;">Yes</label>
+                    <label for="admin_message_email_formate_yes" style="float:none;"><?php _e("Yes",'piereg');?></label>
                     &nbsp;&nbsp;
                     <input type="radio" id="admin_message_email_formate_no" name="admin_message_email_formate" value="0" <?php echo ($piereg['admin_message_email_formate'] == "0")? ' checked="checked" ' : '' ?>>
-                    <label for="admin_message_email_formate_no" style="float:none;">No</label>
+                    <label for="admin_message_email_formate_no" style="float:none;"><?php _e("No",'piereg');?></label>
                 </div>
             </div>
 
@@ -226,11 +226,12 @@ if( $_POST['notice'] ){
               
               
 				<script type="text/javascript">
+					var piereg = jQuery.noConflict();
 					CKEDITOR.replace('piereg_text_editor',{removeButtons: 'About'});
-					jQuery(document).ready(function(){
-						jQuery("#replacement_keys").change(function(){
-							CKEDITOR.instances.piereg_text_editor.insertHtml(jQuery(this).val().trim());
-							jQuery(this).val('select');
+					piereg(document).ready(function(){
+						piereg("#replacement_keys").change(function(){
+							CKEDITOR.instances.piereg_text_editor.insertHtml(piereg(this).val().trim());
+							piereg(this).val('select');
 						});
 					});
                 </script>
@@ -242,16 +243,16 @@ if( $_POST['notice'] ){
 
           </li>
 
-        </ul>
-
-        <input name="action" value="pie_reg_update" type="hidden" />
-
-        <input type="hidden" name="admin_email_notification_page" value="1" />
-
-        <p class="submit"><input style="background: #464646;color: #ffffff;border: 0;cursor: pointer;padding: 5px 0px 5px 0px;margin-top: 15px;
-
-min-width: 113px;" class="submit_btn" name="Submit" value="<?php _e('Save Changes','piereg');?>" type="submit" /></p>
-
+        <li>        
+            <div class="fields">
+                <input name="action" value="pie_reg_update" type="hidden" />
+                
+                <input type="hidden" name="admin_email_notification_page" value="1" />
+                
+                <p  class="submit"><input style="background: #464646;color: #ffffff;border: 0;cursor: pointer;padding: 5px 0px 5px 0px;margin-top: 15px;min-width: 113px;" class="submit_btn" name="Submit" value="<?php _e('Save Changes','piereg');?>" type="submit" /></p>
+            </div>
+        </li>
+	</ul>
       </form>
 
     </div>

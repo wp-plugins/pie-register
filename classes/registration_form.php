@@ -42,11 +42,16 @@ class Registration_form extends PieReg_Base
 
 	{
 
+		
 		$data = "";
+		
+		$data .= '<div class="fieldset '.$this->data['form']['css'].'">';
 
 		$data .= '<h2 id="piereg_pie_form_heading">'.$this->data['form']['label'].'</h2>';	
 
-		$data .= '<p id="piereg_pie_form_desc" class="'.$this->addClass("").'" >'.$this->data['form']['desc'].'</p>';		
+		$data .= '<p id="piereg_pie_form_desc" >'.$this->data['form']['desc'].'</p>';		
+		
+		$data .= '</div>';
 
 		return $data;
 
@@ -61,7 +66,6 @@ class Registration_form extends PieReg_Base
 		$data = "";
 
 		$this->name = $this->field['field_name'];
-
 		if($this->field['field_name']=="description")
 
 		{
@@ -74,7 +78,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$data .= '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
+			$data .= '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.(isset($this->field['placeholder'])?$this->field['placeholder']:"").'" type="text" value="'.$this->getDefaultValue().'" />';	
 
 		}	
 
@@ -108,7 +112,7 @@ class Registration_form extends PieReg_Base
 
 	}
 
-	function addPassword()
+	function addPassword($fromwidget)
 
 	{
 
@@ -132,12 +136,12 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$data .= 'onkeyup="passwordStrength(this.value)" ';
+			//$data .= 'onkeyup="passwordStrength(this.value)" ';
 
 		}
 
 		
-
+		
 		$data .= 'id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" />';
 
 				
@@ -156,9 +160,9 @@ class Registration_form extends PieReg_Base
 
 				$topclass = "label_top"; 
 
-			
-
-			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>Confirm Password</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="input_fields validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" />';	
+			$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
+			$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Confirm Password","piereg");
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.$label2.'</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="input_fields validate[required,equals['.$widget.$this->id.']]" placeholder="'.$this->field['placeholder'].'" />';	
 
 			
 
@@ -170,7 +174,7 @@ class Registration_form extends PieReg_Base
 
 	}	
 
-	function addEmail()
+	function addEmail($fromwidget)
 
 	{
 
@@ -199,8 +203,10 @@ class Registration_form extends PieReg_Base
 		
 
 			
+			$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
 
-			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>Confirm E-Mail</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields validate[required,equals['.$this->id.']]">';
+			$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Confirm E-mail","piereg");
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>'.$label2.'</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields validate[required,equals['.$widget.$this->id.']]">';
 
 			
 
@@ -218,7 +224,7 @@ class Registration_form extends PieReg_Base
 
 	{
 
-		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().' type="file"  />';	
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  '.$this->addValidation().' type="file" />';
 
 	}
 
@@ -244,7 +250,7 @@ class Registration_form extends PieReg_Base
 
 		$data = "";
 
-		$data .= '<div class="fieldset"><label>'.__("First Name","piereg").'</label>';
+		$data .= '<div class="fieldset"><label>'.__($this->field['label'],"piereg").'</label>';
 
 		$data .= '<input value="'.$this->getDefaultValue('first_name').'" id="'.$this->id.'_firstname" name="first_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  />';				
 
@@ -261,8 +267,8 @@ class Registration_form extends PieReg_Base
 		$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 
 			
-
-		$data .= '<div class="fieldset"><label>'.__("Last Name","piereg").'</label>';
+		$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Last Name","piereg");
+		$data .= '<div class="fieldset"><label>'.$label2.'</label>';
 
 		$data .= '<input value="'.$this->getDefaultValue('last_name').'" id="'.$this->id.'_lastname" name="last_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  /></div>';	
 
@@ -288,7 +294,7 @@ class Registration_form extends PieReg_Base
 
 		
 
-		$data .= '<div class="time"><div class="time_fields"><input value="'.$time_this_values["hh"].'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
+		$data .= '<div class="time"><div class="time_fields"><input value="'.((isset($time_this_values["hh"]))?$time_this_values["hh"]:"").'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
 
 		$this->field['hours'] = FALSE;
 
@@ -296,7 +302,7 @@ class Registration_form extends PieReg_Base
 
 		$this->field['mins'] = TRUE;
 
-		$data .= '<span class="colon">:</span><div class="time_fields"><input value="'.$time_this_values["mm"].'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
+		$data .= '<span class="colon">:</span><div class="time_fields"><input value="'.((isset($time_this_values["mm"]))?$time_this_values["mm"]:"").'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
 
 		$this->field['mins'] = FALSE;
 
@@ -306,7 +312,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$time_format_val = $time_this_values["time_format"];
+			$time_format_val = (isset($time_this_values["time_format"]))?$time_this_values["time_format"]:"";
 
 			$data .= '<div class="time_fields"><select name="'.$this->name.'[time_format]" >
 
@@ -314,13 +320,13 @@ class Registration_form extends PieReg_Base
 
 				$data .=($time_format_val == "am")?'selected=""':'';
 
-				$data .='>AM</option>';
+				$data .='>'.__("AM","piereg").'</option>';
 
 				$data .='<option value="pm"  ';
 
 				$data .=($time_format_val == "pm")?'selected=""':'';
 
-				$data .='>PM</option>
+				$data .='>'.__("PM","piereg").'</option>
 
 			</select></div>';
 
@@ -400,7 +406,7 @@ class Registration_form extends PieReg_Base
 
 					$selected = '';
 
-					if(is_array($this->field['selected']) && in_array($a,$this->field['selected']))
+					if(isset($this->field['selected']) && is_array($this->field['selected']) && in_array($a,$this->field['selected']))
 
 					{
 
@@ -468,7 +474,7 @@ class Registration_form extends PieReg_Base
 
 	{		
 
-		return '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.$field['placeholder'].'" type="text" value="'.$this->getDefaultValue().'" />';	
+		return '<input id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' name="'.$this->name.'"  placeholder="'.((isset($field['placeholder']))?$field['placeholder']:"").'" type="text" value="'.$this->getDefaultValue().'" />';	
 
 	}
 
@@ -508,7 +514,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$data .= '<input value="'.$list_this_values[$c][$b-1].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields"> ';
+					$data .= '<input value="'.((isset($list_this_values[$c][$b-1]))?$list_this_values[$c][$b-1]:"").'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields"> ';
 
 				}
 
@@ -516,7 +522,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$data .= ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/plus.png" onclick="addList('.$this->field['rows'].','.$this->field['id'].');" alt="add" /></div>';		
+					$data .= ' <img src="'.plugins_url('pie-register').'/images/plus.png" onclick="addList('.$this->field['rows'].','.$this->field['id'].');" alt="add" /></div>';		
 
 				}
 
@@ -542,13 +548,13 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$data .= '<input value="'.$list_this_values[$c][$b-1].'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields">';
+					$data .= '<input value="'.((isset($list_this_values[$c][$b-1]))?$list_this_values[$c][$b-1]:"").'" style="width:'.$width.'%;margin-right:2px;" type="text" name="'.$this->name.'['.$c.'][]" class="input_fields">';
 
 				}
 
 				
 
-					$data .= ' <img src="'.get_bloginfo('url').'/wp-content/plugins/pie-register/images/minus.gif" onclick="removeList('.$this->field['rows'].','.$this->field['id'].','.$a.');" alt="add" /></div>';
+					$data .= ' <img src="'.plugins_url('pie-register').'/images/minus.gif" onclick="removeList('.$this->field['rows'].','.$this->field['id'].','.$a.');" alt="add" /></div>';
 
 				
 
@@ -616,7 +622,7 @@ class Registration_form extends PieReg_Base
 
 					
 
-				if(is_array($this->field['selected']) && in_array($a,$this->field['selected']))
+				if(isset($this->field['selected']) && is_array($this->field['selected']) && in_array($a,$this->field['selected']))
 
 					$checked = 'checked="checked"';	
 
@@ -656,7 +662,7 @@ class Registration_form extends PieReg_Base
 
 					$data .= "</label>";
 
-					$data .= '<input '.$checked.' value="'.$this->field['value'][$a].'" type="'.$this->field['type'].'" '.$multiple.' name="'.$this->name.'[]" class="'.$this->addClass("").' radio_fields" '.$this->addValidation().'  >';
+					$data .= '<input '.$checked.' value="'.$this->field['value'][$a].'" type="'.$this->field['type'].'" '.((isset($multiple))?$multiple:"").' name="'.$this->name.'[]" class="'.$this->addClass("").' radio_fields" '.$this->addValidation().'  >';
 
 					
 
@@ -686,23 +692,21 @@ class Registration_form extends PieReg_Base
 
 		$data .= '<div class="address">
 
-		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['address'].'">
+		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['address']))?$address_values['address']:"").'">
 
 		  <label>'.__("Street Address","piereg").'</label>
 
 		</div>';
 
 		
-
-		 if(!$this->field['hide_address2'])
-
+		 //if(!$this->field['hide_address2'])
+		 if(empty($this->field['hide_address2']))
 		 {
-
 		
 
 			$data .= '<div class="address">
 
-			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['address2'].'">
+			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['address2']))?$address_values['address2']:"").'">
 
 			  <label>'.__("Address Line 2","piereg").'</label>
 
@@ -716,7 +720,7 @@ class Registration_form extends PieReg_Base
 
 		  <div class="address2">
 
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['city'].'">
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['city']))?$address_values['city']:"").'">
 
 			<label>'.__("City","piereg").'</label>
 
@@ -726,8 +730,8 @@ class Registration_form extends PieReg_Base
 
 		
 
-		 if(!$this->field['hide_state'])
-
+		 //if(!$this->field['hide_state'])
+		 if(empty($this->field['hide_state']))
 		 {
 
 			 	if($this->field['address_type'] == "International")
@@ -736,7 +740,7 @@ class Registration_form extends PieReg_Base
 
 					$data .= '<div class="address2"  >
 
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['state'].'">
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['state']))?$address_values['state']:"").'">
 
 					<label>'.__("State / Province / Region","piereg").'</label>
 
@@ -816,7 +820,7 @@ class Registration_form extends PieReg_Base
 
 		$data .= ' <div class="address2">
 
-		<input id="zip_'.$this->id.'" name="'.$this->name.'[zip]" type="text" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.$address_values['zip'].'">
+		<input id="zip_'.$this->id.'" name="'.$this->name.'[zip]" type="text" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['zip']))?$address_values['zip']:"").'">
 
 		<label>'.__("Zip / Postal Code","piereg").'</label>
 
@@ -832,7 +836,7 @@ class Registration_form extends PieReg_Base
 
 			 $countries = get_option("pie_countries");
 
-			 $selectedoption = ($address_values['country'])?$address_values['country']:$this->field['default_country'];		 
+			 $selectedoption = (isset($address_values['country']) && $address_values['country'])?$address_values['country']:$this->field['default_country'];		 
 
 			 $options 	= $this->createDropdown($countries,$selectedoption);  
 
@@ -900,7 +904,7 @@ class Registration_form extends PieReg_Base
 
 				  <div class="time_fields">
 
-					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['mm'].'">
+					<input id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'" '.$this->addValidation().' value="'.((isset($date_this_values['date']['mm']))?$date_this_values['date']['mm']:"").'">
 
 					<label>'.__("MM","piereg").'</label>
 
@@ -908,7 +912,7 @@ class Registration_form extends PieReg_Base
 
 				  <div class="time_fields">
 
-					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['dd'].'">
+					<input id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'" '.$this->addValidation().' value="'.((isset($date_this_values['date']['dd']))?$date_this_values['date']['dd']: "").'">
 
 					<label>'.__("DD","piereg").'</label>
 
@@ -916,7 +920,7 @@ class Registration_form extends PieReg_Base
 
 				  <div class="time_fields">
 
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" '.$this->addValidation().' value="'.$date_this_values['date']['yy'].'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" '.$this->addValidation().' value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
 
 					<label>'.__("YYYY","piereg").'</label>
 
@@ -1028,7 +1032,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					 $data .=  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.get_bloginfo("url").'/wp-content/plugins/pie-register/images/calendar.png"  />'; 
+					 $data .=  '<img id="'.$this->id.'_icon" class="calendar_icon" src="'.plugins_url('pie-register').'/images/calendar.png" />'; 
 
 				}
 
@@ -1308,6 +1312,7 @@ class Registration_form extends PieReg_Base
 
 						  else
 
+
 						  $sel = '';	
 
 						  $data .=  '<option value="'.$a.'" '.$sel.'>'.__($a,"piereg").'</option>';
@@ -1376,7 +1381,7 @@ class Registration_form extends PieReg_Base
 
 		}
 
-		return $this->field['default_value'];	
+		return (isset($this->field['default_value']))?$this->field['default_value']:"";
 
 	}
 
@@ -1416,7 +1421,7 @@ class Registration_form extends PieReg_Base
 
 	
 
-		return '<label class="'.$topclass .'" for="'.$this->name.'">'.$this->field['label'].'</label>';		
+		return '<label class="'.$topclass .'" for="'.$this->name.'">'.__($this->field['label'],"piereg").'</label>';		
 
 	}
 
@@ -1424,13 +1429,13 @@ class Registration_form extends PieReg_Base
 
 	{
 
-		$class = $default." ".$this->field['css'];
+		$class = $default." ".(isset($this->field['css'])?$this->field['css']:"");
 
 		
 
 		
 
-		if($this->field['required'])
+		if(isset($this->field['required']) && $this->field['required'])
 
 		{
 
@@ -1442,7 +1447,7 @@ class Registration_form extends PieReg_Base
 
 		
 
-		if($this->field['validation_rule']=="number"  || $this->field['type']=="number")
+		if	((isset($this->field['validation_rule']) && $this->field['validation_rule']=="number" ) || $this->field['type']=="number")
 
 		{
 
@@ -1450,7 +1455,7 @@ class Registration_form extends PieReg_Base
 
 		}
 
-		else if($this->field['validation_rule']=="alphanumeric")
+		else if(isset($this->field['validation_rule']) && $this->field['validation_rule']=="alphanumeric")
 
 		{
 
@@ -1458,7 +1463,7 @@ class Registration_form extends PieReg_Base
 
 		}
 
-		else if($this->field['validation_rule']=="email" || $this->field['type']=="email")
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']  =="email" ) || $this->field['type']=="email")
 
 		{
 
@@ -1466,7 +1471,7 @@ class Registration_form extends PieReg_Base
 
 		}
 
-		else if($this->field['validation_rule']=="website" || $this->field['type']=="website")
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="website") || $this->field['type']=="website")
 
 		{
 
@@ -1474,7 +1479,7 @@ class Registration_form extends PieReg_Base
 
 		}		
 
-		else if($this->field['validation_rule']=="standard" || $this->field['phone_format']=="standard")
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="standard") || (isset($this->field['phone_format']) && $this->field['phone_format']=="standard" ))
 
 		{
 
@@ -1482,7 +1487,7 @@ class Registration_form extends PieReg_Base
 
 		}
 
-		else if($this->field['validation_rule']=="international" || $this->field['phone_format']=="international")
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="international") || (isset($this->field['phone_format']) && $this->field['phone_format']=="international"))
 
 		{
 
@@ -1582,7 +1587,7 @@ class Registration_form extends PieReg_Base
 
 		
 
-		if($this->field['required'] && !empty($this->field['validation_message']))
+		if((isset($this->field['required']) && $this->field['required']) && !empty($this->field['validation_message']))
 
 		{
 
@@ -1593,15 +1598,18 @@ class Registration_form extends PieReg_Base
 		
 
 		
-
-		if($this->field['validation_rule']=="number" || $this->field['type']=="number" || $this->field['validation_rule']=="alphanumeric" || $this->field['validation_rule']=="email" || $this->field['type']=="email" || $this->field['validation_rule']=="website" || $this->field['type']=="website" || $this->field['type']=="phone" || $this->field['type']=="date")
-
+		if(isset($this->field['validation_rule']))
 		{
-
-			$val[] = 'data-errormessage-custom-error="'.$this->field['validation_message'].'"';		
-
-		}		
-
+			if(
+				$this->field['validation_rule']=="number" || 
+				$this->field['type']=="number" || $this->field['validation_rule']=="alphanumeric" || 
+				$this->field['validation_rule']=="email" || $this->field['type']=="email" || 
+				$this->field['validation_rule']=="website" || $this->field['type']=="website" || 
+				$this->field['type']=="phone" || $this->field['type']=="date")
+			{
+				$val[] = 'data-errormessage-custom-error="'.$this->field['validation_message'].'"';		
+			}		
+		}
 		else if($this->field['type']=="time")
 
 		{
@@ -1616,7 +1624,7 @@ class Registration_form extends PieReg_Base
 
 		
 
-		if(sizeof($val) > 0)
+		if(isset($val) && sizeof($val) > 0)
 
 		{
 
@@ -1650,7 +1658,7 @@ class Registration_form extends PieReg_Base
 
 			$data .= '<div id="recaptcha_widget_div">';
 
-		 	require_once('wp-content/plugins/pie-register/recaptchalib.php');		
+		 	require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
 
  			$data .= recaptcha_get_html($publickey);
 
@@ -1667,12 +1675,14 @@ class Registration_form extends PieReg_Base
 	{
 
 		$data = "";
+		
+		$data .= '<div class="fieldset piereg_submit_button">';
 
 		if($this->pages > 1)
 
 		{
 
-			$data .= '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="Previous" />';
+			$data .= '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="'.__("Previous","piereg").'" />';
 
 			$data .= '<input id="pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';						
 
@@ -1710,7 +1720,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$data .= '<input name="pie_submit" type="submit" value="'.$this->field['text'].'" />';	
+			$data .= '<input name="pie_submit" type="submit" value="'.__($this->field['text'],"piereg").'" />';
 
 		}
 
@@ -1718,10 +1728,10 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$data .= '<input name="pie_reset" type="reset" value="'.$this->field['reset_text'].'" />';		
+			$data .= '<input name="pie_reset" type="reset" value="'.__($this->field['reset_text'],"piereg").'" />';
 
 		}
-
+		$data .= '</div>';
 		return $data;
 
 	}
@@ -1766,7 +1776,7 @@ class Registration_form extends PieReg_Base
 
 			{
 
-				$data .= '<input class="pie_prev" name="pie_prev" id="'.$cl.'pie_prev_'.$this->pages.'" type="button" value="'.$this->field['prev_button_text'].'" />';	
+				$data .= '<input class="pie_prev" name="pie_prev" id="'.$cl.'pie_prev_'.$this->pages.'" type="button" value="'.__($this->field['prev_button_text'],"piereg").'" />';	
 
 			}
 
@@ -1830,28 +1840,18 @@ class Registration_form extends PieReg_Base
 			{
 	
 				if ($this->field['type']=="")
-	
 				{
-	
 					continue;
-	
 				}
-	
-				
-	
 				if($this->field['type']=="invitation" && $update["enable_invitation_codes"]=="0")
-	
 				{
-	
-					continue;	
-	
+					continue;
+				}
+				if($this->field['type']=="form"){
+					continue;
 				}
 	
-				
-	
-				
-	
-				$this->name 	= $this->createFieldName($this->field['type']."_".$this->field['id']);
+				$this->name 	= $this->createFieldName($this->field['type']."_".((isset($this->field['id']))?$this->field['id']:""));
 	
 				$this->id 		= $this->name;
 	
@@ -1863,7 +1863,7 @@ class Registration_form extends PieReg_Base
 	
 				{
 	
-					$pie_reg_fieldsa .= $this->addHiddenField();
+					$pie_reg_fields .= $this->addHiddenField();
 	
 					continue;
 	
@@ -1975,13 +1975,13 @@ class Registration_form extends PieReg_Base
 	
 					case 'password' :
 	
-					$pie_reg_fields .= $this->addPassword();
+					$pie_reg_fields .= $this->addPassword($fromwidget);
 	
 					break;
 	
 					case 'email' :
 	
-					$pie_reg_fields .= $this->addEmail();
+					$pie_reg_fields .= $this->addEmail($fromwidget);
 	
 					break;
 	
@@ -2167,14 +2167,21 @@ class Registration_form extends PieReg_Base
 	
 					$pie_reg_fields .=  '<li class="fields pageFields_'.$this->pages.'">';
 	
-					$pie_reg_fields .=  "<div id='password_meter' class='fieldset' ".$style.">";
+					/*$pie_reg_fields .=  "<div id='password_meter' class='fieldset' ".$style.">";
 	
 					$pie_reg_fields .=  '<label id="piereg_passwordDescription">'.__("Password not entered","piereg").'</label>
+					<div id="piereg_passwordStrength" class="piereg_strength0">&nbsp;</div>
+					';
+					
+					$pie_reg_fields .=  "</div>";*/
+					
+					$pie_reg_fields .=  "<div id='password_meter' class='fieldset' ".((isset($style))?$style:"").">";
 	
-					<div id="piereg_passwordStrength" class="piereg_strength0">&nbsp;</div>';
-	
+					$pie_reg_fields .=  '<label style="visibility:hidden;">'.__("Password not entered","piereg").'</label>
+					<div id="piereg_passwordStrength" class="piereg_pass" >'.__("Strength Indicator","piereg").'</div>';
+					
 					$pie_reg_fields .=  "</div>";
-	
+					
 					$pie_reg_fields .=  '</li>';
 	
 				}
@@ -2207,7 +2214,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_Username",__(' Invalid Username','piereg' )));
+			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Username",__('Invalid Username','piereg' )));
 
 		}
 
@@ -2215,7 +2222,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Username_already_exists",__(' Username already exists','piereg' )));
+			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Username_already_exists",__('Username already exists','piereg' )));
 
 		}		
 
@@ -2225,7 +2232,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_Email_address",__(' Invalid E-mail address','piereg' )));
+			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Email_address",__('Invalid E-mail address','piereg' )));
 
 		}
 
@@ -2233,7 +2240,7 @@ class Registration_form extends PieReg_Base
 
 		{
 
-			$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Email_address_already_exists",__(' E-mail address already exists','piereg' )));
+			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Email_address_already_exists",__('E-mail address already exists','piereg' )));
 
 					
 
@@ -2245,23 +2252,20 @@ class Registration_form extends PieReg_Base
 
 			$slug 				= $this->createFieldName($field['type']."_".$field['id']);			
 
-			if($field['type']=="username" || $field['type']=="email"  || $field['type']=="password")
-
-			{
-
-				  $slug  = $this->createFieldName($field['label']);	
-
-			}			
-
-			
-
-			$field_name			= $_POST[$slug];			
+			if($field['type']=="username" || $field['type']=="password"){
+				  $slug  = $this->createFieldName($field['type']);
+			}
+			if($field['type']=="email"){
+				  $slug  = $this->createFieldName("e_mail");
+			}
+			$field_name			= $_POST[$slug];
 
 			$required 			= $field['required'];
 
 			$rule				= $field['validation_rule'];
+			
 
-			$validation_message	= (!empty($field['validation_message']) ? $field['validation_message'] : $field['label'] ." is required.");
+			$validation_message	= (!empty($field['validation_message']) ? $field['validation_message'] : $field['label'] .__(" is required","piereg"));
 
 			
 
@@ -2279,7 +2283,7 @@ class Registration_form extends PieReg_Base
 
 					if(!$result){
 
-						$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_File_Type_In_Profile_Picture",__(' Invalid File Type In Profile Picture.','piereg' )));
+						$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_File_Type_In_Profile_Picture",__('Invalid File Type In Profile Picture.','piereg' )));
 
 					}
 
@@ -2301,7 +2305,7 @@ class Registration_form extends PieReg_Base
 
 					if(!$result){
 
-						$errors->add( $slug , apply_filters("piereg_invalid_file",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_Invalid_File_Type",__(' Invalid File Type','piereg' ))));
+						$errors->add( $slug , apply_filters("piereg_invalid_file",'<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_File_Type",__('Invalid File Type','piereg' ))));
 
 					}
 
@@ -2334,7 +2338,7 @@ class Registration_form extends PieReg_Base
 
 					{
 
-						$errors->add( $slug , apply_filters("piereg_invalid_invitaion_code",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invalid Invitation Code.','piereg' )));		
+						$errors->add( $slug , apply_filters("piereg_invalid_invitaion_code",'<strong>'.ucwords(__('error','piereg')).'</strong>: '.__('Invalid Invitation Code','piereg' )));		
 
 							
 
@@ -2344,7 +2348,7 @@ class Registration_form extends PieReg_Base
 
 					{
 
-						$errors->add( $slug , apply_filters("piereg_invitaion_code_expired",'<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.__(' Invitation Code has expired.','piereg' )));
+						$errors->add( $slug , apply_filters("piereg_invitaion_code_expired",'<strong>'.ucwords(__('error','piereg')).'</strong>: '.__('Invitation Code has expired','piereg' )));
 
 					}
 
@@ -2359,7 +2363,7 @@ class Registration_form extends PieReg_Base
 
 		 		$privatekey		= $settings['captcha_private'] ;
 
-				require_once('wp-content/plugins/pie-register/recaptchalib.php');	
+				require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
 
 				
 
@@ -2377,7 +2381,7 @@ class Registration_form extends PieReg_Base
 
 				if (!$resp->is_valid) {				 
 
-				  $errors->add('recaptcha_mismatch',"<strong>". __(ucwords("Error"),"piereg")."</strong>: ". apply_filters("piereg_Invalid_Security_Code",__("Invalid Security Code.", 'piereg')));
+				  $errors->add('recaptcha_mismatch',"<strong>".ucwords(__('error','piereg'))."</strong>: ". apply_filters("piereg_Invalid_Security_Code",__("Invalid Security Code", 'piereg')));
 
 				}	
 
@@ -2401,7 +2405,7 @@ class Registration_form extends PieReg_Base
 
 				
 
-				$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> " .$validation_message );				
+				$errors->add( $slug , "<strong>". __(ucwords("error"),"piereg").":</strong> " .$validation_message );				
 
 			}
 
@@ -2413,7 +2417,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$errors->add( $slug , "<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__(" field must contain only numbers." ,"piereg")));		
+					$errors->add( $slug , "<strong>". __(ucwords("error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__("Field must contain only numbers" ,"piereg")));		
 
 				}	
 
@@ -2427,7 +2431,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_may__alpha_numeric_characters",__(" field may only contain alpha-numeric characters."  ,"piereg")));		
+					$errors->add( $slug ,"<strong>". __(ucwords("error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_may__alpha_numeric_characters",__("Field may only contain alpha-numeric characters"  ,"piereg")));		
 
 				}	
 
@@ -2441,7 +2445,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_valid_email",__(" field must contain a valid email address." ,"piereg")));		
+					$errors->add( $slug ,"<strong>". __(ucwords("error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_field_must_contain_valid_email",__("Field must contain a valid email address" ,"piereg")));		
 
 				}	
 
@@ -2455,7 +2459,7 @@ class Registration_form extends PieReg_Base
 
 				{
 
-					$errors->add( $slug ,"<strong>". __(ucwords("Error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(" must be a valid URL." ,"piereg")));
+					$errors->add( $slug ,"<strong>". __(ucwords("error"),"piereg").":</strong> ".$field['label'] .apply_filters("piereg_must_be_a_valid_URL",__("Must be a valid URL" ,"piereg")));
 
 				}	
 

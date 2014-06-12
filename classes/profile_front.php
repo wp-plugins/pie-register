@@ -48,7 +48,7 @@ class Profile_front extends PieReg_Base
 
     {
 
-        return "field_" . $this->field['id'];
+        return "field_" . ((isset($this->field['id']))?$this->field['id']:"");
 
     }	
 
@@ -56,7 +56,7 @@ class Profile_front extends PieReg_Base
 
     {
 
-        return '<label for="' . $this->id . '">' . $this->field['label'] . '</label>';
+        return '<label for="' . $this->id . '">' . __($this->field['label'],"piereg") . '</label>';
 
     }   
 
@@ -64,7 +64,7 @@ class Profile_front extends PieReg_Base
 
     {
 
-		$data .= "";
+		$data = "";
 
         if (sizeof($this->data) > 0) 
 
@@ -81,7 +81,7 @@ class Profile_front extends PieReg_Base
 				   foreach ($this->data as $this->field)
 				   {
 
-             	$this->slug = $this->createFieldName($this->field['type']."_".$this->field['id']);
+             	$this->slug = $this->createFieldName($this->field['type']."_".((isset($this->field['id']))?$this->field['id']:""));
 
                 $this->type = $this->field['type'];
 
@@ -95,7 +95,7 @@ class Profile_front extends PieReg_Base
 
 			   
 
-			   if($this->field['show_in_profile']=="0")
+			   if(isset($this->field['show_in_profile']) && $this->field['show_in_profile']=="0")
 
 			   {
 
@@ -159,7 +159,7 @@ class Profile_front extends PieReg_Base
 
 						$this->slug = "first_name";
 
-						$data .= '<tr><td class="fields fields2"><label>'.__("First Name","piereg").'</label>';
+						$data .= '<tr><td class="fields fields2"><label>'.__($this->field['label'],"piereg").'</label>';
 
 						$data .= '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
 
@@ -167,7 +167,7 @@ class Profile_front extends PieReg_Base
 
 						$this->slug = "last_name";
 
-						$data .= '<tr><td class="fields fields2"><label>'.__("Last Name","piereg").'</label>';
+						$data .= '<tr><td class="fields fields2"><label>'.__($this->field['label2'],"piereg").'</label>';
 
 						$data .= '</td><td class="fields"><span>'.$this->getValue().'</span></td></tr>';
 
@@ -183,7 +183,7 @@ class Profile_front extends PieReg_Base
 
 					$data .= '<tr><td class="fields fields2">'.$this->addLabel();
 
-					$imgPath = (trim($this->getValue($this->type, $this->slug)) != "")? $this->getValue($this->type, $this->slug) : plugins_url("../images/userImage.png",__FILE__);
+					$imgPath = (trim($this->getValue($this->type, $this->slug)) != "")? $this->getValue($this->type, $this->slug) : plugins_url("images/userImage.png",dirname(__FILE__));
 
 					$data .= '</td><td class="fields"><img src="'.$imgPath.'" style="max-width:150px;" /></td></tr>';
 

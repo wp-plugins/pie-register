@@ -2,7 +2,7 @@
 
 <ul>
 
-    <li><a href="#paypal_payment_gateway">Paypal (one time subscription)</a></li><!--for Paypal-->
+    <li><a href="#paypal_payment_gateway"><?php _e("Paypal (one time subscription)","piereg") ?></a></li><!--for Paypal-->
 
 <?php //pie_register_Authorize_Net_paymentgateways_menus
 
@@ -20,7 +20,7 @@
 
     $piereg_custom = get_option( 'pie_register_custom' );
 
-    if( $_POST['notice'] ){
+    if(isset($_POST['notice']) && $_POST['notice'] ){
 
         echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 
@@ -132,7 +132,7 @@
 
                 <li><?php _e("Give Your Button a Name. i.e: Website Access fee and Set Price.","piereg"); ?></li>
 
-                <li><?php _e('Click on Step3: Customize advance features (optional) Tab, select "Add advanced variables" checbox and add the following snippet',"piereg"); ?>:
+                <li><?php _e('Click on Step3: Customize advance features (optional) Tab, select "Add advanced variables" checkbox and add the following snippet',"piereg"); ?>:
 
                   <ul>
 
@@ -184,7 +184,7 @@
 
                 </li>
 
-                <li><?php _e("Copy the snippet into any text editor and extract and put the hosted_button_id value (XXXXXXXXXX) into the Above Field","piereg"); ?>.</li>
+                <li><?php _e("Copy the snippet into any text editor, extract and put the hosted_button_id value (XXXXXXXXXX) into the Above Field.","piereg"); ?></li>
 
                 <li><?php _e("Save Changes, You're done!","piereg"); ?></li>
 

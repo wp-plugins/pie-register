@@ -16,11 +16,13 @@ $piereg = get_option( 'pie_register_2' );
 
     
 
-    <p class="pieHelpPara"><?php _e("Welcome to the Pie-Register’s Customer Support Page. Many of your installation and setup related queries are answered in our FAQ’s, Documentation and Forums sections listed below. It is suggested that before you submit a support ticket, please review the mentioned sections for a clear and better understanding of Pie-Register. This will reduce the Support Volume for a timely execution of the Support Process.","piereg"); ?>
-
+    <p class="pieHelpPara">
+    <div style="clear:both;">
+	<?php _e("Welcome to the Pie-Register’s Customer Support Page. Many of your installation and setup related queries are answered in our FAQ’s, Documentation and Forums sections listed below. It is suggested that before you submit a support ticket, please review the mentioned sections for a clear and better understanding of Pie-Register. This will reduce the Support Volume for a timely execution of the Support Process","piereg"); ?>
+	</div>
 <br /><br />
 
-    <?php _e("If you still have any query, feel free to contact us by submitting a support ticket form on the right.","piereg"); ?></p>
+    <?php _e("If you still have any query, feel free to contact us by submitting a support ticket form on the right","piereg"); ?></p>
 
     <div class="pieHelpMenuButtonContaner">
 
@@ -78,9 +80,9 @@ $piereg = get_option( 'pie_register_2' );
 
 		<p class="pieHelpPara">
 
-			<?php _e("Now, you can easily embed your Login/Registration/Forgot Password or Profile forms/page anywhere inside a post, page or custom post type or even into the widgets through the use of shortcodes.","piereg"); ?></p>
+			<?php _e("Now, you can easily embed your Login, Registration, Forgot Password forms and Profile pages anywhere inside a post, page or a custom post type or even into the widgets through the use of following shortcodes","piereg"); ?></p>
 
-			<table id="PR_table_Short_Code" cellspacing="5" cellpadding="5">
+			<table id="PR_table_Short_Code" cellspacing="0" cellpadding="10">
 
 				<tr>
 
@@ -196,7 +198,7 @@ $piereg = get_option( 'pie_register_2' );
 
                 <li>
 
-                    <label for="pieHelpEmail"><?php _e("Email","piereg"); ?></label>
+                    <label for="pieHelpEmail"><?php _e("E-mail","piereg"); ?></label>
 
                     <input id="pieHelpEmail" type="email" required="required" name="input_10" value="<?php echo $current_user->data->user_email; ?>" />
 
@@ -228,7 +230,7 @@ $piereg = get_option( 'pie_register_2' );
 
             <div class="pieHelpTicket_input_fileds">
 
-                <input type="submit" value="Submit" name="submit_support"  />
+                <input type="submit" value="<?php _e("Submit","piereg"); ?>" name="submit_support"  />
 
             </div>
 

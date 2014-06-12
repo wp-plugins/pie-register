@@ -6,7 +6,7 @@ $pie_user_email_types 	= get_option( 'pie_user_email_types' );
 
 
 
-if( $_POST['notice'] ){
+if(isset($_POST['notice']) && $_POST['notice'] ){
 
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 
@@ -50,6 +50,8 @@ if(sizeof($fields ) > 0)
 
 		case 'sectionbreak' :
 
+		case 'html' :
+
 		case 'hidden' :
 
 		case 'captcha' :
@@ -78,11 +80,11 @@ if(sizeof($fields ) > 0)
 
 
 
-<script type="text/javascript" src="<?php echo plugins_url("../ckeditor/ckeditor.js",__FILE__);?>"></script>
+<script type="text/javascript" src="<?php echo plugins_url("ckeditor/ckeditor.js",dirname(__FILE__));?>"></script>
 
 <script type="text/javascript">
-
-jQuery(document).ready(function(e) {
+var piereg = jQuery.noConflict();
+piereg(document).ready(function(e) {
 
 	var types =  document.getElementsByName("user_email_type");
 
@@ -94,13 +96,13 @@ jQuery(document).ready(function(e) {
 
 		var val = document.getElementsByName("user_email_type")[a].value;
 
-		jQuery("."+val).hide();
+		piereg("."+val).hide();
 
 	}
 
 	
 
-	jQuery('input[name="user_email_type"]').click(function(e) {
+	piereg('input[name="user_email_type"]').click(function(e) {
 
 		
 
@@ -110,25 +112,25 @@ jQuery(document).ready(function(e) {
 
 			var val = document.getElementsByName("user_email_type")[a].value;
 
-			jQuery("."+val).hide();
+			piereg("."+val).hide();
 
 		}
 
 		
 
-		var val = jQuery(this).val();
+		var val = piereg(this).val();
 
-		jQuery("."+val).show();
+		piereg("."+val).show();
 
 	});
 
-	jQuery('input[name="user_email_type"]').eq(0).trigger("click"); 
+	piereg('input[name="user_email_type"]').eq(0).trigger("click"); 
 
 	<?php if(isset($_POST['user_email_type']))
 
 	{
 
-	?>jQuery('input[value="<?php echo $_POST['user_email_type']?>"]').eq(0).trigger("click"); <?php 
+	?>piereg('input[value="<?php echo $_POST['user_email_type']?>"]').eq(0).trigger("click"); <?php 
 
 	} 
 
@@ -185,12 +187,11 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
               <label><?php _e("Messsage Type",'piereg') ?></label>
 
               <?php foreach ($pie_user_email_types as $val=>$type) { ?>
-
-              <input id="user_email_type_<?php echo $val?>" name="user_email_type" value="<?php echo $val?>" type="radio" />
-
-              <label style="float:none;" class="pie_msg_type" for="user_email_type_<?php echo $val?>"><?php echo $type?></label>
-
-              &nbsp;&nbsp;
+                    <div class="piereg_message_type_links">
+                      <input id="user_email_type_<?php echo $val?>" name="user_email_type" value="<?php echo $val?>" type="radio" />
+                      <label for="user_email_type_<?php echo $val?>"><?php _e($type,"piereg")?></label>
+                    </div>
+                    <!--&nbsp;&nbsp;-->
 
               <?php } ?>
 
@@ -272,13 +273,13 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
           
           <li class="<?php echo $val?>">
                 <div class="fields">
-                  <label style="width:auto;margin-right:20px;"><?php _e("Send HTML Formate",'piereg');?></label>
+                  <label style="width:auto;margin-right:20px;"><?php _e("Send HTML Format",'piereg');?></label>
                     <div class="radio_fields">
                         <input type="radio" id="<?php echo 'user_formate_email_'.$val; ?>_yes" name="<?php echo 'user_formate_email_'.$val; ?>" value="1" <?php echo ($piereg['user_formate_email_'.$val] == "1")? ' checked="checked" ' : '' ?>>
-                        <label for="<?php echo 'user_formate_email_'.$val; ?>_yes" style="float:none;">Yes</label>
+                        <label for="<?php echo 'user_formate_email_'.$val; ?>_yes" style="float:none;"><?php _e("Yes",'piereg');?></label>
                         &nbsp;&nbsp;
                         <input type="radio" id="<?php echo 'user_formate_email_'.$val; ?>_no" name="<?php echo 'user_formate_email_'.$val; ?>" value="0" <?php echo ($piereg['user_formate_email_'.$val] == "0")? ' checked="checked" ' : '' ?>>
-                        <label for="<?php echo 'user_formate_email_'.$val; ?>_no" style="float:none;">No</label>
+                        <label for="<?php echo 'user_formate_email_'.$val; ?>_no" style="float:none;"><?php _e("No",'piereg');?></label>
                     </div>
                 </div>
           </li>
@@ -321,10 +322,10 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
               <textarea name="user_message_email_<?php echo $val?>" id="piereg_text_editor_<?php echo $val?>" class="ckeditor"><?php echo $piereg['user_message_email_'.$val]?></textarea>
 <script type="text/javascript">
 CKEDITOR.replace('piereg_text_editor_<?php echo $val?>',{removeButtons: 'About'});
-jQuery(document).ready(function(){
-	jQuery("#replacement_keys<?php echo $val?>").change(function(){
-		CKEDITOR.instances.piereg_text_editor_<?php echo $val?>.insertHtml(jQuery(this).val().trim());
-		jQuery(this).val('select');
+piereg(document).ready(function(){
+	piereg("#replacement_keys<?php echo $val?>").change(function(){
+		CKEDITOR.instances.piereg_text_editor_<?php echo $val?>.insertHtml(piereg(this).val().trim());
+		piereg(this).val('select');
 	});
 });
 </script>

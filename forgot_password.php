@@ -221,7 +221,7 @@ function pieResetFormOutput($pie_register = false){
 
 	$forgot_pass_form .='<div id="piereg_login">';
 
-		if (is_array($error) && count($error) == 0 ) {	  
+		if (isset($error) && is_array($error) && count($error) == 0 ) {	  
 
 				$forgot_pass_form .= '<div class="alert alert-successs"><p class="piereg_message">';
 
@@ -229,7 +229,7 @@ function pieResetFormOutput($pie_register = false){
 
 				$forgot_pass_form .= '</p></div>';
 
-		} else if (is_array($error) && count($error) > 0 ) {
+		} else if (isset($error) && is_array($error) && count($error) > 0 ) {
 
 				$forgot_pass_form .= '<div class="alert alert-danger"><p class="piereg_login_error">';
 
@@ -249,7 +249,7 @@ function pieResetFormOutput($pie_register = false){
 
 		<p>
 
-		  <label for="user_login">Username or E-mail:</label>
+		  <label for="user_login">'.__("Username or E-mail:","piereg").'</label>
 
 		  <input type="text" size="20" value="" class="input validate[required]" id="user_login" name="user_login">
 
@@ -277,7 +277,7 @@ function pieResetFormOutput($pie_register = false){
 
 			$forgot_pass_form .= '<p class="forgot_pass_links"> <a href="'.wp_login_url().'">'.__('Log in',"piereg").'</a> | <a href="'.wp_registration_url().'">'.__('Register',"piereg").'</a> </p>
 
-			<p class="forgot_pass_links"><a title="'.__('Are you lost?',"piereg").'" href="'.get_bloginfo("url").'">&larr; '.__('Back to Pie Register',"piereg").'</a></p>';
+			<p class="forgot_pass_links"><a title="'.__('Are you lost?',"piereg").'" href="'.get_bloginfo("url").'">&larr; '.__('Back to',"piereg").' '.get_bloginfo("name").'</a></p>';
 
 		}
 

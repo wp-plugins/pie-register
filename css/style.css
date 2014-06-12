@@ -232,9 +232,9 @@ body{margin:0;}
 
 .notifications .fields .input_fields{width: 62%;border-radius: 3px;border: 1px solid #ababab; height:32px;padding: 0px 5px 0px 5px;margin-top: 7px;margin-bottom: 10px;}
 
-.notifications .fields .input_fields2{width: 262px;border-radius: 3px;border: 1px solid #ababab; height:32px;padding: 0px 5px 0px 5px;margin-top: 7px;margin-bottom: 10px;}
+.notifications .fields .input_fields2{width: 62%;border-radius: 3px;border: 1px solid #ababab; height:32px;padding: 0px 5px 0px 5px;margin-top: 7px;margin-bottom: 10px;}
 
-.notifications .fields select{width: 146px;border-radius: 3px;border: 1px solid #ababab; height:32px;padding: 5px 5px 5px 5px;margin-top: 7px;margin-bottom: 10px;margin-left: 6px;color: #66696b;font-size: 11px;}
+.notifications .fields select{width: 250px;border-radius: 3px;border: 1px solid #ababab; height:32px;padding: 5px 5px 5px 5px;margin-top: 7px;margin-bottom: 10px;margin-left: 6px;color: #66696b;font-size: 11px;}
 
 .notifications .fields img{float:left;}
 
@@ -374,7 +374,7 @@ body{margin:0;}
 
 
 
-.htmldiv{float: left;width: 800px;min-height: 35px;word-wrap: break-word;}
+.htmldiv{float: left;/*width: 800px;*/width: 100%;min-height: 35px;word-wrap: break-word;}
 
 .controls{display:none;}
 
@@ -646,3 +646,7 @@ table.piereg_dash_widget tr td h3{border:none;}
 table.piereg_dash_widget tr td a{display:none;}
 table.piereg_dash_widget tr:nth-child(even){background:#F3F3F3;}
 table.piereg_dash_widget tr:hover{background:#E0E0E0;}
+
+div.piereg_message_type_links{float:left;padding:5px;}
+div.piereg_message_type_links label{float:none !important;}
+div.piereg_message_type_links label:hover{text-decoration:underline;}

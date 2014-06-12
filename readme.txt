@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
 Tested up to: 3.9
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
@@ -57,6 +57,16 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.9
+* Replace all Static URI calls with proper WP URI Functions
+* Added ability to redirect Users to an External URLs on Logout
+* Changed Password Strength Meter wth Wordpress
+* Fixed Several jQuery/Javascript issues and conlicts with several themes and plugins
+* Fixed Invitation Code table upgrading issue (Removed DB Delta)
+* Made Default Fields labels editable both at Form Editor and Translation files
+* Fixed Several Spelling Mistakes
+* Tested with different Plugins and themes
+
 ### 2.0.8
 * Added Paypal IPN verification
 * Added Logout URL with after logout page redirection via Settings page (i.e: http://example.com/?piereg_logout_url=true)

@@ -10,7 +10,7 @@ $meta   = $this->getDefaultMeta();
 
 ?>
 
-<link href="<?php echo plugins_url('..//css/jquery.mCustomScrollbar.css',__FILE__); ?>" rel="stylesheet" />
+<link href="<?php echo plugins_url('css/jquery.mCustomScrollbar.css',dirname(__FILE__)); ?>" rel="stylesheet" />
 
 <style type="text/css">
 
@@ -18,13 +18,13 @@ $meta   = $this->getDefaultMeta();
 
 </style>
 
-<?php /*?><script type="text/javascript" src="<?php echo plugins_url("../js/phpjs.js",__FILE__);?>"></script>
+<?php /*?><script type="text/javascript" src="<?php echo plugins_url("js/phpjs.js",dirname(__FILE__));?>"></script>
 
-<script type="text/javascript" src="<?php echo plugins_url("../js/drag.js",__FILE__);?>"></script><?php */?>
+<script type="text/javascript" src="<?php echo plugins_url("js/drag.js",dirname(__FILE__));?>"></script><?php */?>
 
-<script type="text/javascript" src="<?php echo plugins_url("../ckeditor/ckeditor.js",__FILE__);?>"></script>
+<script type="text/javascript" src="<?php echo plugins_url("ckeditor/ckeditor.js",dirname(__FILE__));?>"></script>
 
-<?php /*?><script src="<?php echo plugins_url('../js/jquery.mCustomScrollbar.min.js',__FILE__); ?>"></script><?php */?>
+<?php /*?><script src="<?php echo plugins_url('js/jquery.mCustomScrollbar.min.js',dirname(__FILE__)); ?>"></script><?php */?>
 
 
 
@@ -33,8 +33,8 @@ $meta   = $this->getDefaultMeta();
 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 
 var hintNum = 0;
-
-jQuery(document).ready(function(e) {
+var piereg = jQuery.noConflict();
+piereg(document).ready(function(e) {
 
     var displayhints = "<?php echo $button['display_hints']?>";
 
@@ -46,15 +46,15 @@ jQuery(document).ready(function(e) {
 
 		{
 
-			jQuery("#hint_"+hintNum).delay(500).fadeIn();	
+			piereg("#hint_"+hintNum).delay(500).fadeIn();	
 
 		}
 
-		jQuery(".thanks").click(function() 
+		piereg(".thanks").click(function() 
 
 		{
 
-			jQuery(this).parents(".fields_hint").delay(100).fadeOut();			
+			piereg(this).parents(".fields_hint").delay(100).fadeOut();			
 
 			hintNum++;
 
@@ -70,7 +70,7 @@ jQuery(document).ready(function(e) {
 
 	{
 
-		jQuery(".fields_hint").remove();	
+		piereg(".fields_hint").remove();	
 
 	}
 
@@ -101,6 +101,8 @@ foreach($meta as $key=>$value)
 </script>
 
 
+
+<div style="width:95%;overflow:hidden;">
 
 <div class="right_section">
 
@@ -186,9 +188,9 @@ foreach($meta as $key=>$value)
 
                 <select class="swap_class" onchange="swapClass(this.value);" name="field[form][label_alignment]">
 
-                  <option <?php if($data['form']['label_alignment']=='top') echo 'selected="selected"';?> value="top">Top</option>
+                  <option <?php if($data['form']['label_alignment']=='top') echo 'selected="selected"';?> value="top"><? _e("Top","piereg"); ?></option>
 
-                  <option <?php if($data['form']['label_alignment']=='left') echo 'selected="selected"';?> value="left">Left</option>
+                  <option <?php if($data['form']['label_alignment']=='left') echo 'selected="selected"';?> value="left"><? _e("Left","piereg"); ?></option>
 
                 </select>
 
@@ -254,7 +256,7 @@ foreach($meta as $key=>$value)
 
        
 
-        <div id="hint_1" class="fields_hint" style="left: 95%;top: 50%; z-index:2;"> <img src="../wp-content/plugins/pie-register/images/left_arrow.jpg" width="45" height="26" align="left">
+        <div id="hint_1" class="fields_hint" style="left: 95%;top: 50%; z-index:2;"> <img src="<?php echo plugins_url('pie-register'); ?>/images/left_arrow.jpg" width="45" height="26" align="left">
 
           <div class="hint_content">
 
@@ -293,7 +295,6 @@ foreach($meta as $key=>$value)
 			$meta   = $this->getDefaultMeta();
 
 			
-
 			foreach($data as $field)
 
 			{				
@@ -321,12 +322,12 @@ foreach($meta as $key=>$value)
             <?php
 
         
-
+		
 		if($field['type'] == "url" || $field['type'] == "aim" || $field['type'] == "yim" || $field['type'] == "jabber" || $field['type'] == "description") 
 
 		{
 
-			$field['type'] = "default";	
+			$field['type'] = "default";
 
 		}
 
@@ -336,13 +337,13 @@ foreach($meta as $key=>$value)
 
 		 //We can't edit default wordpress fields
 
-		  if($field['type']!="default")
+		  //if($field['type']!="default")
 
-          { 
+          //{ 
 
           		echo '<a href="javascript:;" class="edit_btn"></a>';
 
-          } 
+          //} 
 
 		  ?>
 
@@ -381,8 +382,8 @@ foreach($meta as $key=>$value)
 										
 
 					
-
 					switch($field['type']) :
+					
 
 					case 'text' :
 
@@ -395,7 +396,7 @@ foreach($meta as $key=>$value)
 					case 'phone':
 
 					$this->addTextField($field,$field['id']);
-
+					
 					break;
 
 					case 'invitation' :					
@@ -511,7 +512,7 @@ foreach($meta as $key=>$value)
 					break;
 
 					case 'default':
-
+					
 					$this->addDefaultField($field,$field['id']);
 
 					break;
@@ -534,8 +535,7 @@ foreach($meta as $key=>$value)
 
             <?php 
 
-			
-
+			if(isset($meta[$field['type']]))
 			echo str_replace("%d%",$field['id'],$meta[$field['type']]);
 
 		 
@@ -553,7 +553,7 @@ foreach($meta as $key=>$value)
 		}
 
 		?>
-
+		</ul>
           <script type="text/javascript"><?php
 
 		foreach($field_values as $key=>$value)
@@ -592,7 +592,7 @@ foreach($meta as $key=>$value)
 
 	?>
 
-        </ul>
+        
 
       </fieldset>
 
@@ -770,7 +770,7 @@ foreach($meta as $key=>$value)
 
 	  ?> 
 
-      <input type="submit" style="float: right;margin-right:85px;" class="button button-primary button-large" name="pie_form"  value="Save Changes">
+      <input type="submit" style="float: right;margin-right:85px;" class="button button-primary button-large" name="pie_form"  value="<?php _e("Save Changes",'piereg');?>">
 
     </form>
 
@@ -780,7 +780,7 @@ foreach($meta as $key=>$value)
 
    
 
-         <div id="hint_0" style="top: 135px;margin-left: -271px;position: fixed;float:right;" class="fields_hint"> <img src="../wp-content/plugins/pie-register/images/right_arrow.jpg" width="45" height="26" align="right">
+         <div id="hint_0" style="top: 135px;margin-left: -271px;position: fixed;float:right;" class="fields_hint"> <img src="<?php echo plugins_url('pie-register'); ?>/images/right_arrow.jpg" width="45" height="26" align="right">
 
           <div class="hint_content">
 
@@ -881,5 +881,7 @@ foreach($meta as $key=>$value)
     </ul>
 
   </div>
+
+</div>
 
 </div>

@@ -409,6 +409,7 @@ class PieReg_Base
 
 		$update['after_login']				= ($current['after_login'])?$current['after_login']:-1;
 		$update['alternate_logout']				= ($current['alternate_logout'])?$current['alternate_logout']:-1;
+		$update['alternate_logout_url']				= ($current['alternate_logout'])?$current['alternate_logout_url']:"";
 
 		$update['support_license'] 			= ($current['support_license'])?$current['support_license']:"";
 
@@ -600,6 +601,8 @@ class PieReg_Base
 		
 
 		$fields[1]['label'] 			= ($current_fields[1]['label'])?$current_fields[1]['label']:__("E-mail","piereg");
+		
+		$fields[1]['label2'] 			= ($current_fields[1]['label2'])?$current_fields[1]['label2']:__("Confirm E-mail","piereg");
 
 		$fields[1]['type'] 				= ($current_fields[1]['type'])?$current_fields[1]['type']:"email";
 
@@ -626,6 +629,8 @@ class PieReg_Base
 		
 
 		$fields[2]['label'] 			= ($current_fields[2]['label'])?$current_fields[2]['label']:__("Password","piereg");
+		
+		$fields[2]['label2'] 			= ($current_fields[2]['label2'])?$current_fields[2]['label2']:__("Confirm Password","piereg");
 
 		$fields[2]['type'] 				= ($current_fields[2]['type'])?$current_fields[2]['type']:"password";
 
@@ -667,7 +672,9 @@ class PieReg_Base
 
 			$fields[$num]['type'] 			= "name";
 
-			$fields[$num]['label'] 			= __("First Name","piereg");	
+			$fields[$num]['label'] 			= __("First Name","piereg");
+
+			$fields[$num]['label2'] 		= __("Last Name","piereg");
 
 			$fields[$num]['field_name'] 	= "first_name";			
 
@@ -903,9 +910,9 @@ class PieReg_Base
 
 		$codetable=$prefix."code";
 
-		//$wpdb->query("CREATE TABLE ".$codetable."(`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");
+		$wpdb->query("CREATE TABLE ".$codetable."(`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`code_usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");
 
-		$create_ctable_sql = "CREATE TABLE $codetable (
+		/*$create_ctable_sql = "CREATE TABLE $codetable (
 
 			  id mediumint(9) NOT NULL AUTO_INCREMENT,
 
@@ -927,9 +934,9 @@ class PieReg_Base
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		dbDelta( $create_ctable_sql );
+		dbDelta( $create_ctable_sql );*/
 
-		/*
+		
 
 		$status = $wpdb->get_results("SHOW COLUMNS FROM ".$codetable."");
 
@@ -939,7 +946,7 @@ class PieReg_Base
 
 		{
 
-			if(trim(strtolower($val->Field)) == "usage")
+			if(trim(strtolower($val->Field)) == "code_usage")
 
 			{
 
@@ -953,9 +960,9 @@ class PieReg_Base
 
 		{
 
-			$wpdb->query("alter table ".$codetable." add column `usage` int(11) NULL");
+			$wpdb->query("alter table ".$codetable." add column `code_usage` int(11) NULL");
 
-		}*/
+		}
 
 		
 
@@ -1013,15 +1020,37 @@ class PieReg_Base
 
 		
 
-		$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
+		/*$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';*/
+		
+	
+		$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Username" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
+		
+		
+		$structure["default"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div></div></div>';
+		
+		$structure["aim"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="AIM" id="label_%d%" class="input_fields field_label"></div></div></div>';
+		
+		
+		$structure["url"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" value="Website" class="input_fields field_label"></div></div></div>';
+
+		
+		
+		$structure["yim"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" value="Yahoo IM" class="input_fields field_label"></div></div></div>';
+
+		
+		
+		$structure["description"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" value="About Yourself" class="input_fields field_label"></div></div></div>';
+
+		
+		
+		$structure["jabber"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Jabber / Google Talk" id="label_%d%" class="input_fields field_label"></div></div></div>';
+		
+
+		$structure["password"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Password" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confirm Password" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_meter_%d%">'.__("Show Strength Meter","piereg").'</label><select class="show_meter" name="field[%d%][show_meter]" id="show_meter_%d%" class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 
 		
 
-		$structure["password"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">Placeholder</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_meter_%d%">'.__("Show Strength Meter","piereg").'</label><select class="show_meter" name="field[%d%][show_meter]" id="show_meter_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
-
-		
-
-			$structure['email']	= '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main">  <div class="advance_options_fields">        <input type="hidden" value="1" name="field[%d%][required]">    <input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]">    <div class="advance_fields"> <label for="desc_%d%">'.__("Description","piereg").'</label> <textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea>    </div>    <div class="advance_fields"> <label for="confirm_email_%d%">'.__("Confirm E-Mail","piereg").'</label> <input name="field[%d%][confirm_email]" id="confirm_email" value="%d%" type="checkbox" class="checkbox_fields">    </div> <div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div>   <div class="advance_fields"> <label for="validation_message_%d%">'.__("Validation Message","piereg").'</label> <input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields">    </div>    <div class="advance_fields"> <label for="css_%d%">'.__("CSS Class Name","piereg").'</label> <input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields">    </div>  </div>  </div>';
+			$structure['email']	= '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="E-mail" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confrim E-mail" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="confirm_email_%d%">'.__("Confirm E-Mail","piereg").'</label><input name="field[%d%][confirm_email]" id="confirm_email" value="%d%" type="checkbox" class="checkbox_fields"></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
 
 		
 
@@ -1031,11 +1060,11 @@ class PieReg_Base
 
 		
 
-		$structure["dropdown"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields  sel_options_%d%"><label for="display_%d%">'.__("Display Value","piereg").'</label><input type="text" name="field[%d%][display][]" id="display_%d%" class="input_fields character_fields select_option_display"><label for="value_%d%">'.__("Value","piereg").'</label><input type="text" name="field[%d%][value][]" id="value_%d%" class="input_fields character_fields select_option_value"><label>'.__("Checked","piereg").'</label><input type="radio" value="0" id="check_%d%" name="field[%d%][selected][]" class="select_option_checked"><a style="color:white" href="javascript:;" onclick="addOptions(%d%,\'radio\',jQuery(this));">+</a><a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="jQuery(this).parent().remove();">x</a></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"> <label for="list_type_%d%">'.__("List Type","piereg").'</label><select name="field[%d%][list_type]" id="list_type_%d%"><option>'.__("None","piereg").'</option><option value="country">'.__("Country","piereg").'</option><option value="us_states">'.__("US States","piereg").'</option><option value="can_states">'.__("Canada States","piereg").'</option> </select></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+		$structure["dropdown"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields  sel_options_%d%"><label for="display_%d%">'.__("Display Value","piereg").'</label><input type="text" name="field[%d%][display][]" id="display_%d%" class="input_fields character_fields select_option_display"><label for="value_%d%">'.__("Value","piereg").'</label><input type="text" name="field[%d%][value][]" id="value_%d%" class="input_fields character_fields select_option_value"><label>'.__("Checked","piereg").'</label><input type="radio" value="0" id="check_%d%" name="field[%d%][selected][]" class="select_option_checked"><a style="color:white" href="javascript:;" onclick="addOptions(%d%,\'radio\',jQuery(this));">+</a><!--<a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="jQuery(this).parent().remove();">x</a>--></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"> <label for="list_type_%d%">'.__("List Type","piereg").'</label><select name="field[%d%][list_type]" id="list_type_%d%"><option>'.__("None","piereg").'</option><option value="country">'.__("Country","piereg").'</option><option value="us_states">'.__("US States","piereg").'</option><option value="can_states">'.__("Canada States","piereg").'</option> </select></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 
 		
 
-		$structure["multiselect"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields  sel_options_%d%"><label for="display_%d%">'.__("Display Value","piereg").'</label><input type="text" name="field[%d%][display][]" id="display_%d%" class="input_fields character_fields select_option_display"><label for="value_%d%">'.__("Value","piereg").'</label><input type="text" name="field[%d%][value][]" id="value_%d%" class="input_fields character_fields select_option_value"><label>'.__("Checked","piereg").'</label><input type="checkbox" value="0" id="check_%d%" name="field[%d%][selected][]" class="select_option_checked"><a style="color:white" href="javascript:;" onclick="addOptions(%d%,\'checkbox\',jQuery(this));">+</a><a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="jQuery(this).parent().remove();">x</a></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"> <label for="list_type_%d%">'.__("List Type","piereg").'</label><select name="field[%d%][list_type]" id="list_type_%d%"><option>'.__("None","piereg").'</option><option value="country">'.__("Country","piereg").'</option><option value="us_states">'.__("US States","piereg").'</option><option value="can_states">'.__("Canada States","piereg").'</option></select></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+		$structure["multiselect"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields  sel_options_%d%"><label for="display_%d%">'.__("Display Value","piereg").'</label><input type="text" name="field[%d%][display][]" id="display_%d%" class="input_fields character_fields select_option_display"><label for="value_%d%">'.__("Value","piereg").'</label><input type="text" name="field[%d%][value][]" id="value_%d%" class="input_fields character_fields select_option_value"><label>'.__("Checked","piereg").'</label><input type="checkbox" value="0" id="check_%d%" name="field[%d%][selected][]" class="select_option_checked"><a style="color:white" href="javascript:;" onclick="addOptions(%d%,\'checkbox\',jQuery(this));">+</a><!--<a style="color:white;font-size: 13px;margin-left: 2px;" href="javascript:;" onclick="jQuery(this).parent().remove();">x</a>--></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"> <label for="list_type_%d%">'.__("List Type","piereg").'</label><select name="field[%d%][list_type]" id="list_type_%d%"><option>'.__("None","piereg").'</option><option value="country">'.__("Country","piereg").'</option><option value="us_states">'.__("US States","piereg").'</option><option value="can_states">'.__("Canada States","piereg").'</option></select></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 
 		
 
@@ -1052,9 +1081,10 @@ class PieReg_Base
 		
 
 		$structure["html"] 			= '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><textarea rows="8" id="htmlbox_%d%" class="ckeditor" name="field[%d%][html]" cols="16"></textarea></div></div></div>';
-
 		
-
+		/*$structure["html"] 			= '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><textarea rows="8" id="htmlbox_%d%" class="piereg_html_editor_field" name="field[%d%][html]" cols="16"></textarea></div></div></div>';*/
+		
+		
 		$structure["sectionbreak"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div></div></div>';
 
 		
@@ -1065,7 +1095,7 @@ class PieReg_Base
 
 		
 
-		$structure['name']	= '<input type="hidden" value="First Name" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"><div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+		$structure['name']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="First Name" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Last Name" id="label2_%d%" class="input_fields field_label2"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 
 		
 
@@ -1229,8 +1259,8 @@ class PieReg_Base
 
 		
 
-		$user_url				= $user->user_url ;
-
+		$user_url				= $user->user_url;
+		
 		$user_aim				= get_user_meta( $user->ID, 'aim' );
 
 		$user_yim				= get_user_meta( $user->ID, 'yim' );
@@ -1292,8 +1322,8 @@ class PieReg_Base
 
 		$keys 	= array("%user_login%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" ,"%invitation_code%","%pending_payment_url%","%blogname_url%","%user_ip%","%user_pass%");
 
-		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name[0],$last_name[0],$user_url[0],$user_aim[0],$user_yim[0],$user_jabber[0],$user_biographical_nfo[0], $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass);
-		
+		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name[0],$last_name[0],$user_url,$user_aim[0],$user_yim[0],$user_jabber[0],$user_biographical_nfo[0], $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass);
+
 		$return_text = str_replace($keys,$values,$text);
 		return $return_text;
 
@@ -1555,7 +1585,7 @@ class PieReg_Base
 
 		if( $wp_version < 3.5 )			
 
-		echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.5 and up. You are currently using WordPress v.', 'piereg').$wp_version.". The plugin may not work as expected.</strong> </p></div>";
+		echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.5 and up. You are currently using WordPress.', 'piereg').$wp_version.". ".__("The plugin may not work as expected.","piereg")."</strong> </p></div>";
 
 		
 
@@ -1639,7 +1669,7 @@ class PieReg_Base
 
 			{
 
-				$piereg = get_option("pie_register");
+				$piereg = get_option("pie_register_2");
 
 				$piereg['support_license'] = "";
 
@@ -1702,8 +1732,8 @@ class PieReg_Base
 			?>
 
 			<script tyle="text/javascript">
-
-                jQuery(document).ready(function(){
+				var piereg = jQuery.noConflict();
+                piereg(document).ready(function(){
 
                     if(sessionStorage.getItem("dissmiss_notice") != "abc")
 
@@ -1711,7 +1741,7 @@ class PieReg_Base
 
 						var dismiss_notice = '<div class="error updated" id="pie_dismiss_error"><a style="float:right;cursor:pointer;" id="pie_dismiss_close_btn">X</a><p><?php echo __($desmiss_notice, 'piereg'); ?></p></div>';
 
-						jQuery("#pie_dismiss_error_show").html(dismiss_notice);
+						piereg("#pie_dismiss_error_show").html(dismiss_notice);
 
 						sessionStorage.setItem("dissmiss_notice","false");
 
@@ -1719,11 +1749,11 @@ class PieReg_Base
 
 					
 
-                    jQuery("#pie_dismiss_close_btn").click(function(){
+                    piereg("#pie_dismiss_close_btn").click(function(){
 
                         sessionStorage.setItem("dissmiss_notice","abc");
 
-                        jQuery("#pie_dismiss_error").fadeOut();
+                        piereg("#pie_dismiss_error").fadeOut();
 
                     });
 
@@ -1795,15 +1825,15 @@ class PieReg_Base
 
 		$pie_reg = get_option('pie_register_2');
 
-		if(	
+		if(
 
-			($pie_reg['enable_authorize_net']	 	== 1 and trim($pie_reg['piereg_authorize_net_api_id'])	 	!= "") or
+			(isset($pie_reg['enable_authorize_net']) && $pie_reg['enable_authorize_net']	 	== 1 and trim($pie_reg['piereg_authorize_net_api_id'])	 	!= "") or
 
-			($pie_reg['enable_2checkout'] 			== 1 and trim($pie_reg['piereg_2checkout_api_id']) 			!= "") or
+		(isset($pie_reg['enable_2checkout']) && $pie_reg['enable_2checkout'] == 1 and trim($pie_reg['piereg_2checkout_api_id']) != "")or
 
-			($pie_reg['enable_PaypalExpress'] 		== 1 and trim($pie_reg['PaypalExpress_Username']) 		!= "")		or
+		(isset($pie_reg['enable_PaypalExpress']) && $pie_reg['enable_PaypalExpress'] == 1 and trim($pie_reg['PaypalExpress_Username']) != "") or
 
-			($pie_reg['enable_Skrill'] 		== 1 and trim($pie_reg['Skrill_Username']) 		!= "") /*or
+		(isset($pie_reg['enable_Skrill']) && $pie_reg['enable_Skrill'] == 1 and trim($pie_reg['Skrill_Username']) != "") /*or
 
 			($pie_reg['enable_paypal'] 			== 1 and trim($pie_reg['paypal_butt_id'])				!= "")*/
 
@@ -1966,6 +1996,8 @@ class PieReg_Base
 		$update['after_login']				= -1;
 		
 		$update['alternate_logout']			= -1;
+		
+		$update['alternate_logout_url']			= -1;
 
 		$update['support_license'] 			= "";
 
@@ -2128,10 +2160,17 @@ class PieReg_Base
 	function piereg_logout_url($url,$redirect)
 	{
 		$options = get_option("pie_register_2");
-		$piereg_after_redirect_page = get_permalink($options['alternate_logout']);
+		if($options['alternate_logout_url'] != ""){
+			$redirect = $options['alternate_logout_url'];
+		}
+		else{
+			if(intval($options['alternate_logout']) > 0 ){
+				$redirect = get_permalink($options['alternate_logout']);
+			}else{
+				$redirect = home_url();
+			}
+		}
 		
-		if($options['alternate_logout'] > 0)
-			$redirect = $piereg_after_redirect_page;
 		if(empty($redirect))
 			$redirect = home_url();
 		
@@ -2181,7 +2220,6 @@ class PieReg_Base
 	
 
 	function pie_profile_pictures_upload($user_id,$field,$field_slug){
-
 		global $errors;
 
 		$errors = new WP_Error();
@@ -2216,11 +2254,11 @@ class PieReg_Base
 
 				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
 
-				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
+				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name)){
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));
 
-					/*$_POST['error'] = ('<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));*/
+					/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));*/
 
 				}else{
 
@@ -2234,9 +2272,9 @@ class PieReg_Base
 
 			}else{
 
-				$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));
+				$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));
 
-				/*$_POST['error'] = ('<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));*/
+				/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));*/
 
 			}
 
@@ -2286,7 +2324,7 @@ class PieReg_Base
 
 					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 
-						$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 
 					}else{
 
@@ -2298,9 +2336,9 @@ class PieReg_Base
 
 				}else{
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));
 
-					/*$_POST['error'] = ('<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));*/
+					/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));*/
 
 				}
 
@@ -2324,7 +2362,7 @@ class PieReg_Base
 
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 
 				}else{
 

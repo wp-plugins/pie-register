@@ -204,7 +204,7 @@ class Profile_admin extends PieReg_Base
 
 		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
 
-		$imgPath = (trim($val) != "")? $val : plugins_url("../images/userImage.png",__FILE__);
+		$imgPath = (trim($val) != "")? $val : plugins_url("images/userImage.png",dirname(__FILE__));
 
 		$data .= '<br /><img src="'.$imgPath.'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />';
 
@@ -868,13 +868,13 @@ class Profile_admin extends PieReg_Base
 
             if ((!isset($field_name) || empty($field_name)) && $required) {
 
-                $errors->add($this->slug, '<strong>'.__(ucwords('Error'),'piereg').'</strong>: ' . $validation_message);
+                $errors->add($this->slug, '<strong>'.ucwords(__('error','piereg')).'</strong>: ' . $validation_message);
 
             } else if ($rule == "number") {
 
                 if (!is_numeric($field_name)) {
 
-                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__(' field must contain only numbers.','piereg' )));
+                    $errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$this->field['label'] .apply_filters("piereg_field_must_contain_only_numbers",__(' field must contain only numbers.','piereg' )));
 
 			    }
 
@@ -882,7 +882,7 @@ class Profile_admin extends PieReg_Base
 
                 if (!preg_match("/^([a-z0-9])+$/i", $field_name)) {
 
-                   	$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_field_may_only_contain_alpha_numeric_characters",__(' field may only contain alpha-numeric characters.','piereg' )));
+                   	$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$this->field['label'] .apply_filters("piereg_field_may_only_contain_alpha_numeric_characters",__(' field may only contain alpha-numeric characters.','piereg' )));
 
                 }
 
@@ -890,7 +890,7 @@ class Profile_admin extends PieReg_Base
 
                 if (!filter_var($field_name, FILTER_VALIDATE_EMAIL)) {
 
-                    $errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'].apply_filters("piereg_field_must_contain_a_valid_email_address",__(' field must contain a valid email address.','piereg' )));
+                    $errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$this->field['label'].apply_filters("piereg_field_must_contain_a_valid_email_address",__(' field must contain a valid email address.','piereg' )));
 
                 }
 
@@ -898,7 +898,7 @@ class Profile_admin extends PieReg_Base
 
                 if (!filter_var($field_name, FILTER_VALIDATE_URL)) {                   
 
-					$errors->add( $slug , '<strong>'.__(ucwords('Error'),'piereg').'</strong>: '.$this->field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(' must be a valid URL.','piereg' )));
+					$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$this->field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(' must be a valid URL.','piereg' )));
 
                 }
 
@@ -1082,7 +1082,7 @@ class Profile_admin extends PieReg_Base
 
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 
 				}else{
 
@@ -1094,7 +1094,7 @@ class Profile_admin extends PieReg_Base
 
 			}else{
 
-				$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_invalid_profile_picture",__('Invalid profile picture','piereg' )));
+				$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_profile_picture",__('Invalid profile picture','piereg' )));
 
 			}
 
@@ -1144,7 +1144,7 @@ class Profile_admin extends PieReg_Base
 
 					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 
-						$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 
 					}else{
 
@@ -1158,7 +1158,7 @@ class Profile_admin extends PieReg_Base
 
 				else{
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Invlid_upload_file",__('Invalid upload file.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invlid_upload_file",__('Invalid upload file.','piereg' )));
 
 				}
 
@@ -1180,7 +1180,7 @@ class Profile_admin extends PieReg_Base
 
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 
-					$errors->add( $field_slug , '<strong>'.__(ucwords('error'),'piereg').'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 
 				}else{
 

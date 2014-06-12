@@ -19,7 +19,7 @@ $newpasspageLock = 0;
 
 
 
-			if($_GET['payment'] == "success")
+			if(isset($_GET['payment']) && $_GET['payment'] == "success")
 
 			{
 
@@ -29,7 +29,7 @@ $newpasspageLock = 0;
 
 				unset($fields);
 
-			}elseif($_GET['payment'] == "cancel"){
+			}elseif(isset($_GET['payment']) && $_GET['payment'] == "cancel"){
 
 				/******************************************************/
 				/*$user_id 		= intval(base64_decode($_GET['pay_id']));
@@ -107,10 +107,7 @@ $newpasspageLock = 0;
 			elseif ( 'activate' == $_GET['action'] )
 
 			{
-
 				$unverified = get_users(array('meta_key'=> 'hash','meta_value' => $_GET['activation_key']));
-
-				
 
 				if(sizeof($unverified )==1)
 
@@ -166,6 +163,7 @@ $newpasspageLock = 0;
 		
 						wp_mail($user_email, $subject, $message , $headers);
 						
+						/////////// END THANK YOU E-MAIL //////////
 						/*************************************/
 						
 						$login_success = '<strong>'.ucwords(__("success","piereg")).'</strong>: '.apply_filters("piereg_your_account_is_now_active",__("Your account is now active","piereg"));	
@@ -176,11 +174,29 @@ $newpasspageLock = 0;
 
 					{
 
-						 $login_error = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.apply_filters("piereg_invalid_activation_key",__("Invalid activation key","piereg","piereg"));
+						 $login_error = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.apply_filters("piereg_invalid_activation_key",__("Invalid activation key","piereg"));
 
 					}
 
-				}		
+				}else{
+					$user_name = mysql_real_escape_string($_GET['id']);
+					$user = get_userdatabylogin($user_name);
+					if($user){
+						$user_meta = get_user_meta( $user->ID, 'active');
+						if(isset($user_meta[0]) && $user_meta[0] == 1){
+							$login_warning = '<strong>'.ucwords(__("warning","piereg")).'</strong>: '.apply_filters("piereg_canelled_your_registration",__("You are already activate","piereg"));
+							unset($user_meta);
+							unset($user_name);
+							unset($user);
+						}
+						else{
+							$login_error = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.apply_filters("piereg_invalid_activation_key",__("Invalid activation key","piereg"));
+						}
+					}
+					else{
+						$login_error = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.apply_filters("piereg_invalid_activation_key",__("You are block","piereg"));
+					}
+				}
 
 				
 
@@ -286,15 +302,15 @@ $newpasspageLock = 0;
 
 		
 
-		if($_POST['success'] != "")
+		if(isset($_POST['success']) && $_POST['success'] != "")
 
 			$form_data .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
 
-		if($_POST['error'] != "")
+		if(isset($_POST['error']) && $_POST['error'] != "")
 
 			$form_data .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';	
 
-if ( ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspageLock == 0) ){
+if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspageLock == 0) ){
 
 	$form_data .= '
 
@@ -354,7 +370,7 @@ if ( ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspag
 
 			<label for="user_login">'.__("Username","piereg").'</label>
 
-			<input placeholder="Username" type="text" size="20" value="" class="input validate[required]" id="user_login" name="log">
+			<input placeholder="'.__("Username","piereg").'" type="text" size="20" value="" class="input validate[required]" id="user_login" name="log">
 
 		</p>
 
@@ -362,7 +378,7 @@ if ( ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspag
 
 			<label for="user_pass">'.__("Password","piereg").'</label>
 
-			<input placeholder="Password" type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
+			<input placeholder="'.__("Password","piereg").'" type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
 
 		</p>';
 
@@ -386,7 +402,7 @@ if ( ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspag
 
 		<p class="submit">
 
-			<input type="submit" value="Log In" class="button button-primary button-large" id="wp-submit" name="wp-submit">
+			<input type="submit" value="'.__("Log In","piereg").'" class="button button-primary button-large" id="wp-submit" name="wp-submit">
 
 			<input type="hidden" value="'.admin_url().'" name="redirect_to">
 
@@ -406,11 +422,11 @@ if ( ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspag
 
 	
 
-		<?php if($pagenow == 'wp-login.php'  ){
+		<?php if(isset($pagenow) && $pagenow == 'wp-login.php' ){
 
 			$form_data .= '
 
-			<p id="backtoblog"><a title="'.__("Are you lost?","piereg").'" href="'.bloginfo("url").'">&larr;'.__(" Back to ".get_bloginfo("name"),"piereg").'</a></p>';
+			<p id="backtoblog"><a title="'.__("Are you lost?","piereg").'" href="'.bloginfo("url").'">&larr;'.__(" Back to","piereg").' '.get_bloginfo("name").'</a></p>';
 
 		} 
 
