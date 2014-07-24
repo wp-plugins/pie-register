@@ -4,18 +4,18 @@ Plugin Name: Pie Register
 Plugin URI: http://genetechsolutions.com/pie-register.html
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
-
 Author: Genetech Solutions
-Version: 2.0.9
+Version: 2.0.10
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
 See readme.txt
 */
-$dir_path = dirname(__FILE__);
-define('PIEREG_DIR_NAME',$dir_path);
+
+$piereg_dir_path = dirname(__FILE__);
+define('PIEREG_DIR_NAME',$piereg_dir_path);
 if(!defined('PIEREG_DB_VERSION'))
-	define('PIEREG_DB_VERSION','2.0.9');
+	define('PIEREG_DB_VERSION','2.0.10');
 
 define('LOG_FILE', '.ipn_results.log');
 define('SSL_P_URL', 'https://www.paypal.com/cgi-bin/webscr');
@@ -26,14 +26,23 @@ function pr_licenseKey_errors()
 	do_action("pr_licenseKey_errors");
 }
 global $pie_success,$pie_error,$pie_error_msg,$pie_suucess_msg, $pagenow,$action,$profile,$errors;
-require_once($dir_path.'/dash_widget.php');
-require_once($dir_path.'/classes/base.php');
-require_once($dir_path.'/classes/profile_admin.php');
-require_once($dir_path.'/classes/profile_front.php');
-require_once($dir_path.'/classes/registration_form.php');
-require_once($dir_path.'/classes/edit_form.php');
-require_once($dir_path.'/widget.php');
+global $piereg_math_captcha_register,$piereg_math_captcha_register_widget,$piereg_math_captcha_login,$piereg_math_captcha_login_widget,$piereg_math_captcha_forgot_pass,$piereg_math_captcha_forgot_pass_widget;
+	
+$piereg_math_captcha_register = false;
+$piereg_math_captcha_register_widget = false;
+$piereg_math_captcha_login = false;
+$piereg_math_captcha_login_widget = false;
+$piereg_math_captcha_forgot_pass = false;
+$piereg_math_captcha_forgot_pass_widget = false;
 
+
+require_once(PIEREG_DIR_NAME.'/dash_widget.php');
+require_once(PIEREG_DIR_NAME.'/classes/base.php');
+require_once(PIEREG_DIR_NAME.'/classes/profile_admin.php');
+require_once(PIEREG_DIR_NAME.'/classes/profile_front.php');
+require_once(PIEREG_DIR_NAME.'/classes/registration_form.php');
+require_once(PIEREG_DIR_NAME.'/classes/edit_form.php');
+require_once(PIEREG_DIR_NAME.'/widget.php');
 if( !class_exists('PieRegister') ){
 class PieRegister extends PieReg_Base{
 	//public static $instance;
@@ -65,7 +74,6 @@ class PieRegister extends PieReg_Base{
 		$errors = new WP_Error();
 		//LOCALIZATION
 		load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/');
-
 		add_action('wp_ajax_get_meta_by_field', array($this,'getMeta'));
 		
 		
@@ -120,11 +128,8 @@ class PieRegister extends PieReg_Base{
 			
 		add_action("Add_payment_option",		array($this,"Add_payment_option"));
 		add_action("add_payment_method_script", array($this,"add_payment_method_script"));
-
 		add_action("add_select_payment_script",	 array($this,"add_select_payment_script"));
 		add_action("get_payment_content_area",	 array($this,"get_payment_content_area"));
-		
-		//	$this->install_settings();
 		
 		add_action("show_icon_payment_gateway",	array($this,"show_icon_payment_gateway"));
 		add_action("check_enable_social_site_method",	array($this,"check_enable_social_site_method_func"));
@@ -136,11 +141,15 @@ class PieRegister extends PieReg_Base{
 		/*update update_invitation_code form ajax*/
 		add_action( 'wp_ajax_pireg_update_invitation_code', array($this,'pireg_update_invitation_code_cb_url' ));
 		add_action( 'wp_ajax_nopriv_pireg_update_invitation_code', array($this,'pireg_update_invitation_code_cb_url' ));
-		add_action( 'admin_enqueue_scripts' ,array($this,'pie_admin_enqueu_scripts') );
+		add_action( 'admin_enqueue_scripts' ,array($this,'pie_admin_menu_style_enqueu') );
 		////FRONT END SCRIPTS
 		add_action('wp_enqueue_scripts',array($this,'pie_frontend_enqueu_scripts'));
 		add_action('wp_head',array($this,'pie_frontend_ajaxurl'));
 		
+	}
+	function pie_admin_menu_style_enqueu(){
+		wp_register_style( 'pie_menu_style_css', plugins_url("/css/piereg_menu_style.css",__FILE__),false,'2.0', "all" );
+		wp_enqueue_style( 'pie_menu_style_css' );
 	}
 	
 	function piereg_register_scripts(){
@@ -151,21 +160,16 @@ class PieRegister extends PieReg_Base{
 		wp_register_script('pie_mCustomScrollbar_js',plugins_url("/js/jquery.mCustomScrollbar.min.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_mousewheel_js',plugins_url("/js/jquery.mousewheel.min.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_sidr_js',plugins_url("/js/jquery.sidr.min.js",__FILE__),'jquery','2.0',false);
-		wp_register_script('pie_validationEngine_js',plugins_url("/js/jquery.validationEngine-en.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_phpjs_js',plugins_url("/js/phpjs.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_registermain_js',plugins_url("/js/pie-register-main.js",__FILE__),'jquery','2.0',false);
-		wp_register_script('pie_password_checker_js',plugins_url("/js/pie_password_checker.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_regs_js',plugins_url("/js/pie_regs.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_tooltip_js',plugins_url("/js/tooltip.js",__FILE__),'jquery','2.0',false);
-		wp_register_script('pie_validation_js',plugins_url("/js/validation.js",__FILE__),'jquery','2.0',false);
+		wp_register_script('pie_validation_js',plugins_url("/js/piereg_validation.js",__FILE__),'jquery','2.0',false);
 		
 		/////////////////////////////////////////////////
 		wp_register_style( 'pie_jqueryui_css', plugins_url("/css/jquery-ui.css",__FILE__),false,'2.0', "all" );
-		wp_register_style( 'pie_calendarcontrol_css', plugins_url("/css/CalendarControl.css",__FILE__),false,'2.0', "all" );
 		wp_register_style( 'pie_front_css', plugins_url("/css/front.css",__FILE__),false,'2.0', "all" );
-		//wp_register_style( 'pie_', plugins_url("/css/CalendarControl.js",__FILE__),false,'2.0', "all" );
 		wp_register_style( 'pie_mCustomScrollbar_css', plugins_url("/css/jquery.mCustomScrollbar.css",__FILE__),false,'2.0', "all" );
-		wp_register_style( 'pie_menu_style_css', plugins_url("/css/piereg_menu_style.css",__FILE__),false,'2.0', "all" );
 		wp_register_style( 'pie_style_css', plugins_url("/css/style.css",__FILE__),false,'2.0', "all" );
 		wp_register_style( 'pie_tooltip_css', plugins_url("/css/tooltip.css",__FILE__),false,'2.0', "all" );
 		wp_register_style( 'pie_validation_css', plugins_url("/css/validation.css",__FILE__),false,'2.0', "all" );
@@ -234,7 +238,9 @@ class PieRegister extends PieReg_Base{
 												 '<?php _e("* Invalid Date or Date Format","piereg");?>',
 												 '<?php _e("Expected Format: ","piereg");?>',
 												 '<?php _e("mm/dd/yyyy hh:mm:ss AM|PM or ","piereg");?>',
-												 '<?php _e("yyyy-mm-dd hh:mm:ss AM|PM","piereg");?>'
+												 '<?php _e("yyyy-mm-dd hh:mm:ss AM|PM","piereg");?>',
+												 '<?php _e("* Invalid Username","piereg");?>',
+												 '<?php _e("* Invalid File","piereg");?>'
 												 );
 		</script>
         <?php
@@ -243,24 +249,20 @@ class PieRegister extends PieReg_Base{
 	function pie_frontend_enqueu_scripts(){
 		
 		$this->print_multi_lang_script_vars();
-		wp_enqueue_style( 'pie_jqueryui_css' );
-		wp_enqueue_style( 'pie_front_css' );
-		wp_enqueue_style( 'pie_validation_css' );
-		wp_enqueue_style( 'pie_calendarcontrol_css' );
+		wp_enqueue_style('pie_front_css');
+		wp_enqueue_style('pie_validation_css');
 		
 		////////////////////////////////////////////
 		wp_deregister_script('jquery-ui-core');
 		wp_register_script('jquery-ui-core', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js',array('jquery'),'1.10.4',false);
-		wp_enqueue_script( 'jquery-ui-core' );	
+		wp_enqueue_script('jquery-ui-core');
 		wp_enqueue_script('jquery-ui-datepicker');	
 		wp_enqueue_script("pie_validation_js");
-		wp_enqueue_script("pie_validationEngine_js");
 		wp_enqueue_script("pie_calendarcontrol_js");
 		
-		wp_enqueue_script( 'password-strength-meter' );
+		wp_enqueue_script('password-strength-meter');
 		wp_enqueue_script("pie_datepicker_js" );
 		
-		//add_action("wp_head",array($this,"addUrl"));
 	}
 	function pie_frontend_ajaxurl(){
 		?>
@@ -284,14 +286,16 @@ class PieRegister extends PieReg_Base{
 		<?php
 		$this->print_multi_lang_script_vars();
 		wp_enqueue_style('pie_jqueryui_css');
-		wp_enqueue_style('pie_calendarcontrol_css');
 		wp_enqueue_style( 'pie_mCustomScrollbar_css' );
-		wp_enqueue_style( 'pie_menu_style_css' );
+		
 		wp_enqueue_style( 'pie_style_css' );
 		wp_enqueue_style('pie_tooltip_css');
 		wp_enqueue_style('pie_validation_css');
 		
 		////////////////////////////////////////////
+		wp_deregister_script('jquery');
+		wp_register_script('jquery', plugins_url("/js/jquery.js",__FILE__),'','2.0.0',false);
+		wp_enqueue_script( 'jquery' );
 		
 		wp_enqueue_script( 'jquery-ui-core' );	
 		wp_enqueue_script('pie_calendarcontrol_js');	
@@ -300,10 +304,8 @@ class PieRegister extends PieReg_Base{
 		wp_enqueue_script("pie_mCustomScrollbar_js");
 		wp_enqueue_script("pie_mousewheel_js" );
 		wp_enqueue_script( 'pie_sidr_js' );	
-		wp_enqueue_script('pie_validationEngine_js');	
 		wp_enqueue_script("pie_phpjs_js");
 		wp_enqueue_script("pie_registermain_js");
-		wp_enqueue_script("pie_password_checker_js");
 		wp_enqueue_script("pie_regs_js" );
 		wp_enqueue_script("pie_tooltip_js" );
 		wp_enqueue_script("pie_validation_js" );
@@ -334,12 +336,11 @@ class PieRegister extends PieReg_Base{
    		 if ( $file != plugin_basename( __FILE__ ))
             return $links;
 		
-		$links[] = '<a href="'. get_admin_url(null, 'admin.php?page=pie-general-settings') .'">General Settings</a>';   		
+		$links[] = '<a href="'. get_admin_url(null, 'admin.php?page=pie-general-settings') .'">'.(__("General Settings","piereg")).'</a>';   		
    		return $links;
 	}
 	function pie_main()
 	{
-		
 		$pie_plugin_db_version = get_option('piereg_plugin_db_version');
 		if($pie_plugin_db_version != PIEREG_DB_VERSION){
 			$this->install_settings();
@@ -391,14 +392,6 @@ class PieRegister extends PieReg_Base{
 			
 		//PAYPAL VALIDATION
 		$this->ValidPUser();
-		////$text = "ValidPUser";
-		//$this->text();
-		
-		/*if($theaction == "payment_success")
-			$this->payment_success_cancel_after_register("payment=success");
-			
-		if($theaction == "payment_cancel")
-			$this->payment_success_cancel_after_register("payment=cancel&pay_id=".$_GET['paypal']);*/
 		
 		#Save Settings
 		if( isset($_POST['action']) && $_POST['action'] == 'pie_reg_update' )
@@ -408,15 +401,11 @@ class PieRegister extends PieReg_Base{
 		
 		add_filter('allow_password_reset',array($this,'checkUserAllowedPassReset'),20,2);
 		
-		#Delete User after grace Period
-		//$this->deleteUsers();
 		
 		#Reset Settings to default
 		if( isset($_POST['piereg_default_settings']) )
 		{
 			$this->piereg_default_settings();
-			/*$this->uninstall_settings();
-			$this->install_settings();*/
 		}
 		
 		#Admin Verify Users
@@ -436,7 +425,11 @@ class PieRegister extends PieReg_Base{
 			$this->AdminDeleteUnvalidated();	
 		
 		//Blocking wp admin for registered users
-		if(($pagenow == 'wp-login.php' && $option['block_wp_login']==1) && ($option['alternate_login']  && $theaction != 'logout'))
+		if(
+		   ($pagenow == 'wp-login.php' && $option['block_wp_login']==1) && 
+		   ($option['alternate_login']  && $theaction != 'logout') && 
+		   (!isset($_REQUEST['interim-login']))
+		   )
 		{
 			if($theaction=="register")
 			{
@@ -454,7 +447,9 @@ class PieRegister extends PieReg_Base{
 		//Blocking access of users to default pages if redirect is on 
 		if((is_user_logged_in() && $pagenow == 'wp-login.php') && ($option['redirect_user']==1   && $theaction != 'logout'))
 		{
-			$this->afterLoginPage();			
+			if(!isset($_REQUEST['interim-login'])){
+				$this->afterLoginPage();
+			}
 		}
 		//
 		if(trim($pagenow) == "profile.php" && $option['block_WP_profile']==1 )
@@ -468,14 +463,11 @@ class PieRegister extends PieReg_Base{
 			}
 		}
 		
-		//Blocking wp admin for registered users
-		/*if($option['subscriber_login']==0)
-			$this->block_wp_admin();*/
 			
-		if(isset($_POST['log']) && isset($_POST['pwd']))	
+		if(isset($_POST['log']) && isset($_POST['pwd'])){
 		 	$this->checkLogin();
-		//else if(isset($_POST['log']) && isset($_POST['reset_pass']))
-			//$this->resetPassword();	
+		}
+		
 		else if(isset($_POST['pie_submit']))	
 			$this->check_register_form();
 			
@@ -483,21 +475,11 @@ class PieRegister extends PieReg_Base{
 		{
 			$this->renew_account();
 		}
-		/*else if(isset($_POST['pie_submit_authorize']))	
-		{
-			do_action('check_register_form_AuthorizeDotNet');
-		}*/
 		
 		// if the user is on the login page, then let the game begin
 		if ($pagenow == 'wp-login.php' && $theaction != 'logout'){
 			add_action('login_init',array($this,'pieregister_login'),1);
-			//$this->pieregister_login();
 		}
-					
-		//else if($theaction=="ipn_success")
-			//$this->validate_ipn();
-			//$this->processPostPayment();
-			
 		//OImport Export Section
 		if(isset($_POST['pie_fields_csv']) || isset($_POST['pie_meta_csv'])){
 			$this->generateCSV();
@@ -521,7 +503,6 @@ class PieRegister extends PieReg_Base{
 			}
 		}
 		
-		//$this->subscriber_show_admin_bar();
 		if(
 			isset($_POST['invitaion_code_bulk_option']) and isset($_POST['btn_submit_invitaion_code_bulk_option']) and isset($_POST['select_invitaion_code_bulk_option']) and $_POST['invitaion_code_bulk_option'] != "" and $_POST['btn_submit_invitaion_code_bulk_option'] != ""
 		  )
@@ -556,7 +537,7 @@ class PieRegister extends PieReg_Base{
 		{
 			$this->subscriber_show_admin_bar();// show/hide admin bar
 		}
-		if($option['block_wp_login']){
+		if( $option['block_wp_login'] ){
 			add_filter( 'login_url', array($this,'pie_login_url'),88888,1);
 			add_filter( 'lostpassword_url', array($this,'pie_lostpassword_url'),88888,1);
 			add_filter( 'register_url', array($this,'pie_registration_url'),88888,1);
@@ -574,29 +555,23 @@ class PieRegister extends PieReg_Base{
 			update_option("pie_register_2",$new_options);
 		}
 		
-		/*echo get_permalink($option['alternate_logout']);
-		echo "<br />";
-		echo wp_logout_url(wp_login_url());
-		echo "<br />";
-		$piereg_logout_url = explode("?",wp_logout_url(get_permalink($option['alternate_logout'])));
-		$piereg_logout_url = $this->pie_modify_custom_url(site_url(),"piereg_logout_url=true&".$piereg_logout_url[1]);
-		echo $piereg_logout_url;
-		die("<br /><br />END");*/
 		if($option['show_custom_logo'] == 1){
-			if($option['custom_logo_url'] != "")
-				add_action( 'login_enqueue_scripts', array($this,'piereg_login_logo'));
-				
+			
+			if(trim($option['custom_logo_url']) != ""){
+				add_action('login_enqueue_scripts', array($this,'piereg_login_logo'));
+			}
 			add_filter( 'login_headertitle',  array($this,'piereg_login_logo_url_title' ));
 			add_filter( 'login_headerurl',  array($this,'piereg_login_logo_url' ));
 		}
 		
 		add_action( 'wp_footer',  array($this,'print_in_footer' ));
-	
 	}
 	
 	function print_in_footer(){
+		echo '<div class="pieregWrapper" style="display:none;">';
 		echo "<iframe id='CalendarControlIFrame' src='javascript:false;' frameBorder='0' scrolling='no'></iframe>";
 		echo "<div id='CalendarControl'></div>";
+		echo "</div>";
 	}
 	private function show_invitaion_code_user(){
 		global $errors,$wpdb;
@@ -718,7 +693,9 @@ class PieRegister extends PieReg_Base{
         $is_post_edit_page = in_array(basename($_SERVER['PHP_SELF']), array('post.php', 'page.php', 'page-new.php', 'post-new.php'));
         if(!$is_post_edit_page)
             return $context;
-        $out = '<a href="#TB_inline?width=480&inlineId=select_pie_form" class="thickbox" id="add_pie_form" title="' . __("Add Pie Register Form", 'piereg') . '"><img src="'.plugins_url('pie-register').'/images/form-icon.png" alt="' . __("Add Pie Register Form", 'piereg') . '" /></a>';
+        //$out = '<a href="#TB_inline?width=480&inlineId=select_pie_form" class="thickbox" id="add_pie_form" title="' . __("Add Pie Register Form", 'piereg') . '"><img src="'.plugins_url('pie-register').'/images/form-icon.png" alt="' . __("Add Pie Register Form", 'piereg') . '" /></a>';
+		
+		$out = '<a href="#TB_inline?width=480&inlineId=select_pie_form" class="thickbox button" id="add_pie_form" title="' . __("Add Pie Register Form", 'piereg') . '" ><span style="background: url('.plugins_url('pie-register').'/images/form-icon.png); background-repeat: no-repeat; background-position: left bottom;" class="wp-media-buttons-icon"></span> '.__("Add Form","piereg").'</a>';
         return $context . $out;
     }
 	function checkLoginPage()
@@ -741,9 +718,7 @@ class PieRegister extends PieReg_Base{
                     alert("<?php _e("Please select a form", "piereg") ?>");
                     return;
                 }
-
                
-
                 window.send_to_editor(form_id);
             }
         </script>
@@ -762,6 +737,7 @@ class PieRegister extends PieReg_Base{
                             <option value="[pie_register_form]"><?php _e("Registration Form","piereg") ?></option>
                             <option value="[pie_register_login]"><?php _e("Login Form","piereg") ?></option>
                             <option value="[pie_register_forgot_password]"><?php _e("Forgot Password Form","piereg") ?></option>
+                            <option value="[pie_register_profile]"><?php _e("Profile Page","piereg") ?></option>
                             
                         </select> <br/>
                         
@@ -801,118 +777,196 @@ class PieRegister extends PieReg_Base{
 	function checkLogin()
 	{
 		global $errors, $wp_session;
-		$errors = new WP_Error();			
+		$errors = new WP_Error();
+		$option = get_option('pie_register_2');
 		if(empty($_POST['log']) || empty($_POST['pwd']))
 		{
 			$errors->add('login-error',apply_filters("piereg_Invalid_username_or_password",__('Invalid username or password.','piereg')));
 		}
 		else
 		{
-			$creds = array();
-			$creds['user_login'] 	= $_POST['log'];
-			$creds['user_password'] = $_POST['pwd'];
-			$creds['remember'] 		= $_POST['rememberme'];
-			if(isset($_POST['social_site']) and $_POST['social_site'] == "true" )
-			{
-				require_once( ABSPATH . WPINC . '/user.php' );
-				require_once( ABSPATH . WPINC . '/pluggable.php' );
-				wp_set_auth_cookie($_POST['user_id_social_site']);
-				$user = get_userdata($_POST['user_id_social_site']);
-			}
-			else
-			{
-				$user = wp_signon( $creds, false );
-			}
-			//$this->check_user_activation();
-			if ( is_wp_error($user))
-			{
-				$user_login_error = $user->get_error_message();
-				if(strpos(strip_tags($user_login_error),'Invalid username',5) > 6)
-				{
-					$user_login_error = apply_filters('pie_invalid_username_password_msg_txt','<strong>'.ucwords(__("error","piereg")).'</strong>: '.__("Invalid username","piereg").'. <a href="'.$this->pie_lostpassword_url().'" title="'.__("Password Lost and Found","piereg").'">'.__("Lost your password?","piereg").'</a>');
-				}else if(strpos(strip_tags($user_login_error),'password you entered',9) > 10)
-				{
-					$user_login_error = apply_filters('pie_invalid_user_password_msg_txt','<strong>'.ucwords(__("error","piereg")).'</strong>: '.__("The password you entered for the username","piereg").' <strong>'.$_POST['log'].'</strong> '.__("is incorrect","piereg").'. <a href="'.$this->pie_lostpassword_url().'" title="'.__("Password Lost and Found","piereg").'">'.__("Lost your password?","piereg").'</a>');
-				}
-				$errors->add('login-error',apply_filters("piereg_login_error",$user_login_error));
-			}
-			else
-			{
+			$error_found = 0;
+			if($option['capthca_in_login'] == 1){
+				$settings  		=  get_option("pie_register_2");
+				$privatekey		= $settings['captcha_private'] ;
+				require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
 				
-				if(in_array("administrator",(array)$user->roles)){
-					//wp_redirect($this->get_redirect_url_pie(admin_url()));
-					
-					if(isset($_GET['redirect_to']) and $_GET['redirect_to'] != ""){
-						wp_redirect($_GET['redirect_to']);
-						exit;
+				$resp = recaptcha_check_answer ($privatekey,
+												$_SERVER["REMOTE_ADDR"],
+												$_POST["recaptcha_challenge_field"],
+												$_POST["recaptcha_response_field"]);
+				
+				if (!$resp->is_valid) {
+					$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
+					$error_found++;
+				}
+			}
+			elseif($option['capthca_in_login'] == 2){
+				
+				if(isset($_POST['piereg_math_captcha_login']))//Login form in Page
+				{
+					$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_Login_form'];
+					$piereg_cookie_array = explode(",",$piereg_cookie_array);
+					$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
+					$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
+					$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
+					if( ($cookie_result1 == $cookie_result2) && ($cookie_result3 == $_POST['piereg_math_captcha_login'])){
 					}
-					
-					wp_safe_redirect(admin_url());
-					exit;
+					else{
+						$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
+						$error_found++;
+					}
+				}
+				elseif(isset($_POST['piereg_math_captcha_login_widget']))//Login form in widget
+				{
+					$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_Login_form_widget'];
+					$piereg_cookie_array = explode(",",$piereg_cookie_array);
+					$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
+					$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
+					$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
+					if( ($cookie_result1 == $cookie_result2) && ($cookie_result3 == $_POST['piereg_math_captcha_login_widget'])){
+					}
+					else{
+						$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
+						$error_found++;
+					}
+				}else{
+					$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
+					$error_found++;
+				}
+			}
+			if($error_found == 0){
+				$creds = array();
+				$creds['user_login'] 	= $_POST['log'];
+				$creds['user_password'] = $_POST['pwd'];
+				$creds['remember'] 		= (isset($_POST['rememberme']))?$_POST['rememberme']:"";
+				if(isset($_POST['social_site']) and $_POST['social_site'] == "true" )
+				{
+					require_once( ABSPATH . WPINC . '/user.php' );
+					require_once( ABSPATH . WPINC . '/pluggable.php' );
+					wp_set_auth_cookie($_POST['user_id_social_site']);
+					$user = get_userdata($_POST['user_id_social_site']);
 				}
 				else
 				{
-					$active = get_user_meta($user->ID,"active");
-					
-					//Delete User after grace Period
-					if($active[0] != 1)//If not active
+					$user = wp_signon( $creds, false );
+				}
+				//$this->check_user_activation();
+				if ( is_wp_error($user))
+				{
+					$user_login_error = $user->get_error_message();
+					if(strpos(strip_tags($user_login_error),'Invalid username',5) > 6)
 					{
-						$delete_user = true;
-						if($this->deleteUsers($user->ID,$user->user_email,$user->user_registered)){
-							$errors->add("login-error",apply_filters("piereg_your_account_has_no_longer_exist",__("Your account has no longer exist.")));
-							$delete_user = false;
+						$user_login_error = apply_filters('pie_invalid_username_password_msg_txt','<strong>'.ucwords(__("error","piereg")).'</strong>: '.__("Invalid username","piereg").'. <a href="'.$this->pie_lostpassword_url().'" title="'.__("Password Lost and Found","piereg").'">'.__("Lost your password?","piereg").'</a>');
+					}else if(strpos(strip_tags($user_login_error),'password you entered',9) > 10)
+					{
+						$user_login_error = apply_filters('pie_invalid_user_password_msg_txt','<strong>'.ucwords(__("error","piereg")).'</strong>: '.__("The password you entered for the username","piereg").' <strong>'.$_POST['log'].'</strong> '.__("is incorrect","piereg").'. <a href="'.$this->pie_lostpassword_url().'" title="'.__("Password Lost and Found","piereg").'">'.__("Lost your password?","piereg").'</a>');
+					}
+					$errors->add('login-error',apply_filters("piereg_login_error",$user_login_error));
+				}
+				else
+				{
+					
+					if(in_array("administrator",(array)$user->roles)){
+						
+						do_action("piereg_admin_login_before_redirect_hook",$user);
+							
+						if(isset($_GET['redirect_to']) and $_GET['redirect_to'] != ""){
+							wp_redirect($_GET['redirect_to']);
+							exit;
 						}
-						if($delete_user){
-							wp_logout();
-							$errors->add('login-error',apply_filters("piereg_your_account_is_not_activated",__('Your account is not activated!.','piereg')));
-						}
-					}else{
-						//apply_filters('get_avatar',array($this,'custom_avatars'),$user->ID,"29");
-						$this->afterLoginPage();
+						
+						wp_safe_redirect(admin_url());
 						exit;
+					}
+					else
+					{
+						$active = get_user_meta($user->ID,"active",true);
+						//Delete User after grace Period
+						if($active == "0")//If not active
+						{
+							$delete_user = true;
+							if($this->deleteUsers($user->ID,$user->user_email,$user->user_registered)){
+								$errors->add("login-error",apply_filters("piereg_your_account_has_no_longer_exist",__("Your account has no longer exist.")));
+								$delete_user = false;
+							}
+							if($delete_user){
+								wp_logout();
+								$errors->add('login-error',apply_filters("piereg_your_account_is_not_activated",__('Your account is not activated!.','piereg')));
+							}
+						}elseif(empty($active))
+						{
+							//apply_filters('get_avatar',array($this,'custom_avatars'),$user->ID,"29");
+							do_action("piereg_user_login_before_redirect_hook",$user);
+							$this->afterLoginPage();
+							exit;
+						}
+						else{
+							//apply_filters('get_avatar',array($this,'custom_avatars'),$user->ID,"29");
+							do_action("piereg_user_login_before_redirect_hook",$user);
+							$this->afterLoginPage();
+							exit;
+						}
 					}
 				}
 			}
 		}
 	}
-	/*function check_user_activation($user_id)1
-	{
-		global $wpdb;
-		$result = $wpdb->get_result("SELECT `meta_key`,`meta_value` FROM `wp_usermeta` WHERE `user_id` = "$user_id" and `meta_key` = 'active'");
-		//
-	}*/
 	//Add the Settings and User Panels
 	function AddPanel()
 	{ 
 		$update = get_option( 'pie_register_2' );
 				
-		$pie_page_suffix_1 = add_object_page( "Pie Register", __('Pie Register',"piereg"), 10, 'pie-register',  array($this,'RegPlusEditForm'), plugins_url("/images/pr_icon.png",__FILE__) );	
+		$pie_page_suffix_1 = add_object_page( "Pie Register", __('Pie Register',"piereg"), 'manage_options', 'pie-register',  array($this,'RegPlusEditForm'), plugins_url("/images/pr_icon.png",__FILE__) );	
 		
-		//add_action('admin_print_scripts-' . $pie_page_suffix_1, 'my_plugin_admin_scripts');
+		add_action('admin_print_scripts-' . $pie_page_suffix_1, array($this,'pieregister_admin_scripts_styles'));
 		
-		$pie_page_suffix_2 = add_submenu_page( 'pie-register', 'Form Editor', __('Form Editor',"piereg"), 10, 'pie-register', array($this, 'RegPlusEditForm') );		
+		$pie_page_suffix_2 = add_submenu_page( 'pie-register', 'Form Editor', __('Form Editor',"piereg"), 'manage_options', 'pie-register', array($this, 'RegPlusEditForm') );		
+		
+		add_action('admin_print_scripts-' . $pie_page_suffix_2, array($this,'pieregister_admin_scripts_styles'));
 		
 		
-		$pie_page_suffix_3 = add_submenu_page( 'pie-register', 'General Settings', __('General Settings',"piereg"), 10, 'pie-general-settings', array($this, 'PieGeneralSettings') );		
+		$pie_page_suffix_3 = add_submenu_page( 'pie-register', 'General Settings', __('General Settings',"piereg"), 'manage_options', 'pie-general-settings', array($this, 'PieGeneralSettings') );	
 		
-		$pie_page_suffix_4 = add_submenu_page( 'pie-register', 'Payment Gateway Settings', __('Payment Gateway',"piereg"), 10, 'pie-gateway-settings', array($this, 'PieRegPaymentGateway') );
+		add_action('admin_print_scripts-' . $pie_page_suffix_3, array($this,'pieregister_admin_scripts_styles'));	
 		
-		$pie_page_suffix_5 = add_submenu_page( 'pie-register', 'Email Notification Settings', __('Admin Notifications',"piereg"), 10, 'pie-admin-notification', array($this, 'PieRegAdminNotification') );		
+		$pie_page_suffix_4 = add_submenu_page( 'pie-register', 'Payment Gateway Settings', __('Payment Gateway',"piereg"), 'manage_options', 'pie-gateway-settings', array($this, 'PieRegPaymentGateway') );
 		
-		$pie_page_suffix_6 = add_submenu_page( 'pie-register', 'Email Notification Settings', __('User Notifications',"piereg"), 10, 'pie-user-notification', array($this, 'PieRegUserNotification') );		
+		add_action('admin_print_scripts-' . $pie_page_suffix_4, array($this,'pieregister_admin_scripts_styles'));
 		
-		$pie_page_suffix_7 = add_submenu_page( 'pie-register', 'Import/Export', __('Import/Export',"piereg"), 10, 'pie-import-export', array($this, 'PieRegImportExport'));		
+		$pie_page_suffix_5 = add_submenu_page( 'pie-register', 'Email Notification Settings', __('Admin Notifications',"piereg"), 'manage_options', 'pie-admin-notification', array($this, 'PieRegAdminNotification') );	
 		
-		$pie_page_suffix_8 = add_submenu_page( 'pie-register', 'Invitation Codes', __('Invitation Codes',"piereg"), 10, 'pie-invitation-codes', array($this, 'PieRegInvitationCodes'));		
+		add_action('admin_print_scripts-' . $pie_page_suffix_5, array($this,'pieregister_admin_scripts_styles'));	
+		
+		$pie_page_suffix_6 = add_submenu_page( 'pie-register', 'Email Notification Settings', __('User Notifications',"piereg"), 'manage_options', 'pie-user-notification', array($this, 'PieRegUserNotification') );	
+		
+		add_action('admin_print_scripts-' . $pie_page_suffix_6, array($this,'pieregister_admin_scripts_styles'));	
+		
+		$pie_page_suffix_7 = add_submenu_page( 'pie-register', 'Import/Export', __('Import/Export',"piereg"), 'manage_options', 'pie-import-export', array($this, 'PieRegImportExport'));		
+		
+		add_action('admin_print_scripts-' . $pie_page_suffix_7, array($this,'pieregister_admin_scripts_styles'));
+		
+		$pie_page_suffix_8 = add_submenu_page( 'pie-register', 'Invitation Codes', __('Invitation Codes',"piereg"), 'manage_options', 'pie-invitation-codes', array($this, 'PieRegInvitationCodes'));		
+		
+		add_action('admin_print_scripts-' . $pie_page_suffix_8, array($this,'pieregister_admin_scripts_styles'));
 		
 		// help page
-		$pie_page_suffix_9 = add_submenu_page( 'pie-register', 'Help', __('Help',"piereg"), 10, 'pie-help', array($this, 'PieRegHelp'));		
+		$pie_page_suffix_9 = add_submenu_page( 'pie-register', 'Help', __('Help',"piereg"), 'manage_options', 'pie-help', array($this, 'PieRegHelp'));		
 		
-		if( $update['verification'] == 1 || $update['verification'] == 2 || $update['enable_paypal'] == 1)
-		add_users_page( 'Unverified Users', 'Unverified Users', 10, 'unverified-users', array($this, 'Unverified') );
+		add_action('admin_print_scripts-' . $pie_page_suffix_9, array($this,'pieregister_admin_scripts_styles'));
 		
+		add_action('admin_print_scripts-' . $pie_page_suffix_1, array($this,'pieregister_admin_scripts_styles'));
+		
+		if( $update['verification'] == 1 || $update['verification'] == 2 || $update['enable_paypal'] == 1){
+			$pie_page_suffix_10 = add_users_page( 'Unverified Users', 'Unverified Users', 'manage_options', 'unverified-users', array($this, 'Unverified') );
+			add_action('admin_print_scripts-' . $pie_page_suffix_10, array($this,'pieregister_admin_scripts_styles'));
+		}
 		do_action('pie_register_add_menu');
 		
+	}
+	
+	function pieregister_admin_scripts_styles(){
+		$this->pie_admin_enqueu_scripts();
 	}
 	
 	function block_wp_admin() 
@@ -929,11 +983,19 @@ class PieRegister extends PieReg_Base{
 	
 	function saveFields()
 	{
-		
+		$math_cpatcha_enable = "false";
 		foreach($_POST['field'] as $k=>$fv){
-			if($fv['type'] == 'html')
-			$fv['html'] = htmlentities(stripslashes($fv['html']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
-			
+			if($fv['type'] == 'html'){
+				$fv['html'] = htmlentities(stripslashes($fv['html']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
+			}
+			if($fv['type'] == 'math_captcha'){
+				$math_cpatcha_enable = "true";
+			}
+			//since 2.0.10
+			if(isset($fv['desc']))
+			{
+				$fv['desc'] = htmlentities(stripslashes($fv['desc']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
+			}
 			$updated_post[$k] = $fv;
 		}
 		
@@ -941,12 +1003,14 @@ class PieRegister extends PieReg_Base{
 				$_POST['field'] =  get_option( 'pie_fields_default' );
 	
 		do_action("pie_fields_save");
-		//update_option("pie_fields",serialize($_POST['field']));
 		update_option("pie_fields",serialize($updated_post));
+		
 		$options = get_option("pie_register_2");
 		$options['pie_regis_set_user_role_'] = $_POST['set_user_role_'];
 		update_option("pie_register_2",$options);
-		//wp_redirect("admin.php?page=pie-register");
+		update_option("piereg_math_cpatcha_enable",$math_cpatcha_enable);
+		// Update Wordpress Drefault User Role
+		update_option("default_role",$_POST['set_user_role_']);
 	}
 	//Opening Form Editor
 	function RegPlusEditForm()
@@ -1025,8 +1089,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		$form 		= new Registration_form();
 		$success 	= '' ;	
-		
-		//$this->pie_frontend_enqueu_scripts();		
 			
 		get_header();
 		include_once("register_form.php");
@@ -1036,28 +1098,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		exit;
 	}
-	/*public function check_enable_payment_method()// only check any payment method enable or not.
-	{
-		$pie_reg = get_option('pie_register_2');
-		if(
-			($pie_reg['enable_authorize_net'] 	== 1 and trim($pie_reg['piereg_authorize_net_api_id']) 	!= "") or
-			($pie_reg['enable_2checkout'] 		== 1 and trim($pie_reg['piereg_2checkout_api_id']) 		!= "") or
-			($pie_reg['enable_paypal'] 			== 1 and trim($pie_reg['paypal_butt_id'])				!= "")
-		  )
-		{
-			return "true";
-		}
-		else
-		{
-			return "false";
-		}
-	}*/
 	function check_register_form()
 	{
-		/*if(isset($_POST['select_payment_method']) and trim($_POST['select_payment_method']) != "" )
-		{
-			do_action('payment_validation_'.$_POST['select_payment_method']);//Validate payment method Like check_payment_method_paypal
-		}*/
 		global $errors, $wp_session;
 		if(($this->check_enable_payment_method()) == "false")
 		{
@@ -1104,10 +1146,14 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$user_id = wp_insert_user( $user_data );
 			$form->addUser($user_id);
 			$new_role = 'subscriber';
-			if(isset($option['pie_regis_set_user_role_']) and trim($option['pie_regis_set_user_role_']) != "")
+			$new_role = get_option("default_role");
+			// Remove Science 2.0.10
+			/*if(isset($option['pie_regis_set_user_role_']) and trim($option['pie_regis_set_user_role_']) != "")
 			{
-				$new_role = strtolower($option['pie_regis_set_user_role_']);
-			}
+				$wp_role = get_option("default_role");
+				$new_role = (isset($option['pie_regis_set_user_role_']) && !empty($option['pie_regis_set_user_role_']))?strtolower($option['pie_regis_set_user_role_']):$wp_role;
+				
+			}*/
 			//// update user role using wordpress function
 			wp_update_user( array ('ID' => $user_id, 'role' => $new_role ) ) ;
 			add_user_meta( $user_id, "is_social", "false", $unique = false );
@@ -1124,40 +1170,21 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				}else{
 					$message_temp	= $option['admin_message_email'];
 				}
-				$message  		= $form->filterEmail($message_temp,$user,$pass);	
-	
+				$message  		= $form->filterEmail($message_temp,$user,$pass);
 				$subject		= $option['admin_subject_email'];
-	
 				$to				= $option['admin_sendto_email'];
-	
 				$from_name		= $option['admin_from_name'];
-	
 				$from_email		= $option['admin_from_email'];
-	
 				$bcc			= $option['admin_bcc_email'];
-	
 				$reply_to_email	= $option['admin_to_email'];
 	
-				
-	
 				if(!filter_var($to,FILTER_VALIDATE_EMAIL))//if not valid email address then use wordpress default admin
-	
 				{
-	
 					$to = get_option('admin_email');
-	
 				}
-	
-				
-	
 				//Headers
-	
 				$headers  = 'MIME-Version: 1.0' . "\r\n";
-	
 				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-	
-				
-	
 				if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 					$headers .= "From: ".$from_name." <".$from_email."> \r\n";
 	
@@ -1172,27 +1199,9 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				else
 					$headers .= "Return-Path: {$from_email}\r\n";
 				
-				@wp_mail($to,$subject, $message,$headers);
+				wp_mail($to,$subject, $message,$headers);
 				
 			}
-			
-			////////////////////////////////////////////////////
-			/*if(isset($_POST['select_payment_method']) and ($_POST['select_payment_method'] != "" or $_POST['select_payment_method'] != "select"))//Goto payment method Like check_payment_method_paypal
-			{
-				$_POST['user_id'] = $user_id;
-				update_user_meta( $user_id, 'active', 0);
-				do_action("check_payment_method_".$_POST['select_payment_method']);// function prefix check_payment_method_
-			}
-			else if(($this->check_enable_payment_method()) == "true" )
-			{
-				if( (($this->check_enable_payment_method()) == "true" and !isset($_POST['select_payment_method']) ) or
-				 	( isset($_POST['select_payment_method']) and $_POST['select_payment_method'] == "" or $_POST['select_payment_method'] == "select")
-				  )
-				{
-					$_POST['error'] = __("please select any payment method","piereg");
-				}
-			}
-			else */
 			if(!(empty($option['paypal_butt_id'])) && $option['enable_paypal']==1)
 			{
 				$_POST['user_id'] = $user_id;
@@ -1266,7 +1275,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			else if($option['verification'] == 0 ){
 				update_user_meta( $user_id, 'active', 1);
 				/************ User Notification **************/
-				//update_user_meta( $user_id, 'active', 1);
 				
 				$subject 		= $option['user_subject_email_default_template'];
 				$message_temp = "";
@@ -1293,13 +1301,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$headers .= "Reply-To: {$from_email}\r\n";
 					$headers .= "Return-Path: {$from_email}\r\n";
 				}
-					
-						
-				wp_mail($_POST['e_mail'], $subject, $message , $headers);
-				/*$fields 			= maybe_unserialize(get_option("pie_fields"));
-				$confirmation_type 	= $fields['submit']['confirmation'];
-				$_POST['success']	= __($fields['submit']['message'],"piereg");*/
-				
+				wp_mail($_POST['e_mail'], $subject, $message , $headers);	
 			}
 			
 			do_action('pie_register_after_register',$user);
@@ -1400,7 +1402,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		echo '<script type="text/javascript">document.getElementById("paypal_form").submit();</script>';
 		die();
 	}
-
 	function process_lostpassword()
  	{
 		global $errors ;
@@ -1463,9 +1464,9 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         &nbsp;
         <input value="<?php _e('Delete','piereg');?>" name="vdeleteit" class="button-secondary delete" type="submit">
       </div>
-      <br class="clear">
+      <br class="piereg_clear">
     </div>
-    <br class="clear">
+    <br class="piereg_clear">
     <table class="widefat">
       <thead>
         <tr class="thead">
@@ -1516,8 +1517,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				if ( $user_id )
 				{
 					update_user_meta( $user_id, 'active',1);
-					//$pass = wp_generate_password();
-					//wp_set_password( $pass, $user_id );
 					//Sending E-Mail to newly active user
 					$user 			= new WP_User($user_id);
 					$subject 		= $option['user_subject_email_email_thankyou'];
@@ -1812,7 +1811,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$wpdb->query("INSERT INTO ".$codetable." (`created`,`modified`,`name`,`count`,`status`,`code_usage`)VALUES('".$date."','".$date."','".$name."','".$counts."','1','".$usage."')");
 			$wpdb->flush();
 			return true;
-			
 		}
 	function generateCSV()
 	{
@@ -1844,7 +1842,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$query 	.= ($fields)?",$fields " : "";
 		$query 	.= " FROM $user_table ";
 		
-		//$query 	= "SELECT ID,$fields FROM $user_table ";
 		
 		if($_POST['date_start'] != "" || $_POST['date_end'] != "")
 		{
@@ -1917,7 +1914,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	function csv_to_array($filename='', $delimiter=','){
 		if(!file_exists($filename) || !is_readable($filename))
 			return FALSE;
-	
 		$header = NULL;
 		$data = array();
 		if (($handle = fopen($filename, 'r')) !== FALSE)
@@ -1928,8 +1924,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$header = $row;
 				else
 					$data[] = array_combine($header, $row);
-					
-				
 			}
 			fclose($handle);
 		}
@@ -2071,9 +2065,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	}
 	function PieRegImportExport()
 	{
-		
-		//wp_enqueue_script('jquery-ui-datepicker');
-		//wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 		require_once($this->plugin_dir.'/menus/PieRegImportExport.php');		
 	}
 	
@@ -2086,17 +2077,16 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			{
 				$update["enable_paypal"]	= intval($_POST['enable_paypal']);
 				$update["paypal_butt_id"]	= $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
-				//$update["paypal_pdt"]     = $this->disable_magic_quotes_gpc($_POST['piereg_paypal_pdt']);
 				$update["paypal_sandbox"]	= $_POST['piereg_paypal_sandbox'];
 			}
 			else if(isset($_POST['admin_email_notification_page'])){
 				
 				$update['enable_admin_notifications']	= intval($_POST['enable_admin_notifications']);
-				$update['admin_sendto_email']			= $_POST['admin_sendto_email'];
+				$update['admin_sendto_email']			= trim($_POST['admin_sendto_email']);
 				$update['admin_from_name']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['admin_from_name'],'HTML-ENTITIES','utf-8'));
-				$update['admin_from_email']				= $_POST['admin_from_email'];
-				$update['admin_to_email']				= $_POST['admin_to_email'];
-				$update['admin_bcc_email']				= $_POST['admin_bcc_email'];
+				$update['admin_from_email']				= trim($_POST['admin_from_email']);
+				$update['admin_to_email']				= trim($_POST['admin_to_email']);
+				$update['admin_bcc_email']				= trim($_POST['admin_bcc_email']);
 				$update['admin_subject_email']			= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['admin_subject_email'],'HTML-ENTITIES','utf-8'));
 				
 				$update['admin_message_email_formate']	= intval($_POST['admin_message_email_formate']);
@@ -2111,26 +2101,17 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				
 				foreach ($pie_user_email_types as $val=>$type){
 					
-					//$update['user_sendto_email_'.$val] = $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_sendto_email_'.$val],'HTML-ENTITIES','utf-8'));
-					$update['user_from_name_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_from_name_'.$val],'HTML-ENTITIES','utf-8'));
-					$update['user_from_email_'.$val]	= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_from_email_'.$val],'HTML-ENTITIES','utf-8'));
-					$update['user_to_email_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_to_email_'.$val],'HTML-ENTITIES','utf-8'));
-					$update['user_bcc_email_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_bcc_email_'.$val],'HTML-ENTITIES','utf-8'));
-					$update['user_subject_email_'.$val]	= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_subject_email_'.$val],'HTML-ENTITIES','utf-8'));
+					$update['user_from_name_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding(trim($_POST['user_from_name_'.$val]),'HTML-ENTITIES','utf-8'));
+					$update['user_from_email_'.$val]	= $this->disable_magic_quotes_gpc(mb_convert_encoding(trim($_POST['user_from_email_'.$val]),'HTML-ENTITIES','utf-8'));
+					$update['user_to_email_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding(trim($_POST['user_to_email_'.$val]),'HTML-ENTITIES','utf-8'));
+					$update['user_bcc_email_'.$val]		= $this->disable_magic_quotes_gpc(mb_convert_encoding(trim($_POST['user_bcc_email_'.$val]),'HTML-ENTITIES','utf-8'));
+					$update['user_subject_email_'.$val]	= $this->disable_magic_quotes_gpc(mb_convert_encoding(trim($_POST['user_subject_email_'.$val]),'HTML-ENTITIES','utf-8'));
 					$update['user_formate_email_'.$val]	= intval($_POST['user_formate_email_'.$val]);
 					$update['user_message_email_'.$val]	= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['user_message_email_'.$val],'HTML-ENTITIES','utf-8'));	
 				}
 				
 			}
 			else if(isset($_POST['general_settings_page'])){
-				/*if(!empty($_POST['support_license']) && $_POST['support_license'] != $update['support_license'])
-				{
-					$update['support_license'] = $this->checkLicense($_POST['support_license']);
-					
-					if(!empty($update['support_license']))
-					$_POST['license_success'] = __('Your plugin has been registered', 'piereg');
-				}*/
-				
 				$update['display_hints']			= intval($_POST['display_hints']);
 				$update['subscriber_login']			= intval($_POST['subscriber_login']);
 				$update['modify_avatars']			= intval($_POST['modify_avatars']);
@@ -2151,10 +2132,32 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				$update['alternate_logout']			= intval($_POST['alternate_logout']);
 				
 				$update['alternate_logout_url']		= $_POST['alternate_logout_url'];
+				
+				//since 2.0.10
+				
+				$update['login_username_label']	= $_POST['login_username_label'];
+				$update['login_username_placeholder']	= $_POST['login_username_placeholder'];
+				$update['login_password_label'] = $_POST['login_password_label'];
+				$update['login_password_placeholder'] = $_POST['login_password_placeholder'];
+				$update['capthca_in_login_label']	= $_POST['capthca_in_login_label'];
+				$update['piereg_recapthca_skin_login'] = $_POST['piereg_recapthca_skin_login'];
+				$update['capthca_in_login']			= intval($_POST['capthca_in_login']);
+				
+				$update['forgot_pass_username_label']	= $_POST['forgot_pass_username_label'];
+				$update['forgot_pass_username_placeholder'] = $_POST['forgot_pass_username_placeholder'];
+				
+				
+				$update['capthca_in_forgot_pass_label']	= $_POST['capthca_in_forgot_pass_label'];
+				$update['piereg_recapthca_skin_forgot_pass']	= $_POST['piereg_recapthca_skin_forgot_pass'];
+				$update['capthca_in_forgot_pass']	= intval($_POST['capthca_in_forgot_pass']);
+				
+				//since 2.0.10
+				$update['remove_PR_settings']		= intval($_POST['remove_PR_settings']);
+				
+				
 				$update['outputcss']				= intval($_POST['outputcss']);
 				$update['outputhtml']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['outputhtml'],'HTML-ENTITIES','utf-8'));
 				$update['no_conflict']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['no_conflict'],'HTML-ENTITIES','utf-8'));
-				$update['currency']					= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['currency'],'HTML-ENTITIES','utf-8'));
 				$update['verification']				= intval($_POST['verification']);
 				$update['grace_period']				= intval($_POST['grace_period']);
 				$update['captcha_publc']			= $_POST['captcha_publc'];
@@ -2163,11 +2166,10 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				$update['tracking_code']			= $_POST['tracking_code'];
 				$update['custom_logo_url']			= $_POST['custom_logo_url'];
 				
-				$update['custom_logo_tooltip']			= $_POST['custom_logo_tooltip'];
+				$update['custom_logo_tooltip']		= $_POST['custom_logo_tooltip'];
 				
 				$update['custom_logo_link']			= $_POST['custom_logo_link'];
-				$update['show_custom_logo']			= (isset($_POST['show_custom_logo']))?$_POST['show_custom_logo']:1;
-				//$update['payment_setting_amount']	= sprintf("%01.2f", $_POST['payment_setting_amount']);
+				$update['show_custom_logo']			= (isset($_POST['show_custom_logo']))?$_POST['show_custom_logo']:0;
 				
 				if(
 					   (isset($_POST['support_email']) and $_POST['support_email'] != "" )and
@@ -2191,7 +2193,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				{
 					$_POST['PR_license_notice'] = $error;
 				}
-
 				$_POST['notice'] = apply_filters("piereg_settings_saved",__('Settings Saved', 'piereg'));
 			
 		}
@@ -2222,13 +2223,11 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			}
 			else
 			{
-				//$post_url = "http://192.168.14.3/pie/Requesthandler.ashx";
 				$post_url = "http://achnawachna.com/PieRegisterService_new/requesthandler.ashx";
 				$domain_name = $_POST['domainname'];
 				$email = $_POST['support_email'];
 				$origin = "plugin";
 				$post_string_url	= "type=adddomain&domainname=".$domain_name."&chk=true&email=".$email."&origin=".$origin."";
-
 				$post_response = "";
 				/*if(function_exists('curl_version')){
 					$request = curl_init($post_url);
@@ -2310,7 +2309,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$name 	= $this->createFieldName($field,$no);
 		$id 	= $this->createFieldID($field,$no);
 		
-		//if($field['label']=="About Yourself")
 		if($field['field_name']=="description")
 		{
 			echo '<textarea  rows="5" cols="73" disabled="disabled" id="default_'.$field['field_name'].'" name="'.$name.'" style="width:100%;"></textarea>';	
@@ -2325,7 +2323,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		echo '<input type="hidden" name="field['.$field['id'].'][label]" value="'.$field['label'].'" id="label_'.$field['id'].'">';
 		echo '<input type="hidden" name="field['.$field['id'].'][field_name]" value="'.$field['type'].'" id="label_'.$field['id'].'">';
 		echo '<input type="hidden" id="default_'.$field['type'].'">';
-
 	}
 	function addEmail($field,$no)
 	{
@@ -2339,10 +2336,9 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		{
 			$confirm_email	= "";
 		}
-		//echo '</div><div '.$confirm_email.' id="confirm_email_label_'.$no.'" class="label_position"><label>Confirm E-Mail</label></div><div class="fields_position"><div id="confirm_email_field_'.$no.'" '.$confirm_email.' class="inner_fields"><input disabled="disabled" type="text" class="input_fields" placeholder="'.$field['placeholder'].'" ></div>';
 		
 		$label2 = (isset($field['label2']) and !empty($field['label2']))?$field['label2'] : __("Confirm E-Mail","piereg");
-		echo '</div><div '.$confirm_email.' id="field_label2_'.$no.'" class="label_position"><label>'.$label2.'</label></div><div class="fields_position"><div id="confirm_email_field_'.$no.'" '.$confirm_email.' class="inner_fields"><input disabled="disabled" type="text" class="input_fields" placeholder="'.$field['placeholder'].'" ></div>';
+		echo '</div><div '.$confirm_email.' id="field_label2_'.$no.'" class="label_position confrim_email_label2"><label>'.$label2.'</label></div><div class="fields_position"><div id="confirm_email_field_'.$no.'" '.$confirm_email.' class="inner_fields"><input disabled="disabled" type="text" class="input_fields" placeholder="'.$field['placeholder'].'" ></div>';
 	}
 	function addPassword($field,$no)
 	{		
@@ -2351,9 +2347,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		
 		echo '<input disabled="disabled" id="'.$id.'" name="'.$name.'" class="input_fields"  placeholder="'.$field['placeholder'].'" type="text" value="" />';
-		
-		
-		//echo '</div><div id="confirm_password_label_'.$no.'" class="label_position"><label>Confirm Password</label></div><div class="fields_position"><div id="confirm_email_field_'.$no.'" '.((isset($confirm_email))?$confirm_email:"").' class="inner_fields"><input disabled="disabled" type="text" class="input_fields" placeholder="'.$field['placeholder'].'" > </div>';
 		
 		$label2 = (isset($field['label2']) and !empty($field['label2']))?$field['label2'] : __("Confirm Password","piereg");
 		echo '</div><div id="field_label2_'.$no.'" class="label_position"><label>'.$label2.'</label></div><div class="fields_position"><div id="confirm_email_field_'.$no.'" '.((isset($confirm_email))?$confirm_email:"").' class="inner_fields"><input disabled="disabled" type="text" class="input_fields" placeholder="'.$field['placeholder'].'" > </div>';
@@ -2381,16 +2374,16 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		echo '<input type="hidden" id="default_'.$field['type'].'">';
 		echo '<div class="address" id="address_fields">
 		  <input disabled="disabled" type="text" class="input_fields">
-		  <label>Street Address</label>
+		  <label>'.__("Street Address","piereg").'</label>
 		</div>
 		<div class="address" id="address_address2_'.$no.'">
 		  <input disabled="disabled" type="text" class="input_fields">
-		  <label>Address Line 2</label>
+		  <label>'.__("Address Line 2","piereg").'</label>
 		</div>
 		<div class="address">
 		  <div class="address2">
 			<input disabled="disabled" type="text" class="input_fields">
-			<label>City</label>
+			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
 		 $hide_state = "";
@@ -2419,21 +2412,21 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		 echo '<div class="address2 state_div_'.$no.'" id="state_'.$no.'" '.$hide_state .'>
 			<input disabled="disabled" type="text" class="input_fields">
-			<label>State / Province / Region</label>
+			<label>'.__("State / Province / Region","piereg").'</label>
 		  </div>
 		  <div class="address2 state_div_'.$no.'" id="state_us_'.$no.'" '.((isset($hide_usstate))?$hide_usstate:"") .'>
 			<select disabled="disabled" id="state_us_field_'.$no.'">
 			  <option value="" selected="selected">'.$field['us_default_state'].'</option>
 			  
 			</select>
-			<label>State</label>
+			<label>'.__("State","piereg").'</label>
 		  </div>
 		  <div class="address2 state_div_'.$no.'" id="state_canada_'.$no.'" '.((isset($hide_usstate))?$hide_canstate:"").'>
 			<select disabled="disabled" id="state_canada_field_'.$no.'">
 			  <option value="" selected="selected">'.$field['canada_default_state'].'</option>
 			  
 			</select>
-			<label>Province</label>
+			<label>'.__("Province","piereg").'</label>
 		  </div>
 		</div>
 		<div class="address">';
@@ -2446,7 +2439,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		 }		
 		echo ' <div class="address2" '.$hideAddress2.'>
 			<input disabled="disabled" type="text" class="input_fields">
-			<label>Zip / Postal Code</label>
+			<label>'.__("Zip / Postal Code","piereg").'</label>
 		  </div>';
 		 
 		 $hideCountry = "";
@@ -2459,7 +2452,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					<select disabled="disabled">
 			  			<option>'.$field['default_country'].'</option>
 					</select>
-					<label>Country</label>
+					<label>'.__("Country","piereg").'</label>
 		  		</div>
 		</div>';	
 	}
@@ -2562,15 +2555,15 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		echo '<div class="time date_format_field" id="datefield_'.$no.'" '.$datefield.'>
 				  <div class="time_fields" id="mm_'.$no.'">
 					<input disabled="disabled" type="text" class="input_fields">
-					<label>MM</label>
+					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields" id="dd_'.$no.'">
 					<input disabled="disabled" type="text" class="input_fields">
-					<label>DD</label>
+					<label>'.__("DD","piereg").'</label>
 				  </div>
 				  <div class="time_fields" id="yyyy_'.$no.'">
 					<input disabled="disabled" type="text" class="input_fields">
-					<label>YYYY</label>
+					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				</div>';
 				
@@ -2582,17 +2575,17 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		echo '<div class="time date_format_field" id="datedropdown_'.$no.'"  '.$datedropdown.'>
 				  <div class="time_fields" id="month_'.$no.'">
 					<select disabled="disabled">
-					  <option>Month</option>
+					  <option>'.__("Month","piereg").'</option>
 					</select>
 				  </div>
 				  <div class="time_fields" id="day_'.$no.'">
 					<select disabled="disabled">
-					  <option>Day</option>
+					  <option>'.__("Day","piereg").'</option>
 					</select>
 				  </div>
 				  <div class="time_fields" id="year_'.$no.'">
 					<select disabled="disabled">
-					  <option>Year</option>
+					  <option>'.__("Year","piereg").'</option>
 					</select>
 				  </div>
 				</div>';	
@@ -2641,7 +2634,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		{
 			$format = "";
 		}		
-		echo '<div class="time"><div class="time_fields"><input disabled="disabled" type="text" class="input_fields"><label>HH</label></div><span class="colon">:</span><div class="time_fields"><input disabled="disabled" type="text" class="input_fields"><label>MM</label></div><div id="time_format_field_'.$no.'" class="time_fields" style="'.$format.'"><select disabled><option>AM</option><option>PM</option></select></div></div>';
+		echo '<div class="time"><div class="time_fields"><input disabled="disabled" type="text" class="input_fields"><label>'.__("HH","piereg").'</label></div><span class="colon">:</span><div class="time_fields"><input disabled="disabled" type="text" class="input_fields"><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$no.'" class="time_fields" style="'.$format.'"><select disabled><option>'.__("AM","piereg").'</option><option>PM</option></select></div></div>';
 	
 	}
 	function addCaptcha($field,$no)
@@ -2650,6 +2643,14 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$id 	= $this->createFieldID($field,$no);
 			
 		echo '<img id="captcha_img" src="'.plugins_url('pie-register').'/images/recatpcha.jpg" />';	
+		echo '<input type="hidden" id="default_'.$field['type'].'">';	
+	}
+	function addMath_Captcha($field,$no)
+	{
+		$name 	= $this->createFieldName($field,$no);
+		$id 	= $this->createFieldID($field,$no);
+			
+		echo '<img id="captcha_img" src="'.plugins_url('pie-register').'/images/math_catpcha.png" />';	
 		echo '<input type="hidden" id="default_'.$field['type'].'">';	
 	}
 	function addList($field,$no)
@@ -2665,7 +2666,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		{
 			echo '<input type="text" id="field_'.$no.'" class="input_fields" style="width:'.$width.'%;margin-right:2px;" >';
 		}
-		//echo '<img src="plugins_url('/images/plus.png',__FILE__).'" />';
 		echo '<img src="'.plugins_url('pie-register').'/images/plus.png" />';
 	}		
 	function createFieldName($field,$no)
@@ -2725,12 +2725,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			return false;
 		}
 		
-		////if (isset($this->paypal_mail) && strtolower ( $_POST['receiver_email'] ) != strtolower(trim( $this->paypal_mail ))) {
-////			$this->ipn_status = "Receiver Email Not Match";
-////			$this->log_ipn_results ( false );
-////			return false;
-////		}
-		
 		if (isset($this->txn_id)&& in_array($_POST['txn_id'],$this->txn_id)) {
 			$this->ipn_status = "txn_id have a duplicate";
 			$this->log_ipn_results ( false );
@@ -2782,8 +2776,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		// Invalid IPN transaction.  Check the $ipn_status and log for details.
 		if (!eregi("VERIFIED",$this->ipn_response)) {
-			/*$this->ipn_status = 'IPN Validation Failed';
-			$this->log_ipn_results(false);*/
 			return false;
 		} else {
 			$this->ipn_status = "IPN VERIFIED";
@@ -2855,9 +2847,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$check_hash = get_usermeta( $user_id, "hash");
 			if($check_hash != $hash)
 				return false;
-			/*$pass 		= wp_generate_password();
-			$user_data 	= array('ID' => $user_id,'user_pass' => $pass);
-			$user_id 	= wp_update_user( $user_data ); */
+			
 			$user 		= new WP_User($user_id);
 			$option 	= get_option('pie_register_2');
 			//mail("baqar.hassan@genetechsolutions.com","payment",$user_id." , ".$user->user_email.",".$user_email );
@@ -2905,24 +2895,12 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		if(($grace != 0 and $user_id != 0) and ($user_email != "" and $user_registered != "") and $register_type[0] != "admin_verify")
 		{
 			$date			= date("Y-m-d 00:00:00",strtotime("-{$grace} days"));
-			/*$inactive		= get_users(array('meta_key'=> 'active','meta_value' => 0,'role'=>get_option('default_role')));
-			if(sizeof($inactive) > 0)
-			{
-				include_once( ABSPATH . 'wp-admin/includes/user.php' );
-				foreach($inactive as $user)
-				{
-					if($user->user_registered < $date)
-					{
-						//wp_delete_user( $user->ID );
-					}
-				}	
-			}*/
-			
+
 			if($user_registered < $date)
 			{
 				global $errors,$wpdb;
 				$errors = new WP_Error();
-				$errors->add("Login-error",apply_filters("piereg_your_account_has_no_longer_exist",__("Your account has no longer exist.")));
+				$errors->add("Login-error",apply_filters("piereg_your_account_has_no_longer_exist",__("Your account has no longer exist.","piereg")));
 				global $wpdb;
 				$user_table = $wpdb->prefix."users";
 				$user_meta_table = $wpdb->prefix."usermeta";
@@ -2930,7 +2908,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				$wpdb->query("DELETE FROM `".$user_table."` WHERE `ID` = '".$user_id."'");
 				wp_logout();
 				return true;
-				//wp_delete_user($user_id);
 				
 			}
 		}
@@ -2943,7 +2920,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		$arrayToJs = array();
 		$arrayToJs[0] = $validateId;
-
 		if(!username_exists($username ))
 		{		// validate??
 				$arrayToJs[1] = true;			// RETURN TRUE
@@ -2975,7 +2951,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		{
 				
 			add_filter( 'wp_mail_content_type', array($this,'set_html_content_type' ));
-			//$this->pie_frontend_enqueu_scripts();			
 			//ob_start();
 			$output = '';
 			if(isset($_POST['success']) && $_POST['success'] != "")
@@ -2996,30 +2971,24 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			include_once("register_form.php");
 			$output .= outputRegForm();
 			return $output;
-			//ob_end_flush();
 		}
 		
 	}
 	function showLoginForm()
 	{
 		global $errors,$pagenow;
-		$option 		= get_option( 'pie_register_2' );	
-		
-		
+		$option = get_option( 'pie_register_2' );
 		if(is_user_logged_in() && $option['redirect_user']==1 )
 		{
 			$this->afterLoginPage();
 			return "";	
-		}	
-		
+			
+		}
 		else
-		{	
-			//$this->pie_frontend_enqueu_scripts();
-			//ob_start();
+		{
 			include_once("login_form.php");
 			$output = pieOutputLoginForm();
 			return  $output;
-			//ob_end_flush();
 		}
 	}
 	function showForgotPasswordForm()
@@ -3034,9 +3003,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		else
 		{
-			//$this->pie_frontend_enqueu_scripts();
 			include_once("forgot_password.php");
-			//$output =  resetFormOutput();
 			$output =  pieResetFormOutput();
 			return $output;
 		}
@@ -3071,29 +3038,20 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 						 {
 							$user_data["user_url"] =  $_POST['url'];	 
 						 }
-						 /*if($current_user->user_pass != $_POST['pwd'] && $_POST['pwd'] == $_POST['confirm_password'])
-		 				 {
-							$user_data["user_pass"] =  $_POST['pwd'];
-						 }*/
 						 if(($_POST['password'] != '') && ($_POST['password'] == $_POST['confirm_password']))
 		 				 {
 							$user_data["user_pass"] =  $_POST['password'];
 						 }
-						 
-						$id = wp_update_user( $user_data );						
-						$form->UpdateUser();
+						 $id = wp_update_user( $user_data );						
+						 $form->UpdateUser();
 					}
 							
 				}
-				
-				/*$success 	= '' ;
-				$error 		= '' ;*/
 				$output = '';
 				if($form->pie_success)
 					$output .= '<div class="alert alert-success"><p class="piereg_message">'.$form->pie_success_msg.'</p></div>';
 				elseif($form->error != "")
 					$output .= '<div class="alert alert-danger"><p class="piereg_login_error">'.$form->error.'</p></div>';	
-				//$option 	= get_option( 'pie_register_2' );
 				if(isset($_POST['success']) && $_POST['success'] != "")
 					$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
 				if(isset($_POST['error']) && $_POST['error'] != "")
@@ -3129,6 +3087,19 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		}else{
 			wp_redirect(site_url());
 		}
+		exit;
+	}
+	function afterLoginPage_admin_init(){ 
+		$option = get_option("pie_register_2");
+		if(isset($_GET['redirect_to']) and $_GET['redirect_to'] != ""){
+			wp_redirect($_GET['redirect_to']);
+		}elseif($option['after_login'] > 0)
+		{
+			wp_safe_redirect(get_permalink($option['after_login']));
+		}/*else{
+			wp_redirect(site_url());
+		}*/
+		exit;
 	}
 	function add_ob_start()
 	{
@@ -3212,7 +3183,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$check_payment = get_option("pie_register_2");
 		if($check_payment["enable_2checkout"] == 1 && !(empty($check_payment['piereg_2checkout_api_id'])) )
 		{
-			//do_action('Add_submit_button_2checkout');
 			echo '<option value="paypal" data-img="https://www.paypalobjects.com/en_US/i/logo/paypal_logo.gif">'.__("Paypal (one time subscription)","piereg").'</option>';
 		}
 	}
@@ -3276,7 +3246,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	{
 		if(isset($_POST['select_payment_method']) and trim($_POST['select_payment_method']) != "")
 		{
-			//Array ( [user_name] => demo [u_pass] => 123456789 [select_payment_method] => authorizeNet [x_card_num] => 222 [x_exp_date] => 2 [pie_renew] => Renew Account )
 			$creds = array();
 			$creds['user_login'] 	= $_POST['user_name'];
 			$creds['user_password'] = $_POST['u_pass'];
@@ -3332,7 +3301,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			//Headers
 			$headers  = 'MIME-Version: 1.0' . "\r\n";
 			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
 			if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 				$headers .= "From: ".$from_name." <".$from_email."> \r\n";
 			
@@ -3395,25 +3363,6 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		  }*/
 		  
 	}
-
-	/*function pie_registration_url($url)
-	{
-		$options = get_option("pie_register_2");
-		$pie_registration_url = get_permalink($options['alternate_register']);
-		return ($pie_registration_url)? $pie_registration_url : wp_registration_url();
-	}
-	function pie_login_url($url)
-	{
-		$options = get_option("pie_register_2");
-		$pie_login_url = get_permalink($options['alternate_login']);
-		return ($pie_login_url)? $pie_login_url : wp_login_url();
-	}
-	function pie_lostpassword_url($url)
-	{
-		$options = get_option("pie_register_2");
-		$pie_lostpass_url = get_permalink($options['alternate_forgotpass']);
-		return ($pie_lostpass_url)? $pie_lostpass_url : wp_lostpassword_url();
-	}*/
 	function delete_invitation_codes($ids="0")
 	{
 		global $wpdb;
@@ -3521,4 +3470,5 @@ if( class_exists('PieRegister') ){
 		}
 	}
 }
+
 ?>

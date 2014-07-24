@@ -84,6 +84,10 @@ function getStyle(type) {
 
 		html.find("#field_position_" + no).html('<img id="captcha_img" src="'+piereg_wp_pie_register_url+'/images/recatpcha.jpg" />');
 
+	} else if (type == "math_captcha") {
+
+		html.find("#field_position_" + no).html('<img id="captcha_img" src="'+piereg_wp_pie_register_url+'/images/math_catpcha.png" />');
+
 	} else if (type == "upload" || type == "profile_pic") {
 
 		html.find("#field_position_" + no).html('<input disabled="disabled" type="file" id="field_' + no + '" class="input_fields">');
@@ -384,7 +388,7 @@ function bindButtons() {
 			if(piereg_ckeditorid.length > 0){
 				CKEDITOR.remove(CKEDITOR.instances[piereg_ckeditorid]);
 			}
-			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "invitation") {
+			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "math_captcha" || delType == "invitation") {
 
 				piereg("ul.controls li a[name='" + field + "']").parent().show();
 
@@ -1017,17 +1021,13 @@ function bindButtons() {
 	piereg("#confirm_email").live("change", function () {
 
 		if (piereg(this).attr('checked')) {
-
-			piereg("#confirm_email_label_1").show();
-
-			piereg("#confirm_email_field_1").show();
-
+			/*piereg("#confirm_email_label_1").show();*/
+			piereg(".confrim_email_label2").fadeIn(1000);
+			piereg("#confirm_email_field_1").fadeIn(1000);
 		} else {
-
-			piereg("#confirm_email_label_1").hide();
-
-			piereg("#confirm_email_field_1").hide();
-
+			/*piereg("#confirm_email_label_1").hide();*/
+			piereg(".confrim_email_label2").fadeOut(1000);
+			piereg("#confirm_email_field_1").fadeOut(1000);
 		}
 
 	});
@@ -1180,7 +1180,7 @@ piereg(document).ready(function () {
 
 				piereg(".swap_class").trigger("change")
 
-				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
+				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
 
 					piereg('ul.controls li a[name="' + dragType + '"]').parent().hide();
 
@@ -1507,3 +1507,8 @@ function showHideReset()
 		elm.show();	
 
 }
+
+
+
+// Declare jQuery Object to $.
+$ = jQuery;

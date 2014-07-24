@@ -408,7 +408,7 @@ class B5F_WP_Table extends WP_List_Table
 
             ?>
 
-            <br class="clear" />
+            <br class="piereg_clear" />
 
         </div>
 

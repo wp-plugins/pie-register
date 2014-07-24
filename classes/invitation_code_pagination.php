@@ -338,7 +338,7 @@ class Pie_Invitation_Table extends WP_List_Table
 
             ?>
 
-            <br class="clear" />
+            <br class="piereg_clear" />
 
         </div>
 
