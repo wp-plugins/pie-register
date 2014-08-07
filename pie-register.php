@@ -5,7 +5,7 @@ Plugin URI: http://genetechsolutions.com/pie-register.html
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.10
+Version: 2.0.11
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -445,10 +445,16 @@ class PieRegister extends PieReg_Base{
 			}
 		}
 		//Blocking access of users to default pages if redirect is on 
-		if((is_user_logged_in() && $pagenow == 'wp-login.php') && ($option['redirect_user']==1   && $theaction != 'logout'))
+		//Patched since 2.0.11
+		//Password protected pages bug
+		//Resolved by adding postpass
+		if($theaction != 'logout' && $theaction != 'postpass' )
 		{
-			if(!isset($_REQUEST['interim-login'])){
-				$this->afterLoginPage();
+			if((is_user_logged_in() && $pagenow == 'wp-login.php') && ($option['redirect_user']==1   && $theaction != 'logout'))
+			{
+				if(!isset($_REQUEST['interim-login'])){
+					$this->afterLoginPage();
+				}
 			}
 		}
 		//
@@ -477,8 +483,11 @@ class PieRegister extends PieReg_Base{
 		}
 		
 		// if the user is on the login page, then let the game begin
-		if ($pagenow == 'wp-login.php' && $theaction != 'logout'){
-			add_action('login_init',array($this,'pieregister_login'),1);
+		if($theaction != 'logout' && $theaction != 'postpass' )
+		{
+			if ($pagenow == 'wp-login.php' && $theaction != 'logout'){
+				add_action('login_init',array($this,'pieregister_login'),1);
+			}
 		}
 		//OImport Export Section
 		if(isset($_POST['pie_fields_csv']) || isset($_POST['pie_meta_csv'])){

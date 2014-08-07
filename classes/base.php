@@ -939,7 +939,7 @@ class PieReg_Base
 		}*/
 		
 
-		$regular_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/regular_notice.txt");
+		//$regular_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/regular_notice.txt");
 		if(trim($regular_notice) != "")
 		{
 			echo "<div id='piereg-warning' class='updated fade-ff0000'>
@@ -947,7 +947,7 @@ class PieReg_Base
 				  </div>";
 		}
 		
-		$desmiss_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/desmiss_notice.txt");
+		//$desmiss_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/desmiss_notice.txt");
 		
 		if(trim($desmiss_notice) != "")
 		{
