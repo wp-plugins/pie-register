@@ -127,7 +127,7 @@ piereg(document).ready(function(){
             <hr />
             <div class="piereg_inner" style="padding:5px 0px 5px 20px;">
                 <p class="piereg_created_by">
-                <span><?php _e("Developed by","piereg"); ?></span> &nbsp;&nbsp; <a href="http://www.genetechsolutions.com/" title="GenetechSolutions" target="_blank" ><img alt="GenetechSolutions" title="GenetechSolutions" src="http://www.genetechsolutions.com/images/sitelogo.png"></a>
+                <span><?php _e("Developed by","piereg"); ?></span> &nbsp;&nbsp; <a href="http://www.genetechsolutions.com/" title="GenetechSolutions" target="_blank" ><img alt="GenetechSolutions" title="GenetechSolutions" src="<?php echo plugins_url("images/genetechsolutions-logo.png",dirname(__FILE__));?>"></a>
                 </p>
             </div>
         </div>
@@ -136,17 +136,6 @@ piereg(document).ready(function(){
     <div class="pieHelpTicket">
     	<div style="display:inline-block;">
             <h2><?php _e("Need Help?","piereg"); ?></h2>
-            <!--<p class="pieHelpPara">
-            <?php _e("Please use pie-register hosted forum for getting free support for V 2.0","piereg"); ?><br />
-            <strong>
-            <?php _e("Dear","piereg");?>&nbsp;<?php echo (!empty(wp_get_current_user()->data->display_name))?wp_get_current_user()->data->display_name : "User"; ?></strong>,<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <?php _e("Please use our own hosted","piereg"); ?> <a href="http://pieregister.genetechsolutions.com/forum/" title="<?php _e("Forum","piereg"); ?>" target="_blank"><strong><?php _e("Forum","piereg"); ?></strong></a> <?php _e("to get free support","piereg"); ?>.<br />
-            <br />
-            <?php _e("Thanks","piereg"); ?><br />
-            <?php _e("The","piereg"); ?> <a href="http://pieregister.genetechsolutions.com/" target="_blank" title="<?php _e("Pie-Register","piereg"); ?>"><strong><?php _e("Pie-Register","piereg"); ?></strong></a> <?php _e("Team","piereg"); ?><br />
-            <!--<a href="https://wordpress.org/plugins/pie-register/" target="_blank">https://wordpress.org/plugins/pie-register</a>-->
-            <!--</p>-->
             <p>
             <?php _e("If you have any query, feel free to post your Questions at our","piereg"); ?>
             <a href="http://pieregister.genetechsolutions.com/forum/" target="_blank"><?php _e("Hosted Forum","piereg"); ?></a>
@@ -155,76 +144,25 @@ piereg(document).ready(function(){
         </div>        
     </div>
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <?php /*?><form method="post" action="http://pieregister.genetechsolutions.com" target="_blank">
-    	<?php global $current_user;
-    	get_currentuserinfo(); ?>
-
-    	<input type="hidden" name="input_8" value="<?php echo $_SERVER['REMOTE_ADDR'] ?>" />
-    	<input type="hidden" name="gform_submit" value="6" />
-    	<input type="hidden" name="processFromPR" value="1" />
-    	<input type="hidden" name="is_submit_6" value="1" />
-    	<input type="hidden" name="state_2" value="YToyOntpOjA7czo2OiJhOjA6e30iO2k6MTtzOjMyOiJkYjk5MDFjYjFkODExZWE4NGNiODkxNGZiOTI2NGFmMyI7fQ==" />
-    	<input type="hidden" name="gform_field_values" value="" />
-    	<input type="hidden" name="gform_target_page_number_6" value="0" />
-    	<input type="hidden" name="gform_source_page_number_6" value="1" />
-    	<input type="hidden" name="gform_unique_id" value="<?php echo time(); ?>" />
-    	<input type="hidden" name="input_1" value="<?php bloginfo("url"); ?>" />
-    	<input type="hidden" name="input_2" value="<?php echo get_bloginfo('name'); ?>" />
-    	<input type="hidden" name="input_9" value="<?php echo date("Y-m-d"); ?>" />
-        <div class="pieHelpTicket">
-            <h2><?php _e("Create a Support Ticket","piereg"); ?></h2>
-            <ul class="pieHelpTicketHelp">
-                <li>
-                    <label for="pieHelpName"><?php _e("Name","piereg"); ?></label>
-                    <input id="pieHelpName" required="required" name="input_4" type="text" value="<?php echo $current_user->user_firstname ?>" />
-                </li>
-                <li>
-                    <label for="pieHelpEmail"><?php _e("E-mail","piereg"); ?></label>
-                    <input id="pieHelpEmail" type="email" required="required" name="input_10" value="<?php echo $current_user->data->user_email; ?>" />
-                </li>
-            </ul>
-            
-            <div class="pieHelpTicket_input_fileds">
-                <label for="pieHelpLicenseKey"><?php _e("License Key","piereg"); ?></label>
-                <input id="pieHelpLicenseKey" type="text" name="input_6" value="<?php echo $piereg['support_license']; ?>" 
-                <?php echo (isset($piereg['support_license']) and trim($piereg['support_license']) != "" )? 'readonly="readonly"' : "" ?> />
-            </div>
-            <div class="pieHelpTicket_input_fileds">
-                <label for="pieHelpComments"><?php _e("Comments","piereg"); ?></label>
-                <textarea id="pieHelpComments" name="input_7" required="required" ></textarea>
-            </div>
-            
-            <div class="pieHelpTicket_input_fileds">
-                <input type="submit" value="<?php _e("Submit","piereg"); ?>" name="submit_support"  />
-            </div>
-        </div>
-    </form><?php */?>
-    
     <div>
-    	<iframe scrolling="no" src="<?php echo "http://genetechsolutions.com/pie_register_help_contain/iframe.html"; ?>" style="width:100%; height:450px;"></iframe>
+		<?php
+		$piereg_notices = @file_get_contents('http://www.genetechsolutions.com/pie_register_help_content/piereg_notices.json');
+		$piereg_iframe = "";
+		if(!empty($piereg_notices))
+		{
+			$piereg_notices_json = json_decode($piereg_notices);// decode the JSON into an object
+			if(is_object($piereg_notices_json))
+			{
+				if(isset($piereg_notices_json->iframe) && trim($piereg_notices_json->iframe->status) == "true"){//for iframe
+					if(isset($piereg_notices_json->iframe->url) && trim($piereg_notices_json->iframe->url) != ""){
+						?>
+						<iframe src="<?php echo $piereg_notices_json->iframe->url; ?>" frameborder="0" marginheight="0" marginwidth="0" style="width:100%; height:450px;" scrolling="no"></iframe>
+						<?php	
+					}
+				}
+			}
+		}
+		?>
     </div>
 
   </div>

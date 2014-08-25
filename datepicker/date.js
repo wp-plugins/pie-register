@@ -457,7 +457,6 @@ Date.fullYearStart = '20';
 	add("getDayOfYear", function() {
 
 		var tmpdtm = new Date("1/1/" + this.getFullYear());
-
 		return Math.floor((this.getTime() - tmpdtm.getTime()) / 86400000);
 
 	});
@@ -555,7 +554,7 @@ Date.fullYearStart = '20';
 	 */
 
 	add("addYears", function(num) {
-
+							 
 		this.setFullYear(this.getFullYear() + num);
 
 		return this;

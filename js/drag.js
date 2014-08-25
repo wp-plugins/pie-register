@@ -82,14 +82,22 @@ function getStyle(type) {
 
 	} else if (type == "captcha") {
 
+		html.find("#field_label_" + no + " label").html("Re-Captcha");
 		html.find("#field_position_" + no).html('<img id="captcha_img" src="'+piereg_wp_pie_register_url+'/images/recatpcha.jpg" />');
 
 	} else if (type == "math_captcha") {
 
+		html.find("#field_label_" + no + " label").html("Math Captcha");
 		html.find("#field_position_" + no).html('<img id="captcha_img" src="'+piereg_wp_pie_register_url+'/images/math_catpcha.png" />');
+		
 
 	} else if (type == "upload" || type == "profile_pic") {
-
+		if(type == "profile_pic"){
+			html.find("#field_label_" + no + " label").html("Profile Picture");
+		}
+		else if(type == "upload"){
+			html.find("#field_label_" + no + " label").html("Upload");
+		}
 		html.find("#field_position_" + no).html('<input disabled="disabled" type="file" id="field_' + no + '" class="input_fields">');
 
 	} else if (type == "address") {
@@ -102,7 +110,7 @@ function getStyle(type) {
 
 	} else if (type == "date") {
 
-		html.find("#field_position_" + no).html('<div class="time date_format_field" id="datefield_' + no + '">  <div class="time_fields" id="mm_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>MM</label>  </div>  <div class="time_fields" id="dd_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>DD</label>  </div>  <div class="time_fields" id="yy_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>YY</label>  </div></div><div class="time date_format_field" id="datepicker_' + no + '"  style="display:none;">  <input type="text" class="input_fields">  <img src="'+ piereg_wp_pie_register_url +'/images/calendar.png" id="calendar_image_' + no + '" style="display:none;" /> </div><div class="time date_format_field" id="datedropdown_' + no + '"  style="display:none;">  <div class="time_fields" id="month_' + no + '"><select disabled="disabled">      <option>Month</option>    </select></div>    <div class="time_fields" id="day_' + no + '"><select disabled="disabled">      <option>Day</option>    </select>  </div>   <div class="time_fields" id="year_' + no + '"><select disabled="disabled">      <option>Year</option>    </select> </div></div>');
+		html.find("#field_position_" + no).html('<div class="time date_format_field" id="datefield_' + no + '">  <div class="time_fields" id="mm_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>MM</label>  </div>  <div class="time_fields" id="dd_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>DD</label>  </div>  <div class="time_fields" id="yy_' + no + '">    <input disabled="disabled" type="text" class="input_fields">    <label>YYYY</label>  </div></div><div class="time date_format_field" id="datepicker_' + no + '"  style="display:none;">  <input type="text" class="input_fields">  <img src="'+ piereg_wp_pie_register_url +'/images/calendar.png" id="calendar_image_' + no + '" style="display:none;" /> </div><div class="time date_format_field" id="datedropdown_' + no + '"  style="display:none;">  <div class="time_fields" id="month_' + no + '"><select disabled="disabled">      <option>Month</option>    </select></div>    <div class="time_fields" id="day_' + no + '"><select disabled="disabled">      <option>Day</option>    </select>  </div>   <div class="time_fields" id="year_' + no + '"><select disabled="disabled">      <option>Year</option>    </select> </div></div>');
 
 	} else if (type == "list") {
 
@@ -383,11 +391,22 @@ function bindButtons() {
 		piereg(this).parents("li").fadeOut(function () {
 
 			piereg(this).remove();
-			var piereg_ckeditorid = piereg(this).closest('li').find('textarea.ckeditor').attr('id');
-			
-			if(piereg_ckeditorid.length > 0){
-				CKEDITOR.remove(CKEDITOR.instances[piereg_ckeditorid]);
+			/*
+				* Add snipt in 2.0.12
+			*/
+			try{
+				if(piereg(this).closest('li').find('textarea.ckeditor').attr('id'))
+				{
+					var piereg_ckeditorid;
+					piereg_ckeditorid = piereg(this).closest('li').find('textarea.ckeditor').attr('id');
+					if(piereg_ckeditorid.length > 0){
+						CKEDITOR.remove(CKEDITOR.instances[piereg_ckeditorid]);
+					}
+				}
+			}catch(e){
+				  console.log(e);
 			}
+			
 			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "math_captcha" || delType == "invitation") {
 
 				piereg("ul.controls li a[name='" + field + "']").parent().show();
@@ -655,7 +674,6 @@ function bindButtons() {
 		id = id.replace("date_format_", "");
 
 		var val = piereg(this).val();
-
 		if (val.charAt(0) == "m" && val.charAt(val.length - 1) == "y") {
 
 			piereg("#dd_" + id).insertBefore(piereg("#yy_" + id));
@@ -677,17 +695,11 @@ function bindButtons() {
 			piereg("#day_" + id).insertBefore(piereg("#month_" + id));
 
 		} else if (val.charAt(0) == "y" && val.charAt(val.length - 1) == "d") {
-
 			piereg("#mm_" + id).insertBefore(piereg("#dd_" + id));
-
 			piereg("#yy_" + id).insertBefore(piereg("#mm_" + id));
-
 			piereg("#month_" + id).insertBefore(piereg("#day_" + id));
-
 			piereg("#year_" + id).insertBefore(piereg("#month_" + id));
-
 		}
-
 	});
 
 	//Change Time Format
@@ -1507,7 +1519,6 @@ function showHideReset()
 		elm.show();	
 
 }
-
 
 
 // Declare jQuery Object to $.

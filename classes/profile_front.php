@@ -36,7 +36,7 @@ class Profile_front extends PieReg_Base
 		{
           	$data .= '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
 			$data .= '<span><a href="'.wp_logout_url().'">'.__("Logout","piereg").'</a></span>';
-            $data .= '<a class="piereg_edit_profile_link" href="?page_id='.$_GET['page_id'].'&edit_user=1"></a>';
+            $data .= '<a class="piereg_edit_profile_link" href="?page_id='.((isset($_GET['page_id']))?$_GET['page_id']:"").'&edit_user=1"></a>';
 		    $data .= '<table border="0" cellpadding="0" cellspacing="0" class="pie_profile" id="pie_register">';
 			if(is_array($this->data)){
 				   foreach ($this->data as $this->field)
@@ -129,7 +129,8 @@ class Profile_front extends PieReg_Base
     }
 	function getValue()
 	{
-		$value = get_usermeta($this->user_id, $this->slug);
+		//$value = get_usermeta($this->user_id, $this->slug);
+		$value = get_user_meta($this->user_id, $this->slug,true);
 		if($this->type=="date")
 		{
 			if(isset($value['date']) && is_array($value['date']))
@@ -187,7 +188,8 @@ class Profile_front extends PieReg_Base
 			$list = "<ol>";
 			for($a = 0 ; $a < sizeof($value) ; $a++ )
 			{
-				$list .= "<li>".$value[$a]."</li>";	
+				if(isset($value[$a]))
+					$list .= "<li>".$value[$a]."</li>";	
 			}	
 			$list .= "</ol>";
 			$value = $list;	

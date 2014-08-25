@@ -35,7 +35,8 @@ class Edit_form extends PieReg_Base
 	function addDefaultField()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->field['field_name']);
+		//$val = get_usermeta($this->user->data->ID , $this->field['field_name']);
+		$val = get_user_meta($this->user->data->ID , $this->field['field_name'],true);
 		if($this->field['field_name']=="url")
 		{
 			$val = $this->user->data->user_url; 		
@@ -47,18 +48,20 @@ class Edit_form extends PieReg_Base
 		}
 		else
 		{
-			$data .= '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$val.'" />';	
+			$data .= '<input id="'.$this->id.'" name="'.$this->field['field_name'].'" class="'.$this->addClass().'"  placeholder="'.((isset($this->field['placeholder']))?$this->field['placeholder']:"").'" type="text" value="'.$val.'" />';	
 		}	
 		return $data;
 	}
 	function addTextField()
 	{
-		$val = get_usermeta($this->user->data->ID , $this->slug);
-		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" type="text" value="'.$val.'" />';	
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  placeholder="'.((isset($this->field['placeholder']))?$this->field['placeholder']:"").'" type="text" value="'.$val.'" />';	
 	}
 	function addHiddenField()
 	{
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		return '<input id="'.$this->id.'" name="'.$this->name.'"  type="hidden" value="'.$val.'" />';		
 	}
 	function addUsername()
@@ -88,7 +91,8 @@ class Edit_form extends PieReg_Base
 	function addUpload()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'" type="file"  />';
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'_hidden" value="'.$val.'" type="hidden"  />';
 		$data .= '<a href="'.$val.'" target="_blank">'.basename($val).'</a>';
@@ -97,7 +101,8 @@ class Edit_form extends PieReg_Base
 	function addProfilePic()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().' validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]" type="file"  />';
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'_hidden" value="'.$val.'" type="hidden"  />';
 		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
@@ -107,18 +112,21 @@ class Edit_form extends PieReg_Base
 	}
 	function addTextArea()
 	{		
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		return '<textarea id="'.$this->id.'" name="'.$this->name.'" rows="'.$this->field['rows'].'" cols="'.$this->field['cols'].'"  class="'.$this->addClass("").'"  placeholder="'.$this->field['placeholder'].'">'.$val.'</textarea>';		
 	}
 	function addName()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , "first_name");
+		//$val = get_usermeta($this->user->data->ID , "first_name");
+		$val = get_user_meta($this->user->data->ID , "first_name",true);
 		
 		$data .= '<div class="fieldset"><label>'.__($this->field['label'],"piereg").'</label>';		
 		$data .= '<input id="'.$this->id.'_firstname" value="'.$val .'" name="first_name" class="'.$this->addClass().' input_fields" type="text"  />';
 		
-		$val = get_usermeta($this->user->data->ID , "last_name");
+		//$val = get_usermeta($this->user->data->ID , "last_name");
+		$val = get_user_meta($this->user->data->ID , "last_name",true);
 			
 		$topclass = "";
 		if($this->label_alignment=="top")
@@ -131,7 +139,8 @@ class Edit_form extends PieReg_Base
 	function addTime()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		$data .= '<div class="piereg_time">
 					<div class="time_fields">
 						<input maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'" value="'.((isset($val['hh']))?$val['hh'] : "").'">
@@ -163,7 +172,8 @@ class Edit_form extends PieReg_Base
 		$data = "";
 		$multiple = "";
 		$name = $this->name."[]";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		
 		if($this->field['type']=="multiselect")
 		{
@@ -208,18 +218,21 @@ class Edit_form extends PieReg_Base
 	}
 	function addNumberField()
 	{
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().'"  placeholder="'.$this->field['placeholder'].'" min="'.$this->field['min'].'" max="'.$this->field['max'].'" type="number" value="'.$val.'" />';	
 	}
 	function addPhone()
 	{		
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		return '<input id="'.$this->id.'" class="'.$this->addClass().'" name="'.$this->name.'" class="input_fields"  placeholder="'.((isset($field['placeholder']))?$field['placeholder']:"").'" type="text" value="'.$val.'" />';	
 	}
 	function addList()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		if(!is_array($val))
 		$val = array();
 		//$val = get_usermeta($this->user->data->ID);
@@ -252,7 +265,8 @@ class Edit_form extends PieReg_Base
 	function addCheckRadio()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		if(sizeof($this->field['value']) > 0)
 		{
 			$data .= '<div class="radio_wrap">';
@@ -282,7 +296,8 @@ class Edit_form extends PieReg_Base
 	function addAddress()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		
 		$data .= '<div class="address">
 		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'" value="'.((isset($val['address']))?$val['address']:"").'">
@@ -371,8 +386,10 @@ class Edit_form extends PieReg_Base
 	function addDate()
 	{
 		$data = "";
-		$val = get_usermeta($this->user->data->ID , $this->slug);
-		
+		//$val = get_usermeta($this->user->data->ID , $this->slug);
+		$val = get_user_meta($this->user->data->ID , $this->slug,true);
+		$startingDate = $this->field['startingDate'];
+		$endingDate = $this->field['endingDate'];
 		if($this->field['date_type'] == "datefield")
 		{
 			//if(!is_array($val['date']['yy']) && strlen($val['date'][0]) == 10)
@@ -474,7 +491,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Month","piereg").'</option>';
 					  for($a=1;$a<=12;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['mm'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['mm']) && $val['date']['mm'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					  $data .= '
@@ -493,7 +510,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Day","piereg").'</option>';
 					  for($a=1;$a<=31;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['dd'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['dd']) && $val['date']['dd'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					$data .= '
@@ -504,9 +521,9 @@ class Edit_form extends PieReg_Base
 				  <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['yy'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['yy']) && $val['date']['yy'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					  /*echo '
@@ -522,9 +539,10 @@ class Edit_form extends PieReg_Base
 					 <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+					  //for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['yy'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['yy']) && $val['date']['yy'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					  
@@ -539,7 +557,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Month","piereg").'</option>';
 					  for($a=1;$a<=12;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['mm'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['mm']) && $val['date']['mm'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 						
@@ -552,7 +570,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Day","piereg").'</option>';
 					  for($a=1;$a<=31;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['dd'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['dd']) && $val['date']['dd'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					$data .= '
@@ -572,7 +590,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Day","piereg").'</option>';
 					  for($a=1;$a<=31;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['dd'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['dd']) && $val['date']['dd'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					$data .= '
@@ -585,7 +603,7 @@ class Edit_form extends PieReg_Base
 					  <option value="">'.__("Month","piereg").'</option>';
 					  for($a=1;$a<=12;$a++){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['mm'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['mm']) && $val['date']['mm'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 						
@@ -596,9 +614,10 @@ class Edit_form extends PieReg_Base
 				  <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
 					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+					  //for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
 					  	$data .= '<option value="'.$a.'"';
-						$data .= ($val['date']['yy'] == $a)? 'selected="selected"' : "";
+						$data .= (isset($val['date']['yy']) && $val['date']['yy'] == $a)? 'selected="selected"' : "";
 						$data .= '>'.__($a,"piereg").'</option>';
 					  }
 					  /*echo '
@@ -631,7 +650,7 @@ class Edit_form extends PieReg_Base
 	}
 	function addClass($default = "input_fields",$val = array())
 	{
-		$class = $default." ".$this->field['css'];
+		$class = $default." ".((isset($this->field['css']))?$this->field['css']:"");
 		
 		
 		if(isset($this->field['required']) && $this->field['required'])

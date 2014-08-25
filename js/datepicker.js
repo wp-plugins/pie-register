@@ -10,16 +10,24 @@ piereg(document).ready(function(e) {
 		}
 	});
 	
+	/*piereg(".pieregWrapper #pie_register_reg_form .fieldset .piereg_time .time_fields .piereg_select_year").on("click",function(){
+		if(piereg(this).val().trim() == "" && $('option:selected', this).attr('data-empty-vlue'))
+		{
+			piereg(this).val(piereg_current_date);
+		}
+	});*/
+	
 	/*piereg(".pieregformWrapper form").validationEngine();
 	piereg("#lostpasswordform").validationEngine();
 	piereg("#resetpassform").validationEngine();	
 	piereg("#loginform").validationEngine();*/
 	
-	piereg('.date_start').datepicker({
+	/*piereg('.date_start').datepicker({
         dateFormat : 'yy-mm-dd',
 		changeMonth: true,
-		changeYear: true
-	});	
+		changeYear: true,
+		yearRange: piereg_startingDate+":"+piereg_endingDate
+	});*/
 	
 	piereg('.date_start').each(function(index, element) {
        
@@ -31,7 +39,8 @@ piereg(document).ready(function(e) {
 		piereg( "#"+id ).datepicker({
 										dateFormat : format,
 										changeMonth: true,
-										changeYear: true	
+										changeYear: true,
+										yearRange: piereg_startingDate+":"+piereg_endingDate 
 									});
 		
 		//First day of a week
@@ -40,7 +49,8 @@ piereg(document).ready(function(e) {
 		piereg( "#"+id ).datepicker({
 										firstDay : format,
 										changeMonth: true,
-										changeYear: true	
+										changeYear: true,
+										yearRange: piereg_startingDate+":"+piereg_endingDate 
 									});
 		
 		//Min date		
@@ -49,9 +59,9 @@ piereg(document).ready(function(e) {
 		piereg( "#"+id ).datepicker({
 										minDate : format,
 										changeMonth: true,
-										changeYear: true	
+										changeYear: true,
+										yearRange: piereg_startingDate+":"+piereg_endingDate
 									});
-		
 		piereg("#ui-datepicker-div").hide();
     });
 	

@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
 Tested up to: 3.9.2
-Stable tag: 2.0.11
+Stable tag: 2.0.12
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
@@ -57,6 +57,13 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.12
+* Fixed SSL issues with Login/Registration and Redirection
+* Fixed File Upload errors
+* Fixed Conflicts in Form Editor
+* Fixed Notification related errors happening on some Servers
+* Updated language files
+
 ### 2.0.11
 * Fixed Password Protected pages error
 

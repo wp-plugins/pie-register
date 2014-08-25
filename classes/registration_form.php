@@ -472,6 +472,9 @@ class Registration_form extends PieReg_Base
 			$date_this_values['date']['dd']="";
 			$date_this_values['date']['yy']="";
 		}
+		$startingDate = $this->field['startingDate'];
+		$endingDate = $this->field['endingDate'];
+		
 		
 		if($this->field['date_type'] == "datefield")
 		{
@@ -488,7 +491,7 @@ class Registration_form extends PieReg_Base
 					<label>'.__("DD","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" '.$this->addValidation().' value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year],max[".$endingDate."],min[".$startingDate."]")).'" '.$this->addValidation().' value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				</div>';
@@ -497,7 +500,7 @@ class Registration_form extends PieReg_Base
 			{
 				$data .= '<div class="piereg_time date_format_field">
 				 <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year],max[".$endingDate."],min[".$startingDate."]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
@@ -522,7 +525,7 @@ class Registration_form extends PieReg_Base
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year],max[".$endingDate."],min[".$startingDate."]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				</div>';	
@@ -535,7 +538,7 @@ class Registration_form extends PieReg_Base
 					<label>'.__("DD","piereg").'</label>
 				  </div>	
 				 <div class="time_fields">
-					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
+					<input id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" maxlength="4"  type="text" class="'.$this->addClass("input_fields",array("custom[year],max[".$endingDate."],min[".$startingDate."]")).'" value="'.((isset($date_this_values['date']['yy']))?$date_this_values['date']['yy']:"").'">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
@@ -605,9 +608,10 @@ class Registration_form extends PieReg_Base
 					</select>
 				  </div>
 				  <div class="time_fields">
-					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
-					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").' piereg_select_year">
+					  <option value="" data-empty-vlue="true">'.__("Year","piereg").'</option>'; 
+  					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+					  //for($a=((int)date("Y") + 100);$a>=(((int)date("Y"))-100);$a--){
 						  if(isset($date_this_values['date']['yy']) && $date_this_values['date']['yy'] == $a)
 						  	$sel = ' selected=""';
 						  else
@@ -624,8 +628,9 @@ class Registration_form extends PieReg_Base
 					$data .= '<div class="piereg_time date_format_field">
 					 <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
-					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
+					  <option value="">'.__("Year","piereg").'</option>'; 
+  					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+					  //for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
 						  if(isset($date_this_values['date']['yy']) && $date_this_values['date']['yy'] == $a)
 						  	$sel = ' selected=""';
 						  else
@@ -697,8 +702,9 @@ class Registration_form extends PieReg_Base
 				  </div>
 				  	 <div class="time_fields">
 					<select id="yy_'.$this->id.'" name="'.$this->name.'[date][yy]" class="'.$this->addClass("").'">
-					  <option value="">'.__("Year","piereg").'</option>';
-					  for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){ 
+					  <option value="">'.__("Year","piereg").'</option>'; 
+  					  for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+					  //for($a=((int)date("Y"));$a>=(((int)date("Y"))-100);$a--){
 						  if(isset($date_this_values['date']['yy']) && $date_this_values['date']['yy'] == $a)
 						  	$sel = ' selected=""';
 						  else

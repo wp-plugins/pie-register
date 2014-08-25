@@ -5,7 +5,7 @@ Plugin URI: http://genetechsolutions.com/pie-register.html
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.11
+Version: 2.0.12
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -15,7 +15,7 @@ See readme.txt
 $piereg_dir_path = dirname(__FILE__);
 define('PIEREG_DIR_NAME',$piereg_dir_path);
 if(!defined('PIEREG_DB_VERSION'))
-	define('PIEREG_DB_VERSION','2.0.10');
+	define('PIEREG_DB_VERSION','2.0.11');
 
 define('LOG_FILE', '.ipn_results.log');
 define('SSL_P_URL', 'https://www.paypal.com/cgi-bin/webscr');
@@ -67,6 +67,7 @@ class PieRegister extends PieReg_Base{
 		$this->ipn_response = '';
 		$this->ipn_debug = false;
 		self::$pieinstance = $this;
+		
 		/***********************/
 		parent::__construct();
 		global $pagenow,$wp_version,$profile;
@@ -143,8 +144,8 @@ class PieRegister extends PieReg_Base{
 		add_action( 'wp_ajax_nopriv_pireg_update_invitation_code', array($this,'pireg_update_invitation_code_cb_url' ));
 		add_action( 'admin_enqueue_scripts' ,array($this,'pie_admin_menu_style_enqueu') );
 		////FRONT END SCRIPTS
-		add_action('wp_enqueue_scripts',array($this,'pie_frontend_enqueu_scripts'));
 		add_action('wp_head',array($this,'pie_frontend_ajaxurl'));
+		add_action('wp_enqueue_scripts',array($this,'pie_frontend_enqueu_scripts'));
 		
 	}
 	function pie_admin_menu_style_enqueu(){
@@ -153,7 +154,6 @@ class PieRegister extends PieReg_Base{
 	}
 	
 	function piereg_register_scripts(){
-		
 		wp_register_script('pie_calendarcontrol_js',plugins_url("/js/CalendarControl.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_datepicker_js',plugins_url("/js/datepicker.js",__FILE__),'jquery','2.0',false);
 		wp_register_script('pie_drag_js',plugins_url("/js/drag.js",__FILE__),'jquery','2.0',false);
@@ -240,15 +240,23 @@ class PieRegister extends PieReg_Base{
 												 '<?php _e("mm/dd/yyyy hh:mm:ss AM|PM or ","piereg");?>',
 												 '<?php _e("yyyy-mm-dd hh:mm:ss AM|PM","piereg");?>',
 												 '<?php _e("* Invalid Username","piereg");?>',
-												 '<?php _e("* Invalid File","piereg");?>'
+												 '<?php _e("* Invalid File","piereg");?>',
+												 '<?php _e("* Maximum value is ","piereg");?>'
 												 );
 		</script>
         <?php
 		
 	}
 	function pie_frontend_enqueu_scripts(){
-		
+		global $piereg_global_options;
 		$this->print_multi_lang_script_vars();
+		?>
+		<script type="text/javascript">
+			var piereg_current_date		= '<?php echo date("Y"); ?>';
+			var piereg_startingDate		= '<?php echo $piereg_global_options['piereg_startingDate']; ?>';
+			var piereg_endingDate		= '<?php echo $piereg_global_options['piereg_endingDate']; ?>';
+        </script>
+        <?php
 		wp_enqueue_style('pie_front_css');
 		wp_enqueue_style('pie_validation_css');
 		
@@ -267,7 +275,7 @@ class PieRegister extends PieReg_Base{
 	function pie_frontend_ajaxurl(){
 		?>
 		<script type="text/javascript">
-        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+			var ajaxurl 				= '<?php echo admin_url('admin-ajax.php'); ?>';
         </script>
         <?php
 	}
@@ -291,7 +299,6 @@ class PieRegister extends PieReg_Base{
 		wp_enqueue_style( 'pie_style_css' );
 		wp_enqueue_style('pie_tooltip_css');
 		wp_enqueue_style('pie_validation_css');
-		
 		////////////////////////////////////////////
 		wp_deregister_script('jquery');
 		wp_register_script('jquery', plugins_url("/js/jquery.js",__FILE__),'','2.0.0',false);
@@ -345,8 +352,9 @@ class PieRegister extends PieReg_Base{
 		if($pie_plugin_db_version != PIEREG_DB_VERSION){
 			$this->install_settings();
 		}
-		
-		$option = get_option( 'pie_register_2' );
+		//$option = get_option( 'pie_register_2' );
+		global $piereg_global_options;
+		$option = $piereg_global_options;
 		
 		/*********************************************/
 		/////////////// PIEREG LOGOUT ////////////////
@@ -535,6 +543,8 @@ class PieRegister extends PieReg_Base{
 			$val = ((int)($_POST['invitation_code_per_page_items']) != 0)? ((int)$_POST['invitation_code_per_page_items']) : "10";
 			$opt['invitaion_codes_pagination_number'] = $val;
 			update_option("pie_register_2",$opt);
+			global $piereg_global_options;
+			$piereg_global_options = $opt;
 			unset($opt);
 		}
 		
@@ -562,6 +572,8 @@ class PieRegister extends PieReg_Base{
 			$new_options['user_message_email_email_verification'] = nl2br($old_options['emailvmsg']);
 			$new_options['user_message_email_default_template'] = nl2br($old_options['msg']);
 			update_option("pie_register_2",$new_options);
+			global $piereg_global_options;
+			$piereg_global_options = $new_options;
 		}
 		
 		if($option['show_custom_logo'] == 1){
@@ -858,9 +870,13 @@ class PieRegister extends PieReg_Base{
 				}
 				else
 				{
-					$user = wp_signon( $creds, false );
+					$piereg_secure_cookie = false;
+					if ( (!empty($_POST['log']) && !empty($_POST['pwd'])) && (!force_ssl_admin() && is_ssl()) ) {
+						$piereg_secure_cookie = true;
+						force_ssl_admin(true);
+					}
+					$user = wp_signon( $creds, $piereg_secure_cookie);
 				}
-				//$this->check_user_activation();
 				if ( is_wp_error($user))
 				{
 					$user_login_error = $user->get_error_message();
@@ -993,6 +1009,8 @@ class PieRegister extends PieReg_Base{
 	function saveFields()
 	{
 		$math_cpatcha_enable = "false";
+		$piereg_startingDate = "1901";
+		$piereg_endingDate = date("Y");
 		foreach($_POST['field'] as $k=>$fv){
 			if($fv['type'] == 'html'){
 				$fv['html'] = htmlentities(stripslashes($fv['html']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
@@ -1005,9 +1023,41 @@ class PieRegister extends PieReg_Base{
 			{
 				$fv['desc'] = htmlentities(stripslashes($fv['desc']), ENT_QUOTES | ENT_IGNORE, "UTF-8");
 			}
+			//since 2.0.12
+			if($fv['type'] == 'date'){
+				$pattern = '/[0-9]{4}/';
+				$subject = $fv['startingDate'];
+				if(
+ 				    (strlen($fv['startingDate']) == 4 && preg_match($pattern, $subject))&&
+					(intval($fv['startingDate']) <= intval($fv['endingDate']))
+				  ){
+					$fv['startingDate'] = $fv['startingDate'];
+					$piereg_startingDate = $fv['startingDate'];
+				}
+				else{
+					$fv['startingDate'] = "1901";
+					$piereg_startingDate = "1900";
+				}
+					
+				$subject = $fv['endingDate'];
+				if(
+				   (strlen($fv['endingDate']) == 4 && preg_match($pattern, $subject)) && 
+				   (intval($fv['endingDate']) >= intval($fv['startingDate']))
+				   ){
+					$fv['endingDate'] = $fv['endingDate'];
+					$piereg_endingDate = $fv['endingDate'];
+				}
+				else{
+					$fv['endingDate'] = date("Y");
+					$piereg_endingDate = date("Y");
+				}
+					
+				
+					
+			}
+			
 			$updated_post[$k] = $fv;
 		}
-		
 		if(!$_POST['field'])
 				$_POST['field'] =  get_option( 'pie_fields_default' );
 	
@@ -1016,7 +1066,11 @@ class PieRegister extends PieReg_Base{
 		
 		$options = get_option("pie_register_2");
 		$options['pie_regis_set_user_role_'] = $_POST['set_user_role_'];
+		$options['piereg_startingDate'] = $piereg_startingDate;
+		$options['piereg_endingDate'] = $piereg_endingDate;
 		update_option("pie_register_2",$options);
+		global $piereg_global_options;
+		$piereg_global_options = $options;
 		update_option("piereg_math_cpatcha_enable",$math_cpatcha_enable);
 		// Update Wordpress Drefault User Role
 		update_option("default_role",$_POST['set_user_role_']);
@@ -1447,7 +1501,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	
 	function Unverified(){
 			global $wpdb;
-			if( $_POST['notice'] )
+			if(isset( $_POST['notice'] ) && !empty( $_POST['notice'] ))
 				echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
 				
 		
@@ -1730,6 +1784,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$piereg = get_option("pie_register_2");
 			$piereg['support_license'] = "";
 			update_option("pie_register_2",$piereg);
+			global $piereg_global_options;
+			$piereg_global_options = $piereg;
 			delete_option("pie_register_2_key");
 			delete_option("pie_register_2_active");
 			delete_option("pie_register_2_key");
@@ -1786,12 +1842,16 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				$this->InsertCode(trim($v));
 			}
 			$piereg['enable_invitation_codes'] = 	$_POST['enable_invitation_codes'];	
-			update_option( 'pie_register_2',$piereg);	
+			update_option( 'pie_register_2',$piereg);
+			global $piereg_global_options;
+			$piereg_global_options = $piereg;	
 			
 			if(isset($_POST['invitation_code_usage']) && is_numeric($_POST['invitation_code_usage'])  && $_POST['invitation_code_usage'] > 0)
 			{
 				$piereg["invitation_code_usage"] = $_POST['invitation_code_usage'];
-				update_option( 'pie_register_2',$piereg);		
+				update_option( 'pie_register_2',$piereg);
+				global $piereg_global_options;
+				$piereg_global_options = $piereg;
 			}	
 		}
 		require_once($this->plugin_dir.'/menus/PieRegInvitationCodes.php');		
@@ -2198,6 +2258,14 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				}	
 			}
 				update_option( 'pie_register_2', $update );
+				global $piereg_global_options;
+				$piereg_global_options = $update;
+				/**
+					* update global options since 2.0.12
+				**/
+				global $piereg_global_options;
+				$piereg_global_options = $update;
+				
 				if(trim($error) != "" )
 				{
 					$_POST['PR_license_notice'] = $error;
@@ -2259,6 +2327,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$piereg = get_option("pie_register_2");
 					$piereg['support_license'] = trim($key);
 					update_option("pie_register_2",$piereg);
+					global $piereg_global_options;
+					$piereg_global_options = $piereg;
 					add_option("pie_register_2_key",trim($key));
 					add_option("pie_register_2_active",1);
 					$error = apply_filters("piereg_Your_version_has_been_registered","Success. Your version has been registered.");
@@ -2283,6 +2353,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			$piereg = get_option("pie_register_2");
 			$piereg['support_license'] = trim($key);
 			update_option("pie_register_2",$piereg);
+			global $piereg_global_options;
+			$piereg_global_options = $piereg;
 			add_option("pie_register_2_key",trim($key));
 			add_option("pie_register_2_active",1);
 			$error = apply_filters("piereg_Your_version_has_been_registered","Success. Your version has been registered.");
@@ -2294,6 +2366,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		$piereg = get_option("pie_register_2");
 		$piereg['support_license'] = "";
 		update_option("pie_register_2",$piereg);
+		global $piereg_global_options;
+		$piereg_global_options = $piereg;
 		delete_option("pie_register_2_key");
 		delete_option("pie_register_2_active");
 		$_POST['PR_license_notice'] = __('Successfully Remove License Key', 'piereg');
@@ -2570,7 +2644,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					<input disabled="disabled" type="text" class="input_fields">
 					<label>'.__("DD","piereg").'</label>
 				  </div>
-				  <div class="time_fields" id="yyyy_'.$no.'">
+				  <div class="time_fields" id="yy_'.$no.'">
 					<input disabled="disabled" type="text" class="input_fields">
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>

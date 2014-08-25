@@ -173,6 +173,7 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 
 						//piereg("input[data-map-field-by-class="+(piereg(option).attr("data-map-field-by-class"))+"]").each(function(i,obj) {
 						pieregchecked = false;
+						var $checked = false;
 						//piereg("input[data-map-field-by-class=radio_14]").each(function(i,obj) {
 						piereg(IsWidget+"input[data-map-field-by-class="+(piereg(option).attr("data-map-field-by-class"))+"]").each(function(i,obj) {
 							if(piereg(obj).prop("checked"))
@@ -192,6 +193,7 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 						}
 						
 					break;
+					
 					default:
 						if(piereg(option).val().trim() == ""){
 							ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.required.alertText));
@@ -229,12 +231,15 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 					case "month":
 					case  "day":
 					case  "year":
-						if(!piereg(option).val().trim().match(new RegExp(getAllRules[rules[i]].regex),piereg(option).val().trim()))
+						if(piereg(option).val().trim() != "")
 						{
-							ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules[rules[i]].alertText));
-							breakLoop = true;
-						}else{
-							RemoveErrorMsg(option);
+							if(!piereg(option).val().trim().match(new RegExp(getAllRules[rules[i]].regex),piereg(option).val().trim()))
+							{
+								ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules[rules[i]].alertText));
+								breakLoop = true;
+							}else{
+								RemoveErrorMsg(option);
+							}
 						}
 					break;
 				}
@@ -253,24 +258,29 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 			
 			case "minSize":
 				i++;
-				var strlen = piereg(option).val().trim();
-				if(rules[i] > strlen.length)
-				{
-					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.minSize.alertText+" "+rules[i]+" "+getAllRules.minSize.alertText2));
-					breakLoop = true;
-				}else{
-					RemoveErrorMsg(option);
+				if(piereg(option).val().trim() != ""){
+					var strlen = piereg(option).val().trim();
+					if(rules[i] > strlen.length)
+					{
+						ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.minSize.alertText+" "+rules[i]+" "+getAllRules.minSize.alertText2));
+						breakLoop = true;
+					}else{
+						RemoveErrorMsg(option);
+					}
 				}
 			break;
 			case "maxSize":
 				i++;
-				var strlen = piereg(option).val().trim();
-				if(rules[i] < strlen.length)
+				if(piereg(option).val().trim())
 				{
-					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.maxSize.alertText+" "+rules[i]+" "+getAllRules.maxSize.alertText2));
-					breakLoop = true;
-				}else{
-					RemoveErrorMsg(option);
+					var strlen = piereg(option).val().trim();
+					if(rules[i] < strlen.length)
+					{
+						ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.maxSize.alertText+" "+rules[i]+" "+getAllRules.maxSize.alertText2));
+						breakLoop = true;
+					}else{
+						RemoveErrorMsg(option);
+					}
 				}
 			break;
 			case "ext":
@@ -278,36 +288,44 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 				var regex;
 				regex = "(.*?)\.("+rules[i]+")$";
 				var regexExpression ="(?!(?:[^<]+>|[^>]+<\\/a>))\\b(" + rules[i] + ")\\b";
-				
-				if(!piereg(option).val().trim().match(new RegExp(regex),piereg(option).val().trim()))
+				if(piereg(option).val().trim() != "")
 				{
-					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.ext.alertText));
-					breakLoop = true;
-				}else{
-					RemoveErrorMsg(option);
+					if(!piereg(option).val().trim().match(new RegExp(regex),piereg(option).val().trim()))
+					{
+						ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.ext.alertText));
+						breakLoop = true;
+					}else{
+						RemoveErrorMsg(option);
+					}
 				}
 				
 			break;
 			case "min":
 				i++;
-				$value = parseInt(piereg(option).val());
-				if($value < rules[i])
+				if(piereg(option).val() != "")
 				{
-					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.min.alertText+" "+rules[i]));
-					breakLoop = true;
-				}else{
-					RemoveErrorMsg(option);
+					$value = parseInt(piereg(option).val());
+					if($value < rules[i])
+					{
+						ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.min.alertText+" "+rules[i]));
+						breakLoop = true;
+					}else{
+						RemoveErrorMsg(option);
+					}
 				}
 			break;
 			case "max":
 				i++;
-				$value = parseInt(piereg(option).val());
-				if($value > rules[i])
+				if(piereg(option).val())
 				{
-					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.max.alertText+" "+rules[i]));
-					breakLoop = true;
-				}else{
-					RemoveErrorMsg(option);
+					$value = parseInt(piereg(option).val());
+					if($value > rules[i])
+					{
+						ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.max.alertText+" "+rules[i]));
+						breakLoop = true;
+					}else{
+						RemoveErrorMsg(option);
+					}
 				}
 			break;
 			
@@ -441,7 +459,7 @@ function getRegexAndErrorMsg(){
 		},
 		"max": {
 			"regex": "none",
-			"alertText": piereg_validation_engn[14]//"* Maximum value is "
+			"alertText": piereg_validation_engn[55]//"* Maximum value is "
 		},
 		"past": {
 			"regex": "none",

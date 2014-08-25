@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2014-07-23 09:50+0500\n"
+"PO-Revision-Date: 2014-08-25 19:27+0500\n"
 "Last-Translator: Genetech Solutions <info@genetechsolutions.com>\n"
 "Language-Team: Baqar\n"
 "Language: en_US\n"
@@ -844,9 +844,6 @@ msgstr "WordPress plugins"
 msgid "Developed by"
 msgstr "Developed by"
 
-msgid "After Logout"
-msgstr "After Logout"
-
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
@@ -921,9 +918,6 @@ msgstr "Profile Page"
 
 msgid "After Sign-in Page"
 msgstr "After Sign-in Page"
-
-msgid "After Logout Page"
-msgstr "After Logout Page"
 
 msgid "After Logout URL"
 msgstr "After Logout URL"
@@ -1204,6 +1198,39 @@ msgstr "Checked"
 
 msgid "List Type"
 msgstr "List Type"
+
+msgid "Remove Settings"
+msgstr "Remove Settings"
+
+msgid "After Logout"
+msgstr "After Logout"
+
+msgid "Starting Date"
+msgstr "Starting Date"
+
+msgid "Ending Date"
+msgstr "Ending Date"
+
+msgid "After Logout Page"
+msgstr "After Logout Page"
+
+msgid "Password Label"
+msgstr "Password Label"
+
+msgid "Password Placeholder"
+msgstr "Password Placeholder"
+
+msgid "Captcha Label"
+msgstr "Captcha Label"
+
+msgid "Username Label"
+msgstr "Username Label"
+
+msgid "Username Placeholder"
+msgstr "Username Placeholder"
+
+msgid "Remove Settings On Deactivation"
+msgstr "Remove Settings On Deactivation"
 
 msgid "Display name"
 msgstr "Display name"

@@ -17,20 +17,25 @@ class Profile_admin extends PieReg_Base
 		$this->default_fields = FALSE;
 		
 		add_action( 'user_edit_form_tag', array($this,"piereg_wp_admin_form_tag") );
+		
+		/*print_r(get_user_meta($this->user_id, $this->slug));
+		print_r(get_usermeta($this->user_id, $this->slug));*/
+		
     }
     function addTextField()
     {
-        echo '<input id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '" type="text" value="' . get_usermeta($this->user_id, $this->slug) . '" />';
-		
-		
+		//get_usermeta($this->user_id, $this->slug)
+        echo '<input id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '" type="text" value="' . get_user_meta($this->user_id, $this->slug,true) . '" />';
     }
     function addTextArea()
     {
-        echo '<textarea id="' . $this->id . '" name="' . $this->slug . '" rows="' . $this->field['rows'] . '" cols="' . $this->field['cols'] . '"  class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '">' . get_usermeta($this->user_id, $this->slug) . '</textarea>';
+		//get_usermeta($this->user_id, $this->slug)
+        echo '<textarea id="' . $this->id . '" name="' . $this->slug . '" rows="' . $this->field['rows'] . '" cols="' . $this->field['cols'] . '"  class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '">' . get_user_meta($this->user_id, $this->slug,true) . '</textarea>';
     }
     function addDropdown()
     {
-        $sel_options = get_usermeta($this->user_id, $this->slug);
+        //$sel_options = get_usermeta($this->user_id, $this->slug);
+        $sel_options = get_user_meta($this->user_id, $this->slug,true);
         $multiple    = "";
         if ($this->type == "multiselect") {
 				$multiple = 'multiple';
@@ -69,19 +74,21 @@ class Profile_admin extends PieReg_Base
     }
     function addNumberField()
     {
-        echo '<input id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '" min="' . $this->field['min'] . '" max="' . $this->field['max'] . '" type="number" value="' . get_usermeta($this->user_id, $this->slug) . '" />';
+		//get_usermeta($this->user_id, $this->slug)
+        echo '<input id="' . $this->id . '" name="' . $this->slug . '" class="' . $this->field['css'] . '"  placeholder="' . $this->field['placeholder'] . '" min="' . $this->field['min'] . '" max="' . $this->field['max'] . '" type="number" value="' . get_user_meta($this->user_id, $this->slug,true) . '" />';
     }
     function addCheckRadio()
     {
         if (sizeof($this->field['value']) > 0) {
-            $val = get_usermeta($this->user_id, $this->slug);
+            //$val = get_usermeta($this->user_id, $this->slug);
+            $val = get_user_meta($this->user_id, $this->slug,true);
             for ($a = 0; $a < sizeof($this->field['value']); $a++) {
                 $checked = '';
                 if (is_array($val) && in_array($this->field['value'][$a], $val)) {
                     $checked = 'checked="checked"';
                 }
                 echo '<span style="margin-left:5px;">'.$this->field['display'][$a].'</span>';
-                echo '<input style="margin-left:5px;" value="' . $this->field['value'][$a] . '" ' . $checked . ' type="' . $this->type . '" ' . $multiple . ' name="' . $this->slug . '[]" class="' . $this->field['css'] . '"  >';
+                echo '<input style="margin-left:5px;" value="' . $this->field['value'][$a] . '" ' . $checked . ' type="' . $this->type . '" ' . ((isset($multiple))?$multiple:"") . ' name="' . $this->slug . '[]" class="' . $this->field['css'] . '"  >';
             }
         }
     }
@@ -92,7 +99,8 @@ class Profile_admin extends PieReg_Base
    
 	function addUpload()
 	{
-		$val = get_usermeta($this->user_id, $this->slug);
+		//$val = get_usermeta($this->user_id, $this->slug);
+		$val = get_user_meta($this->user_id, $this->slug,true);
 				
 		echo '<input name="' . $this->slug . '" type="file" value="'.$val .'">';
 		echo (trim($val) != "")? '<br /><a href="'.$val.'" target="_blank">'.basename($val).'</a>' : "";
@@ -100,7 +108,8 @@ class Profile_admin extends PieReg_Base
     function addProfilePic()
 	{
 		$data = "";
-		$val = get_usermeta($this->user_id , $this->slug);
+		//$val = get_usermeta($this->user_id , $this->slug);
+		$val = get_user_meta($this->user_id , $this->slug,true);
 		$data .= '<input id="'.$this->id.'" name="'.$this->slug.'" type="file" class=" validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]" />';
 		$data .= '<input id="'.$this->id.'" name="'.$this->slug.'_hidden" value="'.$val.'" type="hidden"  />';
 		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
@@ -110,12 +119,13 @@ class Profile_admin extends PieReg_Base
 	}
     function addAddress()
     {
-        $address = get_usermeta($this->user_id, $this->slug);
+        //$address = get_usermeta($this->user_id, $this->slug);
+        $address = get_user_meta($this->user_id, $this->slug,true);
         echo '<div class="address">
 		  <input type="text" name="' . $this->slug . '[address]" id="' . $this->id . '" value="' . ((isset($address['address']))?$address['address']:"") . '" >
 		  <label>'.__("Street Address","piereg").'</label>
 		</div>';
-        if (!$this->field['hide_address2']) {
+        if (isset($this->field['hide_address2']) && !$this->field['hide_address2']) {
             echo '<div class="address">
 			  <input type="text" name="' . $this->slug . '[address2]" id="address2_' . $this->id . '" value="' . ((isset($address['address2']))?$address['address2']:"") . '" >
 			  <label>'.__("Address Line 2","piereg").'</label>
@@ -126,7 +136,7 @@ class Profile_admin extends PieReg_Base
 			<input type="text" name="' . $this->slug . '[city]" id="city_' . $this->id . '" value="' . ((isset($address['city']))?$address['city']:"") . '">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
-        if (!$this->field['hide_state']) {
+        if (isset($this->field['hide_state']) && !$this->field['hide_state']) {
             if ($this->field['address_type'] == "International") {
                 echo '<div class="address2"  >
 					<input type="text" name="' . $this->slug . '[state]" id="state_' . $this->id . '" value="' . ((isset($address['state']))?$address['state']:"") . '">
@@ -173,12 +183,13 @@ class Profile_admin extends PieReg_Base
     }
     function addPhone()
     {
-        
-		echo '<input id="' . $this->id . '"  name="' . $this->slug . '" class="input_fields"  placeholder="' . $field['placeholder'] . '" type="text" value="' . get_usermeta($this->user_id, $this->slug) . '" />';
+		//get_usermeta($this->user_id, $this->slug)
+		echo '<input id="' . $this->id . '"  name="' . $this->slug . '" class="input_fields"  placeholder="' . ((isset($field['placeholder']))?$field['placeholder']:"") . '" type="text" value="' . get_user_meta($this->user_id, $this->slug,true) . '" />';
     }
     function addTime()
     {
-        $time = get_usermeta($this->user_id, $this->slug);
+        //$time = get_usermeta($this->user_id, $this->slug);
+        $time = get_user_meta($this->user_id, $this->slug,true);
         echo '<input size="2" maxlength="2" id="hh_' . $this->id . '" name="' . $this->slug . '[hh]" type="text" value="' . ((isset($time['hh']))?$time['hh']:"") . '"> : <input size="2" maxlength="2" id="mm_' . $this->id . '" type="text" name="' . $this->slug . '[mm]"  value="' . ((isset($time['mm']))?$time['mm']:"") . '">';
         if ($this->field['time_type'] == "12") {
             $time_format = ((isset($time['time_format']))?$time['time_format']:"");
@@ -191,57 +202,59 @@ class Profile_admin extends PieReg_Base
     }
     function addDate()
     {
-        $date = get_usermeta($this->user_id, $this->slug);
+        //$date = get_usermeta($this->user_id, $this->slug);
+        $date = get_user_meta($this->user_id, $this->slug,true);
 		if(!$date)
 		{
 			$date['date']['mm'] = "";
 			$date['date']['dd'] = "";
 			$date['date']['yy'] = "";	
 		}
-		
+		$startingDate = $this->field['startingDate'];
+		$endingDate = $this->field['endingDate'];
         if ($this->field['date_type'] == "datefield") {
             if ($this->field['date_format'] == "mm/dd/yy") {
                 echo '<div class="piereg_time date_format_field">
 				  <div class="time_fields">
-					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . $date['date']['mm'] . '" >
+					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . ((isset($date['date']['mm']))?$date['date']['mm']:"") . '" >
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . $date['date']['dd'] . '">
+					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . ((isset($date['date']['dd']))?$date['date']['dd']:"") . '">
 					<label>'.__("DD","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . $date['date']['yy'] . '">
+					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . ((isset($date['date']['yy']))?$date['date']['yy']:"") . '">
 					<label>'.__("yy","piereg").'</label>
 				  </div>
 				</div>';
             } else if ($this->field['date_format'] == "yy/mm/dd" || $this->field['date_format'] == "yy.mm.dd") {
                 echo '<div class="piereg_time date_format_field">
 				 <div class="time_fields">
-					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . $date['date']['yy'] . '">
+					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . ((isset($date['date']['yy']))?$date['date']['yy']:"") . '">
 					<label>'.__("yy","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . $date['date']['mm'] . '">
+					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . ((isset($date['date']['mm']))?$date['date']['mm']:"") . '">
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . $date['date']['dd'] . '">
+					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . ((isset($date['date']['dd']))?$date['date']['dd']:"") . '">
 					<label>'.__("DD","piereg").'</label>
 				  </div>				  
 				</div>';
             } else {
                 echo '<div class="piereg_time date_format_field">
 				 <div class="time_fields">
-					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . $date['date']['dd'] . '">
+					<input id="dd_' . $this->id . '" name="' . $this->slug . '[date][dd]" maxlength="2"  type="text" value="' . ((isset($date['date']['dd']))?$date['date']['dd']:"") . '">
 					<label>'.__("DD","piereg").'</label>
 				  </div>	
 				 <div class="time_fields">
-					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . $date['date']['yy'] . '">
+					<input id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]" maxlength="4"  type="text" value="' . ((isset($date['date']['yy']))?$date['date']['yy']:"") . '">
 					<label>'.__("yy","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . $date['date']['mm'] . '">
+					<input id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]" maxlength="2" type="text" value="' . ((isset($date['date']['mm']))?$date['date']['mm']:"") . '">
 					<label>'.__("MM","piereg").'</label>
 				  </div>				  			  
 				</div>';
@@ -249,8 +262,9 @@ class Profile_admin extends PieReg_Base
         } 
 		else if ($this->field['date_type'] == "datepicker") {
             echo '<div class="piereg_time date_format_field">
-				  <input id="' . $this->id . '" name="' . $this->slug . '[date][]" value="' . $date['date'][0] . '" type="text" ></div>';
-        } else if ($this->field['date_type'] == "datedropdown") {
+				  <input id="' . $this->id . '" name="' . $this->slug . '[date][]" value="' . $date['date'][0] . '" type="text" placeholder="'.$this->field['date_format'].'"></div>';
+        }
+		else if ($this->field['date_type'] == "datedropdown") {
             echo '<div class="piereg_time date_format_field">
 				 
 					<select id="mm_' . $this->id . '" name="' . $this->slug . '[date][mm]">
@@ -278,8 +292,9 @@ class Profile_admin extends PieReg_Base
 				
 				  
 					<select id="yy_' . $this->id . '" name="' . $this->slug . '[date][yy]">
-					  <option value="">'.__("Year","piereg").'</option>';
-            for ($a = 2099; $a >= 1900; $a--) {
+					  <option value="">'.__("Year","piereg").'</option>'; 
+		    for($a=((int)$endingDate);$a>=(((int)$startingDate));$a--){
+            //for ($a = 2099; $a >= 1900; $a--) {
                 $sel = '';
                 if ((int) $a == (int) $date['date']['yy']) {
                     $sel = 'selected="selected"';
@@ -293,7 +308,8 @@ class Profile_admin extends PieReg_Base
     }
 	function addList()
 	{
-		$list = get_usermeta($this->user_id, $this->slug);		
+		//$list = get_usermeta($this->user_id, $this->slug);
+		$list = get_user_meta($this->user_id, $this->slug,true);
 		$width  = 90 /  $this->field['cols']; 
 		
 		for($a = 1 ,$c=0; $a <= $this->field['rows'] ; $a++,$c++)
@@ -317,7 +333,7 @@ class Profile_admin extends PieReg_Base
     }
     function createFieldID()
     {
-        return "field_" . $this->field['id'];
+        return "field_" . ((isset($this->field['id']))?$this->field['id']:"");
     }
     function addLabel()
     {
@@ -382,7 +398,7 @@ class Profile_admin extends PieReg_Base
             echo '<table class="form-table">';
            foreach ($this->data as $this->field) 
 		   {
-             	$this->slug = $this->createFieldName($this->field['type']."_".$this->field['id']);
+             	$this->slug = $this->createFieldName($this->field['type']."_". ((isset($this->field['id']))?$this->field['id']:"") );
                 $this->type = $this->field['type'];
                 $this->id   = $this->createFieldID();	   
 			   	

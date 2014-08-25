@@ -33,10 +33,10 @@ piereg(document).ready(function(){
 </script>
 <?php
 $piereg = get_option( 'pie_register_2' );
-if( $_POST['notice'] ){
+if(isset( $_POST['notice'] ) && !empty($_POST['notice']) ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '</strong></p></div>';
 }
-if( $_POST['license_success'] ){
+if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['license_success'] . '.</strong></p></div>';
 }
 ?>
@@ -436,7 +436,7 @@ if( $_POST['license_success'] ){
         <div class="fields">
             <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
         </div>
-       
+        
         <h3><?php _e("Installation Status",'piereg') ?></h3>
         <div class="fields">
           <label><?php _e("PHP Version",'piereg') ?></label>
@@ -453,16 +453,47 @@ if( $_POST['license_success'] ){
         </div>
         <div class="fields">
           <label><?php _e("MySQL Version",'piereg') ?></label>
-          <?php if(version_compare(mysql_get_server_info(),  "5.0") == 1)
-		  {
-			  echo '<span class="installation_status">'.mysql_get_server_info().'</span>';
-		  }
-		  else
-		  {
-			  echo '<span class="installation_status_faild">'.mysql_get_server_info().'</span>';
-			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
-		  }
-		  ?>
+          <?php
+		  
+		  
+		  
+			/* Use ext/mysqli if it exists and:
+			  *  - WP_USE_EXT_MYSQL is defined as false, or
+			  *  - We are a development version of WordPress, or
+			  *  - We are running PHP 5.5 or greater, or
+			  *  - ext/mysql is not loaded.
+			  */
+			$piereg_mytsql_version_info = "";
+			global $wpdb;
+			if ( function_exists( 'mysqli_connect' ) ){
+				if ( defined( 'WP_USE_EXT_MYSQL' ) ){
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				} elseif ( version_compare( phpversion(), '5.5', '>=' ) || ! function_exists( 'mysql_connect' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				} elseif ( false !== strpos( $GLOBALS['wp_version'], '-' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				}else{
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				}
+			}else{
+				//mysql
+				$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+			}
+			if(version_compare($piereg_mytsql_version_info,  "5.0") == 1)
+			{
+				echo '<span class="installation_status">'.$piereg_mytsql_version_info.'</span>';
+			}
+			else
+			{
+				echo '<span class="installation_status_faild">'.$piereg_mytsql_version_info.'</span>';
+				echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
+			}
+			?>
+          
         </div>
         <div class="fields">
           <label><?php _e("Wordpress Version",'piereg') ?></label>
