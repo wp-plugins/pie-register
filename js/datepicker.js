@@ -4,11 +4,7 @@ var piereg = jQuery.noConflict();
 
 piereg(document).ready(function(e) {
 	
-	piereg('.date_start').on("focus",function(){
-		if (!piereg("#ui-datepicker-div").closest('.pieregWrapper').length) {
-			piereg("#ui-datepicker-div").wrap("<div class='pieregWrapper pieregister-admin'></div>");
-		}
-	});
+	
 	
 	/*piereg(".pieregWrapper #pie_register_reg_form .fieldset .piereg_time .time_fields .piereg_select_year").on("click",function(){
 		if(piereg(this).val().trim() == "" && $('option:selected', this).attr('data-empty-vlue'))
@@ -29,6 +25,15 @@ piereg(document).ready(function(e) {
 		yearRange: piereg_startingDate+":"+piereg_endingDate
 	});*/
 	
+	
+		
+	///////////////////////// DATE PICKER //////////////////////////////////
+	
+	piereg('.date_start').on("focus",function(){
+		if (!piereg("#ui-datepicker-div").closest('.pieregWrapper').length) {
+			piereg("#ui-datepicker-div").wrap("<div class='pieregWrapper pieregister-admin'></div>");
+		}
+	});
 	piereg('.date_start').each(function(index, element) {
        
 	    var id = piereg(this).attr("id");
@@ -40,7 +45,8 @@ piereg(document).ready(function(e) {
 										dateFormat : format,
 										changeMonth: true,
 										changeYear: true,
-										yearRange: piereg_startingDate+":"+piereg_endingDate 
+										yearRange: piereg_startingDate+":"+piereg_endingDate,
+										showAnim: "fadeIn"
 									});
 		
 		//First day of a week
@@ -50,7 +56,8 @@ piereg(document).ready(function(e) {
 										firstDay : format,
 										changeMonth: true,
 										changeYear: true,
-										yearRange: piereg_startingDate+":"+piereg_endingDate 
+										yearRange: piereg_startingDate+":"+piereg_endingDate,
+										showAnim: "fadeIn"
 									});
 		
 		//Min date		
@@ -60,7 +67,8 @@ piereg(document).ready(function(e) {
 										minDate : format,
 										changeMonth: true,
 										changeYear: true,
-										yearRange: piereg_startingDate+":"+piereg_endingDate
+										yearRange: piereg_startingDate+":"+piereg_endingDate,
+										showAnim: "fadeIn"
 									});
 		piereg("#ui-datepicker-div").hide();
     });
@@ -69,8 +77,8 @@ piereg(document).ready(function(e) {
     	var id = piereg(this).attr("id");		
 		id = id.replace("_icon","");		
 		piereg("#"+id).datepicker("show");
-	}); 
-	
+	});
+	///////////////////////////////////////////////////////////////////
 	/*piereg(".pie_next").click(function () 
 	{  
 		var validate = piereg(this).closest('.pieregformWrapper').find('form').validationEngine('validate')
@@ -163,6 +171,23 @@ piereg(document).ready(function(e) {
 	}
 });*/
 
+
+
+
+
+
+
+
+/**************************************************/
+
+
+
+
+
+
+
+
+/*
 piereg(document).ready(function(){
       if(piereg(".widget #piereg_passwordStrength_widget").length > 0){
 		piereg(".widget #password_2_widget").bind("keyup", function(){
@@ -286,7 +311,7 @@ function updateStrength(strength,pass1,pass2,widje){
       dom.removeClass().addClass(status[1]).text(piereg_pass_str_meter_string[1]);
       break;
     }
-}
+}*/
 
 // Declare jQuery Object to $.
 $ = jQuery;

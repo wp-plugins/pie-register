@@ -1,4 +1,4 @@
-<?php 
+<?php
 function pieOutputLoginForm($piereg_widget = false){
 $option			= get_option("pie_register_2");
 $form_data = "";
@@ -22,7 +22,7 @@ $newpasspageLock = 0;
 				if(is_object($user_data)){
 					$form 			= new Registration_form();
 					$option 		= get_option( 'pie_register_2' );
-					$subject 		= $option['user_subject_email_payment_faild'];
+					$subject 		= html_entity_decode($option['user_subject_email_payment_faild'],ENT_COMPAT,"UTF-8");
 					$message_temp = "";
 					if($option['user_formate_email_payment_faild'] == "0"){
 						$message_temp	= nl2br(strip_tags($option['user_message_email_payment_faild']));
@@ -35,7 +35,7 @@ $newpasspageLock = 0;
 					$reply_email 	= $option['user_to_email_payment_faild'];
 					//Headers
 					$headers  = 'MIME-Version: 1.0' . "\r\n";
-					$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+					$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 	
 					if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 						$headers .= "From: ".$from_name." <".$from_email."> \r\n";
@@ -91,7 +91,7 @@ $newpasspageLock = 0;
 						
 						
 						$form 			= new Registration_form();
-						$subject 		= $option['user_subject_email_email_thankyou'];
+						$subject 		= html_entity_decode($option['user_subject_email_email_thankyou'],ENT_COMPAT,"UTF-8");
 						$message_temp = "";
 						if($option['user_formate_email_email_thankyou'] == "0"){
 							$message_temp	= nl2br(strip_tags($option['user_message_email_email_thankyou']));
@@ -106,7 +106,7 @@ $newpasspageLock = 0;
 						//Headers
 		
 						$headers  = 'MIME-Version: 1.0' . "\r\n";
-						$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+						$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 		
 						if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 		
@@ -207,6 +207,7 @@ $newpasspageLock = 0;
 			$form_data .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
 		if(isset($_POST['error']) && $_POST['error'] != "")
 			$form_data .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';	
+		
 if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET['action']) && ($newpasspageLock == 0) ){
 	$form_data .= '
 	  <form name="resetpassform" class="piereg_resetpassform" action="'.pie_modify_custom_url(pie_login_url(),'action=resetpass&key=' . urlencode( $_GET['key'] ) . '&login=' . urlencode( $_GET['login'] )).'" method="post" autocomplete="off">
@@ -453,4 +454,4 @@ if(!function_exists("login_form_captcha"))
 		}
 		return $output;
 	}
-}
+}?>

@@ -1,7 +1,4 @@
 <?php
-
-
-
 class PieReg_Base
 {
 	var $user_table;		
@@ -43,7 +40,7 @@ class PieReg_Base
 				
 				$value		= get_user_meta($user_id, $meta->meta_key );
 				$get_value = "";
-				if(is_array($value[0])){
+				if(isset($value[0]) && is_array($value[0])){
 					foreach($value[0] as $val){
 						if(is_array($val)){
 							if(array_filter($val))
@@ -179,7 +176,8 @@ class PieReg_Base
 							"payment_faild"								=> __("Payment Faild","piereg"),
 							"pending_payment_reminder"					=> __("Pending Payment Reminder","piereg"),
 							"email_verification_reminder"				=> __("E-Mail Verification Reminder","piereg"),
-							"forgot_password_notification"				=> __("Forgot Password Notification","piereg")
+							"forgot_password_notification"				=> __("Forgot Password Notification","piereg"),
+							"email_edit_verification"					=> __("Email Edit Verification","piereg")
 							);
 		//"email_forgotpassword"=>"Forgot Password"
 		update_option("pie_user_email_types",$email_type);
@@ -227,9 +225,10 @@ class PieReg_Base
 		$update['after_login']				= ($current['after_login'])?$current['after_login']:-1;
 		$update['alternate_logout']				= ($current['alternate_logout'])?$current['alternate_logout']:-1;
 		$update['alternate_logout_url']				= ($current['alternate_logout'])?$current['alternate_logout_url']:"";
-		$update['support_license'] 			= ($current['support_license'])?$current['support_license']:"";
+		
 		$update['outputcss'] 				= ($current['outputcss'])?$current['outputcss']:1;
-		$update['theme_styles']				= ($current['theme_styles'])?$current['theme_styles']:1;
+		$update['outputjquery_ui'] 			= ($current['outputjquery_ui'])?$current['outputjquery_ui']:1;
+		
 		$update['outputhtml'] 				= ($current['outputhtml'])?$current['outputhtml']:1;
 		$update['no_conflict']				= ($current['no_conflict'])?$current['no_conflict']:0;
 		/*$update['currency'] 				= ($current['currency'])?$current['currency']:"USD";*/
@@ -276,6 +275,15 @@ class PieReg_Base
 		$update['capthca_in_forgot_pass_label']	= ($current['capthca_in_forgot_pass_label'])? $current['capthca_in_forgot_pass_label'] : "";
 		$update['capthca_in_forgot_pass']	= ($current['capthca_in_forgot_pass'])? $current['capthca_in_forgot_pass'] : "0";
 		
+		
+		
+		$update['pass_strength_indicator_label']	= ($current['pass_strength_indicator_label'])? $current['pass_strength_indicator_label'] : "Strength Indicator";
+		$update['pass_very_weak_label']				= ($current['pass_very_weak_label'])? $current['pass_very_weak_label'] : "Very weak";
+		$update['pass_weak_label']					= ($current['pass_weak_label'])? $current['pass_weak_label'] : "Weak";
+		$update['pass_medium_label']				= ($current['pass_medium_label'])? $current['pass_medium_label'] : "Medium";
+		$update['pass_strong_label']				= ($current['pass_strong_label'])? $current['pass_strong_label'] : "Strong";
+		$update['pass_mismatch_label']				= ($current['pass_mismatch_label'])? $current['pass_mismatch_label'] : "Mismatch";
+		
 		//Since 2.0.10
 		$update['remove_PR_settings']	= "0";//Remove All PIE-register settings from database
 		
@@ -294,26 +302,28 @@ class PieReg_Base
 			$update['user_formate_email_'.$val] = ($current['user_formate_email_'.$val])?$current['user_formate_email_'.$val]:1;
 		}
 
-		$update['user_message_email_admin_verification']	 					= ($current['user_message_email_admin_verification'])?$current['user_message_email_admin_verification']: '<p>Dear %user_login%,</p><p>Thanks for showing your interest in becoming a registered member of our Wesbite. This is to inform you that your account is under admin moderation and once approved, you will be notified shortly.<br /><br />Best Wishes,</p><p>Team %blogname%</p>';
+		$update['user_message_email_admin_verification']	= ($current['user_message_email_admin_verification'])?$current['user_message_email_admin_verification']: '<p>Dear %user_login%,</p><p>Thanks for showing your interest in becoming a registered member of our Wesbite. This is to inform you that your account is under admin moderation and once approved, you will be notified shortly.<br /><br />Best Wishes,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_email_verification']			 			= ($current['user_message_email_email_verification'])?$current['user_message_email_email_verification']:'<p>Dear %user_login%,</p><p>You have successfully created an account to our Website. You can access your account by completing the registration and verification process, kindly use the link below to verify your email address.</p><p>%activationurl%</p><p>Best Wishes,</p><p>Team %blogname%</p>';
+		$update['user_message_email_email_verification']	= ($current['user_message_email_email_verification'])?$current['user_message_email_email_verification']:'<p>Dear %user_login%,</p><p>You have successfully created an account to our Website. You can access your account by completing the registration and verification process, kindly use the link below to verify your email address.</p><p>%activationurl%</p><p>Best Wishes,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_email_thankyou'] 							= ($current['user_message_email_email_thankyou'])?$current['user_message_email_email_thankyou']:'<p>Dear %user_login%,</p><p>Thank you for signing-up to our site. We appreciate that you have successfully created an account. If you require any assistance, feel free to contact.</p><p>Kind Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_email_thankyou'] 		= ($current['user_message_email_email_thankyou'])?$current['user_message_email_email_thankyou']:'<p>Dear %user_login%,</p><p>Thank you for signing-up to our site. We appreciate that you have successfully created an account. If you require any assistance, feel free to contact.</p><p>Kind Regards,</p><p>Team %blogname%</p>';
 		
 		//$update['user_message_email_email_forgotpassword'] 	= "";
-		$update['user_message_email_payment_success'] 							= ($current['user_message_email_payment_success'])?$current['user_message_email_payment_success']:'<p>Dear %user_login%,</p><p>Congratulations, you have completed the payment procedure successfully. Now you can avail our features anytime you want.</p><p>Best Regards,</p><p>Team %blogname%</p><p>&nbsp;</p>';
+		$update['user_message_email_payment_success'] 		= ($current['user_message_email_payment_success'])?$current['user_message_email_payment_success']:'<p>Dear %user_login%,</p><p>Congratulations, you have completed the payment procedure successfully. Now you can avail our features anytime you want.</p><p>Best Regards,</p><p>Team %blogname%</p><p>&nbsp;</p>';
 		
-		$update['user_message_email_payment_faild'] 							= ($current['user_message_email_payment_faild'])?$current['user_message_email_payment_faild']:'<p>Dear %user_login%,</p><p>Unfortunately the payment attempt from your side has been failed. We request you to kindly Log-In to your account again to complete the payment process.</p><p>Kind Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_payment_faild'] 		= ($current['user_message_email_payment_faild'])?$current['user_message_email_payment_faild']:'<p>Dear %user_login%,</p><p>Unfortunately the payment attempt from your side has been failed. We request you to kindly Log-In to your account again to complete the payment process.</p><p>Kind Regards,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_pending_payment'] 							= ($current['user_message_email_pending_payment'])?$current['user_message_email_pending_payment']:'<p>Dear %user_login%,</p><p>This Email is sent to you to remind that your payment is still in pending. To avoid any further delay to grab our amazing features, kindly complete the payment procedure.</p><p>Best Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_pending_payment'] 		= ($current['user_message_email_pending_payment'])?$current['user_message_email_pending_payment']:'<p>Dear %user_login%,</p><p>This Email is sent to you to remind that your payment is still in pending. To avoid any further delay to grab our amazing features, kindly complete the payment procedure.</p><p>Best Regards,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_default_template'] 							= ($current['user_message_email_default_template'])?$current['user_message_email_default_template']: '<p>Dear %user_login%,</p><p>Thanks for your registration to our Website. Now you can enjoy unlimited benefits of our services and products by just signing in to your personalized account.</p><p>Best Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_default_template'] 		= ($current['user_message_email_default_template'])?$current['user_message_email_default_template']: '<p>Dear %user_login%,</p><p>Thanks for your registration to our Website. Now you can enjoy unlimited benefits of our services and products by just signing in to your personalized account.</p><p>Best Regards,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_pending_payment_reminder'] 					= ($current['user_message_email_pending_payment_reminder'])?$current['user_message_email_pending_payment_reminder']: '<p>Dear %user_login%,</p><p>We have noticed that you have created an account to the site few days ago, but you did not pay for your account yet. For this we would like to remind you that your payment is still in pending. Kindly complete the payment procedure to avoid any further delays.</p><p>%pending_payment_url%</p><p>Best Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_pending_payment_reminder'] = ($current['user_message_email_pending_payment_reminder'])?$current['user_message_email_pending_payment_reminder']: '<p>Dear %user_login%,</p><p>We have noticed that you have created an account to the site few days ago, but you did not pay for your account yet. For this we would like to remind you that your payment is still in pending. Kindly complete the payment procedure to avoid any further delays.</p><p>%pending_payment_url%</p><p>Best Regards,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_email_verification_reminder']			 	= ($current['user_message_email_email_verification_reminder'])?$current['user_message_email_email_verification_reminder']: '<p>Dear %user_login%,</p><p>We have noticed that you have created an account to the site few days ago, but you did not verify your email address yet. Kindly follow the link (&nbsp;%activationurl% ) below to complete the verification procedure to become the registered member of our Website.</p><p>Best Regards,</p><p>Team %blogname%</p>';
+		$update['user_message_email_email_verification_reminder'] = ($current['user_message_email_email_verification_reminder'])?$current['user_message_email_email_verification_reminder']: '<p>Dear %user_login%,</p><p>We have noticed that you have created an account to the site few days ago, but you did not verify your email address yet. Kindly follow the link (&nbsp;%activationurl% ) below to complete the verification procedure to become the registered member of our Website.</p><p>Best Regards,</p><p>Team %blogname%</p>';
 		
-		$update['user_message_email_forgot_password_notification']					= ($current['user_message_email_forgot_password_notification'])?$current['user_message_email_forgot_password_notification']: '<p>Dear %user_login%,</p><p>You have just requested for a new password for your account. Please follow the link (&nbsp;%reset_password_url% ) below to reset your password.</p><p>If you have not requested for a new password, kindly ignore this Email.</p><p>Best Regards,</p><p>Team %user_login%</p>';
+		$update['user_message_email_forgot_password_notification']	= ($current['user_message_email_forgot_password_notification'])?$current['user_message_email_forgot_password_notification']: '<p>Dear %user_login%,</p><p>You have just requested for a new password for your account. Please follow the link (&nbsp;%reset_password_url% ) below to reset your password.</p><p>If you have not requested for a new password, kindly ignore this Email.</p><p>Best Regards,</p><p>Team %user_login%</p>';
+		
+		$update['user_message_email_email_edit_verification']		= ($current['user_message_email_email_edit_verification'])?$current['user_message_email_forgot_password_notification']: '<p>Hello %user_login%,</p><p>You have requested to change of your email address from %user_email% to %user_new_email%. Please click here (%reset_email_url%) to complete the action.</p><p>Thanks</p><p>%blogname%</p>';
 						
 		update_option( 'pie_register_2', $update );
 		
@@ -535,28 +545,13 @@ class PieReg_Base
 		 $blogusers = get_users();
    		 foreach ($blogusers as $user) 
 		 {
-        	add_user_meta( $user->ID, 'active', 1);
+        	update_user_meta( $user->ID, 'active', 1);
     	 }
-		 
-		 
-		 
-		 ////////////////// DELETE ///////////////
-		$key = "WJ1U4QFJBOU25anWq3t8eAc7A1LZJWFExpKUBw2AFVODnxBpscnCYdRcxWkP8os1gfaC2d4s54f65d4sf56s4dT0waQ~~";
-		$key = trim(strip_tags($key));
-		$piereg = get_option("pie_register_2");
-		$piereg['support_license'] = ($piereg['support_license'])? $piereg['support_license'] : $key;
-		update_option("pie_register_2",$piereg);
-		update_option("pie_register_2_key",$key);
-		update_option("pie_register_2_active","1");
-		$error = apply_filters("piereg_Your_version_has_been_registered","Success. Your version has been registered.");
-		return $error ;
-		 /////////////////////////////////////////
-		 
 	}
 	function getDefaultMeta()
 	{
 		$structure = array();
-		$structure["text"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="length_%d%">'.__("Length","piereg").'</label><input type="text" name="field[%d%][length]" id="length_%d%" class="input_fields character_fields field_length numeric"></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="default_value_%d%">'.__("Default Value","piereg").'</label><input type="text" name="field[%d%][default_value]" id="default_value_%d%" class="input_fields field_default_value"></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_rule_%d%">'.__("Validation Rule","piereg").'</label><select name="field[%d%][validation_rule]" id="validation_rule_%d%"><option>'.__("None","piereg").'</option><option value="number">'.__("Number","piereg").'</option><option value="alphanumeric">'.__("Alphanumeric","piereg").'</option><option value="email">'.__("E-Mail","piereg").'</option><option value="website">'.__("Website","piereg").'</option><option value="standard">'.__("USA Format","piereg").' (xxx) (xxx-xxxx)</option><option value="international">'.__("Phone International","piereg").' xxx-xxx-xxxx</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>'; 
+		$structure["text"] = '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="length_%d%">'.__("Length","piereg").'</label><input type="text" name="field[%d%][length]" id="length_%d%" class="input_fields character_fields field_length numeric"></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="default_value_%d%">'.__("Default Value","piereg").'</label><input type="text" name="field[%d%][default_value]" id="default_value_%d%" class="input_fields field_default_value"></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_rule_%d%">'.__("Validation Rule","piereg").'</label><select name="field[%d%][validation_rule]" id="validation_rule_%d%"><option>'.__("None","piereg").'</option><option value="number">'.__("Number","piereg").'</option><option value="alphanumeric">'.__("Alphanumeric","piereg").'</option><option value="email">'.__("E-mail","piereg").'</option><option value="website">'.__("Website","piereg").'</option><option value="standard">'.__("USA Format (xxx) (xxx-xxxx)","piereg").'</option><option value="international">'.__("Phone International xxx-xxx-xxxx","piereg").'</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>'; 
 		
 		/*$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';*/
 		
@@ -580,7 +575,12 @@ class PieReg_Base
 		
 		$structure["jabber"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Jabber / Google Talk" id="label_%d%" class="input_fields field_label"></div></div></div>';
 		
-		$structure["password"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Password" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confirm Password" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_meter_%d%">'.__("Show Strength Meter","piereg").'</label><select class="show_meter" name="field[%d%][show_meter]" id="show_meter_%d%" class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+		/*$structure["password"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Password" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confirm Password" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_meter_%d%">'.__("Show Strength Meter","piereg").'</label><select class="show_meter" name="field[%d%][show_meter]" id="show_meter_%d%" class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';*/
+		
+		/*
+			*	Add Restrict Password Strenght since 2.0.13
+		*/
+		$structure["password"] = '<div class="fields_main"><input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Password" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confirm Password" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_meter_%d%">'.__("Show Strength Meter","piereg").'</label><select class="show_meter" name="field[%d%][show_meter]" id="show_meter_%d%" class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div><div class="advance_fields"><label for="restrict_strength_%d%">'.__("Minimum Strength","piereg").'</label><select class="show_meter" name="field[%d%][restrict_strength]" id="restrict_strength_%d%"><option value="1" selected="selected">'.__("Very weak","piereg").'</option><option value="2">'.__("Weak","piereg").'</option><option value="3">'.__("Medium","piereg").'</option><option value="4">'.__("Strong","piereg").'</option></select></div><div class="advance_fields"><label for="strength_message_%d%">'.__("Strength Message","piereg").'</label><input type="text" name="field[%d%][strength_message]" id="strength_message_%d%" class="input_fields" value="Weak Password"></div></div></div>';
 		
 			$structure['email']	= '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="E-mail" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="label2_%d%">'.__("Label2","piereg").'</label><input type="text" name="field[%d%][label2]" value="Confrim E-mail" id="label2_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="confirm_email_%d%">'.__("Confirm E-Mail","piereg").'</label><input name="field[%d%][confirm_email]" id="confirm_email" value="%d%" type="checkbox" class="checkbox_fields"></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
 		
@@ -621,7 +621,7 @@ class PieReg_Base
 	
 	$structure['profile_pic'] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" value="Profile Picture" class="input_fields field_label"></div><div clss="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label>'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 	
-	$structure['address']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"> <label for="address_type_%d%">'.__("List Type","piereg").'</label><select class="address_type" name="field[%d%][address_type]" id="address_type_%d%"><option value="International">'.__("International","piereg").'</option><option value="United States">'.__("United States","piereg").'</option><option value="Canada">'.__("Canada","piereg").'</option></select></div><div id="default_country_div_%d%" class="advance_fields"> <label for="default_country_%d%">'.__("Default Country","piereg").'</label><select class="default_country" name="field[%d%][default_country]" id="default_country_%d%"><option value="" selected="selected"></option><option value="Afghanistan">'.__("Afghanistan","piereg").'</option><option value="Albania">'.__("Albania","piereg").'</option><option value="Algeria">'.__("Algeria","piereg").'</option><option value="American Samoa">'.__("American Samoa","piereg").'</option><option value="Andorra">'.__("Andorra","piereg").'</option><option value="Angola">'.__("Angola","piereg").'</option><option value="Antigua and Barbuda">'.__("Antigua and Barbuda","piereg").'</option><option value="Argentina">'.__("Argentina","piereg").'</option><option value="Armenia">'.__("Armenia","piereg").'</option><option value="Australia">'.__("Australia","piereg").'</option><option value="Austria">'.__("Austria","piereg").'</option><option value="Azerbaijan">'.__("Azerbaijan","piereg").'</option><option value="Bahamas">'.__("Bahamas","piereg").'</option><option value="Bahrain">'.__("Bahrain","piereg").'</option><option value="Bangladesh">'.__("Bangladesh","piereg").'</option><option value="Barbados">'.__("Barbados","piereg").'</option><option value="Belarus">'.__("Belarus","piereg").'</option><option value="Belgium">'.__("Belgium","piereg").'</option><option value="Belize">'.__("Belize","piereg").'</option><option value="Benin">'.__("Benin","piereg").'</option><option value="Bermuda">'.__("Bermuda","piereg").'</option><option value="Bhutan">'.__("Bhutan","piereg").'</option><option value="Bolivia">'.__("Bolivia","piereg").'</option><option value="Bosnia and Herzegovina">'.__("Bosnia and Herzegovina","piereg").'</option><option value="Botswana">'.__("Botswana","piereg").'</option><option value="Brazil">'.__("Brazil","piereg").'</option><option value="Brunei">'.__("Brunei","piereg").'</option><option value="Bulgaria">'.__("Bulgaria","piereg").'</option><option value="Burkina Faso">'.__("Burkina Faso","piereg").'</option><option value="Burundi">'.__("Burundi","piereg").'</option><option value="Cambodia">'.__("Cambodia","piereg").'</option><option value="Cameroon">'.__("Cameroon","piereg").'</option><option value="Canada">'.__("Canada","piereg").'</option><option value="Cape Verde">'.__("Cape Verde","piereg").'</option><option value="Central African Republic">'.__("Central African Republic","piereg").'</option><option value="Chad">'.__("Chad","piereg").'</option><option value="Chile">'.__("Chile","piereg").'</option><option value="China">'.__("China","piereg").'</option><option value="Colombia">'.__("Colombia","piereg").'</option><option value="Comoros">'.__("Comoros","piereg").'</option><option value="Congo, Democratic Republic of the">'.__("Congo, Democratic Republic of the","piereg").'</option><option value="Congo, Republic of the">'.__("Congo, Republic of the","piereg").'</option><option value="Costa Rica">'.__("Costa Rica","piereg").'</option><option value="Côte d\'Ivoire">'.__("Côte d\'Ivoire","piereg").'</option><option value="Croatia">'.__("Croatia","piereg").'</option><option value="Cuba">'.__("Cuba","piereg").'</option><option value="Cyprus">'.__("Cyprus","piereg").'</option><option value="Czech Republic">'.__("Czech Republic","piereg").'</option><option value="Denmark">'.__("Denmark","piereg").'</option><option value="Djibouti">'.__("Djibouti","piereg").'</option><option value="Dominica">'.__("Dominica","piereg").'</option><option value="Dominican Republic">'.__("Dominican Republic","piereg").'</option><option value="East Timor">'.__("East Timor","piereg").'</option><option value="Ecuador">'.__("Ecuador","piereg").'</option><option value="Egypt">'.__("Egypt","piereg").'</option><option value="El Salvador">'.__("El Salvador","piereg").'</option><option value="Equatorial Guinea">'.__("Equatorial Guinea","piereg").'</option><option value="Eritrea">'.__("Eritrea","piereg").'</option><option value="Estonia">'.__("Estonia","piereg").'</option><option value="Ethiopia">'.__("Ethiopia","piereg").'</option><option value="Fiji">'.__("Fiji","piereg").'</option><option value="Finland">'.__("Finland","piereg").'</option><option value="France">'.__("France","piereg").'</option><option value="Gabon">'.__("Gabon","piereg").'</option><option value="Gambia">'.__("Gambia","piereg").'</option><option value="Georgia">'.__("Georgia","piereg").'</option><option value="Germany">'.__("Germany","piereg").'</option><option value="Ghana">'.__("Ghana","piereg").'</option><option value="Greece">'.__("Greece","piereg").'</option><option value="Greenland">'.__("Greenland","piereg").'</option><option value="Grenada">'.__("Grenada","piereg").'</option><option value="Guam">'.__("Guam","piereg").'</option><option value="Guatemala">'.__("Guatemala","piereg").'</option><option value="Guinea">'.__("Guinea","piereg").'</option><option value="Guinea-Bissau">'.__("Guinea-Bissau","piereg").'</option><option value="Guyana">'.__("Guyana","piereg").'</option><option value="Haiti">'.__("Haiti","piereg").'</option><option value="Honduras">'.__("Honduras","piereg").'</option><option value="Hong Kong">'.__("Hong Kong","piereg").'</option><option value="Hungary">'.__("Hungary","piereg").'</option><option value="Iceland">'.__("Iceland","piereg").'</option><option value="India">'.__("India","piereg").'</option><option value="Indonesia">'.__("Indonesia","piereg").'</option><option value="Iran">'.__("Iran","piereg").'</option><option value="Iraq">'.__("Iraq","piereg").'</option><option value="Ireland">'.__("Ireland","piereg").'</option><option value="Israel">'.__("Israel","piereg").'</option><option value="Italy">'.__("Italy","piereg").'</option><option value="Jamaica">'.__("Jamaica","piereg").'</option><option value="Japan">'.__("Japan","piereg").'</option><option value="Jordan">'.__("Jordan","piereg").'</option><option value="Kazakhstan">'.__("Kazakhstan","piereg").'</option><option value="Kenya">'.__("Kenya","piereg").'</option><option value="Kiribati">'.__("Kiribati","piereg").'</option><option value="North Korea">'.__("North Korea","piereg").'</option><option value="South Korea">'.__("South Korea","piereg").'</option><option value="Kuwait">'.__("Kuwait","piereg").'</option><option value="Kyrgyzstan">'.__("Kyrgyzstan","piereg").'</option><option value="Laos">'.__("Laos","piereg").'</option><option value="Latvia">'.__("Latvia","piereg").'</option><option value="Lebanon">'.__("Lebanon","piereg").'</option><option value="Lesotho">'.__("Lesotho","piereg").'</option><option value="Liberia">'.__("Liberia","piereg").'</option><option value="Libya">'.__("Libya","piereg").'</option><option value="Liechtenstein">'.__("Liechtenstein","piereg").'</option><option value="Lithuania">'.__("Lithuania","piereg").'</option><option value="Luxembourg">'.__("Luxembourg","piereg").'</option><option value="Macedonia">'.__("Macedonia","piereg").'</option><option value="Madagascar">'.__("Madagascar","piereg").'</option><option value="Malawi">'.__("Malawi","piereg").'</option><option value="Malaysia">'.__("Malaysia","piereg").'</option><option value="Maldives">'.__("Maldives","piereg").'</option><option value="Mali">'.__("Mali","piereg").'</option><option value="Malta">'.__("Malta","piereg").'</option><option value="Marshall Islands">'.__("Marshall Islands","piereg").'</option><option value="Mauritania">'.__("Mauritania","piereg").'</option><option value="Mauritius">'.__("Mauritius","piereg").'</option><option value="Mexico">'.__("Mexico","piereg").'</option><option value="Micronesia">'.__("Micronesia","piereg").'</option><option value="Moldova">'.__("Moldova","piereg").'</option><option value="Monaco">'.__("Monaco","piereg").'</option><option value="Mongolia">'.__("Mongolia","piereg").'</option><option value="Montenegro">'.__("Montenegro","piereg").'</option><option value="Morocco">'.__("Morocco","piereg").'</option><option value="Mozambique">'.__("Mozambique","piereg").'</option><option value="Myanmar">'.__("Myanmar","piereg").'</option><option value="Namibia">'.__("Namibia","piereg").'</option><option value="Nauru">'.__("Nauru","piereg").'</option><option value="Nepal">'.__("Nepal","piereg").'</option><option value="Netherlands">'.__("Netherlands","piereg").'</option><option value="New Zealand">'.__("New Zealand","piereg").'</option><option value="Nicaragua">'.__("Nicaragua","piereg").'</option><option value="Niger">'.__("Niger","piereg").'</option><option value="Nigeria">'.__("Nigeria","piereg").'</option><option value="Norway">'.__("Norway","piereg").'</option><option value="Northern Mariana Islands">'.__("Northern Mariana Islands","piereg").'</option><option value="Oman">'.__("Oman","piereg").'</option><option value="Pakistan">'.__("Pakistan","piereg").'</option><option value="Palau">'.__("Palau","piereg").'</option><option value="Palestine">'.__("Palestine","piereg").'</option><option value="Panama">'.__("Panama","piereg").'</option><option value="Papua New Guinea">'.__("Papua New Guinea","piereg").'</option><option value="Paraguay">'.__("Paraguay","piereg").'</option><option value="Peru">'.__("Peru","piereg").'</option><option value="Philippines">'.__("Philippines","piereg").'</option><option value="Poland">'.__("Poland","piereg").'</option><option value="Portugal">'.__("Portugal","piereg").'</option><option value="Puerto Rico">'.__("Puerto Rico","piereg").'</option><option value="Qatar">'.__("Qatar","piereg").'</option><option value="Romania">'.__("Romania","piereg").'</option><option value="Russia">'.__("Russia","piereg").'</option><option value="Rwanda">'.__("Rwanda","piereg").'</option><option value="Saint Kitts and Nevis">'.__("Saint Kitts and Nevis","piereg").'</option><option value="Saint Lucia">'.__("Saint Lucia","piereg").'</option><option value="Saint Vincent and the Grenadines">'.__("Saint Vincent and the Grenadines","piereg").'</option><option value="Samoa">'.__("Samoa","piereg").'</option><option value="San Marino">'.__("San Marino","piereg").'</option><option value="Sao Tome and Principe">'.__("Sao Tome and Principe","piereg").'</option><option value="Saudi Arabia">'.__("Saudi Arabia","piereg").'</option><option value="Senegal">'.__("Senegal","piereg").'</option><option value="Serbia and Montenegro">'.__("Serbia and Montenegro","piereg").'</option><option value="Seychelles">'.__("Seychelles","piereg").'</option><option value="Sierra Leone">'.__("Sierra Leone","piereg").'</option><option value="Singapore">'.__("Singapore","piereg").'</option><option value="Slovakia">'.__("Slovakia","piereg").'</option><option value="Slovenia">'.__("Slovenia","piereg").'</option><option value="Solomon Islands">'.__("Solomon Islands","piereg").'</option><option value="Somalia">'.__("Somalia","piereg").'</option><option value="South Africa">'.__("South Africa","piereg").'</option><option value="Spain">'.__("Spain","piereg").'</option><option value="Sri Lanka">'.__("Sri Lanka","piereg").'</option><option value="Sudan">'.__("Sudan","piereg").'</option><option value="Sudan, South">'.__("Sudan, South","piereg").'</option><option value="Suriname">'.__("Suriname","piereg").'</option><option value="Swaziland">'.__("Swaziland","piereg").'</option><option value="Sweden">'.__("Sweden","piereg").'</option><option value="Switzerland">'.__("Switzerland","piereg").'</option><option value="Syria">'.__("Syria","piereg").'</option><option value="Taiwan">'.__("Taiwan","piereg").'</option><option value="Tajikistan">'.__("Tajikistan","piereg").'</option><option value="Tanzania">'.__("Tanzania","piereg").'</option><option value="Thailand">'.__("Thailand","piereg").'</option><option value="Togo">'.__("Togo","piereg").'</option><option value="Tonga">'.__("Tonga","piereg").'</option><option value="Trinidad and Tobago">'.__("Trinidad and Tobago","piereg").'</option><option value="Tunisia">'.__("Tunisia","piereg").'</option><option value="Turkey">'.__("Turkey","piereg").'</option><option value="Turkmenistan">'.__("Turkmenistan","piereg").'</option><option value="Tuvalu">'.__("Tuvalu","piereg").'</option><option value="Uganda">'.__("Uganda","piereg").'</option><option value="Ukraine">'.__("Ukraine","piereg").'</option><option value="United Arab Emirates">'.__("United Arab Emirates","piereg").'</option><option value="United Kingdom">'.__("United Kingdom","piereg").'</option><option value="United States">'.__("United States","piereg").'</option><option value="Uruguay">'.__("Uruguay","piereg").'</option><option value="Uzbekistan">'.__("Uzbekistan","piereg").'</option><option value="Vanuatu">'.__("Vanuatu","piereg").'</option><option value="Vatican City">'.__("Vatican City","piereg").'</option><option value="Venezuela">'.__("Venezuela","piereg").'</option><option value="Vietnam">'.__("Vietnam","piereg").'</option><option value="Virgin Islands, British">'.__("Virgin Islands, British","piereg").'</option><option value="Virgin Islands, U.S.">'.__("Virgin Islands, U.S.","piereg").'</option><option value="Yemen">'.__("Yemen","piereg").'</option><option value="Zambia">'.__("Zambia","piereg").'</option><option value="Zimbabwe">'.__("Zimbabwe","piereg").'</option></select></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="hide_address2_%d%">'.__("Hide Address 2","piereg").'</label><input onchange="checkEvents(this,\'address_address2_%d%\')" name="field[%d%][hide_address2]" id="hide_address2_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="hide_address2_%d%" class="required"></label></div><div class="advance_fields"><label for="hide_state_%d%">'.__("Hide State","piereg").'</label><input class="hide_state" name="field[%d%][hide_state]" id="hide_state_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="hide_state_%d%" class="required"></label></div><div style="display:none;" id="default_state_div_%d%" class="advance_fields"><label for="default_state_%d%">'.__("Default State","piereg").'</label><select id="us_states_%d%" style="display:none;" class="default_state us_states_%d%" name="field[%d%][us_default_state]"><option value="" selected="selected"></option><option value="Alabama">'.__("Alabama","piereg").'</option><option value="Alaska">'.__("Alaska","piereg").'</option><option value="Arizona">'.__("Arizona","piereg").'</option><option value="Arkansas">'.__("Arkansas","piereg").'</option><option value="California">'.__("California","piereg").'</option><option value="Colorado">'.__("Colorado","piereg").'</option><option value="Connecticut">'.__("Connecticut","piereg").'</option><option value="Delaware">'.__("Delaware","piereg").'</option><option value="District of Columbia">'.__("District of Columbia","piereg").'</option><option value="Florida">'.__("Florida","piereg").'</option><option value="Georgia">'.__("Georgia","piereg").'</option><option value="Hawaii">'.__("Hawaii","piereg").'</option><option value="Idaho">'.__("Idaho","piereg").'</option><option value="Illinois">'.__("Illinois","piereg").'</option><option value="Indiana">'.__("Indiana","piereg").'</option><option value="Iowa">'.__("Iowa","piereg").'</option><option value="Kansas">'.__("Kansas","piereg").'</option><option value="Kentucky">'.__("Kentucky","piereg").'</option><option value="Louisiana">'.__("Louisiana","piereg").'</option><option value="Maine">'.__("Maine","piereg").'</option><option value="Maryland">'.__("Maryland","piereg").'</option><option value="Massachusetts">'.__("Massachusetts","piereg").'</option><option value="Michigan">'.__("Michigan","piereg").'</option><option value="Minnesota">'.__("Minnesota","piereg").'</option><option value="Mississippi">'.__("Mississippi","piereg").'</option><option value="Missouri">'.__("Missouri","piereg").'</option><option value="Montana">'.__("Montana","piereg").'</option><option value="Nebraska">'.__("Nebraska","piereg").'</option><option value="Nevada">'.__("Nevada","piereg").'</option><option value="New Hampshire">'.__("New Hampshire","piereg").'</option><option value="New Jersey">'.__("New Jersey","piereg").'</option><option value="New Mexico">'.__("New Mexico","piereg").'</option><option value="New York">'.__("New York","piereg").'</option><option value="North Carolina">'.__("North Carolina","piereg").'</option><option value="North Dakota">'.__("North Dakota","piereg").'</option><option value="Ohio">'.__("Ohio","piereg").'</option><option value="Oklahoma">'.__("Oklahoma","piereg").'</option><option value="Oregon">'.__("Oregon","piereg").'</option><option value="Pennsylvania">'.__("Pennsylvania","piereg").'</option><option value="Rhode Island">'.__("Rhode Island","piereg").'</option><option value="South Carolina">'.__("South Carolina","piereg").'</option><option value="South Dakota">'.__("South Dakota","piereg").'</option><option value="Tennessee">'.__("Tennessee","piereg").'</option><option value="Texas">'.__("Texas","piereg").'</option><option value="Utah">'.__("Utah","piereg").'</option><option value="Vermont">'.__("Vermont","piereg").'</option><option value="Virginia">'.__("Virginia","piereg").'</option><option value="Washington">'.__("Washington","piereg").'</option><option value="West Virginia">'.__("West Virginia","piereg").'</option><option value="Wisconsin">'.__("Wisconsin","piereg").'</option><option value="Wyoming">'.__("Wyoming","piereg").'</option><option value="Armed Forces Americas">'.__("Armed Forces Americas","piereg").'</option><option value="Armed Forces Europe">'.__("Armed Forces Europe","piereg").'</option><option value="Armed Forces Pacific">'.__("Armed Forces Pacific","piereg").'</option></select><select id="can_states_%d%" style="display:none;" class="default_state can_states_%d%" name="field[%d%][canada_default_state]"><option value="" selected="selected"></option><option value="Alberta">'.__("Alberta","piereg").'</option><option value="British Columbia">'.__("British Columbia","piereg").'</option><option value="Manitoba">'.__("Manitoba","piereg").'</option><option value="New Brunswick">'.__("New Brunswick","piereg").'</option><option value="Newfoundland &amp; Labrador">'.__("Newfoundland and Labrador","piereg").'</option><option value="Northwest Territories">'.__("Northwest Territories","piereg").'</option><option value="Nova Scotia">'.__("Nova Scotia","piereg").'</option><option value="Nunavut">'.__("Nunavut","piereg").'</option><option value="Ontario">'.__("Ontario","piereg").'</option><option value="Prince Edward Island">'.__("Prince Edward Island","piereg").'</option><option value="Quebec">'.__("Quebec","piereg").'</option><option value="Saskatchewan">'.__("Saskatchewan","piereg").'</option><option value="Yukon">'.__("Yukon","piereg").'</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+	$structure['address']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"> <label for="address_type_%d%">'.__("List Type","piereg").'</label><select class="address_type" name="field[%d%][address_type]" id="address_type_%d%"><option value="International">'.__("International","piereg").'</option><option value="United States">'.__("United States","piereg").'</option><option value="Canada">'.__("Canada","piereg").'</option></select></div><div id="default_country_div_%d%" class="advance_fields"> <label for="default_country_%d%">'.__("Default Country","piereg").'</label><select class="default_country" name="field[%d%][default_country]" id="default_country_%d%"><option value="" selected="selected"></option><option value="Afghanistan">'.__("Afghanistan","piereg").'</option><option value="Albania">'.__("Albania","piereg").'</option><option value="Algeria">'.__("Algeria","piereg").'</option><option value="American Samoa">'.__("American Samoa","piereg").'</option><option value="Andorra">'.__("Andorra","piereg").'</option><option value="Angola">'.__("Angola","piereg").'</option><option value="Antigua and Barbuda">'.__("Antigua and Barbuda","piereg").'</option><option value="Argentina">'.__("Argentina","piereg").'</option><option value="Armenia">'.__("Armenia","piereg").'</option><option value="Australia">'.__("Australia","piereg").'</option><option value="Austria">'.__("Austria","piereg").'</option><option value="Azerbaijan">'.__("Azerbaijan","piereg").'</option><option value="Bahamas">'.__("Bahamas","piereg").'</option><option value="Bahrain">'.__("Bahrain","piereg").'</option><option value="Bangladesh">'.__("Bangladesh","piereg").'</option><option value="Barbados">'.__("Barbados","piereg").'</option><option value="Belarus">'.__("Belarus","piereg").'</option><option value="Belgium">'.__("Belgium","piereg").'</option><option value="Belize">'.__("Belize","piereg").'</option><option value="Benin">'.__("Benin","piereg").'</option><option value="Bermuda">'.__("Bermuda","piereg").'</option><option value="Bhutan">'.__("Bhutan","piereg").'</option><option value="Bolivia">'.__("Bolivia","piereg").'</option><option value="Bosnia and Herzegovina">'.__("Bosnia and Herzegovina","piereg").'</option><option value="Botswana">'.__("Botswana","piereg").'</option><option value="Brazil">'.__("Brazil","piereg").'</option><option value="Brunei">'.__("Brunei","piereg").'</option><option value="Bulgaria">'.__("Bulgaria","piereg").'</option><option value="Burkina Faso">'.__("Burkina Faso","piereg").'</option><option value="Burundi">'.__("Burundi","piereg").'</option><option value="Cambodia">'.__("Cambodia","piereg").'</option><option value="Cameroon">'.__("Cameroon","piereg").'</option><option value="Canada">'.__("Canada","piereg").'</option><option value="Cape Verde">'.__("Cape Verde","piereg").'</option><option value="Central African Republic">'.__("Central African Republic","piereg").'</option><option value="Chad">'.__("Chad","piereg").'</option><option value="Chile">'.__("Chile","piereg").'</option><option value="China">'.__("China","piereg").'</option><option value="Colombia">'.__("Colombia","piereg").'</option><option value="Comoros">'.__("Comoros","piereg").'</option><option value="Congo">'.__("Congo","piereg").'</option><option value="Costa Rica">'.__("Costa Rica","piereg").'</option><option value="Costa Rica">'.__("Costa Rica","piereg").'</option><option value="Côte d\'Ivoire">'.__("Côte d\'Ivoire","piereg").'</option><option value="Croatia">'.__("Croatia","piereg").'</option><option value="Cuba">'.__("Cuba","piereg").'</option><option value="Cyprus">'.__("Cyprus","piereg").'</option><option value="Czech Republic">'.__("Czech Republic","piereg").'</option><option value="Denmark">'.__("Denmark","piereg").'</option><option value="Djibouti">'.__("Djibouti","piereg").'</option><option value="Dominica">'.__("Dominica","piereg").'</option><option value="Dominican Republic">'.__("Dominican Republic","piereg").'</option><option value="East Timor">'.__("East Timor","piereg").'</option><option value="Ecuador">'.__("Ecuador","piereg").'</option><option value="Egypt">'.__("Egypt","piereg").'</option><option value="El Salvador">'.__("El Salvador","piereg").'</option><option value="Equatorial Guinea">'.__("Equatorial Guinea","piereg").'</option><option value="Eritrea">'.__("Eritrea","piereg").'</option><option value="Estonia">'.__("Estonia","piereg").'</option><option value="Ethiopia">'.__("Ethiopia","piereg").'</option><option value="Fiji">'.__("Fiji","piereg").'</option><option value="Finland">'.__("Finland","piereg").'</option><option value="France">'.__("France","piereg").'</option><option value="Gabon">'.__("Gabon","piereg").'</option><option value="Gambia">'.__("Gambia","piereg").'</option><option value="Georgia">'.__("Georgia","piereg").'</option><option value="Germany">'.__("Germany","piereg").'</option><option value="Ghana">'.__("Ghana","piereg").'</option><option value="Greece">'.__("Greece","piereg").'</option><option value="Greenland">'.__("Greenland","piereg").'</option><option value="Grenada">'.__("Grenada","piereg").'</option><option value="Guam">'.__("Guam","piereg").'</option><option value="Guatemala">'.__("Guatemala","piereg").'</option><option value="Guinea">'.__("Guinea","piereg").'</option><option value="Guinea-Bissau">'.__("Guinea-Bissau","piereg").'</option><option value="Guyana">'.__("Guyana","piereg").'</option><option value="Haiti">'.__("Haiti","piereg").'</option><option value="Honduras">'.__("Honduras","piereg").'</option><option value="Hong Kong">'.__("Hong Kong","piereg").'</option><option value="Hungary">'.__("Hungary","piereg").'</option><option value="Iceland">'.__("Iceland","piereg").'</option><option value="India">'.__("India","piereg").'</option><option value="Indonesia">'.__("Indonesia","piereg").'</option><option value="Iran">'.__("Iran","piereg").'</option><option value="Iraq">'.__("Iraq","piereg").'</option><option value="Ireland">'.__("Ireland","piereg").'</option><option value="Israel">'.__("Israel","piereg").'</option><option value="Italy">'.__("Italy","piereg").'</option><option value="Jamaica">'.__("Jamaica","piereg").'</option><option value="Japan">'.__("Japan","piereg").'</option><option value="Jordan">'.__("Jordan","piereg").'</option><option value="Kazakhstan">'.__("Kazakhstan","piereg").'</option><option value="Kenya">'.__("Kenya","piereg").'</option><option value="Kiribati">'.__("Kiribati","piereg").'</option><option value="North Korea">'.__("North Korea","piereg").'</option><option value="South Korea">'.__("South Korea","piereg").'</option><option value="Kuwait">'.__("Kuwait","piereg").'</option><option value="Kyrgyzstan">'.__("Kyrgyzstan","piereg").'</option><option value="Laos">'.__("Laos","piereg").'</option><option value="Latvia">'.__("Latvia","piereg").'</option><option value="Lebanon">'.__("Lebanon","piereg").'</option><option value="Lesotho">'.__("Lesotho","piereg").'</option><option value="Liberia">'.__("Liberia","piereg").'</option><option value="Libya">'.__("Libya","piereg").'</option><option value="Liechtenstein">'.__("Liechtenstein","piereg").'</option><option value="Lithuania">'.__("Lithuania","piereg").'</option><option value="Luxembourg">'.__("Luxembourg","piereg").'</option><option value="Macedonia">'.__("Macedonia","piereg").'</option><option value="Madagascar">'.__("Madagascar","piereg").'</option><option value="Malawi">'.__("Malawi","piereg").'</option><option value="Malaysia">'.__("Malaysia","piereg").'</option><option value="Maldives">'.__("Maldives","piereg").'</option><option value="Mali">'.__("Mali","piereg").'</option><option value="Malta">'.__("Malta","piereg").'</option><option value="Marshall Islands">'.__("Marshall Islands","piereg").'</option><option value="Mauritania">'.__("Mauritania","piereg").'</option><option value="Mauritius">'.__("Mauritius","piereg").'</option><option value="Mexico">'.__("Mexico","piereg").'</option><option value="Micronesia">'.__("Micronesia","piereg").'</option><option value="Moldova">'.__("Moldova","piereg").'</option><option value="Monaco">'.__("Monaco","piereg").'</option><option value="Mongolia">'.__("Mongolia","piereg").'</option><option value="Montenegro">'.__("Montenegro","piereg").'</option><option value="Morocco">'.__("Morocco","piereg").'</option><option value="Mozambique">'.__("Mozambique","piereg").'</option><option value="Myanmar">'.__("Myanmar","piereg").'</option><option value="Namibia">'.__("Namibia","piereg").'</option><option value="Nauru">'.__("Nauru","piereg").'</option><option value="Nepal">'.__("Nepal","piereg").'</option><option value="Netherlands">'.__("Netherlands","piereg").'</option><option value="New Zealand">'.__("New Zealand","piereg").'</option><option value="Nicaragua">'.__("Nicaragua","piereg").'</option><option value="Niger">'.__("Niger","piereg").'</option><option value="Nigeria">'.__("Nigeria","piereg").'</option><option value="Norway">'.__("Norway","piereg").'</option><option value="Northern Mariana Islands">'.__("Northern Mariana Islands","piereg").'</option><option value="Oman">'.__("Oman","piereg").'</option><option value="Pakistan">'.__("Pakistan","piereg").'</option><option value="Palau">'.__("Palau","piereg").'</option><option value="Palestine">'.__("Palestine","piereg").'</option><option value="Panama">'.__("Panama","piereg").'</option><option value="Papua New Guinea">'.__("Papua New Guinea","piereg").'</option><option value="Paraguay">'.__("Paraguay","piereg").'</option><option value="Peru">'.__("Peru","piereg").'</option><option value="Philippines">'.__("Philippines","piereg").'</option><option value="Poland">'.__("Poland","piereg").'</option><option value="Portugal">'.__("Portugal","piereg").'</option><option value="Puerto Rico">'.__("Puerto Rico","piereg").'</option><option value="Qatar">'.__("Qatar","piereg").'</option><option value="Romania">'.__("Romania","piereg").'</option><option value="Russia">'.__("Russia","piereg").'</option><option value="Rwanda">'.__("Rwanda","piereg").'</option><option value="Saint Kitts and Nevis">'.__("Saint Kitts and Nevis","piereg").'</option><option value="Saint Lucia">'.__("Saint Lucia","piereg").'</option><option value="Saint Vincent and the Grenadines">'.__("Saint Vincent and the Grenadines","piereg").'</option><option value="Samoa">'.__("Samoa","piereg").'</option><option value="San Marino">'.__("San Marino","piereg").'</option><option value="Sao Tome and Principe">'.__("Sao Tome and Principe","piereg").'</option><option value="Saudi Arabia">'.__("Saudi Arabia","piereg").'</option><option value="Senegal">'.__("Senegal","piereg").'</option><option value="Serbia and Montenegro">'.__("Serbia and Montenegro","piereg").'</option><option value="Seychelles">'.__("Seychelles","piereg").'</option><option value="Sierra Leone">'.__("Sierra Leone","piereg").'</option><option value="Singapore">'.__("Singapore","piereg").'</option><option value="Slovakia">'.__("Slovakia","piereg").'</option><option value="Slovenia">'.__("Slovenia","piereg").'</option><option value="Solomon Islands">'.__("Solomon Islands","piereg").'</option><option value="Somalia">'.__("Somalia","piereg").'</option><option value="South Africa">'.__("South Africa","piereg").'</option><option value="Spain">'.__("Spain","piereg").'</option><option value="Sri Lanka">'.__("Sri Lanka","piereg").'</option><option value="Sudan">'.__("Sudan","piereg").'</option><option value="Sudan, South">'.__("Sudan, South","piereg").'</option><option value="Suriname">'.__("Suriname","piereg").'</option><option value="Swaziland">'.__("Swaziland","piereg").'</option><option value="Sweden">'.__("Sweden","piereg").'</option><option value="Switzerland">'.__("Switzerland","piereg").'</option><option value="Syria">'.__("Syria","piereg").'</option><option value="Taiwan">'.__("Taiwan","piereg").'</option><option value="Tajikistan">'.__("Tajikistan","piereg").'</option><option value="Tanzania">'.__("Tanzania","piereg").'</option><option value="Thailand">'.__("Thailand","piereg").'</option><option value="Togo">'.__("Togo","piereg").'</option><option value="Tonga">'.__("Tonga","piereg").'</option><option value="Trinidad and Tobago">'.__("Trinidad and Tobago","piereg").'</option><option value="Tunisia">'.__("Tunisia","piereg").'</option><option value="Turkey">'.__("Turkey","piereg").'</option><option value="Turkmenistan">'.__("Turkmenistan","piereg").'</option><option value="Tuvalu">'.__("Tuvalu","piereg").'</option><option value="Uganda">'.__("Uganda","piereg").'</option><option value="Ukraine">'.__("Ukraine","piereg").'</option><option value="United Arab Emirates">'.__("United Arab Emirates","piereg").'</option><option value="United Kingdom">'.__("United Kingdom","piereg").'</option><option value="United States">'.__("United States","piereg").'</option><option value="Uruguay">'.__("Uruguay","piereg").'</option><option value="Uzbekistan">'.__("Uzbekistan","piereg").'</option><option value="Vanuatu">'.__("Vanuatu","piereg").'</option><option value="Vatican City">'.__("Vatican City","piereg").'</option><option value="Venezuela">'.__("Venezuela","piereg").'</option><option value="Vietnam">'.__("Vietnam","piereg").'</option><option value="Virgin Islands, British">'.__("Virgin Islands, British","piereg").'</option><option value="Virgin Islands, U.S.">'.__("Virgin Islands, U.S.","piereg").'</option><option value="Yemen">'.__("Yemen","piereg").'</option><option value="Zambia">'.__("Zambia","piereg").'</option><option value="Zimbabwe">'.__("Zimbabwe","piereg").'</option></select></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="hide_address2_%d%">'.__("Hide Address 2","piereg").'</label><input onchange="checkEvents(this,\'address_address2_%d%\')" name="field[%d%][hide_address2]" id="hide_address2_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="hide_address2_%d%" class="required"></label></div><div class="advance_fields"><label for="hide_state_%d%">'.__("Hide State","piereg").'</label><input class="hide_state" name="field[%d%][hide_state]" id="hide_state_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="hide_state_%d%" class="required"></label></div><div style="display:none;" id="default_state_div_%d%" class="advance_fields"><label for="default_state_%d%">'.__("Default State","piereg").'</label><select id="us_states_%d%" style="display:none;" class="default_state us_states_%d%" name="field[%d%][us_default_state]"><option value="" selected="selected"></option><option value="Alabama">'.__("Alabama","piereg").'</option><option value="Alaska">'.__("Alaska","piereg").'</option><option value="Arizona">'.__("Arizona","piereg").'</option><option value="Arkansas">'.__("Arkansas","piereg").'</option><option value="California">'.__("California","piereg").'</option><option value="Colorado">'.__("Colorado","piereg").'</option><option value="Connecticut">'.__("Connecticut","piereg").'</option><option value="Delaware">'.__("Delaware","piereg").'</option><option value="District of Columbia">'.__("District of Columbia","piereg").'</option><option value="Florida">'.__("Florida","piereg").'</option><option value="Georgia">'.__("Georgia","piereg").'</option><option value="Hawaii">'.__("Hawaii","piereg").'</option><option value="Idaho">'.__("Idaho","piereg").'</option><option value="Illinois">'.__("Illinois","piereg").'</option><option value="Indiana">'.__("Indiana","piereg").'</option><option value="Iowa">'.__("Iowa","piereg").'</option><option value="Kansas">'.__("Kansas","piereg").'</option><option value="Kentucky">'.__("Kentucky","piereg").'</option><option value="Louisiana">'.__("Louisiana","piereg").'</option><option value="Maine">'.__("Maine","piereg").'</option><option value="Maryland">'.__("Maryland","piereg").'</option><option value="Massachusetts">'.__("Massachusetts","piereg").'</option><option value="Michigan">'.__("Michigan","piereg").'</option><option value="Minnesota">'.__("Minnesota","piereg").'</option><option value="Mississippi">'.__("Mississippi","piereg").'</option><option value="Missouri">'.__("Missouri","piereg").'</option><option value="Montana">'.__("Montana","piereg").'</option><option value="Nebraska">'.__("Nebraska","piereg").'</option><option value="Nevada">'.__("Nevada","piereg").'</option><option value="New Hampshire">'.__("New Hampshire","piereg").'</option><option value="New Jersey">'.__("New Jersey","piereg").'</option><option value="New Mexico">'.__("New Mexico","piereg").'</option><option value="New York">'.__("New York","piereg").'</option><option value="North Carolina">'.__("North Carolina","piereg").'</option><option value="North Dakota">'.__("North Dakota","piereg").'</option><option value="Ohio">'.__("Ohio","piereg").'</option><option value="Oklahoma">'.__("Oklahoma","piereg").'</option><option value="Oregon">'.__("Oregon","piereg").'</option><option value="Pennsylvania">'.__("Pennsylvania","piereg").'</option><option value="Rhode Island">'.__("Rhode Island","piereg").'</option><option value="South Carolina">'.__("South Carolina","piereg").'</option><option value="South Dakota">'.__("South Dakota","piereg").'</option><option value="Tennessee">'.__("Tennessee","piereg").'</option><option value="Texas">'.__("Texas","piereg").'</option><option value="Utah">'.__("Utah","piereg").'</option><option value="Vermont">'.__("Vermont","piereg").'</option><option value="Virginia">'.__("Virginia","piereg").'</option><option value="Washington">'.__("Washington","piereg").'</option><option value="West Virginia">'.__("West Virginia","piereg").'</option><option value="Wisconsin">'.__("Wisconsin","piereg").'</option><option value="Wyoming">'.__("Wyoming","piereg").'</option><option value="Armed Forces Americas">'.__("Armed Forces Americas","piereg").'</option><option value="Armed Forces Europe">'.__("Armed Forces Europe","piereg").'</option><option value="Armed Forces Pacific">'.__("Armed Forces Pacific","piereg").'</option></select><select id="can_states_%d%" style="display:none;" class="default_state can_states_%d%" name="field[%d%][canada_default_state]"><option value="" selected="selected"></option><option value="Alberta">'.__("Alberta","piereg").'</option><option value="British Columbia">'.__("British Columbia","piereg").'</option><option value="Manitoba">'.__("Manitoba","piereg").'</option><option value="New Brunswick">'.__("New Brunswick","piereg").'</option><option value="Newfoundland &amp; Labrador">'.__("Newfoundland and Labrador","piereg").'</option><option value="Northwest Territories">'.__("Northwest Territories","piereg").'</option><option value="Nova Scotia">'.__("Nova Scotia","piereg").'</option><option value="Nunavut">'.__("Nunavut","piereg").'</option><option value="Ontario">'.__("Ontario","piereg").'</option><option value="Prince Edward Island">'.__("Prince Edward Island","piereg").'</option><option value="Quebec">'.__("Quebec","piereg").'</option><option value="Saskatchewan">'.__("Saskatchewan","piereg").'</option><option value="Yukon">'.__("Yukon","piereg").'</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 				
 		/*$structure['captcha']	= '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div></div></div>';*/
 				
@@ -629,7 +629,7 @@ class PieReg_Base
 				
 		$structure['math_captcha']	= '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Math Captcha" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
 		
-		$structure['phone']	= '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="default_value_%d%">'.__("Default Value","piereg").'</label><input type="text" name="field[%d%][default_value]" id="default_value_%d%" class="input_fields field_default_value"></div><div class="advance_fields"> <label for="phone_format_%d%">'.__("Phone Format","piereg").'</label><select class="phone_format" name="field[%d%][phone_format]" id="phone_format_%d%"><option value="standard">'.__("USA Format","piereg").' (###) ###-####</option><option value="international">'.__("International","piereg").'</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
+		$structure['phone']	= '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="default_value_%d%">'.__("Default Value","piereg").'</label><input type="text" name="field[%d%][default_value]" id="default_value_%d%" class="input_fields field_default_value"></div><div class="advance_fields"> <label for="phone_format_%d%">'.__("Phone Format","piereg").'</label><select class="phone_format" name="field[%d%][phone_format]" id="phone_format_%d%"><option value="standard">'.__("USA Format (xxx) (xxx-xxxx)","piereg").'</option><option value="international">'.__("Phone International xxx-xxx-xxxx","piereg").'</option></select></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 		
 		$structure['date']	= '<div class="fields_main"><div class="advance_options_fields"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="required_%d%">'.__("Rules","piereg").'</label><input name="field[%d%][required]" id="required_%d%" value="%d%" type="checkbox" class="checkbox_fields"><label for="required_%d%" class="required">'.__("Required","piereg").'</label></div><div class="advance_fields"><label for="date_type_%d%">'.__("Date Format","piereg").'</label><select class="date_format" name="field[%d%][date_format]" id="date_format_%d%"><option value="mm/dd/yy">mm/dd/yy</option><option value="dd/mm/yy">dd/mm/yy</option><option value="dd-mm-yy">dd-mm-yy</option><option value="dd.mm.yy">dd.mm.yy</option><option value="yy/mm/dd">yy/mm/dd</option><option value="yy.mm.dd">yy.mm.dd</option></select></div><div class="advance_fields"><label for="date_type_%d%">'.__("Date Input Type","piereg").'</label><select class="date_type" name="field[%d%][date_type]" id="date_type_%d%"><option value="datefield">'.__("Date Field","piereg").'</option><option value="datepicker">'.__("Date Picker","piereg").'</option><option value="datedropdown">'.__("Date Drop Down","piereg").'</option></select></div><div class="advance_fields"><label for="startingDate_%d%">'.__("Starting Date","piereg").'</label><input name="field[%d%][startingDate]" id="startingDate_%d%" type="text" value="1901" class="input_fields"><a href="javascript:;" class="info">e.g : 1901</a></div><div class="advance_fields"><label for="endingDate_%d%">'.__("Ending Date","piereg").'</label><input name="field[%d%][endingDate]" id="endingDate_%d%" type="text" class="input_fields" value="'.(date("Y")).'"><a href="javascript:;" class="info">e.g : 2014</a></div><div style="display:none;" id="icon_div_%d%" class="advance_fields"><label for="date_type_%d%">&nbsp;</label><div class="calendar_icon_type"><input class="calendar_icon" type="radio" id="calendar_icon_%d%_none" name="field[%d%][calendar_icon]" value="none" checked="checked"><label for="calendar_icon_%d%_none"> '.__("No Icon","piereg").' </label>&nbsp;&nbsp;<input class="calendar_icon" type="radio" id="calendar_icon_%d%_calendar" name="field[%d%][calendar_icon]" value="calendar"><label for="calendar_icon_%d%_calendar"> '.__("Calendar Icon","piereg").' </label>&nbsp;&nbsp;<input class="calendar_icon" type="radio" id="calendar_icon_%d%_custom" name="field[%d%][calendar_icon]" value="custom"><label for="calendar_icon_%d%_custom"> '.__("Custom Icon","piereg").' </label></div><div id="icon_url_container_%d%" style="display: none;float:left;clear: both;"><label for="cfield_calendar_icon_%d%_url"> '.__("Image Path","piereg").': </label><input type="text" class="input_fields" name="field[%d%][calendar_icon_url]" id="cfield_calendar_icon_%d%_url"></div></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div><div class="advance_fields"><label for="show_in_profile_%d%">'.__("Show in Profile","piereg").'</label><select class="show_in_profile" name="field[%d%][show_in_profile]" id="show_in_profile_%d%"  class="checkbox_fields"><option value="1" selected="selected">'.__("Yes","piereg").'</option><option value="0">'.__("No","piereg").'</option></select></div></div></div>';
 		
@@ -685,7 +685,7 @@ class PieReg_Base
 	{
 		return str_replace("-","_",sanitize_title($text));	
 	}
-	function filterEmail($text,$user,$user_pass="",$key=false)
+	function filterEmail($text,$user,$user_pass="",$password_reset_key=false,$extra_variables = array())
 	{
 		if(!is_object($user))
 		{
@@ -698,6 +698,20 @@ class PieReg_Base
 			$user = $user_data[0];
 		}
 		if(!$user) return false;
+		
+		/*
+			*	Define Variables
+			*	Add Since 2.0.13
+		*/
+		$reset_email_key = "";
+		/*
+			*	Replace Array to Variables
+			*	Add Since 2.0.13
+		*/
+		if(!empty($extra_variables))
+			extract($extra_variables);
+		
+		
 		$text					= $this->replaceMetaKeys($text,$user->ID);
 		$user_login 			= stripslashes($user->user_login);
 		$user_email 			= stripslashes($user->user_email);
@@ -705,35 +719,53 @@ class PieReg_Base
 		$site_url 				= get_option("siteurl");
 		
 		$blogname_url			= '<a href="'.get_option("siteurl").'">'.get_option("blogname").'</a>';
-		$first_name				= get_user_meta( $user->ID, 'first_name' );
-		$last_name				= get_user_meta( $user->ID, 'last_name' );
+		$first_name				= get_user_meta( $user->ID, 'first_name', true );
+		$last_name				= get_user_meta( $user->ID, 'last_name', true );
 		
 		$user_url				= $user->user_url;
 		
-		$user_aim				= get_user_meta( $user->ID, 'aim' );
-		$user_yim				= get_user_meta( $user->ID, 'yim' );
-		$user_jabber			= get_user_meta( $user->ID, 'jabber' );
-		$user_biographical_nfo	= get_user_meta( $user->ID, 'description' );
-		$invitation_code		= get_user_meta( $user->ID, 'invite_code' );
+		$user_aim				= get_user_meta( $user->ID, 'aim', true );
+		$user_yim				= get_user_meta( $user->ID, 'yim', true );
+		$user_jabber			= get_user_meta( $user->ID, 'jabber', true );
+		$user_biographical_nfo	= get_user_meta( $user->ID, 'description', true );
+		$invitation_code		= get_user_meta( $user->ID, 'invite_code', true );
 		
-		$invitation_code		= (is_array($invitation_code))? $invitation_code[0] : "";
+		$invitation_code		= (isset($invitation_code))? $invitation_code : "";
 		
-		$hash 			= get_user_meta( $user->ID, 'hash' );
+		$hash 					= get_user_meta( $user->ID, 'hash', true );
+		//print_r($hash);
 		$user_ip		= $_SERVER['REMOTE_ADDR'];
 		//$activationurl	= $this->pie_login_url().'?action=activate&id='.$user_login.'&activation_key='.$hash[0];
 		
-		$activationurl	= $this->pie_modify_custom_url($this->pie_login_url(),"action=activate").'&id='.$user_login.'&activation_key='.$hash[0];
-		$activationurl	= '<a href="'.$activationurl.'" target="_blank">'.$activationurl.'</a>';
+		$activationurl = $this->pie_modify_custom_url($this->pie_login_url(),"action=activate").'&id='.$user_login.'&activation_key='.((isset($hash))?$hash:"");
+		//$activationurl	= '<a href="'.$activationurl.'" target="_blank">'.$activationurl.'</a>';
 																																		  
 		$all_field = $this->get_all_field($user->user_email);
 		
-		$password_reset_key = $key;
 		$user_registration_date = $user->user_registered;
 		//$reset_password_url = $this->pie_modify_custom_url($this->pie_login_url())."?action=rp&key={$password_reset_key}&login=" . $user_login;
+		if($password_reset_key)
+			$reset_password_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=rp")."&key={$password_reset_key}&login=" . $user_login;
+		else
+			$reset_password_url = "";
+		//$reset_password_url = '<a href="'.$reset_password_url.'" target="_blank">'.$reset_password_url.'</a>';
 		
-		$reset_password_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=rp")."&key={$password_reset_key}&login=" . $user_login;
-		$reset_password_url = '<a href="'.$reset_password_url.'" target="_blank">'.$reset_password_url.'</a>';
-		
+		/*
+			*	Add since 2.0.13
+			*	User New Email
+		*/
+		$user_new_email = get_user_meta( $user->ID, 'new_email_address', true );
+
+		/*
+			*	Add since 2.0.13
+			*	Email edit verification url
+		*/
+		$reset_email_url = "";
+		if($reset_email_key)
+			$reset_email_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=email_edit")."&key={$reset_email_key}&login=" . $user_login;
+		else
+			$reset_email_url = "";
+
 		/////////////// PAYMENT LINK ///////////
 		$option = get_option("pie_register_2");
 		$pending_payment_url = "";
@@ -752,8 +784,8 @@ class PieReg_Base
 		$user_pass = "********";
 		//////////////////////////////////////
 		
-		$keys 	= array("%user_login%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" ,"%invitation_code%","%pending_payment_url%","%blogname_url%","%user_ip%","%user_pass%");
-		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name[0],$last_name[0],$user_url,$user_aim[0],$user_yim[0],$user_jabber[0],$user_biographical_nfo[0], $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass);
+		$keys 	= array("%user_login%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" ,"%invitation_code%","%pending_payment_url%","%blogname_url%","%user_ip%","%user_pass%","%user_new_email%","%reset_email_url%");
+		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name,$last_name,$user_url,$user_aim,$user_yim,$user_jabber,$user_biographical_nfo, $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass,$user_new_email,$reset_email_url);
 		$return_text = str_replace($keys,$values,$text);
 		return $return_text;
 	}
@@ -808,193 +840,12 @@ class PieReg_Base
 		global $wpdb;		
 		return $wpdb->prefix."pieregister_code";			
 	}
-	function checkLicense($key="")
-	{
-		if(empty($key))	
-		{
-			return;
-		}
-		/*$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,"http://pieregister.genetechsolutions.com/license.php");
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS,"domain=".get_bloginfo("url")."&key=".rawurlencode($key));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$server_output = curl_exec ($ch); 
-		curl_close ($ch);	*/
-		
-		$error = $this->Check_license_key_form_API($key);
-		
-		//if(strip_tags($server_output)=="True")
-		if($error == "")
-		{
-			add_option("pie_register_2_key",$key);
-			add_option("pie_register_2_active",1);
-			return $key; 	
-		}
-		return	""; 
-	}
-	
-	function Check_license_key_form_API($key)
-	{
-		//die("<br />Check_license_key_form_API");
-		/*$post_url = "http://achnawachna.com/PieRegisterService_new/requesthandler.ashx";
-		$domain_name = get_bloginfo("url");
-		$post_string_url	= "type=checkdomainkey&domainname=".$domain_name."&key=".trim($key);
-
-		$post_response = "";
-		if(function_exists('curl_version')){
-			$request = curl_init($post_url);
-			curl_setopt($request, CURLOPT_HEADER, 0);
-			curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($request, CURLOPT_POSTFIELDS, $post_string_url);
-			curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
-			$post_response = curl_exec($request);
-			curl_close ($request);
-		}else{
-			$url = $post_url."?".$post_string_url;
-			$post_response = @file_get_contents($url);
-		}*/
-		/*$rresponce_code = trim(strip_tags($post_response));// get response code from http://pieregister.genetechsolutions.com/
-		/*$error = "";
-		if($rresponce_code == "1001")
-			{$error = __("Both key and domain doesn't exist. Please try gain later","piereg");}
-		else if($rresponce_code == "1002")
-			{$error = __("This Domain doesn't exist. Please try gain later","piereg");}
-		else if($rresponce_code == "1003")
-			{$error = __("This key doesn't exist. Please try gain later","piereg");}
-		else if($rresponce_code == "1004")
-			{$error = __("Key and domain exist but a cross match (not related to each other). Please try gain later","piereg");}
-		else if($rresponce_code == "")
-			{$error = __("Server is down please try again later.","piereg");}
-		else if($rresponce_code == "1000")
-		{
-			$error = array('key'=>$key);
-		}
-		else if($rresponce_code != "")
-		{
-			$error = array('key'=>$key);
-		}*/
-		
-		$key = md5(rand(123,321))."4QFJBOU25anWq3t8eAc7A1LZJWFExpKUBw2AFVODn".md5(time())."gfa~~";
-		$error = array('key'=>$key);
-		return $error;
-	}
-	
-	
 	function warnings()
 	{ //Show warning if plugin is installed on a WordPress lower than 3.2
 		global $wp_version;			
 		//VERSION CONTROL
 		if( $wp_version < 3.5 )			
 		echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Pie-Register is only compatible with WordPress v3.5 and up. You are currently using WordPress.', 'piereg').$wp_version.". ".__("The plugin may not work as expected.","piereg")."</strong> </p></div>";
-		
-		$key 	=  get_option("pie_register_2_key");
-		$active =  get_option("pie_register_2_active");
-		$notice_PR_License_Key = PieRegister::print_Rpr_licenseKey_errors();
-		$print_PR_notice = "";
-		
-		if((empty($key) ||  $active != 1) and 1==2)
-		{
-			/*echo "<div id='piereg-warning' class='updated fade-ff0000'><p><strong>".__('Your are using the unregistered version of Pie Register. ','piereg').'<a href="http://pieregister.genetechsolutions.com/get-your-license-key?wp_home_url='.urlencode(get_bloginfo("url")).'" target="_blank">'.__('Click here','piereg').'</a>'.__(' to get your key. ', 'piereg')."</strong></p></div>";*/
-			
-			$print_PR_notice = "<p>
-									<strong>".__('You are using the unregistered version of Pie Register. ','piereg').'
-										<a href="'.admin_url("admin.php?page=pie-general-settings").'" >
-											'.__('Click here','piereg').'
-										</a>'.__(' to get your free license key. ', 'piereg')."
-									</strong>
-								</p>";
-		}
-		if(trim(strip_tags($notice_PR_License_Key)) != "")
-		{
-			$print_PR_notice .= "<p>
-									<strong>".__($notice_PR_License_Key,'piereg')."
-									</strong>
-								</p>";
-				
-		}
-		if( trim($print_PR_notice) != "" )
-		{
-			echo "<div id='piereg-warning' class='updated fade-ff0000'>
-					".$print_PR_notice."
-				</div>";			
-		}
-		/*else
-		{
-			$responce = $this->Check_license_key_form_API(trim($key));
-			if(trim($responce) == "Server is down please try again later.")
-			{
-				$notice = __($responce,"piereg");
-			}
-			else if(trim($responce) != "")
-			{
-				$piereg = get_option("pie_register_2");
-				$piereg['support_license'] = "";
-				update_option("pie_register_2",$piereg);
-				delete_option("pie_register_key");
-				delete_option("pie_register_active");
-				$notice = __($responce, 'piereg');
-			}
-		}*/
-		/*if(trim($notice) != "")
-		{
-			echo "<div id='piereg-warning' class='updated fade-ff0000'>
-					<p>
-						<strong>notice ::  ".__($notice, 'piereg')."
-						</strong>
-					</p>
-				</div>";
-		}*/
-		/**
-			* add snipt since 2.0.12
-		**/
-		$piereg_notices = @file_get_contents('http://www.genetechsolutions.com/pie_register_help_content/piereg_notices.json');
-		$regular_notice = "";
-		$dismiss_notice = "";
-		if(!empty($piereg_notices))
-		{
-			$piereg_notices_json = json_decode($piereg_notices);// decode the JSON into an object
-			if(is_object($piereg_notices_json))
-			{
-				if(trim($piereg_notices_json->notices->regular_notice) != "")//for regular notice
-					$regular_notice = html_entity_decode($piereg_notices_json->notices->regular_notice);
-				
-				if(trim($piereg_notices_json->notices->dismiss_notice) != "")//for dismiss notice
-					$dismiss_notice = html_entity_decode($piereg_notices_json->notices->dismiss_notice);
-			}
-		}
-		//$regular_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/regular_notice.txt");
-		if(trim($regular_notice) != "")
-		{
-			echo "<div id='piereg-warning' class='updated fade-ff0000'>
-					<p>".$regular_notice."</p>
-				  </div>";
-		}
-		
-		//$desmiss_notice = @file_get_contents("http://genetechsolutions.com/pie_register_help_contain/desmiss_notice.txt");
-		
-		if(trim($dismiss_notice) != "")
-		{
-			?>
-			<script tyle="text/javascript">
-				var piereg = jQuery.noConflict();
-                piereg(document).ready(function(){
-                    if(sessionStorage.getItem("dissmiss_notice") != "abc")
-					{
-						var dismiss_notice = '<div class="error updated" id="pie_dismiss_error"><a style="float:right;cursor:pointer;" id="pie_dismiss_close_btn">X</a><p><?php echo $dismiss_notice; ?></p></div>';
-						piereg("#pie_dismiss_error_show").html(dismiss_notice);
-						sessionStorage.setItem("dissmiss_notice","false");
-					}
-					
-                    piereg("#pie_dismiss_close_btn").click(function(){
-                        sessionStorage.setItem("dissmiss_notice","abc");
-                        piereg("#pie_dismiss_error").fadeOut();
-                    });
-                });
-            </script>
-            <?php
-            echo '<div id="pie_dismiss_error_show"></div>';
-		}
 	}
 	function ignoreHeader($curl, $headerStr)
 	{
@@ -1111,9 +962,10 @@ class PieReg_Base
 		$update['alternate_logout']			= -1;
 		
 		$update['alternate_logout_url']			= -1;
-		$update['support_license'] 			= "";
+		
 		$update['outputcss'] 				= 1;
-		$update['theme_styles']				= 1;
+		$update['outputjquery_ui'] 			= 1;
+		
 		$update['outputhtml'] 				= 1;
 		$update['no_conflict']				= 0;
 		/*$update['currency'] 				= "USD";*/
@@ -1151,6 +1003,16 @@ class PieReg_Base
 		$update['forgot_pass_username_placeholder']	= "";
 		$update['capthca_in_forgot_pass_label']		= "";
 		$update['capthca_in_forgot_pass']			= "0";
+		
+		
+		$update['pass_strength_indicator_label']	= "Strength Indicator";
+		$update['pass_very_weak_label']				= "Very weak";
+		$update['pass_weak_label']					= "Weak";
+		$update['pass_medium_label']				= "Medium";
+		$update['pass_strong_label']				= "Strong";
+		$update['pass_mismatch_label']				= "Mismatch";
+		
+		
 		//Since 2.0.10
 		$update['remove_PR_settings']	= "0";//Remove All PIE-register settings from database
 		
@@ -1193,6 +1055,8 @@ class PieReg_Base
 		$update['user_message_email_email_verification_reminder']			 	= '<p>Dear %user_login%,</p><p>We have noticed that you have created an account to the site few days ago, but you did not verify your email address yet. Kindly follow the link (&nbsp;%activationurl% ) below to complete the verification procedure to become the registered member of our Website.</p><p>Best Regards,</p><p>Team %blogname%</p>';
 
 		$update['user_message_email_forgot_password_notification']				= '<p>Dear %user_login%,</p><p>You have just requested for a new password for your account. Please follow the link (&nbsp;%reset_password_url% ) below to reset your password.</p><p>If you have not requested for a new password, kindly ignore this Email.</p><p>Best Regards,</p><p>Team %user_login%</p>';
+		
+		$update['user_message_email_email_edit_verification']		= '<p>Hello %user_login%,</p><p>You have requested to change of your email address from %user_email% to %user_new_email%. Please click here (%reset_email_url%) to complete the action.</p><p>Thanks</p><p>%blogname%</p>';
 		
 
 		update_option( 'pie_register_2', $update );
@@ -1268,8 +1132,6 @@ class PieReg_Base
 		global $errors;
 		$errors = new WP_Error();
 		if($_FILES[$field_slug]['name'] != ''){
-			//echo $_FILES[$field_slug]['name'];
-			//die('pie_profile_pictures_upload');
 			////////////////////////////UPLOAD PROFILE PICTURE//////////////////////////////
 			$allowedExts = array("gif", "jpeg", "jpg", "png");
 			$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],array("gif","jpeg","jpg","png","bmp"));
@@ -1284,15 +1146,12 @@ class PieReg_Base
 				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name)){
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));
-					/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));*/
 				}else{
-					//$_POST[$field_slug] = $temp_file_url;
 					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
 				}
 				
 			}else{
 				$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));
-				/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file_type_in_profile_picture",__('Invalid File Type In Profile Picture.','piereg' )));*/
 			}
 		}else{
 			update_user_meta($user_id,"pie_".$field_slug, "");
@@ -1321,12 +1180,10 @@ class PieReg_Base
 					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 					}else{
-						//$_POST[$field_slug] = $temp_file_url;
 						update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
 					}
 				}else{
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));
-					/*$_POST['error'] = ('<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_file",__('Invalid File.','piereg' )));*/
 				}
 			}
 			elseif($field['file_types'] == ""){
@@ -1340,7 +1197,6 @@ class PieReg_Base
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 				}else{
-					//$_POST[$field_slug] = $temp_file_url;
 					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
 				}
 			}
@@ -1353,14 +1209,6 @@ class PieReg_Base
 		$pieregcookie = $_COOKIE[$c_name];
 		$pieregcookie = stripslashes($pieregcookie);
 		$pieregcookie = json_decode($pieregcookie, true);
-		echo '<pre>';
-		print_r($pieregcookie);
-		echo '</pre>';
 		return $pieregcookie;
 	}
-	
-	
-	
-	
-	
-}
+}?>

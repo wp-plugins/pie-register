@@ -12,7 +12,7 @@ class Registration_form extends PieReg_Base
 	function __construct()	
 	{
 		$this->data = $this->getCurrentFields();
-		$this->label_alignment = $this->data['form']['label_alignment'];		
+		$this->label_alignment = ((isset($this->data['form']['label_alignment']))?$this->data['form']['label_alignment']:"left");
 		$this->pages = 1;
 		//add_action("Add_payment_option",		array($this,"Add_payment_option"));
 		//add_action("add_payment_method_script", array($this,"add_payment_method_script"));
@@ -56,7 +56,7 @@ class Registration_form extends PieReg_Base
 	function addUsername($form_widget = false)
 	{
 		$formwidget = (isset($form_widget) && $form_widget == true)? '_widget' : '';
-		return '<input id="username'.$formwidget.'" name="username" class="input_fields piereg_validate[required,username]" placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue('username').'" data-errormessage-value-missing="'.$this->field['validation_message'].'"  />';	
+		return '<input id="username'.$formwidget.'" name="username" class="input_fields piereg_validate[required,username]" placeholder="'.$this->field['placeholder'].'" type="text" value="'.$this->getDefaultValue('username').'" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'"  />';	
 		
 	}
 	function addPassword($fromwidget)
@@ -79,23 +79,22 @@ class Registration_form extends PieReg_Base
 			//$data .= 'onkeyup="passwordStrength(this.value)" ';
 		}
 		
-		
-		$data .= 'id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" />';
+		$data .= 'id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" autocomplete="off" />';
 				
+	
+		$class = '';
+		$fclass = '';
 		
-			$class = '';
-			$fclass = '';
+		$topclass = "";
+		if($this->label_alignment=="top")
+			$topclass = "label_top"; 
+		//$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
+		$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? __($this->field['label2'],"piereg") : __("Confirm Password","piereg");
+		
+		$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.$label2.'</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" autocomplete="off" />';	
+		
 			
-			$topclass = "";
-			if($this->label_alignment=="top")
-				$topclass = "label_top"; 
-			//$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
-			$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Confirm Password","piereg");
-			
-			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.$label2.'</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" />';	
-			
-				
-			return $data;
+		return $data;
 			
 	}	
 	function addEmail($fromwidget)
@@ -119,11 +118,8 @@ class Registration_form extends PieReg_Base
 		
 			
 			//$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
-			$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Confirm E-mail","piereg");
-			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>'.$label2.'</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]">';
-			
-			
-			
+			$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? __($this->field['label2'],"piereg") : __("Confirm E-mail","piereg");
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass .'"><div class="fieldset"><label>'.$label2.'</label><input  placeholder="'.$this->field['placeholder'].'" id="confirm_email_'.$this->id.'" '.$this->addValidation().' type="text" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]" autocomplete="off">';
 		}	
 		return $data;
 	}
@@ -151,10 +147,10 @@ class Registration_form extends PieReg_Base
 	
 		//$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 			
-		$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? $this->field['label2'] : __("Last Name","piereg");
+		$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? __($this->field['label2'],"piereg") : __("Last Name","piereg");
 		/*$data .= '<div class="fieldset"><label>'.$label2.'</label>';*/
-		$data .= '<div class="fieldset_child"><label>'.$label2.'</label>';
-		$data .= '<input value="'.$this->getDefaultValue('last_name').'" id="'.$this->id.'_lastname" name="last_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  /></div></div>';	
+		$data .= '</div><div class="fieldset fieldset_child"><label>'.$label2.'</label>';
+		$data .= '<input value="'.$this->getDefaultValue('last_name').'" id="'.$this->id.'_lastname" name="last_name" class="'.$this->addClass().' input_fields" '.$this->addValidation().'  type="text"  /></div>';	
 		return $data;
 		
 	}
@@ -557,10 +553,10 @@ class Registration_form extends PieReg_Base
 			$data .=	(isset($date_this_values['date'][0]))?$date_this_values['date'][0] : "";
 			$data .=	'">';
 			  
-			 $data .= '<input id="'.$this->id.'_format" type="hidden"  value="'.$this->field['date_format'].'">';
-			 $data .= '<input id="'.$this->id.'_firstday" type="hidden"  value="'.$this->field['firstday'].'">';
+			 $data .= '<input id="'.$this->id.'_format" type="hidden"  value="'.((isset($this->field['date_format']))?$this->field['date_format']:"").'">';
+			 $data .= '<input id="'.$this->id.'_firstday" type="hidden"  value="'.((isset($this->field['firstday']))?$this->field['firstday']:"").'">';
 			
-			 $data .= '<input id="'.$this->id.'_startdate" type="hidden"  value="'.$this->field['startdate'].'">';
+			 $data .= '<input id="'.$this->id.'_startdate" type="hidden"  value="'.((isset($this->field['startdate']))?$this->field['startdate']:"").'">';
 			  
 			if($this->field['calendar_icon'] == "calendar")
 			{
@@ -852,7 +848,7 @@ class Registration_form extends PieReg_Base
 	{
 				
 		
-		if((isset($this->field['required']) && $this->field['required']) && !empty($this->field['validation_message']))
+		if((isset($this->field['required']) && $this->field['required']) && !empty($this->field['validation_message']) && isset($this->field['validation_message']))
 		{
 			$val[] = 'data-errormessage-value-missing="'.$this->field['validation_message'].'"';
 		}
@@ -867,14 +863,14 @@ class Registration_form extends PieReg_Base
 				$this->field['validation_rule']=="website" || $this->field['type']=="website" || 
 				$this->field['type']=="phone" || $this->field['type']=="date")
 			{
-				$val[] = 'data-errormessage-custom-error="'.$this->field['validation_message'].'"';		
+				$val[] = 'data-errormessage-custom-error="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'"';
 			}		
 		}
 		else if($this->field['type']=="time")
 		{
-			$val[] = 'data-errormessage-custom-error="'.$this->field['validation_message'].'"';		
-			$val[] = 'data-errormessage-range-underflow="'.$this->field['validation_message'].'"';	
-			$val[] = 'data-errormessage-range-overflow="'.$this->field['validation_message'].'"';
+			$val[] = 'data-errormessage-custom-error="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'"';		
+			$val[] = 'data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'"';	
+			$val[] = 'data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'"';
 		}
 		
 		if(isset($val) && sizeof($val) > 0)
@@ -952,12 +948,12 @@ class Registration_form extends PieReg_Base
 		$field_id = "";
 		if($piereg_widget == true){
 			$data .= '<div id="pieregister_math_captha_widget" class="piereg_math_captcha"></div>';
-			$data .= '<input id="'.$this->id.'" type="text" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="'.$this->addClass().'" placeholder="'.$this->field['placeholder'].'" style="width:auto;margin-top:9px;" name="piereg_math_captcha_widget"/>';
+			$data .= '<input id="'.$this->id.'" type="text" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" class="'.$this->addClass().'" placeholder="'.$this->field['placeholder'].'" style="width:auto;margin-top:9px;" name="piereg_math_captcha_widget"/>';
 			$field_id = "#pieregister_math_captha_widget";
 		}
 		else{
 			$data .= '<div id="pieregister_math_captha" class="piereg_math_captcha"></div>';
-			$data .= '<input id="'.$this->id.'" type="text" data-errormessage-value-missing="'.$this->field['validation_message'].'" data-errormessage-range-underflow="'.$this->field['validation_message'].'" data-errormessage-range-overflow="'.$this->field['validation_message'].'" class="'.$this->addClass().'" placeholder="'.$this->field['placeholder'].'" style="width:auto;margin-top:9px;" name="piereg_math_captcha"/>';
+			$data .= '<input id="'.$this->id.'" type="text" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" class="'.$this->addClass().'" placeholder="'.$this->field['placeholder'].'" style="width:auto;margin-top:9px;" name="piereg_math_captcha"/>';
 			$field_id = "#pieregister_math_captha";
 		}
 		
@@ -1325,6 +1321,24 @@ class Registration_form extends PieReg_Base
 					break;							
 				endswitch;*/
 				
+				
+				/*
+					*	Add Restrict Password strength meater since 2.0.13
+				*/
+				if($this->field['type'] == "password" )
+				{
+					$widget = (isset($fromwidget) && $fromwidget == true)? '_widget' : '';
+					?>
+                    <script type="text/javascript">
+						var password_strength_meter<?php echo $widget; ?> = <?php echo ((isset($this->field['restrict_strength']))?intval($this->field['restrict_strength']):0); ?>;
+					</script>
+                    <?php
+					//Weak Password	
+					$strength_message = ((isset($this->field['strength_message']) && !empty($this->field['strength_message']))?__($this->field['strength_message'],"piereg"):__("Weak Password","piereg"));
+                    $pie_reg_fields .= '<span id="password_strength_message" style="display:none;">'.$strength_message.'</span>';
+				}
+				
+				
 				$pie_reg_fields .=  '</li>';
 				if($this->field['type'] == "password" && $this->field['show_meter']==1)
 				{		
@@ -1334,13 +1348,14 @@ class Registration_form extends PieReg_Base
 					$pie_reg_fields .=  '<label id="piereg_passwordDescription">'.__("Password not entered","piereg").'</label>
 					<div id="piereg_passwordStrength" class="piereg_strength0">&nbsp;</div>';
 					$pie_reg_fields .=  "</div>";*/
-					//NEW PASSWORD STRENGHT METER
 					
+					//NEW PASSWORD STRENGHT METER
 					$widget = (isset($fromwidget) && $fromwidget == true)? '_widget' : '';
 					$widget_style = (isset($fromwidget) && $fromwidget == true)? 'display: none;' : 'visibility:hidden;';
 					$pie_reg_fields .=  '<div id="password_meter" class="fieldset" '.((isset($style))?$style:"").'>';
 					$pie_reg_fields .=  '<label style="'.$widget_style.'">'.__("Password not entered","piereg").'</label>';
-					$pie_reg_fields .=  '<div id="piereg_passwordStrength'.$widget.'" class="piereg_pass" >'.__("Strength Indicator","piereg").'</div>';
+					//$pie_reg_fields .=  '<div id="piereg_passwordStrength'.$widget.'" class="piereg_pass" >'.__("Strength Indicator","piereg").'</div>';
+					$pie_reg_fields .=  '<div id="piereg_passwordStrength'.$widget.'" class="piereg_pass" >'.__($update['pass_strength_indicator_label'],"piereg").'</div>';
 					$pie_reg_fields .=  '</div>';
 					$pie_reg_fields .=  '</li>';
 				}
@@ -1358,35 +1373,35 @@ class Registration_form extends PieReg_Base
 		global $wpdb;
 		if ( empty( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Username",__('Invalid Username','piereg' )));
+			$errors->add( "username" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Username",__('Invalid Username','piereg' )));
 		}
 		else if ( username_exists( $_POST['username'] ) )
 		{
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Username_already_exists",__('Username already exists','piereg' )));
+			$errors->add( "username" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Username_already_exists",__('Username already exists','piereg' )));
 		}		
 		
 		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Email_address",__('Invalid E-mail address','piereg' )));
+			$errors->add( "email" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Email_address",__('Invalid E-mail address','piereg' )));
 		}
 		else if ( email_exists( $_POST['e_mail'] ) )
 		{
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Email_address_already_exists",__('E-mail address already exists','piereg' )));
+			$errors->add( "email" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Email_address_already_exists",__('E-mail address already exists','piereg' )));
 					
 		}
 		if(is_array($this->data)){
 			 foreach($this->data as $field)
 			 {
-			$slug 				= $this->createFieldName($field['type']."_".$field['id']);			
+			$slug 				= $this->createFieldName($field['type']."_".(isset($field['id'])?$field['id']:""));
 			if($field['type']=="username" || $field['type']=="password"){
 				  $slug  = $this->createFieldName($field['type']);
 			}
 			if($field['type']=="email"){
 				  $slug  = $this->createFieldName("e_mail");
 			}
-			$field_name			= $_POST[$slug];
-			$required 			= $field['required'];
-			$rule				= $field['validation_rule'];
+			$field_name			= ((isset($_POST[$slug]))?$_POST[$slug]:"");
+			$required 			= ((isset($field['required']))?$field['required']:"");
+			$rule				= ((isset($field['validation_rule']))?$field['validation_rule']:"");
 			
 			$validation_message	= (!empty($field['validation_message']) ? $field['validation_message'] : $field['label'] .__(" is required","piereg"));
 			
@@ -1598,4 +1613,4 @@ class Registration_form extends PieReg_Base
 		endif;
 		return $pages ;
 	}					
-}
+}?>

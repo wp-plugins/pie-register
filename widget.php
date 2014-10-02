@@ -18,6 +18,7 @@ class Pie_Register_Widget extends WP_Widget
 			//do nothing here
 		}else{
 			global $errors;		
+			$error = "";
 			//$form 		= new Registration_form();
 			$success 	= '' ;
 			$title = apply_filters( 'widget_title', $instance['title'] );
@@ -216,13 +217,11 @@ class Pie_Forgot_Widget extends WP_Widget
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<?php 
-	}
-		
+	}	
 	// Updating widget replacing old instances with new
-	public function update( $new_instance, $old_instance ) {
+	public function update( $new_instance, $old_instance ){
 		$instance = array();
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		return $instance;
 	}
-	
-}
+}?>

@@ -20,10 +20,6 @@ function validateSettings()
 }
 var piereg = jQuery.noConflict();
 piereg(document).ready(function(){
-	if(piereg("#support_license").val().trim() == "")
-	{
-		piereg("#support_license").focus();
-	}
 	piereg( document ).tooltip({
 		track: true
 		/*hide: { effect: "explode", duration: 1000000 }*/
@@ -33,6 +29,7 @@ piereg(document).ready(function(){
 </script>
 <?php
 $piereg = get_option( 'pie_register_2' );
+
 if(isset( $_POST['notice'] ) && !empty($_POST['notice']) ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '</strong></p></div>';
 }
@@ -44,71 +41,8 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
   <div class="right_section">
     <div class="settings">
       <h2><?php _e("Settings",'piereg') ?></h2>
-      
-        <h3><?php _e("Free License Key Setting",'piereg') ?></h3>
 		<form method="post" action="" onsubmit="return validateSettings();">
-        
-        <div class="fields">
-            <input type="hidden" name="domainname" value="<?php echo get_bloginfo("url");?>" />
-        </div>
-        
-        <div class="fields">
-            <label for="support_email"><?php _e("E-mail Address",'piereg') ?></label>
-            <input type="email" style="width:58%;" required="required" name="support_email" id="support_email" class="input_fields" value="<?php echo get_bloginfo("admin_email");?>" />
-            <span class="quotation"><?php _e("The license key for support.",'piereg') ?></span>
-        </div>
-        
-        <div class="fields">
-            <label for="support_license"><?php _e("License Key",'piereg') ?></label>
-            <input type="text" style="width:58%;" 
-            <?php echo (isset($piereg['support_license']) and $piereg['support_license'] != "")? 'readonly="readonly"' : ""; ?>
-            name="support_license" id="support_license" class="input_fields" value="<?php echo $piereg['support_license']?>" />
-            
-            <?php if(isset($piereg['support_license']) and $piereg['support_license'] == ""){ ?>
-	            <input type="hidden" name="empty_license_key" value="yes"/>
-            <?php } ?>
-            
-        <?php if(isset($piereg['support_license'])	and $piereg['support_license'] != "")
-        {?> 
-            <img src="<?php echo plugins_url("images/registerd.png",dirname(__FILE__));?>" style="margin:3px;float:left;" title="<?php _e("You have been using registered version of pie-register","piereg"); ?>" />
-            <input type="image" name="Remove_license" src="<?php echo plugins_url("images/key_remove.png",dirname(__FILE__));?>" value="&nbsp;&nbsp; <?php _e("Remove License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to de-activate your license key","piereg"); ?>" />
-            
-            <span class="quotation"><?php _e("The license key is used for access to automatic upgrades and support.",'piereg') ?></span>
-            <!--</div>
-            <div class="fields">
-            <input type="submit" name="Remove_license" class="submit_btn" style="margin-top:0px;" value="&nbsp;&nbsp; <?php _e("Remove License Key","piereg"); ?> &nbsp;&nbsp;" />-->
-            
-        <?php } else {?>
-        	<img src="<?php echo plugins_url("images/help.png",dirname(__FILE__));?>" style="margin:7px 0px;float:left;" title="<?php _e("Please Click on the license icon to get and auto-filled your free license key","piereg"); ?>" />
-<!--<input type="submit" class="submit_btn" style="margin-top:0px;" value="&nbsp;&nbsp; <?php _e("Get Free License Key"); ?> &nbsp;&nbsp;" />-->
- <input type="image" src="<?php echo plugins_url("images/key.png",dirname(__FILE__));?>" value="&nbsp;&nbsp; <?php _e("Get Free License Key"); ?> &nbsp;&nbsp;" title="<?php _e("Click here to get your free license key","piereg"); ?>" />
-            <span class="quotation"><?php _e("The license key is used for access to automatic upgrades and support.",'piereg') ?></span>
-            
-        <?php } ?>
-            
-            
-        </div>
-            
-      
         <h3><?php _e("General Settings",'piereg') ?></h3>
-        
-         <!--<div class="fields">
-          <label for="support_license"><?php _e("Support License Key",'piereg') ?></label>
-              <input type="text" name="support_license" id="support_license" class="input_fields" value="<?php echo $piereg['support_license']?>" />
-              <span class="quotation"><?php _e("The license key is used for access to automatic upgrades and support.",'piereg') ?></span>
-          </div>-->
-          
-          
-        <!--<div class="fields">
-          <label><?php _e("Get Theme Styles",'piereg') ?></label>
-          <div class="radio_fields">
-            <input type="radio" value="1" name="theme_styles" <?php echo ($piereg['theme_styles']=="1")?'checked="checked"':''?> />
-            <label><?php _e("Yes",'piereg') ?></label>
-            <input type="radio" value="0" name="theme_styles" <?php echo ($piereg['theme_styles']=="0")?'checked="checked"':''?> />
-            <label><?php _e("No",'piereg') ?></label>
-          </div>
-          <span class="quotation">Set this to No if you don't want the current theme header & footer in your form.</span> </div>-->
-       
         <div class="fields">
           <label><?php _e("Display Hints",'piereg') ?></label>
           <div class="radio_fields">
@@ -121,7 +55,7 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
           </div>
          
        <fieldset class="piereg_fieldset_area">
-    		<legend><?php _e("URL Setting",'piereg') ?></legend>
+    		<legend><?php _e("URL Settings",'piereg') ?></legend>
           
              <div class="fields">
               <label for="alternate_login"><?php _e("Login Page",'piereg') ?></label>
@@ -225,10 +159,10 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                 <label for="piereg_capthca_in_login"><?php _e("Captcha",'piereg') ?></label>
                 <select name="capthca_in_login" id="piereg_capthca_in_login">
                     <option value="0" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 0 )?'selected="selected"':'') ?>><?php _e("None",'piereg') ?></option>
-                    <option value="1" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 1 )?'selected="selected"':'') ?>><?php _e("ReCaptcha",'piereg') ?></option>
+                    <option value="1" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 1 )?'selected="selected"':'') ?>><?php _e("Re-Captcha",'piereg') ?></option>
                     <option value="2" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 2 )?'selected="selected"':'') ?>><?php _e("Math Captcha",'piereg') ?></option>
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in login form which you want.",'piereg') ?></span> 
+                <span class="quotation"><?php _e("Apear Captcha in login form which you want",'piereg') ?></span> 
             </div>
             <div class="fields piereg_recapthca_skin_login" style="display:none;">
                 <label for="piereg_recapthca_skin_login"><?php _e("Re-Captcha Skin",'piereg') ?></label>
@@ -243,7 +177,6 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                     <option value="blackglass" <?php echo ((isset($piereg['piereg_recapthca_skin_login']) && $piereg['piereg_recapthca_skin_login'] == "blackglass" )?'selected="selected"':'') ?>><?php _e("blackglass",'piereg') ?></option>
                     
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in Forgot Password form which you want.",'piereg') ?></span> 
             </div>
             <script type="text/javascript">
 				piereg(document).ready(function(){
@@ -285,10 +218,10 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                 <label for="piereg_capthca_in_forgot_pass"><?php _e("Captcha",'piereg') ?></label>
                 <select name="capthca_in_forgot_pass" id="piereg_capthca_in_forgot_pass">
                     <option value="0" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 0 )?'selected="selected"':'') ?>><?php _e("None",'piereg') ?></option>
-                    <option value="1" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 1 )?'selected="selected"':'') ?>><?php _e("ReCaptcha",'piereg') ?></option>
+                    <option value="1" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 1 )?'selected="selected"':'') ?>><?php _e("Re-Captcha",'piereg') ?></option>
                     <option value="2" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 2 )?'selected="selected"':'') ?>><?php _e("Math Captcha",'piereg') ?></option>
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in Forgot Password form which you want.",'piereg') ?></span> 
+                <span class="quotation"><?php _e("Apear Captcha in Forgot Password form which you want",'piereg') ?></span> 
             </div>
             
             <div class="fields piereg_recapthca_skin_forgot_pas" style="display:none;">
@@ -304,7 +237,6 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                     <option value="blackglass" <?php echo ((isset($piereg['piereg_recapthca_skin_forgot_pass']) && $piereg['piereg_recapthca_skin_forgot_pass'] == "blackglass" )?'selected="selected"':'') ?>><?php _e("blackglass",'piereg') ?></option>
                     
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in Forgot Password form which you want.",'piereg') ?></span> 
             </div>
             
             <script type="text/javascript">
@@ -331,7 +263,7 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                 <input type="radio" value="0" name="redirect_user" id="redirect_user_no" <?php echo ($piereg['redirect_user']=="0")?'checked="checked"':''?> />
                 <label for="redirect_user_no"><?php _e("No",'piereg') ?></label>
               </div>
-              <span class="quotation"><?php _e("Set this to Yes if you would like to block Login, Registration & Forgot Password pages for loggged in users.",'piereg') ?></span>
+              <span class="quotation"><?php _e("Set this to Yes if you would like to block Login, Registration & Forgot Password pages for logged in users.",'piereg') ?></span>
            </div>
             
            <?php /*?> <div class="fields">
@@ -395,7 +327,29 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                 <label for="outputcss_no"><?php _e("No",'piereg') ?></label>
               </div>
               <span class="quotation"><?php _e("Set this to No if you would like to disable Pie-Register from outputting the form CSS.",'piereg') ?></span>
-              </div>
+          	</div>
+            
+            <div class="fields">
+                <label><?php _e("Output PR jQuery-ui",'piereg') ?></label>
+                <div class="radio_fields">
+                    <input type="radio" value="1" name="outputjquery_ui" id="outputjquery_ui_yes" <?php echo ($piereg['outputjquery_ui']=="1")?'checked="checked"':''?> />
+                    <label for="outputjquery_ui_yes"><?php _e("Yes",'piereg') ?></label>
+                    <input type="radio" value="0" name="outputjquery_ui" id="outputjquery_ui_no" <?php echo ($piereg['outputjquery_ui']=="0")?'checked="checked"':''?> />
+                    <label for="outputjquery_ui_no"><?php _e("No",'piereg') ?></label>
+                </div>
+                <span class="quotation"><?php _e("Warning: Turning off any script here may stop Pie-Register to work properly, please do it carefully!",'piereg') ?></span>
+            </div>
+            <script type="text/javascript">
+				piereg(document).ready(function(){
+					piereg("#outputjquery_ui_no").on("click",function(){
+						var pr_confrimation = confirm("Warning: Turning off this script here can stop Pie-Register to work properly! Are you sure?");
+						if(!pr_confrimation)
+						{
+							piereg("#outputjquery_ui_yes").click();
+						}
+					});
+				});
+			</script>
            
        </fieldset>
        
@@ -432,10 +386,45 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                 </div>
             </div>
         </fieldset>
+        
+        
+        <!-- Password Strangth Meater -->
+        <fieldset class="piereg_fieldset_area">
+    		<legend><?php _e("Password Strength Meter Settings",'piereg') ?></legend>
+            <div class="fields">
+                <label for="pass_strength_indicator_label"><?php _e("Strength Indicator",'piereg') ?></label>
+                <input type="text" name="pass_strength_indicator_label" id="pass_strength_indicator_label" value="<?php echo $piereg['pass_strength_indicator_label']; ?>" class="input_fields" />
+            </div>
+            <div class="fields">
+                <label for="pass_very_weak_label"><?php _e("Very Weak",'piereg') ?></label>
+                <input type="text" name="pass_very_weak_label" id="pass_very_weak_label" value="<?php echo $piereg['pass_very_weak_label']; ?>" class="input_fields" />
+            </div>
+            <div class="fields">
+                <label for="pass_weak_label"><?php _e("Weak",'piereg') ?></label>
+                <input type="text" name="pass_weak_label" id="pass_weak_label" value="<?php echo $piereg['pass_weak_label']; ?>" class="input_fields" />
+            </div>
+            <div class="fields">
+                <label for="pass_medium_label"><?php _e("Medium",'piereg') ?></label>
+                <input type="text" name="pass_medium_label" id="pass_medium_label" value="<?php echo $piereg['pass_medium_label']; ?>" class="input_fields" />
+            </div>
+            <div class="fields">
+                <label for="pass_strong_label"><?php _e("Strong",'piereg') ?></label>
+                <input type="text" name="pass_strong_label" id="pass_strong_label" value="<?php echo $piereg['pass_strong_label']; ?>" class="input_fields" />
+            </div>
+            <div class="fields">
+                <label for="pass_mismatch_label"><?php _e("Mismatch",'piereg') ?></label>
+                <input type="text" name="pass_mismatch_label" id="pass_mismatch_label" value="<?php echo $piereg['pass_mismatch_label']; ?>" class="input_fields" />
+            </div>
+        </fieldset>
+        
+        
+        
 
         <div class="fields">
             <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
         </div>
+           
+        
         
         <h3><?php _e("Installation Status",'piereg') ?></h3>
         <div class="fields">
@@ -542,13 +531,13 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
         <h3><?php _e("Custom CSS",'piereg'); ?></h3>
         <div class="fields">
          <span class="quotation" style="margin-left:0px;"><?php _e("Please don't use style tags.",'piereg') ?></span>
-          <textarea name="custom_css"><?php echo $piereg['custom_css']?></textarea>        
+          <textarea name="custom_css"><?php echo html_entity_decode($piereg['custom_css'],ENT_COMPAT,"UTF-8")?></textarea>        
           <input type="submit" class="submit_btn" value=" <?php _e("Save Changes","piereg");?> " />
            
         </div>
         <h3><?php _e("Tracking Code",'piereg'); ?></h3>
         <div class="fields">
-          <textarea name="tracking_code"><?php echo $piereg['tracking_code']?></textarea>
+          <textarea name="tracking_code"><?php echo html_entity_decode($piereg['tracking_code'],ENT_COMPAT,"UTF-8")?></textarea>
           <input type="submit" class="submit_btn" value=" <?php _e("Save Changes","piereg");?> " />
         </div>
         

@@ -76,5 +76,4 @@ if( !class_exists('PieRegisterWidget') ){
 add_action( 'plugins_loaded', 'initialize_pr_dashwidget');
 function initialize_pr_dashwidget(){
 	$piereg_widget = new PieRegisterWidget();
-}
-?>
+}?>

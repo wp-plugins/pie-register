@@ -106,7 +106,7 @@ if(isset($_POST['notice']) && $_POST['notice'] ){
 				}
 				?>
 				<select name="replacement_keys" id="replacement_keys" style="font-size:14px;">
-                	<option value="select">Select</option>
+                	<option value="select"><?php _e("Select",'piereg') ?></option>
                     <optgroup label="<?php _e("Default Fields",'piereg') ?>">
                         <option value="%user_login%"><?php _e("User Name",'piereg') ?></option>
                         <option value="%user_email%"><?php _e("User E-mail",'piereg') ?></option>

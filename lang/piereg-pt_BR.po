@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2014-08-25 19:27+0500\n"
-"Last-Translator: Guilherme <guilhermebarbeiro@gmail.com>\n"
+"PO-Revision-Date: 2014-10-02 19:48+0500\n"
+"Last-Translator: Baqar <baqarsoft@gmail.com>\n"
 "Language-Team: GBDesigner <guilhermebarbeiro@gmail.com>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.9\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: \\\\genetech002\\projects\\baqar\\test_wp_plugin\\wp-"
@@ -270,7 +270,7 @@ msgstr "Redirecionamento de Cadastro"
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:114
 msgid ""
 "Set this to Yes if you would like to block Login, Registration & Forgot "
-"Password pages for loggged in users."
+"Password pages for logged in users."
 msgstr ""
 "Defina SIM se voçe gostaria de bloquear as páginas de Login, Cadastro e "
 "Esqueci a Senha para usuário já logados."
@@ -804,6 +804,57 @@ msgstr "Texto"
 msgid "Page"
 msgstr "Página"
 
+msgid "URL Settings"
+msgstr "URL Settings"
+
+msgid "Need Help?"
+msgstr "Need Help?"
+
+msgid "If you have any query, feel free to post your Questions at our"
+msgstr "If you have any query, feel free to post your Questions at our"
+
+msgid "Hosted Forum"
+msgstr "Hosted Forum"
+
+msgid "to get free support"
+msgstr "to get free support"
+
+msgid "Pie-Register"
+msgstr "Pie-Register"
+
+msgid "Do you like this plugin?"
+msgstr "Do you like this plugin?"
+
+msgid "Rate it 5"
+msgstr "Rate it 5"
+
+msgid "on WordPress.org"
+msgstr "on WordPress.org"
+
+msgid "Blog about it & link to the"
+msgstr "Blog about it & link to the"
+
+msgid "plugin page"
+msgstr "plugin page"
+
+msgid "Check out our"
+msgstr "Check out our"
+
+msgid "WordPress plugins"
+msgstr "WordPress plugins"
+
+msgid "Developed by"
+msgstr "Developed by"
+
+msgid "Forgot Password"
+msgstr "Forgot Password"
+
+msgid "Frontend Setting"
+msgstr "Frontend Setting"
+
+msgid "User Verification"
+msgstr "User Verification"
+
 msgid "Redirect"
 msgstr "Redirecionar"
 
@@ -1034,6 +1085,9 @@ msgstr "Topo"
 msgid "Left"
 msgstr "Esquerda"
 
+msgid "Rgistering User Role"
+msgstr "Rgistering User Role"
+
 msgid "Default User Registration Template"
 msgstr "Modelo padrão para Cadastro de Usuários"
 
@@ -1147,6 +1201,36 @@ msgstr "Verificado"
 
 msgid "List Type"
 msgstr "Lista de Tipos"
+
+msgid "Remove Settings"
+msgstr "Remove Settings"
+
+msgid "After Logout"
+msgstr "After Logout"
+
+msgid "Starting Date"
+msgstr "Starting Date"
+
+msgid "Ending Date"
+msgstr "Ending Date"
+
+msgid "Password Label"
+msgstr "Password Label"
+
+msgid "Password Placeholder"
+msgstr "Password Placeholder"
+
+msgid "Captcha Label"
+msgstr "Captcha Label"
+
+msgid "Username Label"
+msgstr "Username Label"
+
+msgid "Username Placeholder"
+msgstr "Username Placeholder"
+
+msgid "Remove Settings On Deactivation"
+msgstr "Remove Settings On Deactivation"
 
 msgid "Display name"
 msgstr "Nome de Exibição"
@@ -1399,27 +1483,6 @@ msgstr "Para usar Formulário de Login"
 
 msgid "For Registration form use"
 msgstr "Para usar Formulário de Cadastro"
-
-msgid "Starting Date"
-msgstr "Starting Date"
-
-msgid "Ending Date"
-msgstr "Ending Date"
-
-msgid "Username Label"
-msgstr "Username Label"
-
-msgid "Username Placeholder"
-msgstr "Username Placeholder"
-
-msgid "Password Label"
-msgstr "Password Label"
-
-msgid "Password Placeholder"
-msgstr "Password Placeholder"
-
-msgid "Captcha Label"
-msgstr "Captcha Label"
 
 msgid "For forgot password form use"
 msgstr "Para usar Formulário de Esquci a Senha"
@@ -1749,105 +1812,1146 @@ msgstr "Página de Login Alternativa"
 msgid "Redirect Users"
 msgstr "Redirecionar Usuários"
 
-#~ msgid "rm=2"
-#~ msgstr "rm=2"
+#: ******* Add These Variables Since 2.0.13 ********
+msgid "HH"
+msgstr "HH"
 
-#~ msgid "notify_url="
-#~ msgstr "notify_url="
+msgid "* Invalid Username"
+msgstr "* Invalid Username"
 
-#~ msgid "cancel_return="
-#~ msgstr "cancel_return="
+msgid "* Invalid File"
+msgstr "* Invalid File"
 
-#~ msgid "return="
-#~ msgstr "return="
+msgid "* Maximum value is "
+msgstr "* Maximum value is "
 
-#~ msgid "<strong>Error:</strong> Please select a user to send emails to"
-#~ msgstr "<strong>Error:</strong> Please select a user to send emails to"
+msgid "No Icon"
+msgstr "No Icon"
 
-#~ msgid "Please <a href=\""
-#~ msgstr "Please <a href=\""
+msgid "Calendar Icon"
+msgstr "Calendar Icon"
 
-#~ msgid "New user Register on your blog %s:"
-#~ msgstr "New user Register on your blog %s:"
+msgid "Custom Icon"
+msgstr "Custom Icon"
 
-#~ msgid "E-mail: %s"
-#~ msgstr "E-mail: %s"
+msgid "Number"
+msgstr "Number"
 
-#~ msgid "[%s] New User Register"
-#~ msgstr "[%s] New User Register"
+msgid "Alphanumeric"
+msgstr "Alphanumeric"
 
-#~ msgid "Password: %s"
-#~ msgstr "Password: %s"
+msgid "None"
+msgstr "None"
 
-#~ msgid "[%s] Your username and password"
-#~ msgstr "[%s] Your username and password"
+msgid "USA Format (xxx) (xxx-xxxx)"
+msgstr "USA Format (xxx) (xxx-xxxx)"
 
-#~ msgid ""
-#~ "<div>&nbsp;%blogname% Registration&nbsp;</div><div>"
-#~ "\t&nbsp;---------------------------&nbsp;</div><div>\t&nbsp;</div><div>"
-#~ "\tThe following user has registered at&nbsp;&nbsp;%blogname%</div><div>"
-#~ "\t&nbsp;</div><div>\t&nbsp;Username: %user_login%&nbsp;</div><div>\t&nbsp;"
-#~ "Password: %user_pass%&nbsp;</div><div>\t&nbsp;</div>"
-#~ msgstr ""
-#~ "<div>&nbsp;%blogname% Registration&nbsp;</div><div>"
-#~ "\t&nbsp;---------------------------&nbsp;</div><div>\t&nbsp;</div><div>"
-#~ "\tThe following user has registered at&nbsp;&nbsp;%blogname%</div><div>"
-#~ "\t&nbsp;</div><div>\t&nbsp;Username: %user_login%&nbsp;</div><div>\t&nbsp;"
-#~ "Password: %user_pass%&nbsp;</div><div>\t&nbsp;</div>"
+msgid "Phone International xxx-xxx-xxxx"
+msgstr "Phone International xxx-xxx-xxxx"
 
-#~ msgid ""
-#~ "Thank you for your registration at %blogname%. Your account is being "
-#~ "moderated by the administrator."
-#~ msgstr ""
-#~ "Thank you for your registration at %blogname%. Your account is being "
-#~ "moderated by the administrator."
+msgid "Rows"
+msgstr "Rows"
 
-#~ msgid ""
-#~ "Thank you for your registration at %blogname%. Please click on the "
-#~ "following link to confirm your registration. <br/><br/><a "
-#~ "href='%activationurl%'>%activationurl%</a>"
-#~ msgstr ""
-#~ "Thank you for your registration at %blogname%. Please click on the "
-#~ "following link to confirm your registration. <br/><br/><a "
-#~ "href='%activationurl%'>%activationurl%</a>"
+msgid "Columns"
+msgstr "Columns"
 
-#~ msgid "Thank you for your registration at %blogname%."
-#~ msgstr "Thank you for your registration at %blogname%."
+msgid "Min"
+msgstr "Min"
 
-#~ msgid ""
-#~ "Thank you for your registration at %blogname%. Please complete your "
-#~ "payment to confirm your registration at %blogname%."
-#~ msgstr ""
-#~ "Thank you for your registration at %blogname%. Please complete your "
-#~ "payment to confirm your registration at %blogname%."
+msgid "Max"
+msgstr "Max"
 
-#~ msgid ""
-#~ "Hello Unverified %user_login%, <br /><br /> Someday ago you have been "
-#~ "signed up at Our Website, an email were sent to you to activate Your "
-#~ "account. This is a reminder email that if you failed to activate in xx "
-#~ "days, You account will be deleted from our system. You can follow the "
-#~ "link below to activate your account.<br><br> Sincerely,The %blogname% "
-#~ "Team."
-#~ msgstr ""
-#~ "Hello Unverified %user_login%, <br /><br /> Someday ago you have been "
-#~ "signed up at Our Website, an email were sent to you to activate Your "
-#~ "account. This is a reminder email that if you failed to activate in xx "
-#~ "days, You account will be deleted from our system. You can follow the "
-#~ "link below to activate your account.<br><br> Sincerely,The %blogname% "
-#~ "Team."
+msgid "12 hour"
+msgstr "12 hour"
 
-#~ msgid ""
-#~ "Your are using the unregistered version of Pie Register. Click <a href="
-#~ "\"http://pieregister.genetechsolutions.com/get-your-license-key\" target="
-#~ "\"_blank\">here</a> to get your key. "
-#~ msgstr ""
-#~ "Your are using the unregistered version of Pie Register. Click <a href="
-#~ "\"http://pieregister.genetechsolutions.com/get-your-license-key\" target="
-#~ "\"_blank\">here</a> to get your key. "
+msgid "24 hour"
+msgstr "24 hour"
 
-#~ msgid ""
-#~ "You may want to see <a target=\"_blank\" href=\"%s\">the example of the "
-#~ "CSV file</a>."
-#~ msgstr ""
-#~ "You may want to see <a target=\"_blank\" href=\"%s\">the example of the "
-#~ "CSV file</a>."
+msgid "Date Field"
+msgstr "Date Field"
+
+msgid "Date Picker"
+msgstr "Date Picker"
+
+msgid "Date Drop Down"
+msgstr "Date Drop Down"
+
+msgid "Re-Captcha"
+msgstr "Re-Captcha"
+
+msgid "Math Captcha"
+msgstr "Math Captcha"
+
+msgid "Select Page"
+msgstr "Select Page"
+
+msgid "Redirect URL"
+msgstr "Redirect URL"
+
+msgid "Apear Captcha in login form which you want"
+msgstr "Apear Captcha in login form which you want"
+
+msgid "Apear Captcha in Forgot Password form which you want"
+msgstr "Apear Captcha in Forgot Password form which you want"
+
+msgid ""
+"Warning: Turning off any script here may stop Pie-Register to work properly, "
+"please do it carefully!"
+msgstr ""
+"Warning: Turning off any script here may stop Pie-Register to work properly, "
+"please do it carefully!"
+
+msgid "Password Strength Meter Settings"
+msgstr "Password Strength Meter Settings"
+
+msgid "Re-Captcha Skin"
+msgstr "Re-Captcha Skin"
+
+msgid "red"
+msgstr "red"
+
+msgid "white"
+msgstr "white"
+
+msgid "clean"
+msgstr "clean"
+
+msgid "blackglass"
+msgstr "blackglass"
+
+msgid "Live"
+msgstr "Live"
+
+msgid "Sandbox"
+msgstr "Sandbox"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Custom Fields"
+msgstr "Custom Fields"
+
+msgid "Other"
+msgstr "Other"
+
+msgid "User E-mail"
+msgstr "User E-mail"
+
+msgid "User First Name"
+msgstr "User First Name"
+
+msgid "User Last Name"
+msgstr "User Last Name"
+
+msgid "User URL"
+msgstr "User URL"
+
+msgid "User AIM"
+msgstr "User AIM"
+
+msgid "User YIM"
+msgstr "User YIM"
+
+msgid "User Jabber"
+msgstr "User Jabber"
+
+msgid "User Biographical Info"
+msgstr "User Biographical Info"
+
+msgid "User Registration Date"
+msgstr "User Registration Date"
+
+msgid "Blog Name"
+msgstr "Blog Name"
+
+msgid "Site URL"
+msgstr "Site URL"
+
+msgid "Blog Name With Site URL"
+msgstr "Blog Name With Site URL"
+
+msgid "Reset Password URL"
+msgstr "Reset Password URL"
+
+msgid "User Activation URL"
+msgstr "User Activation URL"
+
+msgid "Reset Email URL"
+msgstr "Reset Email URL"
+
+msgid "User IP"
+msgstr "User IP"
+
+msgid "User New E-mail"
+msgstr "User New E-mail"
+
+msgid "Pending Payment URL"
+msgstr "Pending Payment URL"
+
+msgid "Email Edit Verification"
+msgstr "Email Edit Verification"
+
+msgid "Select Per-Page Invitaion code"
+msgstr "Select Per-Page Invitaion code"
+
+msgid "Edit Form"
+msgstr "Edit Form"
+
+msgid "Edit Button"
+msgstr "Edit Button"
+
+msgid "Edit Field"
+msgstr "Edit Field"
+
+msgid "International"
+msgstr "International"
+
+msgid "Default State"
+msgstr "Default State"
+
+msgid "Click Here to Select/De-select All"
+msgstr "Click Here to Select/De-select All"
+
+#: Countries Name
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+msgid "Albania"
+msgstr "Albania"
+
+msgid "Algeria"
+msgstr "Algeria"
+
+msgid "American Samoa"
+msgstr "American Samoa"
+
+msgid "Andorra"
+msgstr "Andorra"
+
+msgid "Angola"
+msgstr "Angola"
+
+msgid "Antigua and Barbuda"
+msgstr "Antigua and Barbuda"
+
+msgid "Argentina"
+msgstr "Argentina"
+
+msgid "Armenia"
+msgstr "Armenia"
+
+msgid "Australia"
+msgstr "Australia"
+
+msgid "Austria"
+msgstr "Austria"
+
+msgid "Azerbaijan"
+msgstr "Azerbaijan"
+
+msgid "Bahamas"
+msgstr "Bahamas"
+
+msgid "Bahrain"
+msgstr "Bahrain"
+
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+msgid "Barbados"
+msgstr "Barbados"
+
+msgid "Belarus"
+msgstr "Belarus"
+
+msgid "Belgium"
+msgstr "Belgium"
+
+msgid "Belize"
+msgstr "Belize"
+
+msgid "Benin"
+msgstr "Benin"
+
+msgid "Bermuda"
+msgstr "Bermuda"
+
+msgid "Bhutan"
+msgstr "Bhutan"
+
+msgid "Bolivia"
+msgstr "Bolivia"
+
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia and Herzegovina"
+
+msgid "Botswana"
+msgstr "Botswana"
+
+msgid "Brazil"
+msgstr "Brazil"
+
+msgid "Brunei"
+msgstr "Brunei"
+
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+msgid "Burundi"
+msgstr "Burundi"
+
+msgid "Cambodia"
+msgstr "Cambodia"
+
+msgid "Cameroon"
+msgstr "Cameroon"
+
+msgid "Canada"
+msgstr "Canada"
+
+msgid "Cape Verde"
+msgstr "Cape Verde"
+
+msgid "Central African Republic"
+msgstr "Central African Republic"
+
+msgid "Chad"
+msgstr "Chad"
+
+msgid "Chile"
+msgstr "Chile"
+
+msgid "China"
+msgstr "China"
+
+msgid "Colombia"
+msgstr "Colombia"
+
+msgid "Comoros"
+msgstr "Comoros"
+
+msgid "Congo"
+msgstr "Congo"
+
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+msgid "Côte d'Ivoire"
+msgstr "Côte d'Ivoire"
+
+msgid "Croatia"
+msgstr "Croatia"
+
+msgid "Cuba"
+msgstr "Cuba"
+
+msgid "Cyprus"
+msgstr "Cyprus"
+
+msgid "Czech Republic"
+msgstr "Czech Republic"
+
+msgid "Denmark"
+msgstr "Denmark"
+
+msgid "Djibouti"
+msgstr "Djibouti"
+
+msgid "Dominica"
+msgstr "Dominica"
+
+msgid "Dominican Republic"
+msgstr "Dominican Republic"
+
+msgid "East Timor"
+msgstr "East Timor"
+
+msgid "Ecuador"
+msgstr "Ecuador"
+
+msgid "Egypt"
+msgstr "Egypt"
+
+msgid "El Salvador"
+msgstr "El Salvador"
+
+msgid "Equatorial Guinea"
+msgstr "Equatorial Guinea"
+
+msgid "Eritrea"
+msgstr "Eritrea"
+
+msgid "Estonia"
+msgstr "Estonia"
+
+msgid "Ethiopia"
+msgstr "Ethiopia"
+
+msgid "Fiji"
+msgstr "Fiji"
+
+msgid "Finland"
+msgstr "Finland"
+
+msgid "France"
+msgstr "France"
+
+msgid "Gabon"
+msgstr "Gabon"
+
+msgid "Gambia"
+msgstr "Gambia"
+
+msgid "Georgia"
+msgstr "Georgia"
+
+msgid "Germany"
+msgstr "Germany"
+
+msgid "Ghana"
+msgstr "Ghana"
+
+msgid "Greece"
+msgstr "Greece"
+
+msgid "Greenland"
+msgstr "Greenland"
+
+msgid "Grenada"
+msgstr "Grenada"
+
+msgid "Guam"
+msgstr "Guam"
+
+msgid "Guatemala"
+msgstr "Guatemala"
+
+msgid "Guinea"
+msgstr "Guinea"
+
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+msgid "Guyana"
+msgstr "Guyana"
+
+msgid "Haiti"
+msgstr "Haiti"
+
+msgid "Honduras"
+msgstr "Honduras"
+
+msgid "Hong Kong"
+msgstr "Hong Kong"
+
+msgid "Hungary"
+msgstr "Hungary"
+
+msgid "Iceland"
+msgstr "Iceland"
+
+msgid "India"
+msgstr "India"
+
+msgid "Indonesia"
+msgstr "Indonesia"
+
+msgid "Iran"
+msgstr "Iran"
+
+msgid "Iraq"
+msgstr "Iraq"
+
+msgid "Ireland"
+msgstr "Ireland"
+
+msgid "Israel"
+msgstr "Israel"
+
+msgid "Italy"
+msgstr "Italy"
+
+msgid "Jamaica"
+msgstr "Jamaica"
+
+msgid "Japan"
+msgstr "Japan"
+
+msgid "Jordan"
+msgstr "Jordan"
+
+msgid "Kazakhstan"
+msgstr "Kazakhstan"
+
+msgid "Kenya"
+msgstr "Kenya"
+
+msgid "Kiribati"
+msgstr "Kiribati"
+
+msgid "North Korea"
+msgstr "North Korea"
+
+msgid "South Korea"
+msgstr "South Korea"
+
+msgid "Kuwait"
+msgstr "Kuwait"
+
+msgid "Kyrgyzstan"
+msgstr "Kyrgyzstan"
+
+msgid "Laos"
+msgstr "Laos"
+
+msgid "Latvia"
+msgstr "Latvia"
+
+msgid "Lebanon"
+msgstr "Lebanon"
+
+msgid "Lesotho"
+msgstr "Lesotho"
+
+msgid "Liberia"
+msgstr "Liberia"
+
+msgid "Libya"
+msgstr "Libya"
+
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+msgid "Lithuania"
+msgstr "Lithuania"
+
+msgid "Luxembourg"
+msgstr "Luxembourg"
+
+msgid "Macedonia"
+msgstr "Macedonia"
+
+msgid "Madagascar"
+msgstr "Madagascar"
+
+msgid "Malawi"
+msgstr "Malawi"
+
+msgid "Malaysia"
+msgstr "Malaysia"
+
+msgid "Maldives"
+msgstr "Maldives"
+
+msgid "Mali"
+msgstr "Mali"
+
+msgid "Malta"
+msgstr "Malta"
+
+msgid "Marshall Islands"
+msgstr "Marshall Islands"
+
+msgid "Mauritania"
+msgstr "Mauritania"
+
+msgid "Mauritius"
+msgstr "Mauritius"
+
+msgid "Mexico"
+msgstr "Mexico"
+
+msgid "Micronesia"
+msgstr "Micronesia"
+
+msgid "Moldova"
+msgstr "Moldova"
+
+msgid "Monaco"
+msgstr "Monaco"
+
+msgid "Mongolia"
+msgstr "Mongolia"
+
+msgid "Montenegro"
+msgstr "Montenegro"
+
+msgid "Morocco"
+msgstr "Morocco"
+
+msgid "Mozambique"
+msgstr "Mozambique"
+
+msgid "Myanmar"
+msgstr "Myanmar"
+
+msgid "Namibia"
+msgstr "Namibia"
+
+msgid "Nauru"
+msgstr "Nauru"
+
+msgid "Nepal"
+msgstr "Nepal"
+
+msgid "Netherlands"
+msgstr "Netherlands"
+
+msgid "New Zealand"
+msgstr "New Zealand"
+
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+msgid "Niger"
+msgstr "Niger"
+
+msgid "Nigeria"
+msgstr "Nigeria"
+
+msgid "Norway"
+msgstr "Norway"
+
+msgid "Northern Mariana Islands"
+msgstr "Northern Mariana Islands"
+
+msgid "Oman"
+msgstr "Oman"
+
+msgid "Pakistan"
+msgstr "Pakistan"
+
+msgid "Palau"
+msgstr "Palau"
+
+msgid "Palestine"
+msgstr "Palestine"
+
+msgid "Panama"
+msgstr "Panama"
+
+msgid "Papua New Guinea"
+msgstr "Papua New Guinea"
+
+msgid "Paraguay"
+msgstr "Paraguay"
+
+msgid "Peru"
+msgstr "Peru"
+
+msgid "Philippines"
+msgstr "Philippines"
+
+msgid "Poland"
+msgstr "Poland"
+
+msgid "Portugal"
+msgstr "Portugal"
+
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+msgid "Qatar"
+msgstr "Qatar"
+
+msgid "Romania"
+msgstr "Romania"
+
+msgid "Russia"
+msgstr "Russia"
+
+msgid "Rwanda"
+msgstr "Rwanda"
+
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts and Nevis"
+
+msgid "Saint Lucia"
+msgstr "Saint Lucia"
+
+msgid "Saint Vincent and the Grenadines"
+msgstr "Saint Vincent and the Grenadines"
+
+msgid "Samoa"
+msgstr "Samoa"
+
+msgid "San Marino"
+msgstr "San Marino"
+
+msgid "Sao Tome and Principe"
+msgstr "Sao Tome and Principe"
+
+msgid "Saudi Arabia"
+msgstr "Saudi Arabia"
+
+msgid "Senegal"
+msgstr "Senegal"
+
+msgid "Serbia and Montenegro"
+msgstr "Serbia and Montenegro"
+
+msgid "Seychelles"
+msgstr "Seychelles"
+
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+msgid "Singapore"
+msgstr "Singapore"
+
+msgid "Slovakia"
+msgstr "Slovakia"
+
+msgid "Slovenia"
+msgstr "Slovenia"
+
+msgid "Solomon Islands"
+msgstr "Solomon Islands"
+
+msgid "Somalia"
+msgstr "Somalia"
+
+msgid "South Africa"
+msgstr "South Africa"
+
+msgid "Spain"
+msgstr "Spain"
+
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+msgid "Sudan"
+msgstr "Sudan"
+
+msgid "Sudan, South"
+msgstr "Sudan, South"
+
+msgid "Suriname"
+msgstr "Suriname"
+
+msgid "Swaziland"
+msgstr "Swaziland"
+
+msgid "Sweden"
+msgstr "Sweden"
+
+msgid "Switzerland"
+msgstr "Switzerland"
+
+msgid "Syria"
+msgstr "Syria"
+
+msgid "Taiwan"
+msgstr "Taiwan"
+
+msgid "Tajikistan"
+msgstr "Tajikistan"
+
+msgid "Tanzania"
+msgstr "Tanzania"
+
+msgid "Thailand"
+msgstr "Thailand"
+
+msgid "Togo"
+msgstr "Togo"
+
+msgid "Tonga"
+msgstr "Tonga"
+
+msgid "Trinidad and Tobago"
+msgstr "Trinidad and Tobago"
+
+msgid "Tunisia"
+msgstr "Tunisia"
+
+msgid "Turkey"
+msgstr "Turkey"
+
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+msgid "Uganda"
+msgstr "Uganda"
+
+msgid "Ukraine"
+msgstr "Ukraine"
+
+msgid "United Arab Emirates"
+msgstr "United Arab Emirates"
+
+msgid "United Kingdom"
+msgstr "United Kingdom"
+
+msgid "United States"
+msgstr "United States"
+
+msgid "Uruguay"
+msgstr "Uruguay"
+
+msgid "Uzbekistan"
+msgstr "Uzbekistan"
+
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+msgid "Vatican City"
+msgstr "Vatican City"
+
+msgid "Venezuela"
+msgstr "Venezuela"
+
+msgid "Vietnam"
+msgstr "Vietnam"
+
+msgid "Virgin Islands, British"
+msgstr "Virgin Islands, British"
+
+msgid "Virgin Islands, U.S."
+msgstr "Virgin Islands, U.S."
+
+msgid "Yemen"
+msgstr "Yemen"
+
+msgid "Zambia"
+msgstr "Zambia"
+
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+#: USA State
+msgid "Alabama"
+msgstr "Alabama"
+
+msgid "Alaska"
+msgstr "Alaska"
+
+msgid "Arizona"
+msgstr "Arizona"
+
+msgid "Arkansas"
+msgstr "Arkansas"
+
+msgid "California"
+msgstr "California"
+
+msgid "Colorado"
+msgstr "Colorado"
+
+msgid "Connecticut"
+msgstr "Connecticut"
+
+msgid "Delaware"
+msgstr "Delaware"
+
+msgid "District of Columbia"
+msgstr "District of Columbia"
+
+msgid "Florida"
+msgstr "Florida"
+
+msgid "Hawaii"
+msgstr "Hawaii"
+
+msgid "Idaho"
+msgstr "Idaho"
+
+msgid "Illinois"
+msgstr "Illinois"
+
+msgid "Indiana"
+msgstr "Indiana"
+
+msgid "Iowa"
+msgstr "Iowa"
+
+msgid "Kansas"
+msgstr "Kansas"
+
+msgid "Kentucky"
+msgstr "Kentucky"
+
+msgid "Louisiana"
+msgstr "Louisiana"
+
+msgid "Maine"
+msgstr "Maine"
+
+msgid "Maryland"
+msgstr "Maryland"
+
+msgid "Massachusetts"
+msgstr "Massachusetts"
+
+msgid "Michigan"
+msgstr "Michigan"
+
+msgid "Minnesota"
+msgstr "Minnesota"
+
+msgid "Mississippi"
+msgstr "Mississippi"
+
+msgid "Missouri"
+msgstr "Missouri"
+
+msgid "Montana"
+msgstr "Montana"
+
+msgid "Nebraska"
+msgstr "Nebraska"
+
+msgid "Nevada"
+msgstr "Nevada"
+
+msgid "New Hampshire"
+msgstr "New Hampshire"
+
+msgid "New Jersey"
+msgstr "New Jersey"
+
+msgid "New Mexico"
+msgstr "New Mexico"
+
+msgid "New York"
+msgstr "New York"
+
+msgid "North Carolina"
+msgstr "North Carolina"
+
+msgid "North Dakota"
+msgstr "North Dakota"
+
+msgid "Ohio"
+msgstr "Ohio"
+
+msgid "Oklahoma"
+msgstr "Oklahoma"
+
+msgid "Oregon"
+msgstr "Oregon"
+
+msgid "Pennsylvania"
+msgstr "Pennsylvania"
+
+msgid "Rhode Island"
+msgstr "Rhode Island"
+
+msgid "South Carolina"
+msgstr "South Carolina"
+
+msgid "South Dakota"
+msgstr "South Dakota"
+
+msgid "Tennessee"
+msgstr "Tennessee"
+
+msgid "Texas"
+msgstr "Texas"
+
+msgid "Utah"
+msgstr "Utah"
+
+msgid "Vermont"
+msgstr "Vermont"
+
+msgid "Virginia"
+msgstr "Virginia"
+
+msgid "Washington"
+msgstr "Washington"
+
+msgid "West Virginia"
+msgstr "West Virginia"
+
+msgid "Wisconsin"
+msgstr "Wisconsin"
+
+msgid "Wyoming"
+msgstr "Wyoming"
+
+msgid "Armed Forces Americas"
+msgstr "Armed Forces Americas"
+
+msgid "Armed Forces Europe"
+msgstr "Armed Forces Europe"
+
+msgid "Armed Forces Pacific"
+msgstr "Armed Forces Pacific"
+
+#: Canada State
+msgid "Alberta"
+msgstr "Alberta"
+
+msgid "British Columbia"
+msgstr "British Columbia"
+
+msgid "Manitoba"
+msgstr "Manitoba"
+
+msgid "New Brunswick"
+msgstr "New Brunswick"
+
+msgid "Newfoundland and Labrador"
+msgstr "Newfoundland and Labrador"
+
+msgid "Northwest Territories"
+msgstr "Northwest Territories"
+
+msgid "Nova Scotia"
+msgstr "Nova Scotia"
+
+msgid "Nunavut"
+msgstr "Nunavut"
+
+msgid "Ontario"
+msgstr "Ontario"
+
+msgid "Prince Edward Island"
+msgstr "Prince Edward Island"
+
+msgid "Quebec"
+msgstr "Quebec"
+
+msgid "Saskatchewan"
+msgstr "Saskatchewan"
+
+msgid "Yukon"
+msgstr "Yukon"
+
+msgid "Pie Register - Login"
+msgstr "Pie Register - Login"
+
+msgid "Pie Register - Registration"
+msgstr "Pie Register - Registration"
+
+msgid "Pie Register - Forgot Password"
+msgstr "Pie Register - Forgot Password"
+
+msgid "Pie Register - Profile"
+msgstr "Pie Register - Profile"
+
+msgid "Password Fields do not macth!"
+msgstr "Password Fields do not macth!"
+
+msgid "There was a problem and the email was probably not sent."
+msgstr "There was a problem and the email was probably not sent."
+
+msgid ""
+"Please follow the link sent to your new Email to verify and make the change "
+"applied!"
+msgstr ""
+"Please follow the link sent to your new Email to verify and make the change "
+"applied!"
+
+msgid "This Email already Exists"
+msgstr "This Email already Exists"
+
+msgid "Something Went Wrong updating Profile fields, please try again!"
+msgstr "Something Went Wrong updating Profile fields, please try again!"
+
+msgid "Your Profile has been updated."
+msgstr "Your Profile has been updated."
+
+msgid "Invalid profile picture"
+msgstr "Invalid profile picture"
+
+msgid "Invalid upload file."
+msgstr "Invalid upload file."
+
+msgid "Password not entered"
+msgstr "Password not entered"
+
+msgid "Invalid Math Captcha"
+msgstr "Invalid Math Captcha"
+
+msgid "Invalid Username or Email, try again!"
+msgstr "Invalid Username or Email, try again!"
+
+msgid "Invalid Captcha"
+msgstr "Invalid Captcha"
+
+msgid ""
+"Thank you for your registration. You will receieve your login credentials "
+"soon."
+msgstr ""
+"Thank you for your registration. You will receieve your login credentials "
+"soon."
+
+msgid "Invalid activation key"
+msgstr "Invalid activation key"
+
+msgid "You key has been expired, please reset password again!"
+msgstr "You key has been expired, please reset password again!"
+
+msgid "Password Lost and Found"
+msgstr "Password Lost and Found"
+
+msgid ""
+"This Reset key is invalid or no longer exists. Please reset password again!"
+msgstr ""
+"This Reset key is invalid or no longer exists. Please reset password again!"
+
+msgid "Minimum 8 characters required in password"
+msgstr "Minimum 8 characters required in password"
+
+msgid "New password"
+msgstr "New password"
+
+msgid "Confirm new password"
+msgstr "Confirm new password"
+
+msgid "Reset Password"
+msgstr "Reset Password"
+
+msgid "Jan"
+msgstr "Jan"
+
+msgid "Feb"
+msgstr "Feb"
+
+msgid "Mar"
+msgstr "Mar"
+
+msgid "Apr"
+msgstr "Apr"
+
+msgid "Jun"
+msgstr "Jun"
+
+msgid "Jul"
+msgstr "Jul"
+
+msgid "Aug"
+msgstr "Aug"
+
+msgid "Sep"
+msgstr "Sep"
+
+msgid "Oct"
+msgstr "Oct"
+
+msgid "Nov"
+msgstr "Nov"
+
+msgid "Dec"
+msgstr "Dec"
+
+msgid "There is a problem updating your new Email Address, Pleasde try again!"
+msgstr "There is a problem updating your new Email Address, Pleasde try again!"
+
+msgid ""
+"You have successfully verified your new Email address. Your Account Email "
+"has been changed"
+msgstr ""
+"You have successfully verified your new Email address. Your Account Email "
+"has been changed"
+
+msgid "Invalid or malformed request. This key is no longer exists"
+msgstr "Invalid or malformed request. This key is no longer exists"

@@ -1,7 +1,5 @@
 <?php
-
 function outputRegForm($fromwidget=false){
-
 $form 		= new Registration_form();
 $success 	= '' ;
 $error 		= '' ;
@@ -12,21 +10,6 @@ $registration_from_fields = '<div class="pieregformWrapper pieregWrapper"><style
 </style>';
 $registration_from_fields .= '<div id="show_pie_register_error_js" class="piereg_entry-content"></div>';
 
-/*//Printing Success Message
-if($_POST['success'] != "")
-	$registration_from_fields .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
-if($_POST['error'] != "")
-	$registration_from_fields .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';
-if(sizeof($errors->errors) > 0)
-{
-	foreach($errors->errors as $err)
-	{
-		$error .= $err[0] . "<br />";	
-	}
-	$registration_from_fields .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($error,"piereg")).'</p>';
-}
-	*/
-	
 $registration_from_fields .= $form->addFormData();
 
 $IsWidgetForm = "";
@@ -40,15 +23,8 @@ if($form->countPageBreaks() > 1){
 	$registration_from_fields .= '<div class="piereg_progressbar"></div>';
 }
 $registration_from_fields .= '<ul id="pie_register">';
-
-	   //ob_start();
-	   $output = $form->printFields($fromwidget);
-	   $registration_from_fields .= $output;
-		/*$registration_from_fields .= '<li class="pieloading_status">';
-		$registration_from_fields .= __('Please wait..','piereg');
-		$registration_from_fields .='</li>';*/
-	   //return $registration_from_fields;
-	   //ob_end_flush();
+$output = $form->printFields($fromwidget);
+$registration_from_fields .= $output;
 $registration_from_fields .= '</ul>	';
 $registration_from_fields .= '</form>';
 

@@ -1,5 +1,4 @@
 <?php
-
 require_once('base.php');
 class Profile_admin extends PieReg_Base
 {
@@ -483,11 +482,6 @@ class Profile_admin extends PieReg_Base
         foreach ($this->data as $this->field){
 		//When to add label
 			$slug       = $this->createFieldName($this->field['type']."_".$this->field['id']);
-			/*if($this->field['type']=="upload" )
-			{
-				$this->pie_upload_files($this->field,$slug);
-			}elseif($this->field['type']=="profile_pic")
-				$this->pie_profile_pictures_upload($this->field,$slug);*/
 			
 			switch($this->field['type']) :
 				case 'time':
@@ -561,7 +555,6 @@ class Profile_admin extends PieReg_Base
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 				}else{
-					//$_POST[$field_slug] = $temp_file_url;
 					update_user_meta($user_id,$field_slug, $temp_file_url);
 				}
 			}else{
@@ -592,7 +585,6 @@ class Profile_admin extends PieReg_Base
 					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 					}else{
-						//$_POST[$field_slug] = $temp_file_url;
 						update_user_meta($user_id,$field_slug, $temp_file_url);
 					}
 				}
@@ -610,18 +602,14 @@ class Profile_admin extends PieReg_Base
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 				}else{
-					//$_POST[$field_slug] = $temp_file_url;
 					update_user_meta($user_id,$field_slug, $temp_file_url);
 				}
 			}
-		}/*else{
-			$_POST[$field_slug] = $_POST[$field_slug.'_hidden'];
-		}*/
+		}
 	}
 	
 	function piereg_wp_admin_form_tag(){
 		echo ' enctype="multipart/form-data" ';
 	}
 	
-}
-?>
+}?>

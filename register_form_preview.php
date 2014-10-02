@@ -25,7 +25,25 @@ if(!class_exists("PieRegister")){
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link type="text/css" rel="stylesheet" href="<?php echo plugins_url('pie-register'); ?>/css/front.css"  />
 <script type='text/javascript' src='<?php echo plugins_url("js/jquery.js",__FILE__)?>'></script>
+<?php wp_enqueue_script('password-strength-meter'); ?>
+<script type='text/javascript' src='<?php echo includes_url("/js/zxcvbn-async.js")?>'></script>
+<script type='text/javascript' src='<?php echo admin_url("js/password-strength-meter.min.js")?>'></script>
+
+
+<script type='text/javascript' src='<?php echo get_bloginfo("url");?>/wp-admin/js/password-strength-meter.min.js'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/jquery-ui.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/datepicker.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/piereg_validation.js",__FILE__)?>'></script>
+<script type='text/javascript' src='<?php echo plugins_url("js/pie_password_checker.js",__FILE__)?>'></script>
+<!--<script type='text/javascript' src='<?php echo includes_url("/js/zxcvbn.min.js")?>'></script>-->
+
+
+<?php
+global $piereg_global_options;
+$this->print_multi_lang_script_vars();
+?>
 <script type="text/javascript">
+var piereg = jQuery.noConflict();
 var piereg_pass_str_meter_string = new Array(
 											 '<?php _e("Strength Indicator","piereg");?>',
 											 '<?php _e("Very weak","piereg");?>',
@@ -34,6 +52,10 @@ var piereg_pass_str_meter_string = new Array(
 											 '<?php _e("Strong","piereg");?>',
 											 '<?php _e("Mismatch","piereg");?>'
 											 );
+var piereg_current_date		= '<?php echo date("Y"); ?>';
+var piereg_startingDate		= '<?php echo $piereg_global_options['piereg_startingDate']; ?>';
+var piereg_endingDate		= '<?php echo $piereg_global_options['piereg_endingDate']; ?>';
+
 var piereg_validation_engn = new Array(
 										 '<?php _e("none","piereg");?>',
 										 '<?php _e("* This field is required","piereg");?>',
@@ -102,9 +124,12 @@ var piereg_validation_engn = new Array(
 <body class="piereg_preview_page">
 <div class="piereg_main_wrapper pieregWrapper"  id="pie_register_reg_form">
 <?php
+global $errors;
+$errors = new WP_Error();
 //Printing Success Message
-if($_POST['success'] != "")
+if(isset($_POST['success']) && $_POST['success'] != "")
 	echo '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
+
 if(sizeof($errors->errors) > 0)
 {
 	foreach($errors->errors as $err)
@@ -167,20 +192,9 @@ else
 		elms[a].style.display = "";	
 	}   
 }
-
-
 <?php } ?>
 </script>
 
-
-<!--<script type='text/javascript' src='<?php echo plugins_url("js/validation.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?php echo plugins_url("js/jquery.validationEngine-en.js",__FILE__)?>'></script>-->
-
-
-<script type='text/javascript' src='<?php echo get_bloginfo("url");?>/wp-admin/js/password-strength-meter.min.js'></script>
-<script type='text/javascript' src='<?php echo plugins_url("js/jquery-ui.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?php echo plugins_url("js/datepicker.js",__FILE__)?>'></script>
-<script type='text/javascript' src='<?php echo plugins_url("js/piereg_validation.js",__FILE__)?>'></script>
 </div>
 </body>
 </html>

@@ -38,6 +38,13 @@ piereg(document).ready(function(e) {
 		piereg(".fields_hint").remove();	
 	}
 });
+piereg(document).ready(function(){
+	piereg( document ).tooltip({
+		track: true
+	});
+});
+
+
 var defaultMeta = Array();
 <?php
 foreach($meta as $key=>$value)
@@ -47,8 +54,6 @@ foreach($meta as $key=>$value)
 <?php 
 }
 ?>
-
-
 </script>
 
 <div style="width:99%;overflow:hidden;" class="pieregister-admin">
@@ -67,7 +72,7 @@ foreach($meta as $key=>$value)
       
       <ul>
         <li class="fields">
-          <div class="fields_options" id="field_form_title"> <a href="#" class="edit_btn"></a>
+          <div class="fields_options" id="field_form_title"> <a href="javascript:;" class="edit_btn" title="<?php _e("Edit Form","piereg") ?>"></a>
             <label>
               <?php echo $data['form']['label']?>
             </label>
@@ -94,8 +99,12 @@ foreach($meta as $key=>$value)
               <div class="advance_fields">
                 <label><?php _e("Label Alignment","piereg"); ?></label>
                 <select class="swap_class" onchange="swapClass(this.value);" name="field[form][label_alignment]">
-                  <option <?php if($data['form']['label_alignment']=='top') echo 'selected="selected"';?> value="top"><? _e("Top","piereg"); ?></option>
-                  <option <?php if($data['form']['label_alignment']=='left') echo 'selected="selected"';?> value="left"><? _e("Left","piereg"); ?></option>
+                <?php 
+				$form_label_alignment = (isset($data['form']['label_alignment']) && !empty($data['form']['label_alignment']))?$data['form']['label_alignment']:"left"; 
+				?>
+                  <option <?php if($form_label_alignment=='top') echo 'selected="selected"';?> value="top"><? _e("Top","piereg"); ?></option>
+                  <option <?php if($form_label_alignment=='left') echo 'selected="selected"';?> value="left"><? _e("Left","piereg"); ?></option>
+                <?php unset($form_label_alignment); ?>
                 </select>
               </div>
               
@@ -170,8 +179,8 @@ foreach($meta as $key=>$value)
 		
 		 //We can't edit default wordpress fields
 		  //if($field['type']!="default")
-          //{ 
-          		echo '<a href="javascript:;" class="edit_btn"></a>';
+          //{
+          		echo '<a href="javascript:;" class="edit_btn" title="'.__("Edit Field","piereg").'"></a>';
           //} 
 		  ?>
             <!--Adding Label-->
@@ -316,7 +325,7 @@ foreach($meta as $key=>$value)
       </fieldset>
       <ul id="submit_ul">
         <li class="fields">
-          <div class="fields_options submit_field"> <a href="#" class="edit_btn"></a>
+          <div class="fields_options submit_field"> <a href="javascript:;" class="edit_btn" title="<?php _e("Edit Button","piereg"); ?>"></a>
             <input id="reset_btn" disabled="disabled" name="fields[reset]" type="reset" class="submit_btn" value="<?php echo $data['submit']['reset_text']?>" />
             
             <input disabled="disabled" name="fields[submit]" type="submit" class="submit_btn" value="<?php echo $data['submit']['text']?>" />
@@ -335,8 +344,8 @@ foreach($meta as $key=>$value)
               <div class="advance_fields">
                 <label><?php _e("Show Reset Button","piereg"); ?></label>
                 <select onchange="showHideReset();" id="show_reset" class="swap_reset" name="field[submit][reset]">
-                  <option <?php if($data['submit']['reset']=='0') echo 'selected="selected"';?> value="0">No</option>
-                  <option <?php if($data['submit']['reset']=='1') echo 'selected="selected"';?> value="1">Yes</option>
+                  <option <?php if($data['submit']['reset']=='0') echo 'selected="selected"';?> value="0"><?php _e("No","piereg"); ?></option>
+                  <option <?php if($data['submit']['reset']=='1') echo 'selected="selected"';?> value="1"><?php _e("Yes","piereg"); ?></option>
                 </select>
               </div>
               

@@ -133,36 +133,8 @@ piereg(document).ready(function(){
         </div>
     </div>
     
-    <div class="pieHelpTicket">
-    	<div style="display:inline-block;">
-            <h2><?php _e("Need Help?","piereg"); ?></h2>
-            <p>
-            <?php _e("If you have any query, feel free to post your Questions at our","piereg"); ?>
-            <a href="http://pieregister.genetechsolutions.com/forum/" target="_blank"><?php _e("Hosted Forum","piereg"); ?></a>
-            <?php _e("to get free support","piereg"); ?>
-            </p>
-        </div>        
-    </div>
-    
-    <div>
-		<?php
-		$piereg_notices = @file_get_contents('http://www.genetechsolutions.com/pie_register_help_content/piereg_notices.json');
-		$piereg_iframe = "";
-		if(!empty($piereg_notices))
-		{
-			$piereg_notices_json = json_decode($piereg_notices);// decode the JSON into an object
-			if(is_object($piereg_notices_json))
-			{
-				if(isset($piereg_notices_json->iframe) && trim($piereg_notices_json->iframe->status) == "true"){//for iframe
-					if(isset($piereg_notices_json->iframe->url) && trim($piereg_notices_json->iframe->url) != ""){
-						?>
-						<iframe src="<?php echo $piereg_notices_json->iframe->url; ?>" frameborder="0" marginheight="0" marginwidth="0" style="width:100%; height:450px;" scrolling="no"></iframe>
-						<?php	
-					}
-				}
-			}
-		}
-		?>
+    <div class="pie_register_help_content_area">
+		<iframe src="http://www.genetechsolutions.com/pie_register_help_content/help_page_notice.html" frameborder="0" marginheight="0" marginwidth="0" style="width:100%; height:450px;" scrolling="no"></iframe>
     </div>
 
   </div>

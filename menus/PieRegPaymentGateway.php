@@ -49,8 +49,8 @@
                     <?php _e('Paypal Mode', 'piereg');?>
                   </label>
                   <select name="piereg_paypal_sandbox" id="paypal_sandbox">
-                    <option value="no" <?php if($piereg['paypal_sandbox'] == "no") echo 'selected="selected"';?>>Live</option>
-                    <option value="yes" <?php if($piereg['paypal_sandbox'] == "yes") echo 'selected="selected"';?>>Sandbox</option>
+                    <option value="no" <?php if($piereg['paypal_sandbox'] == "no") echo 'selected="selected"';?>><?php _e("Live","piereg"); ?></option>
+                    <option value="yes" <?php if($piereg['paypal_sandbox'] == "yes") echo 'selected="selected"';?>><?php _e("Sandbox","piereg"); ?></option>
                   </select>
                   <div class="fields">
                     <input name="Submit" style="margin:0;" class="submit_btn" value="<?php _e('Save Changes','piereg');?>" type="submit" />

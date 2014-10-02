@@ -96,6 +96,9 @@
 	padding: 8px 10px;
 	overflow:hidden;
 }
+.pieregWrapper .fields .fieldset.fieldset_child {
+	padding: 15px 10px 8px;
+}
 .pieregWrapper .fields .fieldset .fieldset_child {
     padding: 10px 0;
 }
@@ -326,7 +329,7 @@
 	width: 24px;
 	/*top: 48%;*/
 }
-#pie_register .fields .hasDatepicker{width:70% !important; margin-right:3px;}
+#pie_register .fields .hasDatepicker{width:85% !important; margin-right:3px;}
 #pie_register .fields .inner_fields {
 	float:left;
 	margin-right: 0px;

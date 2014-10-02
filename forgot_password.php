@@ -1,5 +1,4 @@
 <?php
-//function pieResetFormOutput($pie_register = false,$piereg_widget = false;){
 function pieResetFormOutput($piereg_widget = false){
 	$option = get_option('pie_register_2');
 	$forgot_pass_form = '';
@@ -84,13 +83,16 @@ function pieResetFormOutput($piereg_widget = false){
 			else{
 				$error[] = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.__('Username or Email was not found, try again!','piereg');
 			}
+			/*
+				*	If User Exist then
+			*/
+
 			if ($user_exists){
 				
 				$user_login = $user->user_login;
 				$user_email = $user->user_email;
 		
 				$allow = apply_filters( 'allow_password_reset', true, $user->ID );
-				
 				if($allow){
 					//$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 					
@@ -99,15 +101,14 @@ function pieResetFormOutput($piereg_widget = false){
 				 // Generate something random for a key...
 					if ( empty( $wp_hasher ) ) {
 						require_once ABSPATH . 'wp-includes/class-phpass.php';
-						$wp_hasher = new PasswordHash( 8, true );
 					}
 					$wp_hasher = new PasswordHash( 8, true );
 					$key = wp_generate_password( 20, false );
 					$hashed = $wp_hasher->HashPassword( $key );
 					do_action( 'retrieve_password_key', $user_login, $key );
+					
 					// Now insert the new md5 key into the db
 					$wpdb->update($wpdb->users, array('user_activation_key' => $hashed), array('user_login' => $user_login));
-					
 		
 					$pie_register_base = new PieReg_Base();
 									
@@ -122,11 +123,11 @@ function pieResetFormOutput($piereg_widget = false){
 					$from_name		= $option['user_from_name_forgot_password_notification'];
 					$from_email		= $option['user_from_email_forgot_password_notification'];					
 					$reply_email 	= $option['user_to_email_forgot_password_notification'];
-					$subject 		= $option['user_subject_email_forgot_password_notification'];
+					$subject 		= html_entity_decode($option['user_subject_email_forgot_password_notification'],ENT_COMPAT,"UTF-8");
 					
 					//Headers
 					$headers  = 'MIME-Version: 1.0' . "\r\n";
-					$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+					$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
 				
 					if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 					$headers .= "From: ".$from_name." <".$from_email."> \r\n";
@@ -187,7 +188,7 @@ function pieResetFormOutput($piereg_widget = false){
 		<p>';
 		if(isset($option['forgot_pass_username_label']) && !empty($option['forgot_pass_username_label']))
 		{
-			$forgot_pass_form .= '<label for="user_login">'.((isset($option['forgot_pass_username_label']) && !empty($option['forgot_pass_username_label']))? $option['forgot_pass_username_label']: __("Username or E-mail:","piereg")).'</label>';
+			$forgot_pass_form .= '<label for="user_login">'.((isset($option['forgot_pass_username_label']) && !empty($option['forgot_pass_username_label']))? __($option['forgot_pass_username_label'],"piereg"): __("Username or E-mail:","piereg")).'</label>';
 		}
 		  
     $forgot_pass_form .= '<input type="text" size="20" value="" class="input validate[required]" id="user_login" name="user_login" style="margin : 10px 0px;" placeholder="'.((isset($option['forgot_pass_username_placeholder']) && !empty($option['forgot_pass_username_placeholder']))? $option['forgot_pass_username_placeholder']: "").'">
@@ -221,8 +222,8 @@ function pieResetFormOutput($piereg_widget = false){
 		
 		//if(!is_page()) {
 		if(isset($pagenow) && $pagenow == 'wp-login.php' ){
-			$forgot_pass_form .= '<p class="forgot_pass_links"> <a href="'.wp_login_url().'">'.__('Log in',"piereg").'</a> | <a href="'.wp_registration_url().'">'.__('Register',"piereg").'</a> </p>
-			<p class="forgot_pass_links"><a title="'.__('Are you lost?',"piereg").'" href="'.get_bloginfo("url").'">&larr; '.__('Back to',"piereg").' '.get_bloginfo("name").'</a></p>';
+			$forgot_pass_form .= '<p class="forgot_pass_links"> <a href="file://///192.168.14.2/projects/baqar/test_wp_plugin/wp-content/plugins/pie-register/'.wp_login_url().'">'.__('Log in',"piereg").'</a> | <a href="file://///192.168.14.2/projects/baqar/test_wp_plugin/wp-content/plugins/pie-register/'.wp_registration_url().'">'.__('Register',"piereg").'</a> </p>
+			<p class="forgot_pass_links"><a title="'.__('Are you lost?',"piereg").'" href="file://///192.168.14.2/projects/baqar/test_wp_plugin/wp-content/plugins/pie-register/'.get_bloginfo("url").'">&larr; '.__('Back to',"piereg").' '.get_bloginfo("name").'</a></p>';
 		}
 		$forgot_pass_form .= '
 		<input type="hidden" name="reset_pass" value="1" />
@@ -377,5 +378,4 @@ if(!function_exists("forgot_pass_captcha"))
 		}
 		return $output;
 	}
-}
-?>
+}?>

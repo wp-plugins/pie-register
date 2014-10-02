@@ -47,7 +47,7 @@ piereg(document).ready(function(){
         <ul>
           <li>
             <div class="fields">
-              <h2>Guideline</h2>
+              <h2><?php  _e("Guideline",'piereg'); ?></h2>
               <p><?php  _e("Protect your privacy. If you want your blog to be exclusive, enable Invitation Codes and keep track of your users.",'piereg'); ?></p>
             </div>
           </li>
