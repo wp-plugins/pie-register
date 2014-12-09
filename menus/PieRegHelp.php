@@ -38,6 +38,7 @@ piereg(document).ready(function(){
     <?php _e("If you still have any query, feel free to contact us by submitting a support ticket form on the right","piereg"); ?></p>
     <div class="pieHelpMenuButtonContaner">
         <ul class="pieHelpMenuButton">
+        <li><a href="https://www.youtube.com/channel/UCuLxfC2jcyAS5ns4ZT_7jcQ" target="_blank_pieHelp_1"><?php _e("Video Tutorials","piereg"); ?></a></li>
             <li><a href="http://pieregister.genetechsolutions.com/faqs/" target="_blank_pieHelp_1"><?php _e("Browse Frequently Asked Questions","piereg"); ?></a></li>
             <li><a href="http://pieregister.genetechsolutions.com/get-support/" target="_blank_pieHelp_2"><?php _e("Pie-Register v2.0 Beta Problems","piereg"); ?></a></li>
             <li><a href="http://pieregister.genetechsolutions.com/forum/" target="_blank_pieHelp_3"><?php _e("Go To Forums","piereg"); ?></a></li>
