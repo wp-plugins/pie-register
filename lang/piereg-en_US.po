@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2014-10-02 19:48+0500\n"
+"PO-Revision-Date: 2014-12-04 17:58+0500\n"
 "Last-Translator: Baqar <baqarsoft@gmail.com>\n"
 "Language-Team: Baqar\n"
 "Language: en_US\n"
@@ -274,7 +274,7 @@ msgid ""
 "Password pages for logged in users."
 msgstr ""
 "Set this to Yes if you would like to block Login, Registration & Forgot "
-"Password pages for loggged in users."
+"Password pages for logged in users."
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:120
 msgid "Subscibers Access"
@@ -374,12 +374,12 @@ msgstr "reCAPTCHA Settings"
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:197
 msgid ""
 "Pie Register integrates with reCAPTCHA, a free CAPTCHA services that helps "
-"to digitize Books while Protecting your forms from spam bots. Readmore about "
-"reCAPTCHA."
+"to digitize Books while Protecting your forms from spam bots. Read more "
+"about reCAPTCHA."
 msgstr ""
 "Pie Register integrates with reCAPTCHA, a free CAPTCHA services that helps "
-"to digitize Books while Protecting your forms from spam bots. Readmore about "
-"reCAPTCHA."
+"to digitize Books while Protecting your forms from spam bots. Read more "
+"about reCAPTCHA."
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:200
 msgid "reCAPTCHA Public Key"
@@ -1889,11 +1889,11 @@ msgstr "Select Page"
 msgid "Redirect URL"
 msgstr "Redirect URL"
 
-msgid "Apear Captcha in login form which you want"
-msgstr "Apear Captcha in login form which you want"
+msgid "Appear Captcha in login form which you want"
+msgstr "Appear Captcha in login form which you want"
 
-msgid "Apear Captcha in Forgot Password form which you want"
-msgstr "Apear Captcha in Forgot Password form which you want"
+msgid "Appear Captcha in Forgot Password form which you want"
+msgstr "Appear Captcha in Forgot Password form which you want"
 
 msgid ""
 "Warning: Turning off any script here may stop Pie-Register to work properly, "
@@ -2956,3 +2956,7 @@ msgstr ""
 
 msgid "Invalid or malformed request. This key is no longer exists"
 msgstr "Invalid or malformed request. This key is no longer exists"
+
+#: ******* Add These Variables Since 2.0.13 ********
+msgid "Sorry, your nonce did not verify."
+msgstr "Sorry, your nonce did not verify."

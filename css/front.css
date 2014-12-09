@@ -345,6 +345,12 @@
 	display: inline-block;
 	width: 71%;
 }
+#pie_register .fields.label_top .piereg_time {
+	width:95%;
+}
+#pie_register .fields.label_top .hasDatepicker{
+	width:100% !important;
+}
 .widget #pie_register .fields .piereg_time{
 	width:100%;
 }
@@ -357,10 +363,13 @@
 }
 #pie_register .fields .piereg_time .time_fields {
 	float: left;
-	width: 28%;
+	/*width: 28%;*/
+	width: 40%;
 }
+#pie_register .fields.label_top .piereg_time .time_fields {width: 47%;}
 #pie_register .fields .piereg_time .time_fields .input_fields {
-	width: 89%;
+	/*width: 89%;*/
+	width: 99%;
 	margin-bottom:3px;
 	float: left;
 	margin-right: 2%;
@@ -416,7 +425,8 @@
 #pie_register .fields .address2 select {
 	width:96%;
 	margin-top: 0px;
-	height: 22px;
+	/*height: 22px;*/
+	height: 23px;
 }
 #pie_register .fields input[type="submit"],#pie_register .fields input[type="reset"]{float:right;}
 #piereg_recaptcha_area {
@@ -511,8 +521,8 @@
 }
 #pie_register .label_top .address{float: left;width: 98%;}
 #pie_register .label_top .address2{width: 50%;}
-#pie_register .label_top .address2 .input_fields{width: 88%;}
-#pie_register .label_top .address2 select{margin-bottom:0; width: 93%;}
+#pie_register .label_top .address2 .input_fields{/*width: 88%;*/width: 95%;}
+#pie_register .label_top .address2 select{margin-bottom:0; /*width: 93%;*/width: 95%;}
 #pie_register .label_top .pie_list{float: left;width: 97.2%;}
 #pie_register .label_top .pie_list img{position: absolute;top: -21px;left: 30px;}
 #pie_register .label_top select{width:97.9%;}
@@ -1192,6 +1202,7 @@ div.piereg_entry-content{
 	-o-transition: all 500ms;
 	-webkit-transition: all 500ms;
 }
+#pie_register .label_top #piereg_passwordStrength{width:91%;}
 .widget #piereg_passwordStrength_widget{
 	padding :5px 0px;
 	height:auto;
@@ -1204,7 +1215,8 @@ div.piereg_entry-content{
 	-moz-transition: all 500ms;
 	-o-transition: all 500ms;
 	-webkit-transition: all 500ms;
-	width:100%;
+	/*width:100%;*/
+	width:95%;
 }
 .piereg_pass{
 	background: #EEEEEE;

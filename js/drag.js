@@ -1192,7 +1192,7 @@ piereg(document).ready(function () {
 
 				piereg(".swap_class").trigger("change")
 
-				if (dragType == "invitation" || dragType == "name" || dragType == "address" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
+				if (dragType == "invitation" || dragType == "name" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
 
 					piereg('ul.controls li a[name="' + dragType + '"]').parent().hide();
 

@@ -124,7 +124,7 @@ class Profile_admin extends PieReg_Base
 		  <input type="text" name="' . $this->slug . '[address]" id="' . $this->id . '" value="' . ((isset($address['address']))?$address['address']:"") . '" >
 		  <label>'.__("Street Address","piereg").'</label>
 		</div>';
-        if (isset($this->field['hide_address2']) && !$this->field['hide_address2']) {
+        if (empty($this->field['hide_address2'])) {
             echo '<div class="address">
 			  <input type="text" name="' . $this->slug . '[address2]" id="address2_' . $this->id . '" value="' . ((isset($address['address2']))?$address['address2']:"") . '" >
 			  <label>'.__("Address Line 2","piereg").'</label>
@@ -135,7 +135,7 @@ class Profile_admin extends PieReg_Base
 			<input type="text" name="' . $this->slug . '[city]" id="city_' . $this->id . '" value="' . ((isset($address['city']))?$address['city']:"") . '">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
-        if (isset($this->field['hide_state']) && !$this->field['hide_state']) {
+        if (empty($this->field['hide_state'])) {
             if ($this->field['address_type'] == "International") {
                 echo '<div class="address2"  >
 					<input type="text" name="' . $this->slug . '[state]" id="state_' . $this->id . '" value="' . ((isset($address['state']))?$address['state']:"") . '">

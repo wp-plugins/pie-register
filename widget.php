@@ -114,16 +114,19 @@ class Pie_Login_Widget extends WP_Widget {
 					$profile_pic = trim($val[0]);
 				}
 			}
-			
-			if(!preg_match('/(http|https):\/\/(www\.)?[\w-_\.]+\.[a-zA-Z]+\/((([\w-_\/]+)\/)?[\w-_\.]+\.(png|gif|jpg|jpeg|xpng|bmp))/',$profile_pic)){
+			/*if(!preg_match('/(http|https):\/\/(www\.)?[\w-_\.]+\.[a-zA-Z]+\/((([\w-_\/]+)\/)?[\w-_\.]+\.(png|gif|jpg|jpeg|xpng|bmp))/',$profile_pic)){
 				$profile_pic = plugin_dir_url(__FILE__).'images/userImage.png';
-			}
+			}*/
 			
 			$profile_pic = apply_filters("piereg_profile_image_url",$profile_pic,$current_user);
 			
 			echo '<div class="logged-In">';
 			$profile_link = get_permalink($option['alternate_profilepage']);
-			$profile_image_html = '<a href="'.$profile_link.'"><img src="'.$profile_pic.'" style="max-width:75px;max-height:75px;"/></a>';
+			$user_avater = get_avatar(get_current_user_id(),75);
+			$profile_avatar = ((!empty($profile_pic))?('<img src="'.$profile_pic.'" style="max-width:75px;max-height:75px;"/>'):$user_avater);
+			
+			//$profile_image_html = '<a href="'.$profile_link.'"><img src="'.$profile_pic.'" style="max-width:75px;max-height:75px;"/></a>';
+			$profile_image_html = '<a href="'.$profile_link.'">'.$profile_avatar.'</a>';
 			echo apply_filters('pie_profile_image_frontend_widget',$profile_image_html,$profile_link,$profile_pic);
 			////////////////////////////
 			$profile_text = $current_user->user_login;

@@ -132,7 +132,7 @@ $newpasspageLock = 0;
 						 $login_error = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.apply_filters("piereg_invalid_activation_key",__("Invalid activation key","piereg"));
 					}
 				}else{
-					$user_name = mysql_real_escape_string($_GET['id']);
+					$user_name = esc_sql($_GET['id']);
 					$user = get_userdatabylogin($user_name);
 					if($user){
 						$user_meta = get_user_meta( $user->ID, 'active');
@@ -241,8 +241,8 @@ if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET[
 	if(isset($option['login_username_label']) && !empty($option['login_username_label'])){
 			$form_data .= '<label for="user_login">'.((isset($option['login_username_label']) && !empty($option['login_username_label']))? __($option['login_username_label'],"piereg") : __("Username","piereg")) .'</label>';
 	}
-	
-	$form_data .= '<input placeholder="'.((isset($option['login_username_placeholder']) && !empty($option['login_username_placeholder']))? __($option['login_username_placeholder'],"piereg") : "").'" type="text" size="20" value="" class="input validate[required]" id="user_login" name="log">
+	$user_name_val = ((isset($_POST['log']) && !empty($_POST['log']))?$_POST['log']:"");
+	$form_data .= '<input placeholder="'.((isset($option['login_username_placeholder']) && !empty($option['login_username_placeholder']))? __($option['login_username_placeholder'],"piereg") : "").'" type="text" size="20" value="'.$user_name_val.'" class="input validate[required]" id="user_login" name="log">
 		</p>
 		<p>';
 	

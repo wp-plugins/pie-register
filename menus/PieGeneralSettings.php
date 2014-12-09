@@ -16,6 +16,33 @@ function validateSettings()
 		alert("Please select an alternate forgot password page.");
 		return false;	
 	}
+	if(piereg("#piereg_reCAPTCHA_Private_Key").val() != "" || piereg("#piereg_reCAPTCHA_Public_Key").val()){
+		/*var patt1 = /(?=^.{40,40}$)[0-9a-zA-Z_-]/;*/
+		var patt1 = /[0-9a-zA-Z_-]{40}/;
+		var re_captcha_scroll_top = piereg("#piereg_reCAPTCHA_Public_Key").offset();
+		if(re_captcha_scroll_top.top > 0)
+			re_captcha_scroll_top.top = re_captcha_scroll_top.top - 100;
+		
+		var is_error = false;
+		if(!piereg("#piereg_reCAPTCHA_Public_Key").val().match(patt1)){
+			piereg("#piereg_reCAPTCHA_Public_Key").css({"color":"red"});
+			piereg("html, body").animate({scrollTop: re_captcha_scroll_top.top }, '500');
+			piereg("#piereg_reCAPTCHA_Public_Key_error").show();
+			is_error = true;
+		}
+		if(!piereg("#piereg_reCAPTCHA_Private_Key").val().match(patt1)){
+			piereg("#piereg_reCAPTCHA_Private_Key").css({"color":"red"});
+			piereg("html, body").animate({scrollTop: re_captcha_scroll_top.top }, '500');
+			piereg("#piereg_reCAPTCHA_Public_Key_error").show();
+			is_error = true;
+		}
+		
+		if(is_error){
+			return false;
+		}
+		
+		
+	}
 	return true;	
 }
 var piereg = jQuery.noConflict();
@@ -33,8 +60,11 @@ $piereg = get_option( 'pie_register_2' );
 if(isset( $_POST['notice'] ) && !empty($_POST['notice']) ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '</strong></p></div>';
 }
-if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
+elseif(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['license_success'] . '.</strong></p></div>';
+}
+elseif(isset( $_POST['error'] ) && !empty($_POST['error']) ){
+	echo '<div id="error" class="error fade"><p><strong>' . $_POST['error'] . '.</strong></p></div>';
 }
 ?>
 <div id="container"  class="pieregister-admin">
@@ -42,6 +72,104 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
     <div class="settings">
       <h2><?php _e("Settings",'piereg') ?></h2>
 		<form method="post" action="" onsubmit="return validateSettings();">
+        <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_general_settings_nonce','piereg_general_settings_nonce'); ?>
+        
+        
+        
+        
+        
+        <h3><?php _e("Installation Status",'piereg') ?></h3>
+        <div class="fields">
+          <label><?php _e("PHP Version",'piereg') ?></label>
+          <?php if(version_compare(phpversion(),  "5.0") == 1)
+		  {
+			  echo '<span class="installation_status">'.phpversion().'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.phpversion().'</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires PHP 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("MySQL Version",'piereg') ?></label>
+          <?php
+		  
+		  
+		  
+			/* Use ext/mysqli if it exists and:
+			  *  - WP_USE_EXT_MYSQL is defined as false, or
+			  *  - We are a development version of WordPress, or
+			  *  - We are running PHP 5.5 or greater, or
+			  *  - ext/mysql is not loaded.
+			  */
+			$piereg_mytsql_version_info = "";
+			global $wpdb;
+			if ( function_exists( 'mysqli_connect' ) ){
+				if ( defined( 'WP_USE_EXT_MYSQL' ) ){
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				} elseif ( version_compare( phpversion(), '5.5', '>=' ) || ! function_exists( 'mysql_connect' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				} elseif ( false !== strpos( $GLOBALS['wp_version'], '-' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				}else{
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				}
+			}else{
+				//mysql
+				$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+			}
+			if(version_compare($piereg_mytsql_version_info,  "5.0") == 1)
+			{
+				echo '<span class="installation_status">'.$piereg_mytsql_version_info.'</span>';
+			}
+			else
+			{
+				echo '<span class="installation_status_faild">'.$piereg_mytsql_version_info.'</span>';
+				echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
+			}
+			?>
+          
+        </div>
+        <div class="fields">
+          <label><?php _e("Wordpress Version",'piereg') ?></label>
+          <?php if(version_compare(get_bloginfo('version'),  "3.5") == 1)
+		  {
+			  echo '<span class="installation_status">'.get_bloginfo('version').'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.get_bloginfo('version').'</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires Wordpress 3.5 or higher. Please deactivate Pie-Register","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("Enable Curl",'piereg') ?></label>
+          <?php if(function_exists('curl_version'))
+		  {
+			  echo '<span class="installation_status">'.__("CURL Enable","piereg").'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.__("CURL Enable","piereg").'</span>';
+			  echo '<span class="quotation">'.__("Please install CURL on server","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
         <h3><?php _e("General Settings",'piereg') ?></h3>
         <div class="fields">
           <label><?php _e("Display Hints",'piereg') ?></label>
@@ -162,7 +290,7 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                     <option value="1" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 1 )?'selected="selected"':'') ?>><?php _e("Re-Captcha",'piereg') ?></option>
                     <option value="2" <?php echo ((isset($piereg['capthca_in_login']) && $piereg['capthca_in_login'] == 2 )?'selected="selected"':'') ?>><?php _e("Math Captcha",'piereg') ?></option>
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in login form which you want",'piereg') ?></span> 
+                <span class="quotation"><?php _e("Appear Captcha in login form which you want",'piereg') ?></span> 
             </div>
             <div class="fields piereg_recapthca_skin_login" style="display:none;">
                 <label for="piereg_recapthca_skin_login"><?php _e("Re-Captcha Skin",'piereg') ?></label>
@@ -221,7 +349,7 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
                     <option value="1" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 1 )?'selected="selected"':'') ?>><?php _e("Re-Captcha",'piereg') ?></option>
                     <option value="2" <?php echo ((isset($piereg['capthca_in_forgot_pass']) && $piereg['capthca_in_forgot_pass'] == 2 )?'selected="selected"':'') ?>><?php _e("Math Captcha",'piereg') ?></option>
                 </select>
-                <span class="quotation"><?php _e("Apear Captcha in Forgot Password form which you want",'piereg') ?></span> 
+                <span class="quotation"><?php _e("Appear Captcha in Forgot Password form which you want",'piereg') ?></span> 
             </div>
             
             <div class="fields piereg_recapthca_skin_forgot_pas" style="display:none;">
@@ -424,8 +552,8 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
             <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
         </div>
            
-        
-        
+        <?php /* ?>
+        <div style="display:none;">
         <h3><?php _e("Installation Status",'piereg') ?></h3>
         <div class="fields">
           <label><?php _e("PHP Version",'piereg') ?></label>
@@ -446,12 +574,12 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
 		  
 		  
 		  
-			/* Use ext/mysqli if it exists and:
-			  *  - WP_USE_EXT_MYSQL is defined as false, or
-			  *  - We are a development version of WordPress, or
-			  *  - We are running PHP 5.5 or greater, or
-			  *  - ext/mysql is not loaded.
-			  */
+			// Use ext/mysqli if it exists and:
+			//  - WP_USE_EXT_MYSQL is defined as false, or
+			//  - We are a development version of WordPress, or
+			//  - We are running PHP 5.5 or greater, or
+			//  - ext/mysql is not loaded.
+			  
 			$piereg_mytsql_version_info = "";
 			global $wpdb;
 			if ( function_exists( 'mysqli_connect' ) ){
@@ -510,18 +638,21 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
 		  }
 		  ?>
         </div>
+        </div>
+        <?php */ ?>
         
         <h3><?php _e("reCAPTCHA Settings",'piereg') ?></h3>
         <div class="fields">
-          <p><?php _e("Pie Register integrates with reCAPTCHA, a free CAPTCHA services that helps to digitize Books while Protecting your forms from spam bots. Readmore about reCAPTCHA.",'piereg') ?></p>
+          <p><?php _e("Pie Register integrates with reCAPTCHA, a free CAPTCHA services that helps to digitize Books while Protecting your forms from spam bots. Read more about reCAPTCHA.",'piereg') ?></p>
+          <p id="piereg_reCAPTCHA_Public_Key_error" style="display:none;color:#F00;"><strong><?php _e("Error : Invalid Re-Captcha keys",'piereg') ?></strong></p>
         </div>
         <div class="fields">
-          <label for="captcha_publc"><?php _e("reCAPTCHA Public Key",'piereg') ?></label>
-          <input type="text" id="captcha_publc" name="captcha_publc" class="input_fields" value="<?php echo $piereg['captcha_publc']?>" />
+          <label for="piereg_reCAPTCHA_Public_Key"><?php _e("reCAPTCHA Public Key",'piereg') ?></label>
+          <input type="text" id="piereg_reCAPTCHA_Public_Key" name="captcha_publc" class="input_fields" value="<?php echo $piereg['captcha_publc']?>" />
           <span class="quotation"><?php _e("Required Only if you decide to Use the reCAPTCHA field. Sign Up for a Free account to get the key.",'piereg') ?></span> </div>
         <div class="fields">
-          <label for="captcha_private"><?php _e("reCAPTCHA Private Key",'piereg') ?></label>
-          <input type="text" id="captcha_private" name="captcha_private" class="input_fields" value="<?php echo $piereg['captcha_private']?>" />
+          <label for="piereg_reCAPTCHA_Private_Key"><?php _e("reCAPTCHA Private Key",'piereg') ?></label>
+          <input type="text" id="piereg_reCAPTCHA_Private_Key" name="captcha_private" class="input_fields" value="<?php echo $piereg['captcha_private']?>" />
           <span class="quotation"><?php _e("Required Only if you decide to Use the reCAPTCHA field. Sign Up for a Free account to get the key.",'piereg') ?></span> </div>
         <div class="fields">
           <input type="submit" class="submit_btn" value="<?php _e("Save Settings","piereg"); ?>" />
@@ -530,13 +661,13 @@ if(isset( $_POST['license_success'] ) && !empty($_POST['license_success']) ){
       
         <h3><?php _e("Custom CSS",'piereg'); ?></h3>
         <div class="fields">
-         <span class="quotation" style="margin-left:0px;"><?php _e("Please don't use style tags.",'piereg') ?></span>
+          <span class="quotation" style="margin-left:0px;"><?php _e("Please don't use style tags.",'piereg') ?></span>
           <textarea name="custom_css"><?php echo html_entity_decode($piereg['custom_css'],ENT_COMPAT,"UTF-8")?></textarea>        
           <input type="submit" class="submit_btn" value=" <?php _e("Save Changes","piereg");?> " />
-           
         </div>
         <h3><?php _e("Tracking Code",'piereg'); ?></h3>
         <div class="fields">
+          <span class="quotation" style="margin-left:0px;"><?php _e("Please don't use script tags.",'piereg') ?></span>
           <textarea name="tracking_code"><?php echo html_entity_decode($piereg['tracking_code'],ENT_COMPAT,"UTF-8")?></textarea>
           <input type="submit" class="submit_btn" value=" <?php _e("Save Changes","piereg");?> " />
         </div>

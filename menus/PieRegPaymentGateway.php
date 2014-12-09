@@ -13,6 +13,9 @@
     if(isset($_POST['notice']) && $_POST['notice'] ){
         echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
     }
+    elseif(isset($_POST['error']) && $_POST['error'] ){
+        echo '<div id="error" class="error fade"><p><strong>' . $_POST['error'] . '.</strong></p></div>';
+    }
     ?>
     <!-- start Paypal pament gateway -->
     <div id="piereg_paypal_payment_gateway">
@@ -24,7 +27,7 @@
               </h2>
               <div id="pie-register">
                 <form method="post" action="#paypal_payment_gateway" enctype="multipart/form-data">
-                <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg-update-options'); ?>
+                <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_paypal_settings_nonce','piereg_paypal_settings_nonce'); ?>
                 <h3><?php _e("Paypal Information","piereg"); ?></h3>
                 <div class="fields">
                   <label for="enable_paypal_yes"><?php _e("Enable Paypal","piereg"); ?></label>

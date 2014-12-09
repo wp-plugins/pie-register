@@ -1131,6 +1131,7 @@ class Registration_form extends PieReg_Base
 				$topclass = "";
 				if($this->label_alignment=="top")
 					$topclass = "label_top";
+				
 				$pie_reg_fields .= '<li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 	
 				//When to add label
@@ -1240,9 +1241,11 @@ class Registration_form extends PieReg_Base
 						$pie_reg_fields .= $this->addDesc().'</div>';
 					break;
 					case 'captcha':
-						$pie_reg_fields .= '<div class="fieldset">'.$this->addLabel();
-						$pie_reg_fields .= $this->addCaptcha();
-						$pie_reg_fields .= $this->addDesc().'</div>';
+						if( isset($update['captcha_publc']) && !empty($update['captcha_publc']) ){
+							$pie_reg_fields .= '<div class="fieldset">'.$this->addLabel();
+							$pie_reg_fields .= $this->addCaptcha();
+							$pie_reg_fields .= $this->addDesc().'</div>';
+						}
 					break;
 					case 'math_captcha':
 						global $piereg_math_captcha_register,$piereg_math_captcha_register_widget;
@@ -1342,7 +1345,7 @@ class Registration_form extends PieReg_Base
 				$pie_reg_fields .=  '</li>';
 				if($this->field['type'] == "password" && $this->field['show_meter']==1)
 				{		
-					$pie_reg_fields .=  '<li class="fields pageFields_'.$this->pages.'">';
+					$pie_reg_fields .=  '<li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 					//OLD PASSWORD STRENGHT METER
 					/*$pie_reg_fields .=  "<div id='password_meter' class='fieldset' ".$style.">";
 					$pie_reg_fields .=  '<label id="piereg_passwordDescription">'.__("Password not entered","piereg").'</label>
@@ -1456,16 +1459,18 @@ class Registration_form extends PieReg_Base
 			{
 				$settings  		=  get_option("pie_register_2");
 		 		$privatekey		= $settings['captcha_private'] ;
-				require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
-				
-				$resp = recaptcha_check_answer ($privatekey,
-												$_SERVER["REMOTE_ADDR"],
-												$_POST["recaptcha_challenge_field"],
-												$_POST["recaptcha_response_field"]);
-				
-				if (!$resp->is_valid) {				 
-				  $errors->add('recaptcha_mismatch',"<strong>".ucwords(__('error','piereg'))."</strong>: ". apply_filters("piereg_Invalid_Security_Code",__("Invalid Security Code", 'piereg')));
-				}	
+				if( !empty( $privatekey ) ){
+					require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
+					
+					$resp = recaptcha_check_answer ($privatekey,
+													$_SERVER["REMOTE_ADDR"],
+													$_POST["recaptcha_challenge_field"],
+													$_POST["recaptcha_response_field"]);
+					
+					if (!$resp->is_valid) {				 
+					  $errors->add('recaptcha_mismatch',"<strong>".ucwords(__('error','piereg'))."</strong>: ". apply_filters("piereg_Invalid_Security_Code",__("Invalid Security Code", 'piereg')));
+					}
+				}
 			
 			}
 			else if($field['type']=="math_captcha")

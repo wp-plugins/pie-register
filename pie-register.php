@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Pie Register
-Plugin URI: http://genetechsolutions.com/pie-register.html
+Plugin URI: http://pieregister.genetechsolutions.com/
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.13
+Version: 2.0.14
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -16,6 +16,9 @@ $piereg_dir_path = dirname(__FILE__);
 define('PIEREG_DIR_NAME',$piereg_dir_path);
 if(!defined('PIEREG_DB_VERSION'))
 	define('PIEREG_DB_VERSION','2.0.13');
+
+if(!defined('PIEREG_PLUGIN_BASENAME'))
+	define('PIEREG_PLUGIN_BASENAME',plugin_basename( __FILE__ ));
 
 define('LOG_FILE', '.ipn_results.log');
 define('SSL_P_URL', 'https://www.paypal.com/cgi-bin/webscr');
@@ -30,7 +33,6 @@ $piereg_math_captcha_login = false;
 $piereg_math_captcha_login_widget = false;
 $piereg_math_captcha_forgot_pass = false;
 $piereg_math_captcha_forgot_pass_widget = false;
-
 
 require_once(PIEREG_DIR_NAME.'/dash_widget.php');
 require_once(PIEREG_DIR_NAME.'/classes/base.php');
@@ -145,10 +147,15 @@ class PieRegister extends PieReg_Base{
 		/*update update_invitation_code form ajax*/
 		add_action( 'wp_ajax_pireg_update_invitation_code', array($this,'pireg_update_invitation_code_cb_url' ));
 		add_action( 'wp_ajax_nopriv_pireg_update_invitation_code', array($this,'pireg_update_invitation_code_cb_url' ));
-		add_action( 'admin_enqueue_scripts' ,array($this,'pie_admin_menu_style_enqueu') );
+		//add_action( 'admin_enqueue_scripts' ,array($this,'pie_admin_menu_style_enqueu') );
 		////FRONT END SCRIPTS
 		add_action('wp_head',array($this,'pie_frontend_ajaxurl'));
 		add_action('wp_enqueue_scripts',array($this,'pie_frontend_enqueu_scripts'));
+		
+		/*
+			*	Add sub links in wp plugin's page
+		*/
+		add_filter( 'plugin_row_meta', array( $this, 'piereg_plugin_row_meta' ), 10, 2 );
 		
 	}
 	function pie_admin_menu_style_enqueu(){
@@ -436,9 +443,9 @@ class PieRegister extends PieReg_Base{
 		}
 		
 		#Admin Verify Users
-		if( isset($_POST['verifyit']) )		
+		if( isset($_POST['verifyit']) ){
 			$this->verifyUsers();
-			
+		}
 		#Admin Send Payment Link
 		if( isset($_POST['paymentl']) && !(empty($option['paypal_butt_id'])) && $option['enable_paypal']==1)
 			$this->PaymentLink();
@@ -875,16 +882,15 @@ class PieRegister extends PieReg_Base{
 			if($option['capthca_in_login'] == 1){
 				$settings  		=  get_option("pie_register_2");
 				$privatekey		= $settings['captcha_private'] ;
-				require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
-				
-				$resp = recaptcha_check_answer ($privatekey,
-												$_SERVER["REMOTE_ADDR"],
-												$_POST["recaptcha_challenge_field"],
-												$_POST["recaptcha_response_field"]);
-				
-				if (!$resp->is_valid) {
-					$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
-					$error_found++;
+				if($privatekey)
+				{
+					require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
+					$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
+					
+					if (!$resp->is_valid) {
+						$errors->add('login-error',apply_filters("Invalid_Security_Code",__('Invalid Security Code','piereg')));
+						$error_found++;
+					}
 				}
 			}
 			elseif($option['capthca_in_login'] == 2){
@@ -1342,27 +1348,27 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				}
 				$message  		= $form->filterEmail($message_temp,$user,$pass);
 				$subject		= html_entity_decode($option['admin_subject_email'],ENT_COMPAT,"UTF-8");
-				$to				= $option['admin_sendto_email'];
-				$from_name		= $option['admin_from_name'];
-				$from_email		= $option['admin_from_email'];
-				$bcc			= $option['admin_bcc_email'];
-				$reply_to_email	= $option['admin_to_email'];
+				$to				= trim($option['admin_sendto_email']);
+				$from_name		= trim($option['admin_from_name']);
+				$from_email		= trim($option['admin_from_email']);
+				$bcc			= trim($option['admin_bcc_email']);
+				$reply_to_email	= trim($option['admin_to_email']);
 	
-				if(!filter_var($to,FILTER_VALIDATE_EMAIL))//if not valid email address then use wordpress default admin
+				if(empty($to))//if not valid email address then use wordpress default admin
 				{
 					$to = get_option('admin_email');
 				}
 				//Headers
 				$headers  = 'MIME-Version: 1.0' . "\r\n";
 				$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-				if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
+				if(!empty($from_email))//Validating From
 					$headers .= "From: ".$from_name." <".$from_email."> \r\n";
 	
-				if(!empty($bcc) && filter_var($bcc,FILTER_VALIDATE_EMAIL))//Validating BCC
+				if(!empty($bcc))//Validating BCC
 					$headers .= "Bcc: " . $bcc . " \r\n";
 	
-				if(!empty($reply_to_email) && filter_var($reply_to_email,FILTER_VALIDATE_EMAIL))//Validating Reply To
-					$headers .= 'Reply-To: <'.$reply_to_email.'> \r\n';
+				if(!empty($reply_to_email))//Validating Reply To
+					$headers .= "Reply-To: <".$reply_to_email."> \r\n";
 				
 				if($reply_to_email)
 					$headers .= "Return-Path: {$reply_to_email}\r\n";
@@ -1406,7 +1412,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$headers .= "Return-Path: {$from_email}\r\n";
 				}
 				wp_mail($_POST['e_mail'], $subject, $message , $headers);
-				$_POST['success'] = apply_filters("piereg_thank_you_for_your_registration",__("Thank you for your registration. You will be notified once the admin approves your account.",'piereg'));	
+				$_POST['registration_success'] = apply_filters("piereg_thank_you_for_your_registration",__("Thank you for your registration. You will be notified once the admin approves your account.",'piereg'));	
 			
 			}
 			else if($option['verification'] == 2 )//E-Mail Link Verification
@@ -1439,7 +1445,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 					$headers .= "Return-Path: {$from_email}\r\n";
 				}
 				wp_mail($_POST['e_mail'], $subject, $message , $headers);
-				$_POST['success'] = apply_filters("piereg_thank_you_for_your_registration",__("Thank you for your registration. An activation link with your password has been sent to you.",'piereg'));
+				$_POST['registration_success'] = apply_filters("piereg_thank_you_for_your_registration",__("Thank you for your registration. An activation link with your password has been sent to you.",'piereg'));
 					
 			}
 			else if($option['verification'] == 0 ){
@@ -1500,7 +1506,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			}
 			else
 			{
-				$_POST['success']	= __($fields['submit']['message'],"piereg");
+				$_POST['registration_success']	= __($fields['submit']['message'],"piereg");
 			}
 			
 		}
@@ -1609,8 +1615,9 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			global $wpdb;
 			if(isset( $_POST['notice'] ) && !empty( $_POST['notice'] ))
 				echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
-				
-		
+			else if(isset( $_POST['error'] ) && !empty( $_POST['error'] ))
+				echo '<div id="error" class="error fade"><p><strong>' . $_POST['error'] . '.</strong></p></div>';
+			
 			$unverified = get_users(array('meta_key'=> 'active','meta_value'   => 0));			
 			$piereg = get_option('pie_register_2');
 			?>
@@ -1619,10 +1626,11 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
     <?php _e('Unverified Users', 'piereg')?>
   </h2>
   <form id="verify-filter" method="post" action="">
-    <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg-unverified'); ?>
+    <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_unverified_nonce','piereg_unverified_users_nonce'); ?>
     <div class="tablenav">
       <div class="alignleft">
-        <input onclick="return window.confirm('This will verify users of all types'); " value="<?php _e('Verify Checked Users','piereg');?>" name="verifyit" class="button-secondary" type="submit">
+        <input onclick="return window.confirm('<?php _e('This will verify users of all types','piereg');?>'); " value="<?php _e('Verify Checked Users','piereg');?>" name="verifyit" class="button-secondary" type="submit">
+        <?php //wp_nonce_field('name_of_my_action','piereg_wp_nonce'); ?>
         &nbsp;
         <?php //if( !(empty($piereg['paypal_butt_id'])) && $piereg['enable_paypal']==1){ ?>
         <input value="<?php _e('Resend Pending Payment E-mail','piereg');?>" name="paymentl" class="button-secondary" type="submit">
@@ -1677,48 +1685,55 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		}
 	function verifyUsers()
 	{
-		$valid = $_POST['vusers'];
-		if($valid)
+		
+		if(isset($_POST['piereg_unverified_users_nonce']) && wp_verify_nonce( $_POST['piereg_unverified_users_nonce'], 'piereg_unverified_nonce' ))//Verify true nonce then
 		{
-			$option = get_option('pie_register_2');
-			foreach( $valid as $user_id )
+			
+			$valid = $_POST['vusers'];
+			if($valid)
 			{
-				if ( $user_id )
+				$option = get_option('pie_register_2');
+				foreach( $valid as $user_id )
 				{
-					update_user_meta( $user_id, 'active',1);
-					//Sending E-Mail to newly active user
-					$user 			= new WP_User($user_id);
-					$subject 		= html_entity_decode($option['user_subject_email_email_thankyou'],ENT_COMPAT,"UTF-8");
-					$user_email 	= $user->user_email;
-					$message_temp = "";
-					if($option['user_formate_email_email_thankyou'] == "0"){
-						$message_temp	= nl2br(strip_tags($option['user_message_email_email_thankyou']));
-					}else{
-						$message_temp	= $option['user_message_email_email_thankyou'];
+					if ( $user_id )
+					{
+						update_user_meta( $user_id, 'active',1);
+						//Sending E-Mail to newly active user
+						$user 			= new WP_User($user_id);
+						$subject 		= html_entity_decode($option['user_subject_email_email_thankyou'],ENT_COMPAT,"UTF-8");
+						$user_email 	= $user->user_email;
+						$message_temp = "";
+						if($option['user_formate_email_email_thankyou'] == "0"){
+							$message_temp	= nl2br(strip_tags($option['user_message_email_email_thankyou']));
+						}else{
+							$message_temp	= $option['user_message_email_email_thankyou'];
+						}
+						$message		= $this->filterEmail($message_temp,$user,$pass);
+						$from_name		= $option['user_from_name_email_thankyou'];
+						$from_email		= $option['user_from_email_email_thankyou'];
+						$reply_email	= $option['user_to_email_email_thankyou'];
+						//Headers
+						$headers  = 'MIME-Version: 1.0' . "\r\n";
+						$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+						if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
+							$headers .= "From: ".$from_name." <".$from_email."> \r\n";
+						if($reply_email){
+							$headers .= "Reply-To: {$reply_email}\r\n";
+							$headers .= "Return-Path: {$from_name}\r\n";
+						}else{
+							$headers .= "Reply-To: {$from_email}\r\n";
+							$headers .= "Return-Path: {$from_email}\r\n";
+						}
+						wp_mail($user_email, $subject, $message , $headers);
 					}
-					$message		= $this->filterEmail($message_temp,$user,$pass);
-					$from_name		= $option['user_from_name_email_thankyou'];
-					$from_email		= $option['user_from_email_email_thankyou'];
-					$reply_email	= $option['user_to_email_email_thankyou'];
-					//Headers
-					$headers  = 'MIME-Version: 1.0' . "\r\n";
-					$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-					if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
-						$headers .= "From: ".$from_name." <".$from_email."> \r\n";
-					if($reply_email){
-						$headers .= "Reply-To: {$reply_email}\r\n";
-						$headers .= "Return-Path: {$from_name}\r\n";
-					}else{
-						$headers .= "Reply-To: {$from_email}\r\n";
-						$headers .= "Return-Path: {$from_email}\r\n";
-					}
-					wp_mail($user_email, $subject, $message , $headers);
 				}
+				$_POST['notice'] = __("User(s) has been activated");
 			}
-			$_POST['notice'] = __("User(s) has been activated");
+			else
+				$_POST['notice'] = "<strong>".__('error','piereg').":</strong>".__("Please select a user to send emails to", "piereg");
+		}else{
+			$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
 		}
-		else
-			$_POST['notice'] = "<strong>".__('error','piereg').":</strong>".__("Please select a user to send emails to", "piereg");
 	}
 	function PaymentLink()
 	{
@@ -1910,37 +1925,52 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		
 		if( isset($_POST['invi_del_id']) ) 
 		{
-			if($wpdb->query("DELETE FROM ".$codetable." WHERE id = ".$_POST['invi_del_id']))	
-			$_POST['notice'] = "The Invitation Code has been deleted";
+			if(isset($_POST['piereg_invitation_nonce']) && wp_verify_nonce( $_POST['piereg_invitation_nonce'], 'piereg_wp_invitation_nonce' ))
+			{
+				if($wpdb->query("DELETE FROM ".$codetable." WHERE id = ".$_POST['invi_del_id']))	
+				$_POST['notice'] = "The Invitation Code has been deleted";
+			}else{
+				$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
+			}
 		}
-		
 		else if( isset($_POST['status_id']) ) 
 		{
-			if($wpdb->query("update ".$codetable." SET status = CASE WHEN status = 1 THEN  0 WHEN status = 0 THEN 1 ELSE  0 END  WHERE id = ".$_POST['status_id']))	
-			$_POST['notice'] = "Status has been changed.";
+			if(isset($_POST['piereg_invitation_nonce']) && wp_verify_nonce( $_POST['piereg_invitation_nonce'], 'piereg_wp_invitation_nonce' ))
+			{
+				if($wpdb->query("update ".$codetable." SET status = CASE WHEN status = 1 THEN  0 WHEN status = 0 THEN 1 ELSE  0 END  WHERE id = ".$_POST['status_id']))	
+				$_POST['notice'] = "Status has been changed.";
+			}
+			else{
+				$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
+			}
 		}
-		
 		else if( isset($_POST['piereg_codepass']) ) 
 		{
-			$update["codepass"] = $_POST['piereg_codepass'];
-			$codespasses=explode("\n",$update["codepass"]);
-			
-			foreach( $codespasses as $k=>$v )
+			if(isset($_POST['piereg_invitation_nonce']) && wp_verify_nonce( $_POST['piereg_invitation_nonce'], 'piereg_wp_invitation_nonce' ))
 			{
-				$this->InsertCode(trim($v));
-			}
-			$piereg['enable_invitation_codes'] = 	$_POST['enable_invitation_codes'];	
-			update_option( 'pie_register_2',$piereg);
-			global $piereg_global_options;
-			$piereg_global_options = $piereg;	
-			
-			if(isset($_POST['invitation_code_usage']) && is_numeric($_POST['invitation_code_usage'])  && $_POST['invitation_code_usage'] > 0)
-			{
-				$piereg["invitation_code_usage"] = $_POST['invitation_code_usage'];
+				$update["codepass"] = $_POST['piereg_codepass'];
+				$codespasses=explode("\n",$update["codepass"]);
+				
+				foreach( $codespasses as $k=>$v )
+				{
+					$this->InsertCode(trim($v));
+				}
+				$piereg['enable_invitation_codes'] = 	$_POST['enable_invitation_codes'];	
 				update_option( 'pie_register_2',$piereg);
 				global $piereg_global_options;
-				$piereg_global_options = $piereg;
-			}	
+				$piereg_global_options = $piereg;	
+				
+				if(isset($_POST['invitation_code_usage']) && is_numeric($_POST['invitation_code_usage'])  && $_POST['invitation_code_usage'] > 0)
+				{
+					$piereg["invitation_code_usage"] = $_POST['invitation_code_usage'];
+					update_option( 'pie_register_2',$piereg);
+					global $piereg_global_options;
+					$piereg_global_options = $piereg;
+				}
+			}
+			else{
+				$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
+			}
 		}
 		require_once($this->plugin_dir.'/menus/PieRegInvitationCodes.php');		
 	}
@@ -1962,7 +1992,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				return true;
 			}
 			
-			$name = mysql_real_escape_string(trim(preg_replace("/[^A-Za-z0-9_-]/", '', $name)));			
+			$name = esc_sql(trim(preg_replace("/[^A-Za-z0-9_-]/", '', $name)));			
 			$date=date("Y-m-d");
 			$usage = $_POST['invitation_code_usage'];			
 			$wpdb->query("INSERT INTO ".$codetable." (`created`,`modified`,`name`,`count`,`status`,`code_usage`)VALUES('".$date."','".$date."','".$name."','".$counts."','1','".$usage."')");
@@ -1971,103 +2001,109 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		}
 	function generateCSV()
 	{
-		global $wpdb;
-		$user_table 		= $wpdb->prefix . "users";
-		$user_meta_table 	= $wpdb->prefix . "usermeta";
-		
-		
-		$fields = "";
-		if(sizeof($_POST['pie_fields_csv']) > 0)
+		if(isset($_POST['piereg_export_users_nonce']) && wp_verify_nonce( $_POST['piereg_export_users_nonce'], 'piereg_wp_exportusers_nonce' ))
 		{
-			$fields	=	implode(',',array_keys($_POST['pie_fields_csv']));					
-		}			
-		
-		
-		if(!isset($_POST['pie_fields_csv']) || sizeof($_POST['pie_fields_csv']) == 0)
-		{
-			$_POST['pie_fields_csv'] = array();
-		}
-		if(!isset($_POST['pie_meta_csv']) || sizeof($_POST['pie_meta_csv']) == 0)
-		{
-			$_POST['pie_meta_csv'] = array();
-		}
+			global $wpdb;
+			$user_table 		= $wpdb->prefix . "users";
+			$user_meta_table 	= $wpdb->prefix . "usermeta";
 			
-		
-		$heads	= array_merge(array("id"=>"User ID"),$_POST['pie_fields_csv'],$_POST['pie_meta_csv']);
-		
-		$query 	= "SELECT ID ";
-		$query 	.= ($fields)?",$fields " : "";
-		$query 	.= " FROM $user_table ";
-		
-		if($_POST['date_start'] != "" || $_POST['date_end'] != "")
-		{
-			$_date_start = date("Y-m-d",strtotime($_POST['date_start']));
-			$_date_end = date("Y-m-d",strtotime($_POST['date_end']));
-			$date_start = FALSE;
-			$query .= " where ";
-			if($_POST['date_start'] != "")
+			
+			$fields = "";
+			if(sizeof($_POST['pie_fields_csv']) > 0)
 			{
-				$query .= " user_registered >= '{$_date_start} 00:00:00' ";
-				$date_start = TRUE;			
+				$fields	=	implode(',',array_keys($_POST['pie_fields_csv']));					
+			}			
+			
+			
+			if(!isset($_POST['pie_fields_csv']) || sizeof($_POST['pie_fields_csv']) == 0)
+			{
+				$_POST['pie_fields_csv'] = array();
 			}
-			
-			if($_POST['date_end'] != "")
+			if(!isset($_POST['pie_meta_csv']) || sizeof($_POST['pie_meta_csv']) == 0)
 			{
-				if($date_start)
+				$_POST['pie_meta_csv'] = array();
+			}
+				
+			
+			$heads	= array_merge(array("id"=>"User ID"),$_POST['pie_fields_csv'],$_POST['pie_meta_csv']);
+			
+			$query 	= "SELECT ID ";
+			$query 	.= ($fields)?",$fields " : "";
+			$query 	.= " FROM $user_table ";
+			
+			if($_POST['date_start'] != "" || $_POST['date_end'] != "")
+			{
+				$_date_start = date("Y-m-d",strtotime($_POST['date_start']));
+				$_date_end = date("Y-m-d",strtotime($_POST['date_end']));
+				$date_start = FALSE;
+				$query .= " where ";
+				if($_POST['date_start'] != "")
 				{
-					$query .= " AND ";	
+					$query .= " user_registered >= '{$_date_start} 00:00:00' ";
+					$date_start = TRUE;			
 				}
-				$query .= " user_registered <= '{$_date_end} 23:59:59' ";			
-			}		
-		}		
-		$query .= " order by user_login asc";
-
-		$users = $wpdb->get_results($query,ARRAY_A);
-		global  $wp_roles,$wpdb;
-		if(sizeof($users ) > 0){
-			$dfile = "pieregister_exported_users_".date("Y-m-d").".csv";
-			header('Content-Type: application/csv');
-			header('Content-Disposition: attachment; filename='.$dfile);
-			header('Pragma: no-cache');
-			echo '"'.implode('","',$heads).'"'."\r\n";
-			
-			foreach ($users as $user_key=>$user_value){
-				$content_data = '';
-				foreach($user_value as $single_user_data){
-					$content_data.='"'.$single_user_data.'",'; 
-				}
-				if(sizeof($_POST['pie_meta_csv']) > 0){
-					foreach($_POST['pie_meta_csv'] as $key=>$value){
-						
-						if($key == "wp_capabilities"){
-							$user = get_userdata( $user_value['ID'] );
-							
-							 $capabilities = $user->{$wpdb->prefix . 'capabilities'};
-	
-							if ( !isset( $wp_roles ) )
-								$wp_roles = new WP_Roles();
-							$meta_value = '';
-							foreach ( $wp_roles->role_names as $role => $name ):
-								if ( array_key_exists( $role, $capabilities ) )
-									$meta_value = $role;
-							endforeach;
-						}
-						else{
-							$meta_value = get_user_meta($user_value['ID'],$key,true);
-						}
-						
-						$content_data.='"'.htmlentities($meta_value, ENT_QUOTES | ENT_IGNORE, "UTF-8").'"'.",";
+				
+				if($_POST['date_end'] != "")
+				{
+					if($date_start)
+					{
+						$query .= " AND ";	
 					}
+					$query .= " user_registered <= '{$_date_end} 23:59:59' ";			
+				}		
+			}		
+			$query .= " order by user_login asc";
+	
+			$users = $wpdb->get_results($query,ARRAY_A);
+			global  $wp_roles,$wpdb;
+			if(sizeof($users ) > 0){
+				$dfile = "pieregister_exported_users_".date("Y-m-d").".csv";
+				header('Content-Type: application/csv');
+				header('Content-Disposition: attachment; filename='.$dfile);
+				header('Pragma: no-cache');
+				echo '"'.implode('","',$heads).'"'."\r\n";
+				
+				foreach ($users as $user_key=>$user_value){
+					$content_data = '';
+					foreach($user_value as $single_user_data){
+						$content_data.='"'.$single_user_data.'",'; 
+					}
+					if(sizeof($_POST['pie_meta_csv']) > 0){
+						foreach($_POST['pie_meta_csv'] as $key=>$value){
+							
+							if($key == "wp_capabilities"){
+								$user = get_userdata( $user_value['ID'] );
+								
+								 $capabilities = $user->{$wpdb->prefix . 'capabilities'};
+		
+								if ( !isset( $wp_roles ) )
+									$wp_roles = new WP_Roles();
+								$meta_value = '';
+								foreach ( $wp_roles->role_names as $role => $name ):
+									if ( array_key_exists( $role, $capabilities ) )
+										$meta_value = $role;
+								endforeach;
+							}
+							else{
+								$meta_value = get_user_meta($user_value['ID'],$key,true);
+							}
+							
+							$content_data.='"'.htmlentities($meta_value, ENT_QUOTES | ENT_IGNORE, "UTF-8").'"'.",";
+						}
+					}
+					echo rtrim($content_data,',');
+					echo "\r\n";
 				}
-				echo rtrim($content_data,',');
-				echo "\r\n";
+				die();
 			}
-			die();
+			else
+			{
+				$_POST['error_message'] = __("No Record Found","piereg");
+			}
 		}
-		else
-		{
-			$_POST['error_message'] = "No Record Found.";	
-		}			
+		else{
+			$_POST['error_message'] = __("Sorry, your nonce did not verify","piereg");
+		}
 	}
 	function csv_to_array($filename='', $delimiter=','){
 		if(!file_exists($filename) || !is_readable($filename))
@@ -2089,84 +2125,76 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	}
 	function importUsers()
 	{
-		$success_import = 0;
-		$unsuccess_import = 0;
-		$already_exist = 0;
-		if(empty($_FILES['csvfile']['name']))
+		if(isset($_POST['piereg_import_users_nonce']) && wp_verify_nonce( $_POST['piereg_import_users_nonce'], 'piereg_wp_importusers_nonce' ))
 		{
-			$_POST['error_message'] = apply_filters("piereg_didnt_select_file_to_import",__("You did not select a file to import users",'piereg'));
-			return;	
-		}
-		$ext = pathinfo($_FILES['csvfile']['name'], PATHINFO_EXTENSION);
-		if($ext != "csv")
-		{
-			$_POST['error_message'] = __("Invalid CSV file.",'piereg');	
-			return;	
-		}
-		$current_csv_file_data = "";
-		if ($_FILES['csvfile']['tmp_name']){
-			$csv_data = $this->csv_to_array($_FILES['csvfile']['tmp_name']);
-		}
-		if(!isset($csv_data[0]) or sizeof($csv_data[0]) < 3)
-		{
-			 $_POST['error_message'] = __("Invalid CSV File. It must contain all the default user fields.",'piereg');
-			 return;	
-		}
-		$table_fields = array(
-							  //////////// DEFAULT FEILDS //////////
-							  "User ID"=>"ID",
-							  "Username"=>"user_login",
-							  "Password"=>'user_pass',
-							  "Nickname"=>"user_nicename",
-							  "E-mail"=>"user_email",
-							  "Website"=>"user_url",
-							  "User Registered"=>"user_registered",
-							  "Display name"=>"display_name",
-							  ///////////// USER META /////////////
-							  "First Name"=>"first_name",
-							  "Last Name"=>"last_name",
-							  "Biographical Info"=>"description",
-							  "Role"=>"wp_capabilities");
-		$user_csv_data = array();
-		$temp_data = array();
-		$user_default_data = array();
-		$user_meta_key = array();
-		foreach($csv_data as $arr_key=>$arr_val){
-			foreach($arr_val as $head_key=>$user_data){
-				switch($head_key):
-					case 'User ID' :
-					case 'Username' :
-					case 'user_pass' :
-					case 'Nickname' :
-					case 'E-mail' :
-					case 'Website' :
-					case 'User Registered' :
-					case 'Display name' :
-						$user_default_data[$table_fields[$head_key]] = utf8_encode(html_entity_decode($user_data));
-					break;
-					case 'First Name' :
-					case 'Last Name' :
-					case 'Biographical Info' :
-					case 'Role' :
-						$user_meta_key[$table_fields[$head_key]] = utf8_encode(html_entity_decode($user_data));
-					break;
-				endswitch;
-				$temp_data[$table_fields[$head_key]] = $user_data;
+			$success_import = 0;
+			$unsuccess_import = 0;
+			$already_exist = 0;
+			if(empty($_FILES['csvfile']['name']))
+			{
+				$_POST['error_message'] = apply_filters("piereg_didnt_select_file_to_import",__("You did not select a file to import users",'piereg'));
+				return;	
 			}
-			$user_csv_data[$arr_key] = $temp_data;
-			$user_default_data['user_pass'] = wp_generate_password();
-			
-			if ( username_exists( $user_default_data['user_login'] ) ){
-				if(isset($_POST['update_existing_users']) && $_POST['update_existing_users'] == "yes"){
-					$user_id = wp_update_user($user_default_data);
-					if(isset($user_id)){
-						$this->update_user_meta_by_array($user_id,$user_meta_key);
-					}
-				}else{
-					$already_exist++;
+			$ext = pathinfo($_FILES['csvfile']['name'], PATHINFO_EXTENSION);
+			if($ext != "csv")
+			{
+				$_POST['error_message'] = __("Invalid CSV file.",'piereg');	
+				return;	
+			}
+			$current_csv_file_data = "";
+			if ($_FILES['csvfile']['tmp_name']){
+				$csv_data = $this->csv_to_array($_FILES['csvfile']['tmp_name']);
+			}
+			if(!isset($csv_data[0]) or sizeof($csv_data[0]) < 3)
+			{
+				 $_POST['error_message'] = __("Invalid CSV File. It must contain all the default user fields.",'piereg');
+				 return;	
+			}
+			$table_fields = array(
+								  //////////// DEFAULT FEILDS //////////
+								  "User ID"=>"ID",
+								  "Username"=>"user_login",
+								  "Password"=>'user_pass',
+								  "Nickname"=>"user_nicename",
+								  "E-mail"=>"user_email",
+								  "Website"=>"user_url",
+								  "User Registered"=>"user_registered",
+								  "Display name"=>"display_name",
+								  ///////////// USER META /////////////
+								  "First Name"=>"first_name",
+								  "Last Name"=>"last_name",
+								  "Biographical Info"=>"description",
+								  "Role"=>"wp_capabilities");
+			$user_csv_data = array();
+			$temp_data = array();
+			$user_default_data = array();
+			$user_meta_key = array();
+			foreach($csv_data as $arr_key=>$arr_val){
+				foreach($arr_val as $head_key=>$user_data){
+					switch($head_key):
+						case 'User ID' :
+						case 'Username' :
+						case 'user_pass' :
+						case 'Nickname' :
+						case 'E-mail' :
+						case 'Website' :
+						case 'User Registered' :
+						case 'Display name' :
+							$user_default_data[$table_fields[$head_key]] = utf8_encode(html_entity_decode($user_data));
+						break;
+						case 'First Name' :
+						case 'Last Name' :
+						case 'Biographical Info' :
+						case 'Role' :
+							$user_meta_key[$table_fields[$head_key]] = utf8_encode(html_entity_decode($user_data));
+						break;
+					endswitch;
+					$temp_data[$table_fields[$head_key]] = $user_data;
 				}
-			}else{
-				if(get_user_by('ID',$user_default_data['ID'])){
+				$user_csv_data[$arr_key] = $temp_data;
+				$user_default_data['user_pass'] = wp_generate_password();
+				
+				if ( username_exists( $user_default_data['user_login'] ) ){
 					if(isset($_POST['update_existing_users']) && $_POST['update_existing_users'] == "yes"){
 						$user_id = wp_update_user($user_default_data);
 						if(isset($user_id)){
@@ -2176,33 +2204,44 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 						$already_exist++;
 					}
 				}else{
-					unset($user_default_data['ID']);
-					$user_id = wp_insert_user($user_default_data);
-					if(isset($user_id)){
-						$this->update_user_meta_by_array($user_id,$user_meta_key);
+					if(get_user_by('ID',$user_default_data['ID'])){
+						if(isset($_POST['update_existing_users']) && $_POST['update_existing_users'] == "yes"){
+							$user_id = wp_update_user($user_default_data);
+							if(isset($user_id)){
+								$this->update_user_meta_by_array($user_id,$user_meta_key);
+							}
+						}else{
+							$already_exist++;
+						}
+					}else{
+						unset($user_default_data['ID']);
+						$user_id = wp_insert_user($user_default_data);
+						if(isset($user_id)){
+							$this->update_user_meta_by_array($user_id,$user_meta_key);
+						}
+						$success_import++;
 					}
-					$success_import++;
+				}
+				
+				unset($temp_data);
+				unset($user_meta_key);
+				unset($user_default_data);
+			}
+			
+			$_POST['success_message'] = __("$success_import user(s) imported.",'piereg');
+			if($unsuccess_import)
+				$_POST['error_message'] = __("$unsuccess_import user(s) do not imported.",'piereg');
+				
+			if($already_exist){
+				if(isset($_POST['update_existing_users']) && $_POST['update_existing_users'] == "yes"){
+					$_POST['success_message'] .= "<br />".__("$already_exist user(s) Update.",'piereg');
+				}else{
+					$_POST['error_message'] = __("$already_exist user(s) already exist.",'piereg');
 				}
 			}
-			
-			unset($temp_data);
-			unset($user_meta_key);
-			unset($user_default_data);
+		}else{
+			$_POST['error_message'] = __("Sorry, your nonce did not verify","piereg");	
 		}
-		
-		$_POST['success_message'] = __("$success_import user(s) imported.",'piereg');
-		if($unsuccess_import)
-			$_POST['error_message'] = __("$unsuccess_import user(s) do not imported.",'piereg');
-			
-		if($already_exist){
-			if(isset($_POST['update_existing_users']) && $_POST['update_existing_users'] == "yes"){
-				$_POST['success_message'] .= "<br />".__("$already_exist user(s) Update.",'piereg');
-			}else{
-				$_POST['error_message'] = __("$already_exist user(s) already exist.",'piereg');
-			}
-		}
-		
-		
 	}
 	function update_user_meta_by_array($user_id,$user_meta_keys)
 	{
@@ -2233,9 +2272,14 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		{
 			if(isset($_POST['payment_gateway_page']))
 			{
-				$update["enable_paypal"]	= intval($_POST['enable_paypal']);
-				$update["paypal_butt_id"]	= $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
-				$update["paypal_sandbox"]	= $_POST['piereg_paypal_sandbox'];
+				if(isset($_POST['piereg_paypal_settings_nonce']) && wp_verify_nonce( $_POST['piereg_paypal_settings_nonce'], 'piereg_wp_paypal_settings_nonce' ))
+				{
+					$update["enable_paypal"]	= intval($_POST['enable_paypal']);
+					$update["paypal_butt_id"]	= $this->disable_magic_quotes_gpc($_POST['piereg_paypal_butt_id']);
+					$update["paypal_sandbox"]	= $_POST['piereg_paypal_sandbox'];
+				}else{
+					$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
+				}
 			}
 			else if(isset($_POST['admin_email_notification_page'])){
 				
@@ -2270,75 +2314,80 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				
 			}
 			else if(isset($_POST['general_settings_page'])){
-				$update['display_hints']			= intval($_POST['display_hints']);
-				/*$update['subscriber_login']			= intval($_POST['subscriber_login']);
-				$update['modify_avatars']			= intval($_POST['modify_avatars']);*/
-				$update['show_admin_bar']			= intval($_POST['show_admin_bar']);
-				$update['allow_pr_edit_wplogin']	= intval($_POST['allow_pr_edit_wplogin']);
-				
-				$update['block_WP_profile']			= intval($_POST['block_WP_profile']);
-				
-				$update['redirect_user']			= intval($_POST['redirect_user']);
-				$update['block_wp_login']			= intval($_POST['block_wp_login']);
-				$update['alternate_register']		= intval($_POST['alternate_register']);
-				
-				$update['alternate_login']			= intval($_POST['alternate_login']);
-				$update['alternate_forgotpass']		= intval($_POST['alternate_forgotpass']);
-				$update['alternate_profilepage']	= intval($_POST['alternate_profilepage']);
-				$update['after_login']				= intval($_POST['after_login']);
-				
-				$update['alternate_logout']			= intval($_POST['alternate_logout']);
-				
-				$update['alternate_logout_url']		= $_POST['alternate_logout_url'];
-				
-				//since 2.0.10
-				
-				$update['login_username_label']	= $_POST['login_username_label'];
-				$update['login_username_placeholder']	= $_POST['login_username_placeholder'];
-				$update['login_password_label'] = $_POST['login_password_label'];
-				$update['login_password_placeholder'] = $_POST['login_password_placeholder'];
-				$update['capthca_in_login_label']	= $_POST['capthca_in_login_label'];
-				$update['piereg_recapthca_skin_login'] = $_POST['piereg_recapthca_skin_login'];
-				$update['capthca_in_login']			= intval($_POST['capthca_in_login']);
-				
-				$update['forgot_pass_username_label']	= $_POST['forgot_pass_username_label'];
-				$update['forgot_pass_username_placeholder'] = $_POST['forgot_pass_username_placeholder'];
-				
-				
-				$update['pass_strength_indicator_label']	= $_POST['pass_strength_indicator_label'];
-				$update['pass_very_weak_label']				= $_POST['pass_very_weak_label'];
-				$update['pass_weak_label']					= $_POST['pass_weak_label'];
-				$update['pass_medium_label']				= $_POST['pass_medium_label'];
-				$update['pass_strong_label']				= $_POST['pass_strong_label'];
-				$update['pass_mismatch_label']				= $_POST['pass_mismatch_label'];
-				
-				$update['capthca_in_forgot_pass_label']	= $_POST['capthca_in_forgot_pass_label'];
-				$update['piereg_recapthca_skin_forgot_pass']	= $_POST['piereg_recapthca_skin_forgot_pass'];
-				$update['capthca_in_forgot_pass']	= intval($_POST['capthca_in_forgot_pass']);
-				
-				//since 2.0.10
-				$update['remove_PR_settings']		= intval($_POST['remove_PR_settings']);
-				
-				
-				$update['outputcss']				= intval($_POST['outputcss']);
-				$update['outputjquery_ui']			= intval($_POST['outputjquery_ui']);
-				
-				/*$update['outputhtml']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['outputhtml'],'HTML-ENTITIES','utf-8'));
-				$update['no_conflict']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['no_conflict'],'HTML-ENTITIES','utf-8'));*/
-				$update['verification']				= intval($_POST['verification']);
-				$update['grace_period']				= intval($_POST['grace_period']);
-				$update['captcha_publc']			= $_POST['captcha_publc'];
-				$update['captcha_private']			= $_POST['captcha_private'];
-				/*$update['custom_css']				= strip_tags($_POST['custom_css']);*/
-				$update['custom_css']				= $this->disable_magic_quotes_gpc(mb_convert_encoding(strip_tags($_POST['custom_css']),'HTML-ENTITIES','utf-8'));
-				/*$update['tracking_code']			= $_POST['tracking_code'];*/
-				$update['tracking_code']			= $this->disable_magic_quotes_gpc(mb_convert_encoding(strip_tags($_POST['tracking_code']),'HTML-ENTITIES','utf-8'));
-				$update['custom_logo_url']			= $_POST['custom_logo_url'];
-				
-				$update['custom_logo_tooltip']		= $_POST['custom_logo_tooltip'];
-				
-				$update['custom_logo_link']			= $_POST['custom_logo_link'];
-				$update['show_custom_logo']			= (isset($_POST['show_custom_logo']))?$_POST['show_custom_logo']:0;
+				if(isset($_POST['piereg_general_settings_nonce']) && wp_verify_nonce( $_POST['piereg_general_settings_nonce'], 'piereg_wp_general_settings_nonce' ))
+				{
+					$update['display_hints']			= intval($_POST['display_hints']);
+					/*$update['subscriber_login']			= intval($_POST['subscriber_login']);
+					$update['modify_avatars']			= intval($_POST['modify_avatars']);*/
+					$update['show_admin_bar']			= intval($_POST['show_admin_bar']);
+					$update['allow_pr_edit_wplogin']	= intval($_POST['allow_pr_edit_wplogin']);
+					
+					$update['block_WP_profile']			= intval($_POST['block_WP_profile']);
+					
+					$update['redirect_user']			= intval($_POST['redirect_user']);
+					$update['block_wp_login']			= intval($_POST['block_wp_login']);
+					$update['alternate_register']		= intval($_POST['alternate_register']);
+					
+					$update['alternate_login']			= intval($_POST['alternate_login']);
+					$update['alternate_forgotpass']		= intval($_POST['alternate_forgotpass']);
+					$update['alternate_profilepage']	= intval($_POST['alternate_profilepage']);
+					$update['after_login']				= intval($_POST['after_login']);
+					
+					$update['alternate_logout']			= intval($_POST['alternate_logout']);
+					
+					$update['alternate_logout_url']		= $_POST['alternate_logout_url'];
+					
+					//since 2.0.10
+					
+					$update['login_username_label']	= $_POST['login_username_label'];
+					$update['login_username_placeholder']	= $_POST['login_username_placeholder'];
+					$update['login_password_label'] = $_POST['login_password_label'];
+					$update['login_password_placeholder'] = $_POST['login_password_placeholder'];
+					$update['capthca_in_login_label']	= $_POST['capthca_in_login_label'];
+					$update['piereg_recapthca_skin_login'] = $_POST['piereg_recapthca_skin_login'];
+					$update['capthca_in_login']			= intval($_POST['capthca_in_login']);
+					
+					$update['forgot_pass_username_label']	= $_POST['forgot_pass_username_label'];
+					$update['forgot_pass_username_placeholder'] = $_POST['forgot_pass_username_placeholder'];
+					
+					
+					$update['pass_strength_indicator_label']	= $_POST['pass_strength_indicator_label'];
+					$update['pass_very_weak_label']				= $_POST['pass_very_weak_label'];
+					$update['pass_weak_label']					= $_POST['pass_weak_label'];
+					$update['pass_medium_label']				= $_POST['pass_medium_label'];
+					$update['pass_strong_label']				= $_POST['pass_strong_label'];
+					$update['pass_mismatch_label']				= $_POST['pass_mismatch_label'];
+					
+					$update['capthca_in_forgot_pass_label']	= $_POST['capthca_in_forgot_pass_label'];
+					$update['piereg_recapthca_skin_forgot_pass']	= $_POST['piereg_recapthca_skin_forgot_pass'];
+					$update['capthca_in_forgot_pass']	= intval($_POST['capthca_in_forgot_pass']);
+					
+					//since 2.0.10
+					$update['remove_PR_settings']		= intval($_POST['remove_PR_settings']);
+					
+					
+					$update['outputcss']				= intval($_POST['outputcss']);
+					$update['outputjquery_ui']			= intval($_POST['outputjquery_ui']);
+					
+					/*$update['outputhtml']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['outputhtml'],'HTML-ENTITIES','utf-8'));
+					$update['no_conflict']				= $this->disable_magic_quotes_gpc(mb_convert_encoding($_POST['no_conflict'],'HTML-ENTITIES','utf-8'));*/
+					$update['verification']				= intval($_POST['verification']);
+					$update['grace_period']				= intval($_POST['grace_period']);
+					$update['captcha_publc']			= $_POST['captcha_publc'];
+					$update['captcha_private']			= $_POST['captcha_private'];
+					/*$update['custom_css']				= strip_tags($_POST['custom_css']);*/
+					$update['custom_css']				= $this->disable_magic_quotes_gpc(mb_convert_encoding(strip_tags($_POST['custom_css']),'HTML-ENTITIES','utf-8'));
+					/*$update['tracking_code']			= $_POST['tracking_code'];*/
+					$update['tracking_code']			= $this->disable_magic_quotes_gpc(mb_convert_encoding(strip_tags($_POST['tracking_code']),'HTML-ENTITIES','utf-8'));
+					$update['custom_logo_url']			= $_POST['custom_logo_url'];
+					
+					$update['custom_logo_tooltip']		= $_POST['custom_logo_tooltip'];
+					
+					$update['custom_logo_link']			= $_POST['custom_logo_link'];
+					$update['show_custom_logo']			= (isset($_POST['show_custom_logo']))?$_POST['show_custom_logo']:0;
+				}else{
+					$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
+				}
 			}
 			update_option( 'pie_register_2', $update );
 			global $piereg_global_options;
@@ -2353,7 +2402,8 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			{
 				$_POST['PR_license_notice'] = $error;
 			}
-			$_POST['notice'] = apply_filters("piereg_settings_saved",__('Settings Saved', 'piereg'));
+			if(!isset($_POST['error']) && empty($_POST['error']))
+				$_POST['notice'] = apply_filters("piereg_settings_saved",__('Settings Saved', 'piereg'));
 		}
 	}
 	function addTextField($field,$no)
@@ -3021,9 +3071,15 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 			//ob_start();
 			$output = '';
 			if(isset($_POST['success']) && $_POST['success'] != "")
-			$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
+				$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['success'],"piereg")).'</p>';
 			if(isset($_POST['error']) && $_POST['error'] != "")
-			$output .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';
+				$output .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['error'],"piereg")).'</p>';
+			
+			if(isset($_POST['registration_success']) && $_POST['registration_success'] != "")
+				$output .= '<p class="piereg_message">'.apply_filters('piereg_messages',__($_POST['registration_success'],"piereg")).'</p>';
+			if(isset($_POST['registration_error']) && $_POST['registration_error'] != "")
+				$output .= '<p class="piereg_login_error">'.apply_filters('piereg_messages',__($_POST['registration_error'],"piereg")).'</p>';
+			
 			if(isset($errors->errors) && sizeof($errors->errors) > 0)
 			{
 				foreach($errors->errors as $key=>$err)
@@ -3462,7 +3518,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				{
 					$sql_res_sel = $wpdb->get_var( $wpdb->prepare( "SELECT `name` FROM `{$codetable}` WHERE `name` = %s", $_POST['data']['value']) );
 					if(!$sql_res_sel)
-						$sql = "UPDATE `{$codetable}` SET `name`='".mysql_real_escape_string($_POST['data']['value'])."' WHERE `id` = '{$inv_code_id}'";
+						$sql = "UPDATE `{$codetable}` SET `name`='".esc_sql($_POST['data']['value'])."' WHERE `id` = '{$inv_code_id}'";
 					else{
 						echo "duplicate";
 						die();
@@ -3470,7 +3526,7 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 				}
 				else if(trim($_POST['data']['type']) == "code_usage")
 				{
-					$sql = "UPDATE `{$codetable}` SET `code_usage`='".mysql_real_escape_string($_POST['data']['value'])."' WHERE `id` = ".((int)$_POST['data']['id'])."";
+					$sql = "UPDATE `{$codetable}` SET `code_usage`='".esc_sql($_POST['data']['value'])."' WHERE `id` = ".((int)$_POST['data']['id'])."";
 				}
 				$result = $wpdb->query($sql);
 				if($result)
@@ -3500,14 +3556,38 @@ var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 	}
 	function checkUserAllowedPassReset($val,$userid){
 		if(!$userid) return false;
-		//Checkj if the user is active or not
+		//Check if the user is active or not
 		//if active true, or false
-		$user_active_status = get_user_meta($userid,"active");
-		return $user_active_status[0];
+		global $piereg_global_options;
+		
+		if(
+		   (isset($piereg_global_options['verification']) && ($piereg_global_options['verification'] == "2" || $piereg_global_options['verification'] == "1")) ||
+		   ((!empty($piereg_global_options['paypal_butt_id'])) && $piereg_global_options['enable_paypal'] == "1" )
+		   ){
+			$user_active_status = get_user_meta($userid,"active",true);
+			//If employee register from wp-register the active meta is not saved
+			if($user_active_status == "")
+				return true;
+			//If employee register from wp-register the active meta is not saved
+			return (($user_active_status == 1)?true:false);
+		}
+		return true;
 	}
 	function piereg_password_reset_not_allowed_text_function($text)
 	{
 		return $text;
+	}
+	function piereg_plugin_row_meta( $links, $file ) {
+		if ( $file == PIEREG_PLUGIN_BASENAME ) {
+			$row_meta = array(
+				'docs'		=>	'<a href="' . esc_url( apply_filters( 'pieregister_docs_url', 'http://pieregister.genetechsolutions.com/documentation/' ) ) . '" title="' . esc_attr( __( 'View Pie-Register Documentation', 'piereg' ) ) . '" target="_blank">' . __( 'Docs', 'piereg' ) . '</a>',
+				'support'	=>	'<a href="' . esc_url( apply_filters( 'pieregister_support_url', 'http://pieregister.genetechsolutions.com/forum/' ) ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'piereg' ) ) . '" target="_blank">' . __( 'Support', 'piereg' ) . '</a>',
+			);
+
+			return array_merge( $links, $row_meta );
+		}
+
+		return (array) $links;
 	}
 }
 }
@@ -3516,6 +3596,7 @@ if( class_exists('PieRegister') ){
 	if(isset($pie_register)){
 		register_activation_hook( __FILE__, array(  &$pie_register, 'install_settings' ) );
 		register_deactivation_hook( __FILE__, array(  &$pie_register, 'uninstall_settings' ) );
+		
 		function pie_registration_url($url=false)
 		{
 			return PieRegister::pie_registration_url($url);
@@ -3536,4 +3617,5 @@ if( class_exists('PieRegister') ){
 			return PieRegister::pie_modify_custom_url($url,$query_string);
 		}
 	}
+register_uninstall_hook( __FILE__, array(  "PieRegister" , 'piereg_remove_all_settings' ) );
 }?>

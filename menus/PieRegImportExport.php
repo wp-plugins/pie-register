@@ -56,15 +56,19 @@ piereg(document).ready(function(e) {
   <h2>
     <?php  _e("Import/Export User Entries",'piereg') ?>
   </h2>
+  <div style="clear: both;float: none;">
+	  <?php
+       if(!empty( $_POST['error_message'] ))
+        echo '<p class="error">' . $_POST['error_message']  . "</p>";
+        
+         if(!empty( $_POST['success_message'] ))
+        echo '<p class="success">' . $_POST['success_message']  . "</p>";
+        ?>
+  </div>
   <div class="export">
-    <?php
-   if(!empty( $_POST['error_message'] ))
-	echo '<p class="error">' . $_POST['error_message']  . "</p>";
-	
-	 if(!empty( $_POST['success_message'] ))
-	echo '<p class="success">' . $_POST['success_message']  . "</p>";
-	?>
+    
     <form method="post" action="" id="export">
+    	<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_exportusers_nonce','piereg_export_users_nonce'); ?>
       <ul>
         <li>
           <div class="fields">
@@ -149,6 +153,7 @@ piereg(document).ready(function(e) {
   </div>
   <div class="import">
     <form method="post" action="" enctype="multipart/form-data">
+    	<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_importusers_nonce','piereg_import_users_nonce'); ?>
       <ul>
         <li>
           <div class="fields">

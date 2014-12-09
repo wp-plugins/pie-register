@@ -198,8 +198,7 @@ class PieReg_Base
 		$update['admin_bcc_email'] 		= ($current['admin_bcc_email'])?$current['admin_bcc_email']:get_option( 'admin_email' );
 		$update['admin_subject_email'] 	= ($current['admin_subject_email'])?$current['admin_subject_email']:__("New User Registration","piereg");
 		$update['admin_message_email_formate'] 	= ($current['admin_message_email_formate'])?$current['admin_message_email_formate']:1;
-		$update['admin_message_email'] 	= ($current['admin_message_email'])?$current['admin_message_email']:'<p>Hello Admin,</p><p>A new user has been registered on your Website,. Details are given below:</p><p>Thanks</p><p>Team %blogname%</p>';
-		
+		$update['admin_message_email'] 	= ($current['admin_message_email'])?$current['admin_message_email']:'<p>Hello Admin,</p><p>A new user has been registered on your Website.</p><p>Details are given below:</p><p>Username : %user_login%</p><p>Email : %user_email%</p><p>Thanks</p><p>Team %blogname%</p>';
 		
 		$update['display_hints']			= ($current['display_hints'])?$current['display_hints']:1;
 		$update['redirect_user']			= ($current['redirect_user'])?$current['redirect_user']:1;
@@ -643,39 +642,42 @@ class PieReg_Base
 	}
 	function uninstall_settings()
 	{
-		global $wpdb;
 		$option = get_option("pie_register_2");
 		
 		if($option['remove_PR_settings'] == 1)
 		{
-			$pie_pages = get_option("pie_pages",$pie_pages);
-			
-			if(is_array($pie_pages ))
-			{
-				foreach ($pie_pages as $page)	
-				{
-					wp_delete_post($page);	
-				}
-			}
-			
-			delete_option('piereg_math_cpatcha_enable');
-			delete_option('piereg_plugin_db_version');
-			delete_option('pie_can_states');
-			delete_option('pie_countries');
-			delete_option('pie_fields');
-			delete_option('pie_fields_default');
-			delete_option('pie_fields_meta');
-			delete_option('pie_register_2');
-			delete_option('pie_register_2_active');
-			delete_option('pie_register_2_key');
-			delete_option('pie_user_email_types');
-			delete_option('pie_us_states');
-			delete_option('pie_pages');
-			
-			$prefix=$wpdb->prefix."pieregister_";
-			$codetable=$prefix."code";
-			$wpdb->query("DROP TABLE IF EXISTS $codetable");
+			$this->piereg_remove_all_settings();
 		}
+	}
+	function piereg_remove_all_settings(){
+		global $wpdb;
+		$pie_pages = get_option("pie_pages");
+			
+		if(is_array($pie_pages ))
+		{
+			foreach ($pie_pages as $page)	
+			{
+				wp_delete_post($page);	
+			}
+		}
+		
+		delete_option('piereg_math_cpatcha_enable');
+		delete_option('piereg_plugin_db_version');
+		delete_option('pie_can_states');
+		delete_option('pie_countries');
+		delete_option('pie_fields');
+		delete_option('pie_fields_default');
+		delete_option('pie_fields_meta');
+		delete_option('pie_register_2');
+		delete_option('pie_register_2_active');
+		delete_option('pie_register_2_key');
+		delete_option('pie_user_email_types');
+		delete_option('pie_us_states');
+		delete_option('pie_pages');
+		
+		$codetable= $wpdb->prefix."pieregister_code";
+		$wpdb->query("DELETE FROM $codetable");
+		$wpdb->query("DROP TABLE IF EXISTS $codetable");
 	}
 	function pluginURL($add = "")
 	{
@@ -795,7 +797,7 @@ class PieReg_Base
 		{
 			global $wpdb;
 			$user_table = $wpdb->prefix."users";
-			$user = $wpdb->get_results("SELECT `ID`, `user_login`, `user_nicename`, `user_email`, `user_registered` FROM `".$user_table."` WHERE `user_email` = '".stripslashes(mysql_real_escape_string( $user ) )."'");
+			$user = $wpdb->get_results("SELECT `ID`, `user_login`, `user_nicename`, `user_email`, `user_registered` FROM `".$user_table."` WHERE `user_email` = '".stripslashes(esc_sql( $user ) )."'");
 			$user = $user[0];
 		}
 		if($user)
@@ -941,7 +943,7 @@ class PieReg_Base
 		$update['admin_bcc_email'] 		= get_option( 'admin_email' );
 		$update['admin_subject_email'] 	= __("New User Registration","piereg");
 		$update['admin_message_email_formate'] 	= 1;
-		$update['admin_message_email'] 	= '<p>Hello Admin,</p><p>A new user has been registered on your Website,. Details are given below:</p><p>Thanks</p><p>Team %blogname%</p>';
+		$update['admin_message_email'] 	= '<p>Hello Admin,</p><p>A new user has been registered on your Website.</p><p>Details are given below:</p><p>Username : %user_login%</p><p>Email : %user_email%</p><p>Thanks</p><p>Team %blogname%</p>';
 		
 		
 		$update['display_hints']			= 1;

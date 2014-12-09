@@ -451,11 +451,12 @@ foreach($meta as $key=>$value)
       </li>
       <li id="advanced_fields"><a class="right_menu_heading" href="javascript:;"><?php _e("Advanced Fields","piereg"); ?></a>
         <ul class="controls picker pie-content-ul"  id="content_3">
-          <li class="standard_time"><a name="time" href="javascript:;"><?php _e("Time","piereg"); ?></a></li>
-          <li class="standard_address"><a name="address" class="default" href="javascript:;"><?php _e("Address","piereg"); ?></a></li>
+          <?php /*?><li class="standard_time"><a name="time" href="javascript:;"><?php _e("Time","piereg"); ?></a></li><?php */?>
+          <li class="standard_address"><a name="address" href="javascript:;"><?php _e("Address","piereg"); ?></a></li>
           <li class="standard_captcha"><a name="captcha" class="default" href="javascript:;"><?php _e("Re-Captcha","piereg"); ?></a></li>
           <li class="standard_captcha"><a name="math_captcha" class="default" href="javascript:;"><?php _e("Math Captcha","piereg"); ?></a></li>
           <li class="standard_date"><a name="date" href="javascript:;"><?php _e("Date","piereg"); ?></a></li>
+          <li class="standard_time"><a name="time" href="javascript:;"><?php _e("Time","piereg"); ?></a></li>
           <li class="standard_phone"><a name="phone" href="javascript:;"><?php _e("Phone","piereg"); ?></a></li>
           <li class="standard_upload"><a name="upload" href="javascript:;"><?php _e("Upload","piereg"); ?></a></li>
           <li class="standard_upload"><a name="profile_pic"  href="javascript:;"><?php _e("Profile Picture","piereg"); ?></a></li>

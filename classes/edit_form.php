@@ -29,8 +29,8 @@ class Edit_form extends PieReg_Base
 		//echo '<h1 id="piereg_pie_form_heading">'.$this->field['label'].'</h1>';	
 		//echo '<p id="piereg_pie_form_desc" class="'.$this->addClass("").'" >'.$this->field['desc'].'</p>';
 		//$this->user->data->display_name
-		return '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
 		$this->label_alignment = $this->field['label_alignment'];
+		return '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
 	}
 	function addDefaultField()
 	{
@@ -66,6 +66,7 @@ class Edit_form extends PieReg_Base
 	}
 	function addUsername()
 	{
+		return '<input class="input_fields" type="text" value="'.$this->user->data->user_login.'" disabled="disabled" readonly="readonly" />';
 		return '<span>'.$this->user->data->user_login.'</span>';
 	}
 	function addPassword()
@@ -106,8 +107,15 @@ class Edit_form extends PieReg_Base
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().' validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]" type="file"  />';
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'_hidden" value="'.$val.'" type="hidden"  />';
 		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
-		$imgPath = (trim($val) != "")? $val : plugins_url("images/userImage.png",dirname(__FILE__));
-		$data .= '<br /><img src="'.$imgPath.'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />';
+		
+		if(trim($val) != "")
+			$imgPath = ('<img src="'.$val.'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />');
+		elseif(function_exists("get_avatar"))
+			$imgPath = get_avatar($this->user->data->ID,75);
+		else
+			$imgPath = ('<img src="'.plugins_url("images/userImage.png",dirname(__FILE__)).'" style="max-width:150px;" alt="'.__($imgPath,"piereg").'" />');
+			
+		$data .= '<div class="piereg_show_profile_pic">'.$imgPath.'</div>';
 		return $data;
 	}
 	function addTextArea()
@@ -298,7 +306,7 @@ class Edit_form extends PieReg_Base
 		$data = "";
 		//$val = get_usermeta($this->user->data->ID , $this->slug);
 		$val = get_user_meta($this->user->data->ID , $this->slug,true);
-		
+		$data .= '<div class="address_main">';
 		$data .= '<div class="address">
 		  <input type="text" name="'.$this->name.'[address]" id="'.$this->id.'" class="'.$this->addClass().'" value="'.((isset($val['address']))?$val['address']:"").'">
 		  <label>'.__("Street Address","piereg").'</label>
@@ -380,7 +388,8 @@ class Edit_form extends PieReg_Base
 					<label>'.__("Country","piereg").'</label>
 		  		</div>';
 		 }
-		$data .= '</div>';	
+		$data .= '</div>';
+		$data .= '</div>';
 		return $data;
 	}	
 	function addDate()
@@ -732,7 +741,10 @@ class Edit_form extends PieReg_Base
 			if ($this->field['type']=="")
 			{
 				continue;
-			}
+			}/*elseif($this->field['type']=="form"){
+				//$profile_fields_data .= $this->addFormData();
+				continue;
+			}*/
 			
 			$this->name 	= $this->createFieldName($this->field['type']."_".$this->field['id']);
 			$this->slug 	= $this->createFieldName("pie_".$this->field['type']."_".$this->field['id']);
@@ -745,9 +757,10 @@ class Edit_form extends PieReg_Base
 				continue;
 			}
 			
+			
 			$topclass = "";
 			if($this->label_alignment=="top")
-				$topclass = "label_top"; 
+				$topclass = "label_top";
 			
 			$profile_fields_data .= '<li class="fields pageFields_'.$this->pages.' '.$topclass.'">';
 			
@@ -777,14 +790,11 @@ class Edit_form extends PieReg_Base
 				break;							
 			endswitch;
 			
-		
-			
-			
 			
 			//Printting Field
 			switch($this->field['type']) :
 				case 'form':
-				$profile_fields_data .= $this->addFormData();
+				//$profile_fields_data .= $this->addFormData();
 				break;
 				case 'text' :								
 				case 'website' :
@@ -899,6 +909,9 @@ class Edit_form extends PieReg_Base
 			if ($this->field['type']=="math_captcha")
 			{
 				continue;
+			}elseif($this->field['type']=="form"){
+				$profile_fields_data .= $this->addFormData();
+				continue;
 			}
 			
 			$this->name 	= $this->createFieldName($this->field['type']."_".((isset($this->field['id']))?$this->field['id']:""));
@@ -911,7 +924,6 @@ class Edit_form extends PieReg_Base
 				$profile_fields_data .= $this->addHiddenField();
 				continue;
 			}
-			
 			$topclass = "";
 			if($this->label_alignment=="top")
 				$topclass = "label_top"; 
@@ -950,7 +962,7 @@ class Edit_form extends PieReg_Base
 			//Printting Field
 			switch($this->field['type']) :
 				case 'form':
-				$profile_fields_data .= $this->addFormData();
+				//$profile_fields_data .= $this->addFormData();
 				break;
 				case 'text' :								
 				case 'website' :
@@ -1156,7 +1168,7 @@ class Edit_form extends PieReg_Base
 							$headers .= "Reply-To: {$from_email}\r\n";
 							$headers .= "Return-Path: {$from_email}\r\n";
 						}
-						if(!mail($_POST['e_mail'], $subject, $message , $headers))
+						if(!wp_mail($_POST['e_mail'], $subject, $message , $headers))
 						{
 							$errors->add('check-error',apply_filters("piereg_problem_and_the_email_was_probably_not_sent",__("There was a problem and the email was probably not sent.",'piereg')));
 						}

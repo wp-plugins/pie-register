@@ -15,17 +15,14 @@ function pieResetFormOutput($piereg_widget = false){
 		$error_found = 0;
 		if($option['capthca_in_forgot_pass'] == 1){
 			$settings  		=  get_option("pie_register_2");
-			$privatekey		= $settings['captcha_private'] ;
-			require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
-			
-			$resp = recaptcha_check_answer ($privatekey,
-											$_SERVER["REMOTE_ADDR"],
-											$_POST["recaptcha_challenge_field"],
-											$_POST["recaptcha_response_field"]);
-			
-			if (!$resp->is_valid) {
-				$error[] = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.__('Invalid Security Code','piereg');
-				$error_found++;
+			$privatekey		=  $settings['captcha_private'] ;
+			if($privatekey){
+				require_once(PIEREG_DIR_NAME.'/recaptchalib.php');
+				$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
+				if (!$resp->is_valid) {
+					$error[] = '<strong>'.ucwords(__("error","piereg")).'</strong>: '.__('Invalid Security Code','piereg');
+					$error_found++;
+				}
 			}
 			
 			

@@ -4,6 +4,8 @@ include_once( PIEREG_DIR_NAME."/classes/invitation_code_pagination.php");
 
 if(isset($_POST['notice']) && $_POST['notice'] ){
 	echo '<div id="message" class="updated fade"><p><strong>' . $_POST['notice'] . '.</strong></p></div>';
+}elseif(isset($_POST['error']) && $_POST['error'] ){
+	echo '<div id="error" class="error fade"><p><strong>' . $_POST['error'] . '.</strong></p></div>';
 }
 ?>
 <script type="text/javascript">
@@ -34,9 +36,11 @@ piereg(document).ready(function(){
 });
 </script>
 <form method="post" action="" id="del_form">
+	<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_invitation_nonce','piereg_invitation_nonce'); ?>
   <input type="hidden" id="invi_del_id" name="invi_del_id" value="0" />
 </form>
 <form method="post" action="" id="status_form">
+<?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_invitation_nonce','piereg_invitation_nonce'); ?>
   <input type="hidden" id="status_id" name="status_id" value="0" />
 </form>
 <div id="container" class="pieregister-admin">
@@ -44,6 +48,7 @@ piereg(document).ready(function(){
     <div class="invitation">
       <h2><?php  _e("Invitation Codes",'piereg'); ?></h2>
       <form method="post" action="">
+	      <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_invitation_nonce','piereg_invitation_nonce'); ?>
         <ul>
           <li>
             <div class="fields">
