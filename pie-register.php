@@ -969,7 +969,7 @@ class PieRegister extends PieReg_Base{
 						if( $user ) {
 							wp_set_current_user( $user->ID, $user->user_login );
 							wp_set_auth_cookie( $user->ID );
-							do_action( 'wp_login', $user->user_login );
+							do_action( 'wp_login', $user->user_login,$user );
 						}
 						do_action("piereg_admin_login_before_redirect_hook",$user);
 							
@@ -1004,7 +1004,7 @@ class PieRegister extends PieReg_Base{
 							if( $user ) {
 								wp_set_current_user( $user->ID, $user->user_login );
 								wp_set_auth_cookie( $user->ID );
-								do_action( 'wp_login', $user->user_login );
+								do_action( 'wp_login', $user->user_login,$user );
 							}
 							do_action("piereg_user_login_before_redirect_hook",$user);
 							$this->afterLoginPage();
@@ -1017,7 +1017,7 @@ class PieRegister extends PieReg_Base{
 							if( $user ) {
 								wp_set_current_user( $user->ID, $user->user_login );
 								wp_set_auth_cookie( $user->ID );
-								do_action( 'wp_login', $user->user_login );
+								do_action( 'wp_login', $user->user_login,$user );
 							}
 							do_action("piereg_user_login_before_redirect_hook",$user);
 							$this->afterLoginPage();
