@@ -3,8 +3,8 @@ Contributors: genetech
 
 Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 2.0.13
+Tested up to: 4.0.1
+Stable tag: 2.0.14
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
@@ -57,6 +57,15 @@ Please follow our plugin [documentation](http://pieregister.genetechsolutions.co
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.14
+* Allowed multiple addresses on Registration Form
+* Allowed multiple email addresses in Admin Notification
+* Added Nonce on Import n Export Forms (Backend)
+* Added Nonce on User Verification Forms (Backend)
+* Fixed Password Reset Bug
+* Remove Settings and Pages created by Pie-Register on uninstall hook
+* ReCaptcha Keys Validation on General Settings Page
+
 ### 2.0.13
 * Added WP hook on PR Login
 * Added ability to Verify Email on later change
