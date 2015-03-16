@@ -1,46 +1,37 @@
 ﻿=== Pie Register ===
 Contributors: genetech
 
-Tags: register, registration, password, invitation, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
+Tags: register plugin, user register, register, registration, registration plugin, custom registration, custom login plugin, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
-Tested up to: 4.0.1
+Tested up to: 4.1.1
 Stable tag: 2.0.14
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
-**Welcome to Pie-Register by Genetech Solutions.**
+**Welcome to Pie Register by Genetech Solutions.**
 
-So you want to have users register and login to your site before they interact with it? You need user registration and you don't have to build it from scratch. With Pie-Register you can use your logo and color scheme to brand your registration pages to your liking.  Use this plugin to quickly add custom user registration to your WordPress based blog or site.
+Pie Register is a free, commercial grade, open source WordPress Registration Plugin from [Genetech Solutions](http://www.genetechsolutions.com/).
 
-Want your customers to pay for the service you provide? The plugin allows you to charge the users when they register with PayPal integration.
+It's the easy, secure and intuitive way to create and brand registration pages for your WordPress sites. Seriously, No Coding Required! 
 
-And there is more, you can:
+Use Pie Register when you need to create user registration forms for your WordPress site and you don't want to build from scratch. Use the plugin to quickly add custom user registration forms and more to your WordPress based blog or site. The plugin even lets your customers pay for the service you provide. It allows you to charge the users via PayPal when they register on your site.  
 
-*   **Customised Registration Form**
-*   **Charge Users for Registration**
-*   **Enable Email Verification or Admin Moderation**
-*   **Create Custom Profile Pages**
-*   **Use Shortcodes and Widgets**
+Best of all, Pie Register is and always will be free.  
 
-Use the free Pie-Register plugin to easily add features like these to your service; they help you go above and beyond your competitors.
+With Pie Register you can: 
 
-See the plugin features section for complete details.
+*   Create Registration Forms
+*   Verify &amp; Moderate Registrations
+*   Use Invitation Codes for Registrations by Invitation-Only
+*   Custom Email Templates
+*   Add Captcha Support
+*   Use Short Codes
+*   Data Import/Export
+*   Use PayPal to Charge Membership Fees
+*   Create Custom Profile Pages
+*   Add Widgets
 
-**Features Highlight:**
-
-Pie-Register has great features which you can’t find in any other free plugin.
-
-1.   **New and Improved User Interface**
-2.   **Custom Login/Registration Pages**
-3.   **Invitation Codes**
-4.   **Shortcodes**
-5.   **CAPTCHA Validation**
-6.   **Email Verification**
-7.   **Admin Moderation**
-8.   **Widgets**
-9.   **Profile Pages**
-10.   **Customized Admin & User Registration Email**
-11.   **Paypal**
+With the clean, attractive and easy to use interface introduced in Pie Register 2.0 and above you can drag and drop fields to your forms and add advanced registration features&#160;to your service that can help you go above and beyond the competition.
 
 
 == Installation ==
