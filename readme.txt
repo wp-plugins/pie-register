@@ -54,7 +54,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 * ckEditor fixes
 * Fixed several typos
 * Change of Email Verification
-* Added security for password changes in Profile (frontend)
+* Added security for password changes in Profile (front-end)
 * Fixed Several CSS Issues and many other stuff
 
 
