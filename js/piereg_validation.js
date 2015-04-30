@@ -211,10 +211,10 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 				if(piereg(option).val().trim() != piereg("#"+rules[i]).val().trim()){
 					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.equals.alertText));
 					breakLoop = true;
-				}else if(piereg(option).val().trim() == "" ){
+				}/*else if(piereg(option).val().trim() == "" ){
 					ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules.equals.alertText));
 					breakLoop = true;
-				}else{
+				}*/else{
 					RemoveErrorMsg(option);
 				}
 			break;
@@ -225,6 +225,7 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 					case "email":
 					case "number":
 					case "alphanumeric":
+					case "alphabetic":
 					case "url":
 					case "phone_standard":
 					case "phone_international":
@@ -233,6 +234,7 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 					case  "year":
 						if(piereg(option).val().trim() != "")
 						{
+							console.log( rules[i] );
 							if(!piereg(option).val().trim().match(new RegExp(getAllRules[rules[i]].regex),piereg(option).val().trim()))
 							{
 								ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules[rules[i]].alertText));
@@ -422,6 +424,10 @@ function getRegexAndErrorMsg(){
 		"alphanumeric": {
 			"regex": /^[a-zA-Z0-9]+$/,
 			"alertText": piereg_validation_engn[53]//"* Invalid Username"
+		},
+		"alphabetic": {
+			"regex": /^[a-zA-Z\s]+$/,
+			"alertText": piereg_validation_engn[56]//"* Alphabetic Letters only"
 		},
 		"requiredInFunction": { 
 			"func": function(field, rules, i, options){

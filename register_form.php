@@ -1,5 +1,9 @@
 <?php
 function outputRegForm($fromwidget=false){
+	
+$users_can_register =  get_option("users_can_register");
+if($users_can_register == 1){
+
 $form 		= new Registration_form();
 $success 	= '' ;
 $error 		= '' ;
@@ -61,4 +65,9 @@ EOL;
 }
  $registration_from_fields.='</div></div>';
 return $registration_from_fields;
+}
+else{
+	$registration_from_fields = '<div class="alert alert-warning"><p class="piereg_warning">'.__("User registration is currently not allowed.","piereg").'</p></div>';
+    return $registration_from_fields;
+}
 }

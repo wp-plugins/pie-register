@@ -1,21 +1,23 @@
 <?php
 if( !class_exists( 'WP_List_Table' ) )
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-
 class Pie_Invitation_Table extends WP_List_Table
 {
     private $order;
     private $orderby;
-
+    //private $posts_per_page = 5;
     public function __construct()
     {
-        parent :: __construct(array(
+        parent :: __construct( array(
             'singular' => 'table example',
             'plural'   => 'table examples',
             'ajax'     => true
-        ));
+        ) );
+        /*$this->set_order();
+        $this->set_orderby();
+        $this->prepare_items();
+        $this->display();*/
     }
-
     private function get_sql_results()
     {
         global $wpdb;
@@ -30,7 +32,6 @@ class Pie_Invitation_Table extends WP_List_Table
         );
         return $sql_results;
     }
-
     public function set_order()
     {
         $order = 'DESC';
@@ -38,7 +39,6 @@ class Pie_Invitation_Table extends WP_List_Table
             $order = $_GET['order'];
         $this->order = esc_sql( $order );
     }
-
     public function set_orderby()
     {
         $orderby = 'code_usage';
@@ -52,7 +52,7 @@ class Pie_Invitation_Table extends WP_List_Table
     }
     public function no_items() 
     {
-         _e( 'Not Found Invitaion Code',"piereg" );
+         _e( 'Not Found Invitaion Code', "piereg" );
     }
     public function get_views()
     {
@@ -61,7 +61,7 @@ class Pie_Invitation_Table extends WP_List_Table
     public function get_columns()
     {
         $columns = array(
-			'check_box'		=> '<input type="checkbox" id="select_all_invitaion_checkbox" class="select_all_invitaion_checkbox" onclick="select_all_invitaion_checkbox();" title="'.__("Click Here to Select/De-select All","piereg").'" />',
+			'check_box'		=> __( '<input type="checkbox" id="select_all_invitaion_checkbox" class="select_all_invitaion_checkbox" onclick="select_all_invitaion_checkbox();" title="'.__("Click Here to Select/De-select All","piereg").'" />' ),
             'id'         => __( '#' ),
             'name' => __( 'Code Name',"piereg" ),
             'code_usage'  => __( 'Usage' ,"piereg"),
@@ -75,8 +75,8 @@ class Pie_Invitation_Table extends WP_List_Table
         $sortable = array(
             'id'         => array( 'id', true ),
             'name' => array( 'name', true ),
-            'code_usage'  => array( 'usage', true ),
-            'count'  => __( 'used' )
+            'code_usage'  => array( 'code_usage', true ),
+            'count'  => array( 'count', true )
         );
         return $sortable;
     }
@@ -90,13 +90,13 @@ class Pie_Invitation_Table extends WP_List_Table
             $hidden,
             $sortable 
         );
-
         // SQL results
         $posts = $this->get_sql_results();
         empty( $posts ) AND $posts = array();
         # >>>> Pagination
 		
-        $opt = get_option("pie_register_2");
+        //$opt = get_option("pie_register");
+        $opt = get_option(OPTION_PIE_REGISTER);
 		$per_page_item = (isset($opt['invitaion_codes_pagination_number']) && ((int)$opt['invitaion_codes_pagination_number']) != 0)? (int)$opt['invitaion_codes_pagination_number'] : 10;
 		unset($opt);
         //$per_page     = $this->posts_per_page;
@@ -111,7 +111,6 @@ class Pie_Invitation_Table extends WP_List_Table
         $last_post = $current_page * $per_page;
         $first_post = $last_post - $per_page + 1;
         $last_post > $total_items AND $last_post = $total_items;
-
         // Setup the range of keys/indizes that contain 
         // the posts on the currently displayed page(d).
         // Flip keys with values as the range outputs the range in the values.
@@ -119,7 +118,6 @@ class Pie_Invitation_Table extends WP_List_Table
         // Filter out the posts we're not displaying on the current page.
         $posts_array = array_intersect_key( $posts, $range );
         # <<<< Pagination
-
         // Prepare the data
         $permalink = __( 'Edit:' );
 		$id = 1;
@@ -139,7 +137,8 @@ class Pie_Invitation_Table extends WP_List_Table
 			
 			
 			$class = ($post->status==1) ? "active"  : "inactive";
-			$title = ($class == "active")? "Active Code" : "Unactive Code";
+			$title = ($class == "active")? "Deactivate" : "Activate";
+
 			$posts[ $key ]->action = '<a onclick="changeStatus(\''.$post->id.'\',\''.$post_name.'\',\''.$title.'\');" href="javascript:;" title="'.__($title,"piereg").'" class="'.$class.'"></a> <a class="delete" href="javascript:;" onclick="confirmDel(\''.$post->id.'\',\''.$post_name.'\');" title="'.__("Delete","piereg").'"></a>';
 			$id++;
         }
@@ -172,7 +171,6 @@ class Pie_Invitation_Table extends WP_List_Table
         $views = $this->get_views();
         if ( empty( $views ) )
             return;
-
         $this->views();
     }
-}?>
+}

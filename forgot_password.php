@@ -1,5 +1,11 @@
 <?php
 function pieResetFormOutput($piereg_widget = false){
+	$pie_register_base = new PieReg_Base();
+	/*
+		*	Sanitizing post data
+	*/
+	$pie_register_base->piereg_sanitize_post_data( ( (isset($_POST) && !empty($_POST))?$_POST : array() ) );
+	
 	$option = get_option('pie_register_2');
 	$forgot_pass_form = '';
 	$forgot_pass_form .= '
@@ -31,7 +37,8 @@ function pieResetFormOutput($piereg_widget = false){
 			if(isset($_POST['piereg_math_captcha_forgot_pass']))
 			{
 				$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_forgot_password'];
-				$piereg_cookie_array = explode(",",$piereg_cookie_array);
+				/*$piereg_cookie_array = explode(",",$piereg_cookie_array);*/
+				$piereg_cookie_array = explode("|",$piereg_cookie_array);
 				$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
 				$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
 				$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
@@ -45,7 +52,8 @@ function pieResetFormOutput($piereg_widget = false){
 			elseif(isset($_POST['piereg_math_captcha_forgot_pass_widget']))
 			{
 				$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_forgot_password_widget'];
-				$piereg_cookie_array = explode(",",$piereg_cookie_array);
+				/*$piereg_cookie_array = explode(",",$piereg_cookie_array);*/
+				$piereg_cookie_array = explode("|",$piereg_cookie_array);
 				$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
 				$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
 				$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
@@ -107,8 +115,7 @@ function pieResetFormOutput($piereg_widget = false){
 					// Now insert the new md5 key into the db
 					$wpdb->update($wpdb->users, array('user_activation_key' => $hashed), array('user_login' => $user_login));
 		
-					$pie_register_base = new PieReg_Base();
-									
+					
 					$message_temp = "";
 					if($option['user_formate_email_forgot_password_notification'] == "0"){
 						$message_temp	= nl2br(strip_tags($option['user_message_email_forgot_password_notification']));
@@ -285,16 +292,14 @@ if(!function_exists("forgot_pass_captcha"))
 			//print_r($_COOKIE['piereg_math_captcha_registration']);
 			$data = "";
 			$data .='<div style="display:inline-block;">
-			<script type="text/javascript">
-				var dummy_array = [];
-				dummy_array[0] = "'.$result1.'";
-				dummy_array[1] = "'.$result2.'";
-				dummy_array[2] = "'.$result3.'";';
+			<script type="text/javascript">';
 			if($piereg_widget == true){
-				$data .= 'document.cookie= "piereg_math_captcha_forgot_password_widget="+dummy_array;';
+				/*$data .= 'document.cookie= "piereg_math_captcha_forgot_password_widget="+dummy_array;';*/
+				$data .= 'document.cookie= "piereg_math_captcha_forgot_password_widget='.$result1."|".$result2."|".$result3.'";';
 			}
 			else{
-				$data .= 'document.cookie= "piereg_math_captcha_forgot_password="+dummy_array;';
+				/*$data .= 'document.cookie= "piereg_math_captcha_forgot_password="+dummy_array;';*/
+				$data .= 'document.cookie= "piereg_math_captcha_forgot_password='.$result1."|".$result2."|".$result3.'";';
 			}
 			$data .= '</script>';
 			$field_id = "";
@@ -326,47 +331,10 @@ if(!function_exists("forgot_pass_captcha"))
 			$data .= '
 			 <script type="text/javascript">
 				jQuery("'.$field_id.'").css({
-					"background" : "url('.plugins_url('pie-register').'/images/math_captcha/'.$image_name.'.png)",
+					"background" : "url('.plugins_url('/images/math_captcha/'.$image_name.'.png',__FILE__).')",
 					"color"		 : "'.$color[$image_name].'"
 				});
 				jQuery("'.$field_id.'").html("'.$start." ".$operator." ".$end . ' = ");
-			 
-			 
-			 
-			 
-			 
-				/*var CVS = document.createElement("canvas"),
-				ctx = CVS.getContext("2d");
-				
-				CVS.width  = 115;
-				CVS.height = 40;*/
-				//document.getElementById("pieregister_math_captha_forgot_password").appendChild(CVS);
-				
-				//// GRAPHICS TO CANVAS /////
-				/*function sendToCanvas( ob ){
-				  var img = new Image();
-				  img.onload = function(){
-					ctx.drawImage(img, 0, 0);
-					ctx.font = ob.fontWeight+" "+ob.fontSize+" "+ob.fontFamily;
-					ctx.textAlign = "center";
-					ctx.fillStyle = ob.color;
-					ctx.fillText(ob.text, 60, 25);
-				  };
-				  img.src = ob.image;
-				}
-				///////////////////////////
-				
-				// DO IT! /////////////////
-				sendToCanvas({
-				  image      : "'.plugins_url('pie-register').'/images/math_captcha/'.$image_name.'.png",
-				  text       : "'.$start." ".$operator." ".$end . ' = ",
-				  fontFamily : "Arial",
-				  fontWeight : "bold",
-				  fontSize   : "20px",
-				  //color      : "rgba(0, 0, 0, 0.6)"
-				  color      : "'.$color[$image_name].';"
-				  //color      : "rgba(0, 0, 999, 0.6);"
-				});*/
 			 </script>
 			 </div>';
 			 

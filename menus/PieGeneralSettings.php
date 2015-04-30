@@ -78,98 +78,6 @@ elseif(isset( $_POST['error'] ) && !empty($_POST['error']) ){
         
         
         
-        <h3><?php _e("Installation Status",'piereg') ?></h3>
-        <div class="fields">
-          <label><?php _e("PHP Version",'piereg') ?></label>
-          <?php if(version_compare(phpversion(),  "5.0") == 1)
-		  {
-			  echo '<span class="installation_status">'.phpversion().'</span>';
-		  }
-		  else
-		  {
-			  echo '<span class="installation_status_faild">'.phpversion().'</span>';
-			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires PHP 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
-		  }
-		  ?>
-        </div>
-        <div class="fields">
-          <label><?php _e("MySQL Version",'piereg') ?></label>
-          <?php
-		  
-		  
-		  
-			/* Use ext/mysqli if it exists and:
-			  *  - WP_USE_EXT_MYSQL is defined as false, or
-			  *  - We are a development version of WordPress, or
-			  *  - We are running PHP 5.5 or greater, or
-			  *  - ext/mysql is not loaded.
-			  */
-			$piereg_mytsql_version_info = "";
-			global $wpdb;
-			if ( function_exists( 'mysqli_connect' ) ){
-				if ( defined( 'WP_USE_EXT_MYSQL' ) ){
-					//mysql
-					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
-				} elseif ( version_compare( phpversion(), '5.5', '>=' ) || ! function_exists( 'mysql_connect' ) ) {
-					//mysqli
-					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
-				} elseif ( false !== strpos( $GLOBALS['wp_version'], '-' ) ) {
-					//mysqli
-					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
-				}else{
-					//mysql
-					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
-				}
-			}else{
-				//mysql
-				$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
-			}
-			if(version_compare($piereg_mytsql_version_info,  "5.0") == 1)
-			{
-				echo '<span class="installation_status">'.$piereg_mytsql_version_info.'</span>';
-			}
-			else
-			{
-				echo '<span class="installation_status_faild">'.$piereg_mytsql_version_info.'</span>';
-				echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
-			}
-			?>
-          
-        </div>
-        <div class="fields">
-          <label><?php _e("Wordpress Version",'piereg') ?></label>
-          <?php if(version_compare(get_bloginfo('version'),  "3.5") == 1)
-		  {
-			  echo '<span class="installation_status">'.get_bloginfo('version').'</span>';
-		  }
-		  else
-		  {
-			  echo '<span class="installation_status_faild">'.get_bloginfo('version').'</span>';
-			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires Wordpress 3.5 or higher. Please deactivate Pie-Register","piereg").'</span>';
-		  }
-		  ?>
-        </div>
-        <div class="fields">
-          <label><?php _e("Enable Curl",'piereg') ?></label>
-          <?php if(function_exists('curl_version'))
-		  {
-			  echo '<span class="installation_status">'.__("CURL Enable","piereg").'</span>';
-		  }
-		  else
-		  {
-			  echo '<span class="installation_status_faild">'.__("CURL Enable","piereg").'</span>';
-			  echo '<span class="quotation">'.__("Please install CURL on server","piereg").'</span>';
-		  }
-		  ?>
-        </div>
-        
-        
-        
-        
-        
-        
-        
-        
         <h3><?php _e("General Settings",'piereg') ?></h3>
         <div class="fields">
           <label><?php _e("Display Hints",'piereg') ?></label>
@@ -513,6 +421,41 @@ elseif(isset( $_POST['error'] ) && !empty($_POST['error']) ){
                     <p><?php _e("Unverified Users will be automatically deleted after grace period expires. 0 (Zero) For Unlimited",'piereg') ?></p>
                 </div>
             </div>
+            
+            
+            <div class="fields">
+                <label><?php _e("Email Edit Verifications",'piereg') ?></label>
+                <div class="radio_fields">
+                    <input type="radio" value="1" name="email_edit_verification_step" id="email_edit_verification_1" <?php echo ($piereg['email_edit_verification_step']=="1")?'checked="checked"':''?> class="step_email_edit_verif" />
+                    <label for="email_edit_verification_1"><?php _e("1 Step Email Edit Verification",'piereg') ?></label>
+                    <input type="radio" value="2" name="email_edit_verification_step" id="email_edit_verification_2" <?php echo ($piereg['email_edit_verification_step']=="2")?'checked="checked"':''?> class="step_email_edit_verif" />
+                    <label for="email_edit_verification_2"><?php _e("2 Step Email Edit Verification",'piereg') ?></label>
+                    <input type="radio" value="0" name="email_edit_verification_step" id="email_edit_verification_0" <?php echo ($piereg['email_edit_verification_step']=="0")?'checked="checked"':''?> class="step_email_edit_verif" />
+                    <label for="email_edit_verification_0"><?php _e("Off",'piereg') ?></label>
+                    
+                </div>
+                <span class="1step_email_edit_verification pr_email_edit_verif quotation"><strong><?php _e("Note","piereg");?></strong>&nbsp;:&nbsp;<?php _e("1 Step (Verify new address only)","piereg"); ?></span>
+                <span class="2step_email_edit_verification pr_email_edit_verif quotation"><strong><?php _e("Note","piereg");?></strong>&nbsp;:&nbsp;<?php _e("2 Step (Authenticate request by sending an email to old address + verify new address)","piereg"); ?></span>
+                <script type="text/javascript">
+					piereg(document).ready(function(){
+						piereg(".step_email_edit_verif").on("change",function(){
+							email_edit_verification_description();
+						});
+						email_edit_verification_description();
+						function email_edit_verification_description(){
+							piereg("span.pr_email_edit_verif ").hide();
+							if(piereg("#email_edit_verification_1").is(":checked")){
+								piereg("span.2step_email_edit_verification").hide();
+								piereg("span.1step_email_edit_verification").fadeIn(1000);
+							}else if(piereg("#email_edit_verification_2").is(":checked")){
+								piereg("span.1step_email_edit_verification").hide();
+								piereg("span.2step_email_edit_verification").fadeIn(1000);
+							}
+						}
+					});
+				</script>
+            </div>
+            
         </fieldset>
         
         
@@ -647,11 +590,11 @@ elseif(isset( $_POST['error'] ) && !empty($_POST['error']) ){
           <p id="piereg_reCAPTCHA_Public_Key_error" style="display:none;color:#F00;"><strong><?php _e("Error : Invalid Re-Captcha keys",'piereg') ?></strong></p>
         </div>
         <div class="fields">
-          <label for="piereg_reCAPTCHA_Public_Key"><?php _e("reCAPTCHA Public Key",'piereg') ?></label>
+          <label for="piereg_reCAPTCHA_Public_Key"><?php _e("reCAPTCHA Site Key",'piereg') ?></label>
           <input type="text" id="piereg_reCAPTCHA_Public_Key" name="captcha_publc" class="input_fields" value="<?php echo $piereg['captcha_publc']?>" />
           <span class="quotation"><?php _e("Required Only if you decide to Use the reCAPTCHA field. Sign Up for a Free account to get the key.",'piereg') ?></span> </div>
         <div class="fields">
-          <label for="piereg_reCAPTCHA_Private_Key"><?php _e("reCAPTCHA Private Key",'piereg') ?></label>
+          <label for="piereg_reCAPTCHA_Private_Key"><?php _e("reCAPTCHA Secret Key",'piereg') ?></label>
           <input type="text" id="piereg_reCAPTCHA_Private_Key" name="captcha_private" class="input_fields" value="<?php echo $piereg['captcha_private']?>" />
           <span class="quotation"><?php _e("Required Only if you decide to Use the reCAPTCHA field. Sign Up for a Free account to get the key.",'piereg') ?></span> </div>
         <div class="fields">
@@ -844,6 +787,191 @@ window.send_to_editor = function(html) {
         <input name="action" value="pie_reg_update" type="hidden" />
         <input type="hidden" name="general_settings_page" value="1" />
       </form>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+       <h3><?php _e("Installation Status",'piereg') ?></h3>
+        <div class="fields">
+          <label><?php _e("PHP Version",'piereg') ?></label>
+          <?php if(version_compare(phpversion(),  "5.0") == 1)
+		  {
+			  echo '<span class="installation_status">'.phpversion().'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.phpversion().'</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires PHP 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("MySQL Version",'piereg') ?></label>
+          <?php
+			/* Use ext/mysqli if it exists and:
+			  *  - WP_USE_EXT_MYSQL is defined as false, or
+			  *  - We are a development version of WordPress, or
+			  *  - We are running PHP 5.5 or greater, or
+			  *  - ext/mysql is not loaded.
+			  */
+			/*$piereg_mytsql_version_info = "";
+			global $wpdb;
+			if ( function_exists( 'mysqli_connect' ) ){
+				if ( defined( 'WP_USE_EXT_MYSQL' ) ){
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				} elseif ( version_compare( phpversion(), '5.5', '>=' ) || ! function_exists( 'mysql_connect' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				} elseif ( false !== strpos( $GLOBALS['wp_version'], '-' ) ) {
+					//mysqli
+					$piereg_mytsql_version_info = mysqli_get_server_info($wpdb->dbh);
+				}else{
+					//mysql
+					$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+				}
+			}else{
+				//mysql
+				$piereg_mytsql_version_info = mysql_get_server_info($wpdb->dbh);
+			}*/
+			global $wpdb;
+			$piereg_mytsql_version_info = $wpdb->db_version();
+			if(version_compare($piereg_mytsql_version_info,  "5.0") == 1)
+			{
+				echo '<span class="installation_status">'.$piereg_mytsql_version_info.'</span>';
+			}
+			else
+			{
+				echo '<span class="installation_status_faild">'.$piereg_mytsql_version_info.'</span>';
+				echo '<span class="quotation">'.__("Sorry, Pie-Register requires MySQL 5.0 or higher. Please deactivate Pie-Register","piereg").'</span>';
+			}
+			?>
+          
+        </div>
+        <div class="fields">
+          <label><?php _e("Wordpress Version",'piereg') ?></label>
+          <?php if(version_compare(get_bloginfo('version'),  "3.5") == 1)
+		  {
+			  echo '<span class="installation_status">'.get_bloginfo('version').'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.get_bloginfo('version').'</span>';
+			  echo '<span class="quotation">'.__("Sorry, Pie-Register requires Wordpress 3.5 or higher. Please deactivate Pie-Register","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("Curl",'piereg') ?></label>
+          <?php if(function_exists('curl_version'))
+		  {
+			  echo '<span class="installation_status">'.__("Enable","piereg").'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.__("Disable","piereg").'</span>';
+			  echo '<span class="quotation">'.__("Please install CURL on server","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("File Get Contents",'piereg') ?></label>
+          <?php if(function_exists('file_get_contents'))
+		  {
+			  echo '<span class="installation_status">'.__("Enable","piereg").'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.__("Disable","piereg").'</span>';
+			  echo '<span class="quotation">'.__("Please install File Get Contents on server","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("MB String",'piereg') ?></label>
+          <?php if (extension_loaded('mbstring'))
+		  {
+			  echo '<span class="installation_status">'.__("Enable","piereg").'</span>';
+		  }
+		  else
+		  {
+			  echo '<span class="installation_status_faild">'.__("Disable","piereg").'</span>';
+			  echo '<span class="quotation">'.__("Please install MB String on server","piereg").'</span>';
+		  }
+		  ?>
+        </div>
+        <?php if ( function_exists( 'ini_get' ) ){ ?>
+          
+	            <div class="fields">
+                      <label><?php _e("PHP Post Max Size",'piereg') ?></label>
+                      <?php
+                      echo '<span class="installation_status installation_status_no_bg">'.(ini_get('post_max_size')).'</span>';
+                  ?>
+                </div>
+	            <div class="fields">
+                      <label><?php _e("PHP Time Limit",'piereg') ?></label>
+                      <?php
+                      echo '<span class="installation_status installation_status_no_bg">'.(ini_get('max_execution_time')).'</span>';
+                  ?>
+                </div>
+                
+        <?php } else {?>
+		        <div class="fields">
+                     <label><?php _e("ini_get",'piereg') ?></label><?php
+                     echo '<span class="installation_status_faild">'.__("Disable","piereg").'</span>';
+                     echo '<span class="quotation">'.__("Please install ini_get on server","piereg").'</span>';
+				  ?>
+				</div>
+        <?php } ?>
+        <div class="fields">
+          <label><?php _e("WP Memory Limit",'piereg') ?></label>
+          <?php
+		  echo '<span class="installation_status installation_status_no_bg">'.WP_MEMORY_LIMIT.'</span>';
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("WP Debug Mode",'piereg') ?></label>
+          <?php
+		  if ( defined('WP_DEBUG') && WP_DEBUG ) echo '<span class="installation_status installation_status_no_bg">' . __( 'Yes', 'piereg' ) . '</span>'; else echo '<span class="installation_status installation_status_no_bg">' . __( 'No', 'piereg' ) . '</span>';
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("WP Language",'piereg') ?></label>
+          <?php
+		  echo '<span class="installation_status installation_status_no_bg">' . get_locale() . '</span>';
+		  ?>
+        </div>
+        <div class="fields">
+          <label><?php _e("WP Max Upload Size",'piereg') ?></label>
+          <?php
+		  echo '<span class="installation_status installation_status_no_bg">' . size_format( wp_max_upload_size() ) . '</span>';
+		  ?>
+        </div>
+        
+        
+        
+        
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
     </div>
   </div>
 </div>

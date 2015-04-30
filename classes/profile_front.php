@@ -35,8 +35,9 @@ class Profile_front extends PieReg_Base
         if (sizeof($this->data) > 0) 
 		{
           	$data .= '<h1 id="piereg_pie_form_heading">'.__("Profile Page","piereg").'</h1>';
-			$data .= '<span><a href="'.wp_logout_url().'">'.__("Logout","piereg").'</a></span>';
-            $data .= '<a class="piereg_edit_profile_link" href="?page_id='.((isset($_GET['page_id']))?$_GET['page_id']:"").'&edit_user=1"></a>';
+			$data .= '<span class="piereg-profile-logout-url"><a href="'.wp_logout_url().'">'.__("Logout","piereg").'</a></span>';
+            /*$data .= '<a class="piereg_edit_profile_link" href="?page_id='.((isset($_GET['page_id']))?$_GET['page_id']:"").'&edit_user=1"></a>';*/
+            $data .= '<a class="piereg_edit_profile_link" href="'.( add_query_arg( array("edit_user" => "1"), $this->piereg_get_current_url() ) ).'"></a>';
 		    $data .= '<table border="0" cellpadding="0" cellspacing="0" class="pie_profile" id="pie_register">';
 			if(is_array($this->data)){
 				   foreach ($this->data as $this->field)
@@ -196,6 +197,7 @@ class Profile_front extends PieReg_Base
 		}
 		else if(is_array($value))
 		{
+			$value = array_filter($value);
 			return implode(", ",$value);	
 		}
 		return $value;	

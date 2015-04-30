@@ -35,4 +35,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+	
+	/*// Allow to add css clss in sorce code in ckeditor*/
+	config.allowedContent = true;
 };

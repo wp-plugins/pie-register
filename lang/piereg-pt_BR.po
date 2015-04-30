@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2014-12-04 17:57+0500\n"
+"PO-Revision-Date: 2015-03-04 12:27+0500\n"
 "Last-Translator: Baqar <baqarsoft@gmail.com>\n"
 "Language-Team: GBDesigner <guilhermebarbeiro@gmail.com>\n"
 "Language: pt_BR\n"
@@ -380,8 +380,8 @@ msgstr ""
 "sobre reCAPTCHA."
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:200
-msgid "reCAPTCHA Public Key"
-msgstr "Chave reCAPTCHA "
+msgid "reCAPTCHA Site Key"
+msgstr "reCAPTCHA Site Key"
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:202
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:206
@@ -393,8 +393,8 @@ msgstr ""
 "criar uma conta grátis para pegar a chave."
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:204
-msgid "reCAPTCHA Private Key"
-msgstr "Chave reCAPTCHA"
+msgid "reCAPTCHA Secret Key"
+msgstr "reCAPTCHA Secret Key"
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:212
 msgid "Custom CSS"
@@ -504,18 +504,17 @@ msgstr "Importar/Exportar"
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieRegImportExport.php:72
 msgid ""
-"Now you can export all users with custom fields with a particular date range "
-"in a CSV file! Simply select your fields and select your Date Range. The "
-"Date Range feature is optional which means that if you do not select a date "
-"range then all entries will be exported. Click on the Download Export Files "
-"to complete the operation."
+"Now you can export all users fields with a particular date range in a CSV "
+"file! Simply select your fields and select your Date Range. The Date Range "
+"feature is optional which means that if you do not select a date range then "
+"all entries will be exported. Click on the Download Export Files to complete "
+"the operation."
 msgstr ""
-"Agora você pode exportar todos os usuários com campos personalizados com um "
-"determinado intervalo de datas em um arquivo CSV! Basta selecionar os campos "
-"e selecione o intervalo de datas. O recurso variação data é opcional, o que "
-"significa que, se você não selecionar um intervalo de datas, todas as "
-"entradas serão exportados. Clique em Download Exportar arquivos para "
-"concluir a operação."
+"Now you can export all users fields with a particular date range in a CSV "
+"file! Simply select your fields and select your Date Range. The Date Range "
+"feature is optional which means that if you do not select a date range then "
+"all entries will be exported. Click on the Download Export Files to complete "
+"the operation."
 
 #: \\genetech002\projects\baqar\test_wp_plugin\wp-content\plugins\pie-register/menus/PieRegImportExport.php:78
 msgid "Select Fields"
@@ -1028,8 +1027,8 @@ msgstr "Sua conta está Ativada"
 msgid "Please enter Logo URL"
 msgstr "Por favor digite a URL do Logo"
 
-msgid "Enable Curl"
-msgstr "Habilitar Curl"
+msgid "Curl"
+msgstr "Curl"
 
 msgid "Enter logo tooltip"
 msgstr "Digite a Tooltip do Logo"
@@ -1257,8 +1256,8 @@ msgstr ""
 "Período é opcional, se não houver intervalo de datas selecionado, todas as "
 "entradas serão exportadas."
 
-msgid "Download Export Files"
-msgstr "Download do Aquivos Exportados"
+msgid "Download CSV File"
+msgstr "Download CSV File"
 
 msgid "Confirm Password"
 msgstr "Confirmar Senha"
@@ -2959,3 +2958,68 @@ msgstr "Invalid or malformed request. This key is no longer exists"
 #: ******* Add These Variables Since 2.0.13 ********
 msgid "Sorry, your nonce did not verify."
 msgstr "Sorry, your nonce did not verify."
+
+#: ******* Add These Variables Since 2.0.15 ********
+msgid "File Get Contents"
+msgstr "File Get Contents"
+
+msgid "MB String"
+msgstr "MB String"
+
+msgid "PHP Post Max Size"
+msgstr "PHP Post Max Size"
+
+msgid "PHP Time Limit"
+msgstr "PHP Time Limit"
+
+msgid "WP Memory Limit"
+msgstr "WP Memory Limit"
+
+msgid "WP Debug Mode"
+msgstr "WP Debug Mode"
+
+msgid "WP Language"
+msgstr "WP Language"
+
+msgid "WP Max Upload Size"
+msgstr "WP Max Upload Size"
+
+msgid "Please install File Get Contents on server"
+msgstr "Please install File Get Contents on server"
+
+msgid "Please install MB String on server"
+msgstr "Please install MB String on server"
+
+msgid "Please install ini_get on server"
+msgstr "Please install ini_get on server"
+
+msgid "Please install CURL on server"
+msgstr "Please install CURL on server"
+
+msgid "Old Password"
+msgstr "Old Password"
+
+msgid "Old Password Field do not macth!"
+msgstr "Old Password Field do not macth!"
+
+msgid "Old and New passwords are same!"
+msgstr "Old and New passwords are same!"
+
+msgid "Invalid Old Password Field!"
+msgstr "Invalid Old Password Field!"
+
+msgid "Email Edit Verifications"
+msgstr "Email Edit Verifications"
+
+msgid "1 Step (Verify new address only)"
+msgstr "1 Step (Verify new address only)"
+
+msgid ""
+"2 Step (Authenticate request by sending an email to old address + verify new "
+"address)"
+msgstr ""
+"2 Step (Authenticate request by sending an email to old address + verify new "
+"address)"
+
+msgid "Invalid request. This key is no longer exists"
+msgstr "Invalid request. This key is no longer exists"

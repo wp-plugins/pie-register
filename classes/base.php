@@ -177,7 +177,8 @@ class PieReg_Base
 							"pending_payment_reminder"					=> __("Pending Payment Reminder","piereg"),
 							"email_verification_reminder"				=> __("E-Mail Verification Reminder","piereg"),
 							"forgot_password_notification"				=> __("Forgot Password Notification","piereg"),
-							"email_edit_verification"					=> __("Email Edit Verification","piereg")
+							"email_edit_verification"					=> __("Email Edit Verification","piereg"),
+							"current_email_verification"				=> __("Current Email Edit Verification","piereg")
 							);
 		//"email_forgotpassword"=>"Forgot Password"
 		update_option("pie_user_email_types",$email_type);
@@ -232,6 +233,9 @@ class PieReg_Base
 		$update['no_conflict']				= ($current['no_conflict'])?$current['no_conflict']:0;
 		/*$update['currency'] 				= ($current['currency'])?$current['currency']:"USD";*/
 		$update['verification'] 			= ($current['verification'])?$current['verification']:0;
+		$update['email_edit_verification_step']	= ($current['email_edit_verification_step'])?$current['email_edit_verification_step']:1;
+		
+		
 		$update['grace_period'] 			= ($current['grace_period'])?$current['grace_period']:0;
 		$update['captcha_publc'] 			= ($current['captcha_publc'])?$current['captcha_publc']:"";
 		$update['captcha_private'] 			= ($current['captcha_private'])?$current['captcha_private']:"";
@@ -322,7 +326,9 @@ class PieReg_Base
 		
 		$update['user_message_email_forgot_password_notification']	= ($current['user_message_email_forgot_password_notification'])?$current['user_message_email_forgot_password_notification']: '<p>Dear %user_login%,</p><p>You have just requested for a new password for your account. Please follow the link (&nbsp;%reset_password_url% ) below to reset your password.</p><p>If you have not requested for a new password, kindly ignore this Email.</p><p>Best Regards,</p><p>Team %user_login%</p>';
 		
-		$update['user_message_email_email_edit_verification']		= ($current['user_message_email_email_edit_verification'])?$current['user_message_email_forgot_password_notification']: '<p>Hello %user_login%,</p><p>You have requested to change of your email address from %user_email% to %user_new_email%. Please click here (%reset_email_url%) to complete the action.</p><p>Thanks</p><p>%blogname%</p>';
+		$update['user_message_email_email_edit_verification']		= ($current['user_message_email_email_edit_verification'])?$current['user_message_email_email_edit_verification']: '<p>Hello %user_login%,</p><p>You have requested to change of your email address from %user_email% to %user_new_email%. Please click here (%reset_email_url%) to complete the action.</p><p>Thanks</p><p>%blogname%</p>';
+		
+		$update['user_message_email_current_email_verification']	= ($current['user_message_email_current_email_verification'])?$current['user_message_email_current_email_verification']: '<p>Hello %user_login%,</p><p>You have requested to confirm change of your email address. Please click here (%confirm_current_email_url%) to complete the action.</p><p>Otherwise please ignore this email.</p><p>Thanks</p><p>%blogname%</p>';
 						
 		update_option( 'pie_register_2', $update );
 		
@@ -555,7 +561,7 @@ class PieReg_Base
 		/*$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';*/
 		
 	
-		$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Username" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"></div></div></div>';
+		$structure["username"] = '<input type="hidden" value="0" class="input_fields" name="field[%d%][meta]" id="meta_%d%"><div class="fields_main"><div class="advance_options_fields"><input type="hidden" value="1" name="field[%d%][required]"><input type="hidden" name="field[%d%][label]"><input type="hidden" name="field[%d%][validation_rule]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" value="Username" id="label_%d%" class="input_fields field_label"></div><div class="advance_fields"><label for="desc_%d%">'.__("Description","piereg").'</label><textarea name="field[%d%][desc]" id="desc_%d%" rows="8" cols="16"></textarea></div><div class="advance_fields"><label for="placeholder_%d%">'.__("Placeholder","piereg").'</label><input type="text" name="field[%d%][placeholder]" id="placeholder_%d%" class="input_fields field_placeholder"></div><div class="advance_fields"><label for="validation_message_%d%">'.__("Validation Message","piereg").'</label><input type="text" name="field[%d%][validation_message]" id="validation_message_%d%" class="input_fields"></div><div class="advance_fields"><label for="css_%d%">'.__("CSS Class Name","piereg").'</label><input type="text" name="field[%d%][css]" id="css_%d%" class="input_fields"><input type="hidden" id="default_username"></div></div></div>';
 		
 		
 		$structure["default"] = '<div class="fields_main"><div class="advance_options_fields"><input type="hidden" class="input_fields" name="field[%d%][type]"><div class="advance_fields"><label for="label_%d%">'.__("Label","piereg").'</label><input type="text" name="field[%d%][label]" id="label_%d%" class="input_fields field_label"></div></div></div>';
@@ -706,6 +712,7 @@ class PieReg_Base
 			*	Add Since 2.0.13
 		*/
 		$reset_email_key = "";
+		$confirm_current_email_url = "";
 		/*
 			*	Replace Array to Variables
 			*	Add Since 2.0.13
@@ -764,9 +771,15 @@ class PieReg_Base
 		*/
 		$reset_email_url = "";
 		if($reset_email_key)
-			$reset_email_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=email_edit")."&key={$reset_email_key}&login=" . $user_login;
+			$reset_email_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=email_edit&key={$reset_email_key}&login={$user_login}");
 		else
 			$reset_email_url = "";
+		
+		$confirm_current_email_url = "";
+		if($confirm_current_email_key)
+			$confirm_current_email_url = $this->pie_modify_custom_url($this->pie_login_url(),"action=current_email_verify&key={$confirm_current_email_key}&login={$user_login}");
+		else
+			$confirm_current_email_url = "";
 
 		/////////////// PAYMENT LINK ///////////
 		$option = get_option("pie_register_2");
@@ -786,8 +799,8 @@ class PieReg_Base
 		$user_pass = "********";
 		//////////////////////////////////////
 		
-		$keys 	= array("%user_login%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" ,"%invitation_code%","%pending_payment_url%","%blogname_url%","%user_ip%","%user_pass%","%user_new_email%","%reset_email_url%");
-		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name,$last_name,$user_url,$user_aim,$user_yim,$user_jabber,$user_biographical_nfo, $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass,$user_new_email,$reset_email_url);
+		$keys 	= array("%user_login%","%user_email%","%blogname%","%siteurl%","%activationurl%","%firstname%","%lastname%","%user_url%","%user_aim%","%user_yim%","%user_jabber%","%user_biographical_nfo%","%all_field%","%user_registration_date%","%reset_password_url%" ,"%invitation_code%","%pending_payment_url%","%blogname_url%","%user_ip%","%user_pass%","%user_new_email%","%reset_email_url%","%confirm_current_email_url%");
+		$values = array($user_login ,$user_email,$blog_name, $site_url,$activationurl,$first_name,$last_name,$user_url,$user_aim,$user_yim,$user_jabber,$user_biographical_nfo, $all_field,$user_registration_date,$reset_password_url,$invitation_code,$pending_payment_url,$blogname_url,$user_ip,$user_pass,$user_new_email,$reset_email_url,$confirm_current_email_url);
 		$return_text = str_replace($keys,$values,$text);
 		return $return_text;
 	}
@@ -963,7 +976,7 @@ class PieReg_Base
 		
 		$update['alternate_logout']			= -1;
 		
-		$update['alternate_logout_url']			= -1;
+		$update['alternate_logout_url']			= "";
 		
 		$update['outputcss'] 				= 1;
 		$update['outputjquery_ui'] 			= 1;
@@ -972,6 +985,7 @@ class PieReg_Base
 		$update['no_conflict']				= 0;
 		/*$update['currency'] 				= "USD";*/
 		$update['verification'] 			= 0;
+		$update['email_edit_verification_step'] = 1;
 		$update['grace_period'] 			= 0;
 		$update['captcha_publc'] 			= "";
 		$update['captcha_private'] 			= "";
@@ -1060,10 +1074,12 @@ class PieReg_Base
 		
 		$update['user_message_email_email_edit_verification']		= '<p>Hello %user_login%,</p><p>You have requested to change of your email address from %user_email% to %user_new_email%. Please click here (%reset_email_url%) to complete the action.</p><p>Thanks</p><p>%blogname%</p>';
 		
+		$update['user_message_email_current_email_verification']	= '<p>Hello %user_login%,</p><p>You have requested to confirm change of your email address. Please click here (%confirm_current_email_url%) to complete the action.</p><p>Otherwise please ignore this email.</p><p>Thanks</p><p>%blogname%</p>';
+		
 
 		update_option( 'pie_register_2', $update );
 	}
-	function pie_registration_url($url=false)
+	static function static_pie_registration_url($url=false)
 	{
 		//$options = get_option("pie_register_2");
 		global $piereg_global_options;
@@ -1071,7 +1087,16 @@ class PieReg_Base
 		$pie_registration_url = get_permalink($options['alternate_register']);
 		return ($pie_registration_url)? $pie_registration_url : wp_registration_url();
 	}
-	function pie_login_url($url=false)
+	function pie_registration_url($url=false)
+	{
+		$this->pr_get_WP_Rewrite();
+		//$options = get_option("pie_register_2");
+		global $piereg_global_options;
+		$options = $piereg_global_options;
+		$pie_registration_url = get_permalink($options['alternate_register']);
+		return ($pie_registration_url)? $pie_registration_url : wp_registration_url();
+	}
+	static function static_pie_login_url($url=false)
 	{
 		//$options = get_option("pie_register_2");
 		global $piereg_global_options;
@@ -1079,7 +1104,22 @@ class PieReg_Base
 		$pie_login_url = get_permalink($options['alternate_login']);
 		return ($pie_login_url)? $pie_login_url : wp_login_url();
 	}
-	function pie_lostpassword_url($url=false)
+	function pie_login_url($url=false)
+	{
+		$this->pr_get_WP_Rewrite();
+		
+		global $piereg_global_options;
+		$options = $piereg_global_options;
+		$pie_login_url = get_permalink($options['alternate_login']);
+		$redirect_url = explode('?redirect_to=',$url);
+		
+		if(isset($redirect_url[1]) && is_array($redirect_url)){
+			$pie_login_url = $this->pie_modify_custom_url($pie_login_url,"redirect_to=".($redirect_url[1]) );
+		}
+		return ( ($pie_login_url) ? $pie_login_url : ( (!empty($url)) ? $url : wp_login_url() ) );
+	}
+	
+	static function static_pie_lostpassword_url($url=false)
 	{
 		//$options = get_option("pie_register_2");
 		global $piereg_global_options;
@@ -1087,7 +1127,16 @@ class PieReg_Base
 		$pie_lostpass_url = get_permalink($options['alternate_forgotpass']);
 		return ($pie_lostpass_url)? $pie_lostpass_url : wp_lostpassword_url();
 	}
-	function piereg_logout_url($url,$redirect)
+	function pie_lostpassword_url($url=false)
+	{
+		$this->pr_get_WP_Rewrite();
+		//$options = get_option("pie_register_2");
+		global $piereg_global_options;
+		$options = $piereg_global_options;
+		$pie_lostpass_url = get_permalink($options['alternate_forgotpass']);
+		return ($pie_lostpass_url)? $pie_lostpass_url : wp_lostpassword_url();
+	}
+	static function static_piereg_logout_url($url,$redirect)
 	{
 		//$options = get_option("pie_register_2");
 		global $piereg_global_options;
@@ -1109,6 +1158,41 @@ class PieReg_Base
 		$redirect = urlencode($redirect);
 		$new_logout_url = home_url() . '/?piereg_logout_url=true&redirect_to=' . $redirect;
     	return $new_logout_url;
+	}
+	function piereg_logout_url($url,$redirect)
+	{
+		$this->pr_get_WP_Rewrite();
+		//$options = get_option("pie_register_2");
+		global $piereg_global_options;
+		$options = $piereg_global_options;
+		if($options['alternate_logout_url'] != ""){
+			$redirect = $options['alternate_logout_url'];
+		}
+		else{
+			if(intval($options['alternate_logout']) > 0 ){
+				$redirect = get_permalink($options['alternate_logout']);
+			}else{
+				$redirect = home_url();
+			}
+		}
+		
+		if(empty($redirect))
+			$redirect = home_url();
+		
+		$redirect = urlencode($redirect);
+		$new_logout_url = home_url() . '/?piereg_logout_url=true&redirect_to=' . $redirect;
+    	return $new_logout_url;
+	}
+	static function static_pie_modify_custom_url($get_url,$query_string=false){
+		$get_url = trim($get_url);
+		if(!$get_url) return false;
+		
+		if(strpos($get_url,"?"))
+			$url = $get_url."&".$query_string;
+		else
+			$url = $get_url."?".$query_string;
+			
+		return $url;
 	}
 	function pie_modify_custom_url($get_url,$query_string=false){
 		$get_url = trim($get_url);
@@ -1133,10 +1217,11 @@ class PieReg_Base
 	function pie_profile_pictures_upload($user_id,$field,$field_slug){
 		global $errors;
 		$errors = new WP_Error();
-		if($_FILES[$field_slug]['name'] != ''){
+		if( isset($_FILES[$field_slug]['name']) && $_FILES[$field_slug]['name'] != '' ){
 			////////////////////////////UPLOAD PROFILE PICTURE//////////////////////////////
-			$allowedExts = array("gif", "jpeg", "jpg", "png");
-			$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],array("gif","jpeg","jpg","png","bmp"));
+			$allowedExts = array("gif", "GIF", "jpeg", "JPEG", "jpg", "JPG", "png", "PNG", "bmp", "BMP" );
+			$result = $this->piereg_validate_files($_FILES[$field_slug]['name'],$allowedExts);
+			
 			if($result)
 			{
 				$temp = explode(".", $_FILES[$field_slug]["name"]);
@@ -1144,11 +1229,22 @@ class PieReg_Base
 				$upload_dir = wp_upload_dir();
 				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
 				wp_mkdir_p($temp_dir);
-				$temp_file_name = "profile_pic_".crc32($user_id."_".$extension."_".time()).".".$extension;
+				$temp_file_name = "profile_pic_".abs( crc32( wp_generate_password( rand(7,12) ) ."_".time() ) ).".".$extension;
 				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
 				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name)){
 					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile picture",__('Fail to upload profile picture.','piereg' )));
 				}else{
+					/*Upload Index.html file on User dir*/
+					$this->upload_forbidden_html_file( $upload_dir['basedir']."/piereg_users_files" );
+					/*Upload Index.html file on User dir*/
+					$this->upload_forbidden_html_file( $temp_dir );
+					
+					$old_picture = get_user_meta($user_id,"pie_".$field_slug, true);
+					if( !empty($old_picture) ){
+						if( file_exists($temp_dir."/".basename( $old_picture )) ){
+							unlink( $temp_dir."/".basename( $old_picture ) );
+						}
+					}
 					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
 				}
 				
@@ -1159,11 +1255,18 @@ class PieReg_Base
 			update_user_meta($user_id,"pie_".$field_slug, "");
 		}
 	}
+	function upload_forbidden_html_file($dir_name){
+		if( !empty($dir_name) && !file_exists($dir_name."/index.html") ){
+			$myfile = @fopen($dir_name."/index.html", "w");
+			@fwrite( $myfile, "<html><head><title>Forbidden</title></head><body><h1>Forbidden</h1><p>You Don't have permission to access on this server</p></body></html>" );
+			@fclose( $myfile );
+		}
+	}
 	function pie_upload_files($user_id,$field,$field_slug){
 		global $errors;
 		$errors = new WP_Error();
 		$result = false;
-		if($_FILES[$field_slug]['name'] != ''){
+		if( isset($_FILES[$field_slug]['name']) && $_FILES[$field_slug]['name'] != '' ){
 			///////////////////UPLOAD ALL FILES//////////////////////////
 			
 			if($field['file_types'] != ""){
@@ -1177,11 +1280,24 @@ class PieReg_Base
 					$upload_dir = wp_upload_dir();
 					$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
 					wp_mkdir_p($temp_dir);
-					$temp_file_name = "file_".crc32($user_id."_".$extension."_".time()).".".$extension;
+					$temp_file_name = "file_".abs( crc32( wp_generate_password( rand(7,12) ) ."_".time() ) ).".".$extension;
 					$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
 					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
 						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
 					}else{
+						
+						/*Upload Index.html file on User dir*/
+						$this->upload_forbidden_html_file( $upload_dir['basedir']."/piereg_users_files" );
+						/*Upload Index.html file on User dir*/
+						$this->upload_forbidden_html_file( $temp_dir );
+						
+						$old_file = get_user_meta($user_id,"pie_".$field_slug, true);
+						if( !empty($old_file) ){
+							if( file_exists($temp_dir."/".basename( $old_file )) ){
+								unlink( $temp_dir."/".basename( $old_file ) );
+							}
+						}
+						
 						update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
 					}
 				}else{
@@ -1189,17 +1305,30 @@ class PieReg_Base
 				}
 			}
 			elseif($field['file_types'] == ""){
-				$temp = explode(".", $_FILES[$field_slug]["name"]);
-				$extension = end($temp);
-				$upload_dir = wp_upload_dir();
-				$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
-				wp_mkdir_p($temp_dir);
-				$temp_file_name = "file_".crc32($user_id."_".$extension."_".time()).".".$extension;
-				$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
-				if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) && $required){
-					$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
-				}else{
-					update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
+				if( isset($_FILES[$field_slug]["name"]) && $_FILES[$field_slug]["name"] != "" ){
+					$temp = explode(".", $_FILES[$field_slug]["name"]);
+					$extension = end($temp);
+					$upload_dir = wp_upload_dir();
+					$temp_dir = $upload_dir['basedir']."/piereg_users_files/".$user_id;
+					wp_mkdir_p($temp_dir);
+					$temp_file_name = "file_".abs( crc32( wp_generate_password( rand(7,12) ) ."_".time() ) ).".".$extension;
+					$temp_file_url = $upload_dir['baseurl']."/piereg_users_files/".$user_id."/".$temp_file_name;
+					if(!move_uploaded_file($_FILES[$field_slug]['tmp_name'],$temp_dir."/".$temp_file_name) ){
+						$errors->add( $field_slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_fail_to_upload_profile_picture",__('Fail to upload profile picture.','piereg' )));
+					}else{
+						/*Upload Index.html file on User dir*/
+						$this->upload_forbidden_html_file( $upload_dir['basedir']."/piereg_users_files" );
+						/*Upload Index.html file on User dir*/
+						$this->upload_forbidden_html_file( $temp_dir );
+						
+						$old_file = get_user_meta($user_id,"pie_".$field_slug, true);
+						if( !empty($old_file) ){
+							if( file_exists($temp_dir."/".basename( $old_file )) ){
+								unlink( $temp_dir."/".basename( $old_file ) );
+							}
+						}
+						update_user_meta($user_id,"pie_".$field_slug, $temp_file_url);
+					}
 				}
 			}
 		}else{
@@ -1213,4 +1342,59 @@ class PieReg_Base
 		$pieregcookie = json_decode($pieregcookie, true);
 		return $pieregcookie;
 	}
+	/*
+		*	Add since 2.0.15
+	*/
+	function pr_get_WP_Rewrite(){
+		if ( empty( $GLOBALS['wp_rewrite'] ) )
+			$GLOBALS['wp_rewrite'] = new WP_Rewrite();
+	}
+	function get_current_permalink(){
+		$this->pr_get_WP_Rewrite();
+		return get_permalink();
+	}
+	function get_page_permalink_by_id($page_id, $query_string = ""){
+		$this->pr_get_WP_Rewrite();
+		if(!empty($query_string))
+			return $this->pie_modify_custom_url(get_permalink($page_id),$query_string);
+		else
+			return get_permalink($page_id);
+	}
+	// get current URL
+	function piereg_get_current_url($query_string = "") {
+		$current_url = $this->get_current_permalink();
+		
+		if(!empty($query_string))
+			return $this->pie_modify_custom_url($current_url,$query_string);
+		
+		return $current_url;
+	}
+	/*
+		*	Added since 2.0.15
+	*/
+	function piereg_sanitize_post_data($post = array()){
+			if(!is_array($post) || empty($post))
+				return false;
+			
+			foreach($post as $key=>$val){
+				if( isset($_POST[$key]) && strpos($key,"username") !== false ){
+					$_POST[$key] = esc_sql(esc_attr(sanitize_user($_POST[$key])));
+				}elseif( isset($_POST[$key]) && ( strpos($key,"email") !== false ||  strpos($key,"e_mail") !== false ) ){
+					$_POST[$key] = esc_sql(esc_attr(sanitize_email($_POST[$key])));
+				}elseif( isset($_POST[$key]) ){
+					$_POST[$key] = $this->piereg_post_array_filter($_POST[$key]);
+				}
+			}
+		}
+		function piereg_post_array_filter($post){
+			$new_post = $post;
+			if( isset($new_post) && is_array($new_post) ){
+				foreach($new_post as $k=>$val){
+					$new_post[$k] = $this->piereg_post_array_filter($val);
+				}
+				return $new_post;
+			}else{
+				return esc_sql(esc_attr(sanitize_text_field($new_post)));
+			}
+		}
 }?>

@@ -40,8 +40,8 @@ define("RECAPTCHA_API_SERVER", "http://www.google.com/recaptcha/api");
 if(!defined("RECAPTCHA_API_SECURE_SERVER"))
 define("RECAPTCHA_API_SECURE_SERVER", "https://www.google.com/recaptcha/api");
 if(!defined("RECAPTCHA_VERIFY_SERVER"))
-define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
-
+define("RECAPTCHA_VERIFY_SERVER", gethostbyname("www.google.com"));
+//define("RECAPTCHA_VERIFY_SERVER", "www.google.com");
 /**
  * Encodes the given data into a query string format
  * @param $data - array of string elements to be encoded

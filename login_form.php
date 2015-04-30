@@ -1,5 +1,6 @@
 <?php
 function pieOutputLoginForm($piereg_widget = false){
+$users_can_register =  get_option("users_can_register");
 $option			= get_option("pie_register_2");
 $form_data = "";
 $form_data .= '<div class="piereg_container">
@@ -226,8 +227,11 @@ if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET[
 		</div>
 		<div class="field">
 		 <div class="nav">
-		 	<a href="'.pie_login_url().'">'.__("Log in","piereg").'</a> | <a href="'.pie_registration_url().'">'.__("Register","piereg").'</a>
-		 </div>
+		 	<a href="'.pie_login_url().'">'.__("Log in","piereg").'</a>';
+	if($users_can_register == 1){
+		$form_data	.= '&nbsp;|&nbsp;<a href="'.pie_registration_url().'">'.__("Register","piereg").'</a>';
+	}
+	$form_data .= '</div>
 		</div>
 		<div class="backtoblog">
 			<a title="'.__("Are you lost?","piereg").'" href="'.get_bloginfo("url").'">&larr; '.__("Back to","piereg").' '.get_bloginfo("name").'</a>
@@ -290,8 +294,11 @@ if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET[
 		</p>';
 		
 		//if(!is_page() ) {
-			$form_data .= '
-			<p id="nav"> <a href="'.pie_registration_url().'">'.__("Register","piereg").'</a> <a style="cursor:default;text-decoration:none;" href="javascript:;"> | </a> <a title="'.__("Password Lost and Found","piereg").'" href="'.pie_lostpassword_url().'">'.__("Lost your password?","piereg").'</a> </p>';
+			$form_data .= '<p id="nav">';
+			if($users_can_register == 1){		
+				$form_data .= '<a href="'.pie_registration_url().'">'.__("Register","piereg").'</a>&nbsp;<a style="cursor:default;text-decoration:none;" href="javascript:;">&nbsp;|&nbsp;</a>&nbsp;';
+			}
+			$form_data .= '<a title="'.__("Password Lost and Found","piereg").'" href="'.pie_lostpassword_url().'">'.__("Lost your password?","piereg").'</a> </p>';
 		//} ?>
 	
 		<?php if(isset($pagenow) && $pagenow == 'wp-login.php' ){
@@ -360,16 +367,14 @@ if(!function_exists("login_form_captcha"))
 			//print_r($_COOKIE['piereg_math_captcha_registration']);
 			$data = "";
 			$data .='<div style="display:inline-block;">
-			<script type="text/javascript">
-				var dummy_array = [];
-				dummy_array[0] = "'.$result1.'";
-				dummy_array[1] = "'.$result2.'";
-				dummy_array[2] = "'.$result3.'";';
+			<script type="text/javascript">';
 			if($piereg_widget == true){
-				$data .= 'document.cookie= "piereg_math_captcha_Login_form_widget="+dummy_array;';
+				/*$data .= 'document.cookie= "piereg_math_captcha_Login_form_widget="+dummy_array;';*/
+				$data .= 'document.cookie= "piereg_math_captcha_Login_form_widget='.$result1."|".$result2."|".$result3.'";';
 			}
 			else{
-				$data .= 'document.cookie= "piereg_math_captcha_Login_form="+dummy_array;';
+				/*$data .= 'document.cookie= "piereg_math_captcha_Login_form="+dummy_array;';*/
+				$data .= 'document.cookie= "piereg_math_captcha_Login_form='.$result1."|".$result2."|".$result3.'";';
 			}
 			$data .= '</script>';
 			
@@ -411,41 +416,6 @@ if(!function_exists("login_form_captcha"))
 					"color"		 : "'.$color[$image_name].'"
 				});
 				jQuery("'.$field_id.'").html("'.$start." ".$operator." ".$end . ' = ");
-			 
-			 
-			 
-				/*var CVS = document.createElement("canvas"),
-				ctx = CVS.getContext("2d");
-				
-				CVS.width  = 115;
-				CVS.height = 40;
-				document.getElementById("pieregister_math_captha_login_form").appendChild(CVS);
-				
-				//// GRAPHICS TO CANVAS /////
-				function sendToCanvas( ob ){
-				  var img = new Image();
-				  img.onload = function(){
-					ctx.drawImage(img, 0, 0);
-					ctx.font = ob.fontWeight+" "+ob.fontSize+" "+ob.fontFamily;
-					ctx.textAlign = "center";
-					ctx.fillStyle = ob.color;
-					ctx.fillText(ob.text, 60, 25);
-				  };
-				  img.src = ob.image;
-				}
-				///////////////////////////
-				
-				// DO IT! /////////////////
-				sendToCanvas({
-				  image      : "'.plugins_url('pie-register').'/images/math_captcha/'.$image_name.'.png",
-				  text       : "'.$start." ".$operator." ".$end . ' = ",
-				  fontFamily : "Arial",
-				  fontWeight : "bold",
-				  fontSize   : "20px",
-				  //color      : "rgba(0, 0, 0, 0.6)"
-				  color      : "'.$color[$image_name].';"
-				  //color      : "rgba(0, 0, 999, 0.6);"
-				});*/
 			 </script>
 			 </div>';
 			 

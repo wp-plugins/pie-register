@@ -97,9 +97,30 @@ piereg(document).ready(function(){
 					<td></td>
 				</tr>
 			</table>
-            </div>
-            
-            
+            <h2><?php _e("Plugins & Themes Status","piereg"); ?></h2>
+            <p class="pieHelpPara"><a class="button-primary piereg_log_view_btn" onclick="piereg('.piereg_log_view_area').fadeToggle(1000);return false;"><?php _e("Show Log", "piereg"); ?></a></p>
+        	<textarea class="piereg_log_view_area" style="max-width:100%;min-width:50%;width:100%;height:300px;display:none;" readonly="readonly"  onkeypress="this.select();" onclick="this.select();" onfocus="this.select();"><?php 
+							$themes = wp_get_themes();
+							$current_theme = get_current_theme();
+							echo "================= Themes =================\r\n\r\n";
+							foreach($themes as $theme){
+								if( $current_theme == $theme['Name'] )
+									echo $theme['Name']." [ACTIVATE]\r\n";
+								else
+									echo $theme['Name']." [DEACTIVATE]\r\n";
+							}
+							
+							$activate_plugins 	= get_option('active_plugins');
+							$all_plugins 		= get_plugins();
+							echo "\r\n\r\n================= Plugins (".count($activate_plugins)."/".count($all_plugins).") =================\r\n\r\n";
+							foreach($all_plugins as $key=>$plugin){
+								if( in_array($key,$activate_plugins) )
+									echo $plugin['Name']." [ACTIVATE]\r\n";
+								else
+									echo $plugin['Name']." [DEACTIVATE]\r\n";
+							}
+		  ?></textarea>
+        </div>
             
 		<div class="piereg-plugin-rate">
             <h3>

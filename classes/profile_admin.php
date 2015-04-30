@@ -172,7 +172,7 @@ class Profile_admin extends PieReg_Base
             $options   = $this->createDropdown($countries, ((isset($address['country']))?$address['country']:""));
             echo '<div  class="address2" >
 					<select id="country_' . $this->id . '" name="' . $this->slug . '[country]" >
-                    <option>'.__("Select Country","piereg").'</option>
+                    <option value="">'.__("Select Country","piereg").'</option>
 					' . $options . '
 					 </select>
 					<label>'.__("Country","piereg").'</label>
@@ -393,7 +393,8 @@ class Profile_admin extends PieReg_Base
     {
         if (sizeof($this->data) > 0)
 		{
-            $this->user_id = $user->ID;			
+            $this->user_id = $user->ID;	
+			echo "<h3>Additionals Registration Fields (Pie-Register)</h3>";
             echo '<table class="form-table">';
            foreach ($this->data as $this->field) 
 		   {
@@ -442,6 +443,11 @@ class Profile_admin extends PieReg_Base
  	}
     function validate_user_profile($errors, $update, $user)
     {
+		/*
+			*	Sanitizing post data
+		*/
+		$this->piereg_sanitize_post_data( ( (isset($_POST) && !empty($_POST))?$_POST : array() ) );
+		
         foreach ($this->data as $this->field) {
             $this->slug         = $this->createFieldName($this->field['label']);
             $this->type         = $this->type;
