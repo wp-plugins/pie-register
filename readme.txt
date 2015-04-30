@@ -4,7 +4,7 @@ Contributors: genetech
 Tags: register plugin, user register, register, registration, registration plugin, custom registration, custom login plugin, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
 Tested up to: 4.2.1
-Stable tag: 2.0.14
+Stable tag: 2.0.15
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
