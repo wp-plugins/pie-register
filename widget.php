@@ -102,7 +102,9 @@ class Pie_Login_Widget extends WP_Widget {
 			$output = pieOutputLoginForm(true);
 			echo $output;
 		}else{
-			$current_user = wp_get_current_user();
+			global $current_user;
+			get_currentuserinfo();
+			//$current_user = wp_get_current_user();
 			if ( ! empty( $after_title ) )
 			echo $args['before_title'] . $after_title . $args['after_title'];
 			
@@ -129,7 +131,16 @@ class Pie_Login_Widget extends WP_Widget {
 			$profile_image_html = '<a href="'.$profile_link.'">'.$profile_avatar.'</a>';
 			echo apply_filters('pie_profile_image_frontend_widget',$profile_image_html,$profile_link,$profile_pic);
 			////////////////////////////
-			$profile_text = $current_user->user_login;
+			
+			$first_name = get_user_meta($current_user->ID,"first_name",true);
+			$last_name = get_user_meta($current_user->ID,"last_name",true);
+			if( !empty($first_name) && !empty($last_name) )
+				$profile_text = $first_name . "&nbsp;" . $last_name;
+			elseif( !empty($current_user->display_name) )
+				$profile_text = $current_user->display_name;
+			else
+				$profile_text = $current_user->user_login;
+				
 			$profile_text_html = '<a href="'.$profile_link .'">' . $profile_text . '</a>';
 			
 			

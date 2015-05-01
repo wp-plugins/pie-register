@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2014-12-04 17:56+0500\n"
+"PO-Revision-Date: 2015-03-04 12:28+0500\n"
 "Last-Translator: Baqar <baqarsoft@gmail.com>\n"
 "Language-Team: Gianluca Cassarino <gcassarino@gmail.com>\n"
 "Language: it_IT\n"
@@ -391,8 +391,8 @@ msgstr ""
 "su reCAPTCHA."
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:200
-msgid "reCAPTCHA Public Key"
-msgstr "reCAPTCHA chiave pubblica"
+msgid "reCAPTCHA Site Key"
+msgstr "reCAPTCHA Site Key"
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:202
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:206
@@ -404,8 +404,8 @@ msgstr ""
 "per avere un account gratuito per ottenere la chiave."
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:204
-msgid "reCAPTCHA Private Key"
-msgstr "reCAPTCHA chiave privata"
+msgid "reCAPTCHA Secret Key"
+msgstr "reCAPTCHA Secret Key"
 
 #: \\wp-content\plugins\pie-register/menus/PieGeneralSettings.php:212
 msgid "Custom CSS"
@@ -515,18 +515,17 @@ msgstr "Import / Export"
 
 #: \\wp-content\plugins\pie-register/menus/PieRegImportExport.php:72
 msgid ""
-"Now you can export all users with custom fields with a particular date range "
-"in a CSV file! Simply select your fields and select your Date Range. The "
-"Date Range feature is optional which means that if you do not select a date "
-"range then all entries will be exported. Click on the Download Export Files "
-"to complete the operation."
+"Now you can export all users fields with a particular date range in a CSV "
+"file! Simply select your fields and select your Date Range. The Date Range "
+"feature is optional which means that if you do not select a date range then "
+"all entries will be exported. Click on the Download Export Files to complete "
+"the operation."
 msgstr ""
-"Ora è possibile esportare tutti gli utenti con campi personalizzati con un "
-"particolare intervallo di date in un file CSV! Basta selezionare i campi e "
-"selezionare l'intervallo di date. La funzione Intervallo date è opzionale il "
-"che significa che se non si seleziona un intervallo di date quindi tutte le "
-"voci verranno esportate. Fare clic sul scarica il file di esportazione per "
-"completare l'operazione."
+"Now you can export all users fields with a particular date range in a CSV "
+"file! Simply select your fields and select your Date Range. The Date Range "
+"feature is optional which means that if you do not select a date range then "
+"all entries will be exported. Click on the Download Export Files to complete "
+"the operation."
 
 #: \\wp-content\plugins\pie-register/menus/PieRegImportExport.php:78
 msgid "Select Fields"
@@ -1049,8 +1048,8 @@ msgstr "Il tuo account è ora attivo"
 msgid "Please enter Logo URL"
 msgstr "Inserisci URL Logo "
 
-msgid "Enable Curl"
-msgstr "Abilita Curl"
+msgid "Curl"
+msgstr "Curl"
 
 msgid "Enter logo tooltip"
 msgstr "Inserisci tooltip logo"
@@ -1275,8 +1274,8 @@ msgstr ""
 "Intervallo date è facoltativo, se non è selezionato alcun intervallo di date "
 "verranno esportate tutte le voci."
 
-msgid "Download Export Files"
-msgstr "Scarica File Esportatazione"
+msgid "Download CSV File"
+msgstr "Download CSV File"
 
 msgid "Confirm Password"
 msgstr "Conferma Password"
@@ -2986,3 +2985,68 @@ msgstr "Invalid or malformed request. This key is no longer exists"
 #: ******* Add These Variables Since 2.0.13 ********
 msgid "Sorry, your nonce did not verify."
 msgstr "Sorry, your nonce did not verify."
+
+#: ******* Add These Variables Since 2.0.15 ********
+msgid "File Get Contents"
+msgstr "File Get Contents"
+
+msgid "MB String"
+msgstr "MB String"
+
+msgid "PHP Post Max Size"
+msgstr "PHP Post Max Size"
+
+msgid "PHP Time Limit"
+msgstr "PHP Time Limit"
+
+msgid "WP Memory Limit"
+msgstr "WP Memory Limit"
+
+msgid "WP Debug Mode"
+msgstr "WP Debug Mode"
+
+msgid "WP Language"
+msgstr "WP Language"
+
+msgid "WP Max Upload Size"
+msgstr "WP Max Upload Size"
+
+msgid "Please install File Get Contents on server"
+msgstr "Please install File Get Contents on server"
+
+msgid "Please install MB String on server"
+msgstr "Please install MB String on server"
+
+msgid "Please install ini_get on server"
+msgstr "Please install ini_get on server"
+
+msgid "Please install CURL on server"
+msgstr "Please install CURL on server"
+
+msgid "Old Password"
+msgstr "Old Password"
+
+msgid "Old Password Field do not macth!"
+msgstr "Old Password Field do not macth!"
+
+msgid "Old and New passwords are same!"
+msgstr "Old and New passwords are same!"
+
+msgid "Invalid Old Password Field!"
+msgstr "Invalid Old Password Field!"
+
+msgid "Email Edit Verifications"
+msgstr "Email Edit Verifications"
+
+msgid "1 Step (Verify new address only)"
+msgstr "1 Step (Verify new address only)"
+
+msgid ""
+"2 Step (Authenticate request by sending an email to old address + verify new "
+"address)"
+msgstr ""
+"2 Step (Authenticate request by sending an email to old address + verify new "
+"address)"
+
+msgid "Invalid request. This key is no longer exists"
+msgstr "Invalid request. This key is no longer exists"

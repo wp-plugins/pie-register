@@ -68,6 +68,12 @@ piereg(document).ready(function(){
               <span class="quotation"><?php _e("Set this to Yes if you want users to register only by your defined invitaion codes. You will have to add invitation code field in the form editor","piereg");?>.</span> </div>
           </li>
           <li>
+            <p class="submit">
+              <input name="Submit" style="background: #464646;color: #ffffff;border: 0;cursor: pointer;padding: 5px 0px 5px 0px;margin-top: 15px;
+min-width: 113px;float:right;" value="<?php _e('Save Settings','piereg');?>" type="submit" />
+            </p>
+          </li>
+          <li>
             <div class="fields">
               <h3><?php _e("Insert Code","piereg");?></h3>
               <textarea id="piereg_codepass" name="piereg_codepass"></textarea>
@@ -212,8 +218,8 @@ piereg(document).ready(function(){
         <select name="invitaion_code_bulk_option" id="invitaion_code_bulk_option">
             <option selected="selected" value="0"><?php _e("Bulk Actions","piereg"); ?></option>
             <option value="delete"><?php _e("Delete","piereg"); ?></option>
-            <option value="active"><?php _e("Active","piereg"); ?></option>
-            <option value="unactive"><?php _e("Unactive","piereg"); ?></option>
+            <option value="active"><?php _e("Activate","piereg"); ?></option>
+            <option value="unactive"><?php _e("Deactivate","piereg"); ?></option>
         </select>
         <input type="submit" value="<?php _e("Apply","piereg"); ?>" class="button action" id="doaction" name="btn_submit_invitaion_code_bulk_option">
     </form>

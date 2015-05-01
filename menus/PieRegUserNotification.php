@@ -186,6 +186,7 @@ min-width: 113px;float:right;" value="<?php _e('Save Changes','piereg');?>" type
                         <option value="%reset_password_url%"><?php _e("Reset Password URL",'piereg') ?></option>
                         <option value="%activationurl%"><?php _e("User Activation URL",'piereg') ?></option>
                         <option value="%reset_email_url%"><?php _e("Reset Email URL",'piereg') ?></option>
+                        <option value="%confirm_current_email_url%"><?php _e("Confirm Current Email URL",'piereg') ?></option>
                         <option value="%user_ip%"><?php _e("User IP",'piereg') ?></option>
                         <option value="%user_new_email%"><?php _e("User New E-mail",'piereg') ?></option>
                         <option value="%pending_payment_url%"><?php _e("Pending Payment URL",'piereg') ?></option>

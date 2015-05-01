@@ -91,7 +91,7 @@ class Registration_form extends PieReg_Base
 		//$widget = ( ($fromwidget)? ' pie_widget-2 #' : '' );
 		$label2 = (isset($this->field['label2']) and !empty($this->field['label2']))? __($this->field['label2'],"piereg") : __("Confirm Password","piereg");
 		
-		$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.$label2.'</label><input id="confirm_password_'.$this->id.'" type="password" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" autocomplete="off" />';	
+		$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.$label2.'</label><input id="confirm_password_'.$this->id.'" name="confirm_password" type="password" data-errormessage-value-missing="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-underflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" data-errormessage-range-overflow="'.((isset($this->field['validation_message']))?$this->field['validation_message']:"").'" class="input_fields '.$this->field['css'].' piereg_validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" autocomplete="off" />';	
 		
 			
 		return $data;
@@ -129,7 +129,7 @@ class Registration_form extends PieReg_Base
 	}
 	function addProfilePicUpload()
 	{
-		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass("input_fields",array("funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]")).'"  '.$this->addValidation().' type="file"  />';	
+		return '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass("input_fields",array("funcCall[checkExtensions],ext[gif|GIF|jpeg|JPEG|jpg|JPG|png|PNG|bmp|BMP]")).'"  '.$this->addValidation().' type="file"  />';	
 	}
 	function addTextArea()
 	{
@@ -307,6 +307,13 @@ class Registration_form extends PieReg_Base
 	}
 	function addHTML()
 	{
+		
+		$data = '<div class="piereg-html-field-content" >';
+		$data .= html_entity_decode($this->field['html']);
+		$data .= '</div>';
+		$data .= $this->addDesc();
+		return $data;
+		
 		return html_entity_decode($this->field['html']);
 	}
 	function addSectionBreak()
@@ -384,7 +391,7 @@ class Registration_form extends PieReg_Base
 		
 		$data .= '<div class="address">
 		  <div class="address2">
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['city']))?$address_values['city']:"").'">
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  '.$this->addValidation().' value="'.((isset($address_values['city']))?$address_values['city']:"").'">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
@@ -395,7 +402,7 @@ class Registration_form extends PieReg_Base
 			 	if($this->field['address_type'] == "International")
 				{
 					$data .= '<div class="address2"  >
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['state']))?$address_values['state']:"").'">
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  '.$this->addValidation().' value="'.((isset($address_values['state']))?$address_values['state']:"").'">
 					<label>'.__("State / Province / Region","piereg").'</label>
 				 	 </div>';		
 				}
@@ -447,7 +454,7 @@ class Registration_form extends PieReg_Base
 			 $options 	= $this->createDropdown($countries,$selectedoption);  
 			 $data .= '<div  class="address2" >
 					<select id="country_'.$this->id.'" name="'.$this->name.'[country]" class="'.$this->addClass("").'"   '.$this->addValidation().'>
-                    <option>'.__("Select Country","piereg").'</option>
+                    <option value="">'.__("Select Country","piereg").'</option>
 					'. $options .'
 					 </select>
 					<label>'.__("Country","piereg").'</label>
@@ -462,8 +469,9 @@ class Registration_form extends PieReg_Base
 	function addDate()
 	{			
 		$data = "";
+		$date_this_values = array();
 		$date_this_values = $this->getDefaultValue($this->name);
-		if($date_this_values != ""){
+		if(is_array($date_this_values)){
 			$date_this_values['date']['mm']="";
 			$date_this_values['date']['dd']="";
 			$date_this_values['date']['yy']="";
@@ -752,7 +760,10 @@ class Registration_form extends PieReg_Base
 	}
 	function addLabel()
 	{
-		if($this->field['type']=="name" && $this->field['name_format']=="normal")
+		if($this->field['type'] == "html" && $this->field['label'] == ""){
+			return "";
+		}
+		elseif($this->field['type']=="name" && $this->field['name_format']=="normal")
 		{
 			return "";
 		}		
@@ -931,16 +942,14 @@ class Registration_form extends PieReg_Base
 		$data = "";
 		
 		$data .='
-		<script type="text/javascript">
-			var dummy_array = [];
-			dummy_array[0] = "'.$result1.'";
-			dummy_array[1] = "'.$result2.'";
-			dummy_array[2] = "'.$result3.'";';
+		<script type="text/javascript">';
 		if($piereg_widget == true){
-			$data .= 'document.cookie="piereg_math_captcha_registration_widget="+dummy_array;';
+			/*$data .= 'document.cookie="piereg_math_captcha_registration_widget="+dummy_array;';*/
+			$data .= 'document.cookie="piereg_math_captcha_registration_widget='.$result1."|".$result2."|".$result3.'";';
 		}
 		else{
-			$data .= 'document.cookie="piereg_math_captcha_registration="+dummy_array;';
+			/*$data .= 'document.cookie="piereg_math_captcha_registration="+dummy_array;';*/
+			$data .= 'document.cookie="piereg_math_captcha_registration='.$result1."|".$result2."|".$result3.'";';
 		}
 		$data .= '</script>';
 		
@@ -980,42 +989,6 @@ class Registration_form extends PieReg_Base
 				"color"		 : "'.$color[$image_name].'"
 			});
 			jQuery("'.$field_id.'").html("'.$start." ".$operator." ".$end . ' = ");
-		 
-		 
-		 
-		 
-			/*var CVS = document.createElement("canvas"),
-			ctx = CVS.getContext("2d");
-			
-			CVS.width  = 115;
-			CVS.height = 40;
-			document.getElementById("pieregister_math_captha").appendChild(CVS);
-			
-			//// GRAPHICS TO CANVAS /////
-			function sendToCanvas( ob ){
-			  var img = new Image();
-			  img.onload = function(){
-				ctx.drawImage(img, 0, 0);
-				ctx.font = ob.fontWeight+" "+ob.fontSize+" "+ob.fontFamily;
-				ctx.textAlign = "center";
-				ctx.fillStyle = ob.color;
-				ctx.fillText(ob.text, 60, 25);
-			  };
-			  img.src = ob.image;
-			}
-			///////////////////////////
-			
-			// DO IT! /////////////////
-			sendToCanvas({
-			  image      : "'.plugins_url('pie-register').'/images/math_captcha/'.$image_name.'.png",
-			  text       : "'.$start." ".$operator." ".$end . ' = ",
-			  fontFamily : "Arial",
-			  fontWeight : "bold",
-			  fontSize   : "20px",
-			  //color      : "rgba(0, 0, 0, 0.6)"
-			  color      : "'.$color[$image_name].';"
-			  //color      : "rgba(0, 0, 999, 0.6);"
-			});*/
 		 </script>';
 		 
 		 return $data;
@@ -1331,14 +1304,15 @@ class Registration_form extends PieReg_Base
 				if($this->field['type'] == "password" )
 				{
 					$widget = (isset($fromwidget) && $fromwidget == true)? '_widget' : '';
-					?>
+					/*?>
                     <script type="text/javascript">
 						var password_strength_meter<?php echo $widget; ?> = <?php echo ((isset($this->field['restrict_strength']))?intval($this->field['restrict_strength']):0); ?>;
 					</script>
-                    <?php
+                    <?php*/
+					$pie_reg_fields .= '<input type="hidden" id="password_strength_meter_1" data-id="1" value="'.((isset($this->field['restrict_strength']))?intval($this->field['restrict_strength']):0).'" />';
 					//Weak Password	
 					$strength_message = ((isset($this->field['strength_message']) && !empty($this->field['strength_message']))?__($this->field['strength_message'],"piereg"):__("Weak Password","piereg"));
-                    $pie_reg_fields .= '<span id="password_strength_message" style="display:none;">'.$strength_message.'</span>';
+                    $pie_reg_fields .= '<span id="password_strength_message_1" style="display:none;">'.$strength_message.'</span>';
 				}
 				
 				
@@ -1371,10 +1345,17 @@ class Registration_form extends PieReg_Base
 		if(!is_wp_error($errors))
 		$errors = new WP_Error();
 		$piereg 	= get_option( 'pie_register_2' );
-		
+		/*
+			*	Sanitizing post data
+		*/
+		$this->piereg_sanitize_post_data( ( (isset($_POST) && !empty($_POST))?$_POST : array() ) );
 		
 		global $wpdb;
-		if ( empty( $_POST['username'] ) )
+		
+		do_action("pieregister_registration_validation_before");
+		
+		$_POST['username'] = preg_replace('/\s+/', '', strtolower($_POST['username']));
+		if ( !isset($_POST['username']) && empty( $_POST['username'] ) && !validate_username($_POST['username']) )
 		{
 			$errors->add( "username" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Username",__('Invalid Username','piereg' )));
 		}
@@ -1383,7 +1364,7 @@ class Registration_form extends PieReg_Base
 			$errors->add( "username" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Username_already_exists",__('Username already exists','piereg' )));
 		}		
 		
-		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
+		if ( !isset($_POST['e_mail']) || empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
 			$errors->add( "email" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_Email_address",__('Invalid E-mail address','piereg' )));
 		}
@@ -1391,6 +1372,10 @@ class Registration_form extends PieReg_Base
 		{
 			$errors->add( "email" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Email_address_already_exists",__('E-mail address already exists','piereg' )));
 					
+		}
+		if(isset($_POST['password'], $_POST['confirm_password'] ) && !empty($_POST['password']) && $_POST['password'] != $_POST['confirm_password'] )
+		{
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_password",__('Invalid Password','piereg' )));
 		}
 		if(is_array($this->data)){
 			 foreach($this->data as $field)
@@ -1413,7 +1398,7 @@ class Registration_form extends PieReg_Base
 			{
 				$field_name = $_FILES[$slug]['name'];
 				if($_FILES[$slug]['name'] != ''){
-					$result = $this->piereg_validate_files($_FILES[$slug]['name'],array("gif","jpeg","jpg","png","bmp"));
+					$result = $this->piereg_validate_files($_FILES[$slug]['name'],array("gif","GIF","jpeg","JPEG","jpg","JPG","png","PNG","bmp","BMP"));
 					if(!$result){
 						$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_Invalid_File_Type_In_Profile_Picture",__('Invalid File Type In Profile Picture.','piereg' )));
 					}
@@ -1478,7 +1463,8 @@ class Registration_form extends PieReg_Base
 				if(isset($_POST['piereg_math_captcha']))
 				{
 					$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_registration'];
-					$piereg_cookie_array = explode(",",$piereg_cookie_array);
+					/*$piereg_cookie_array = explode(",",$piereg_cookie_array);*/
+					$piereg_cookie_array = explode("|",$piereg_cookie_array);
 					$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
 					$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
 					$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
@@ -1492,7 +1478,8 @@ class Registration_form extends PieReg_Base
 				elseif(isset($_POST['piereg_math_captcha_widget']))
 				{
 					$piereg_cookie_array =  $_COOKIE['piereg_math_captcha_registration_widget'];
-					$piereg_cookie_array = explode(",",$piereg_cookie_array);
+					/*$piereg_cookie_array = explode(",",$piereg_cookie_array);*/
+					$piereg_cookie_array = explode("|",$piereg_cookie_array);
 					$cookie_result1 = (intval(base64_decode($piereg_cookie_array[0])) - 12);
 					$cookie_result2 = (intval(base64_decode($piereg_cookie_array[1])) - 786);
 					$cookie_result3 = (intval(base64_decode($piereg_cookie_array[2])) + 5);
@@ -1548,6 +1535,7 @@ class Registration_form extends PieReg_Base
 			
 		 }
 		}
+		do_action("pieregister_registration_validation_after");
 		return $errors;
 	}
 	function addUser($user_id)

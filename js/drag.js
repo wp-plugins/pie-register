@@ -52,6 +52,9 @@ function getStyle(type) {
 
 		html.find("#field_position_" + no).html('<div style="width:100%;float:left;border: 1px solid #aaaaaa;margin-top:25px;"></div>');
 
+	} else if (type == "username") {
+		html.find("#field_label_" + no + " label").html("Username");
+		html.find("#field_position_" + no).html('<input type="text" disabled="disabled"  id="field_' + no + '" class="input_fields">');
 	}
 
 	if (type == "pagebreak") {
@@ -407,7 +410,7 @@ function bindButtons() {
 				  console.log(e);
 			}
 			
-			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "math_captcha" || delType == "invitation") {
+			if (delType == "default" || delType == "name" || delType == "address" || delType == "captcha" || delType == "math_captcha" || delType == "invitation" || delType == "username") {
 
 				piereg("ul.controls li a[name='" + field + "']").parent().show();
 
@@ -1192,7 +1195,7 @@ piereg(document).ready(function () {
 
 				piereg(".swap_class").trigger("change")
 
-				if (dragType == "invitation" || dragType == "name" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url") {
+				if (dragType == "invitation" || dragType == "name" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url" || delType == "username") {
 
 					piereg('ul.controls li a[name="' + dragType + '"]').parent().hide();
 

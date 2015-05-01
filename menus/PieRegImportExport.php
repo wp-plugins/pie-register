@@ -56,6 +56,14 @@ piereg(document).ready(function(e) {
   <h2>
     <?php  _e("Import/Export User Entries",'piereg') ?>
   </h2>
+  
+   <!-- Add Start -->
+    <?php
+    //$PieReg_Adds = new PieReg_Adds();
+	//$PieReg_Adds->get_add("import_export");
+	?>
+    <!-- Add End -->
+  
   <div style="clear: both;float: none;">
 	  <?php
        if(!empty( $_POST['error_message'] ))
@@ -75,7 +83,7 @@ piereg(document).ready(function(e) {
             <h2>
               <?php  _e("Export",'piereg'); ?>
             </h2>
-            <p><?php  _e("Now you can export all users with custom fields with a particular date range in a CSV file! Simply select your fields and select your Date Range. The Date Range feature is optional which means that if you do not select a date range then all entries will be exported. Click on the Download Export Files to complete the operation.",'piereg'); ?> </p>
+            <p><?php  _e("Now you can export default user fields with a particular date range in a CSV file! Simply select your fields and select your Date Range. The Date Range feature is optional which means that if you do not select a date range then all entries will be exported. Click on the Download Export Files to complete the operation.",'piereg'); ?> </p>
           </div>
         </li>
         <li>
@@ -145,7 +153,7 @@ piereg(document).ready(function(e) {
               </div>
             <?php _e("Date Range is optional, if no date range is selected all entries will be exported.","piereg"); ?>
             <div class="piereg_clear"></div>
-            <input type="submit" class="submit_btn" value="<? _e("Download Export Files","piereg")?>" />
+            <input type="submit" class="submit_btn" value="<? _e("Download CSV File","piereg")?>" />
           </div>
         </li>
       </ul>

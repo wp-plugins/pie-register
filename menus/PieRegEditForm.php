@@ -50,7 +50,7 @@ var defaultMeta = Array();
 foreach($meta as $key=>$value)
 {
 ?>
-	defaultMeta["<?php echo $key?>"] = '<?php echo mysql_escape_string($value)?>';	
+	defaultMeta["<?php echo $key?>"] = '<?php echo esc_sql($value)?>';	
 <?php 
 }
 ?>
@@ -62,6 +62,14 @@ foreach($meta as $key=>$value)
     <h2>
       <?php _e("Form Editor : Registration Form",'piereg');?>
     </h2>
+    
+    <!-- Add Start -->
+    <?php
+    //$PieReg_Adds = new PieReg_Adds();
+	//$PieReg_Adds->get_add("form_editor");
+	?>
+    <!-- Add End -->
+    
     <form method="post" id="formeditor">
       <input type="hidden" name="field[form][type]" value="form">
       <input type="hidden" name="field[form][meta]" value="0">
@@ -188,8 +196,12 @@ foreach($meta as $key=>$value)
               <label><?php echo (empty($field['label']) ? $field['type']:trim($field['label']))?></label>
             </div>
             <?php
-           //We can't remove Username, password and email fields
-		    if(!isset($field['remove']))					
+			/*
+				*	Modify Username field Since 2.0.15
+			*/
+           //We can't remove password and email fields
+		    //if(!isset($field['remove']))
+		    if(!isset($field['remove']) || ($field['type'] == "username") )
 				  	echo '<a href="javascript:;" rel="'.$field['id'].'" class="delete_btn">X</a>';                
 			  	else
 			  		echo '<input  name="field['.$field['id'].'][remove]" value="0" type="hidden" /> '; 
@@ -426,6 +438,7 @@ foreach($meta as $key=>$value)
     <ul>
       <li id="default_fields"><a class="right_menu_heading" href="javascript:;"><?php _e("Default Fields","piereg"); ?></a>
         <ul class="controls picker pie-content-ul"  id="content_1">
+	      <li class="standard_name"><a name="username" class="default" href="javascript:;"><?php _e("Username","piereg"); ?></a></li>
           <li class="standard_name"><a name="name" class="default" href="javascript:;"><?php _e("Name","piereg"); ?></a></li>
           <li class="standard_website"><a name="url" class="default" href="javascript:;"><?php _e("Website","piereg"); ?></a></li>
           <li class="standard_aim"><a name="aim" class="default" href="javascript:;"><?php _e("AIM","piereg"); ?></a></li>
@@ -453,13 +466,13 @@ foreach($meta as $key=>$value)
         <ul class="controls picker pie-content-ul"  id="content_3">
           <?php /*?><li class="standard_time"><a name="time" href="javascript:;"><?php _e("Time","piereg"); ?></a></li><?php */?>
           <li class="standard_address"><a name="address" href="javascript:;"><?php _e("Address","piereg"); ?></a></li>
-          <li class="standard_captcha"><a name="captcha" class="default" href="javascript:;"><?php _e("Re-Captcha","piereg"); ?></a></li>
+          <li class="standard_captcha_n"><a name="captcha" class="default" href="javascript:;"><?php _e("Re-Captcha","piereg"); ?></a></li>
           <li class="standard_captcha"><a name="math_captcha" class="default" href="javascript:;"><?php _e("Math Captcha","piereg"); ?></a></li>
           <li class="standard_date"><a name="date" href="javascript:;"><?php _e("Date","piereg"); ?></a></li>
           <li class="standard_time"><a name="time" href="javascript:;"><?php _e("Time","piereg"); ?></a></li>
           <li class="standard_phone"><a name="phone" href="javascript:;"><?php _e("Phone","piereg"); ?></a></li>
           <li class="standard_upload"><a name="upload" href="javascript:;"><?php _e("Upload","piereg"); ?></a></li>
-          <li class="standard_upload"><a name="profile_pic"  href="javascript:;"><?php _e("Profile Picture","piereg"); ?></a></li>
+          <li class="standard_profile"><a name="profile_pic"  href="javascript:;"><?php _e("Profile Picture","piereg"); ?></a></li>
           <li class="standard_list"><a name="list" href="javascript:;"><?php _e("List","piereg"); ?></a></li>
           <?php if($button['enable_invitation_codes']==1) { ?> 
           <li class="standard_invitation"><a name="invitation" class="default" href="javascript:;"><?php _e("Invitation Code","piereg"); ?></a></li>

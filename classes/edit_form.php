@@ -72,7 +72,11 @@ class Edit_form extends PieReg_Base
 	function addPassword()
 	{
 		$data = "";	
-		$data .= '<input id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" value="" autocomplete="off" />';	
+		
+		$data .= '<label>'.__("Old Password","piereg").'</label><input id="old_password_'.$this->id.'" type="password" class="input_fields" value="" name="old_password" autocomplete="off"></div></li>';
+		
+		
+		$data .= '<li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset">'.$this->addLabel().'<input id="'.$this->id.'" name="password" class="'.$this->addClass("input_fields",array("minSize[8]")).'" placeholder="'.$this->field['placeholder'].'" type="password" value="" autocomplete="off" />';	
 		
 			$class = '';
 			$fclass = '';
@@ -81,7 +85,7 @@ class Edit_form extends PieReg_Base
 			if($this->label_alignment=="top")
 				$topclass = "label_top"; 
 			$label2 = ((isset($this->field['label2']))?$this->field['label2']:"Confirm Password");
-			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.__($label2,"piereg").'</label><div '.$fclass.'><input id="confirm_password_'.$this->id.'" type="password" class="input_fields validate[required,equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" value="" name="confirm_password" autocomplete="off">';
+			$data .= '</div></li><li class="fields pageFields_'.$this->pages.' '.$topclass.'"><div class="fieldset"><label>'.__($label2,"piereg").'</label><div '.$fclass.'><input id="confirm_password_'.$this->id.'" type="password" class="input_fields piereg_validate[equals['.$this->id.']]" placeholder="'.$this->field['placeholder'].'" value="" name="confirm_password" autocomplete="off">';
 		return $data;	
 	}	
 	function addEmail()
@@ -104,7 +108,8 @@ class Edit_form extends PieReg_Base
 		$data = "";
 		//$val = get_usermeta($this->user->data->ID , $this->slug);
 		$val = get_user_meta($this->user->data->ID , $this->slug,true);
-		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().' validate[funcCall[checkExtensions],ext[gif|jpeg|jpg|png|bmp]]" type="file"  />';
+		
+		$data .= '<input id="'.$this->id.'" name="'.$this->name.'" class="'.$this->addClass().' piereg_validate[funcCall[checkExtensions],ext[gif|GIF|jpeg|JPEG|jpg|JPG|png|PNG|bmp|BMP]]" type="file"  />';
 		$data .= '<input id="'.$this->id.'" name="'.$this->name.'_hidden" value="'.$val.'" type="hidden"  />';
 		$ext = (trim(basename($val)))? $val." Not Found" : "Profile Pictuer Not Found";
 		
@@ -323,7 +328,7 @@ class Edit_form extends PieReg_Base
 		
 		$data .= '<div class="address">
 		  <div class="address2">
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  value="'.((isset($val['city']))?$val['city']:"").'">
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  value="'.((isset($val['city']))?$val['city']:"").'">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
@@ -333,7 +338,7 @@ class Edit_form extends PieReg_Base
 			 	if($this->field['address_type'] == "International")
 				{
 					$data .= '<div class="address2"  >
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  value="'.((isset($val['state']))?$val['state']:"").'">
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  value="'.((isset($val['state']))?$val['state']:"").'">
 					<label>'.__("State / Province / Region","piereg").'</label>
 				 	 </div>';		
 				}
@@ -382,7 +387,7 @@ class Edit_form extends PieReg_Base
 			 $options 	= $this->createDropdown($countries,((isset($val['country']))?$val['country']:""));  
 			 $data .= '<div  class="address2" >
 					<select id="country_'.$this->id.'" name="'.$this->name.'[country]" class="'.$this->addClass("").'">
-                    <option>'.__("Select Country","piereg").'</option>
+                    <option value="">'.__("Select Country","piereg").'</option>
 					'. $options .'
 					 </select>
 					<label>'.__("Country","piereg").'</label>
@@ -397,6 +402,7 @@ class Edit_form extends PieReg_Base
 		$data = "";
 		//$val = get_usermeta($this->user->data->ID , $this->slug);
 		$val = get_user_meta($this->user->data->ID , $this->slug,true);
+		//var_dump($val);
 		$startingDate = $this->field['startingDate'];
 		$endingDate = $this->field['endingDate'];
 		if($this->field['date_type'] == "datefield")
@@ -444,6 +450,11 @@ class Edit_form extends PieReg_Base
 			}
 			else
 			{
+				if(!isset($val['date'])){
+					$val = array('date'=>array());
+				}elseif(!is_array($val['date'])){
+					$val['date'] = array();
+				}
 				$data .= '<div class="piereg_time date_format_field">
 				 <div class="time_fields">
 					<input value="'.$val['date']['dd'].'" id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
@@ -662,9 +673,16 @@ class Edit_form extends PieReg_Base
 		$class = $default." ".((isset($this->field['css']))?$this->field['css']:"");
 		
 		
-		if(isset($this->field['required']) && $this->field['required'])
+		if(isset($this->field['required']) && $this->field['required'] && $this->field['type'] != "password")
 		{
-			$val[] = "required";		
+			if($this->field['type'] == "upload" || $this->field['type'] == "profile_pic"){
+				$meta_value = get_user_meta($this->user->data->ID , $this->slug,true);
+				if(empty($meta_value)){
+					$val[] = "required";
+				}
+			}else{
+				$val[] = "required";
+			}
 		}
 		
 		
@@ -694,16 +712,16 @@ class Edit_form extends PieReg_Base
 			$val[] = "minSize[2]";
 			$val[] = "maxSize[2]";	
 		}
-		else if($this->field['type']=="upload" && explode(",",$this->field['file_types']) > 0)
+		else if($this->field['type']=="upload" && !empty($this->field['file_types']) && explode(",",$this->field['file_types']) > 0)
 		{
-			$val[] = "funcCall[checkExtensions]";	
+			$val[] = "funcCall[checkExtensions]";
 			$val[] = "ext[".str_replace(",","|",$this->field['file_types'])."]";			
 		}
 		
-		if(sizeof($val) > 0)
+		if( !empty($val) && count($val) > 0)
 		{
-			$val = " validate[".implode(",",$val)."]";
-			$class .= $val;	
+			$val = " piereg_validate[".implode(",",$val)."]";
+			$class .= $val;
 		}
 		
 		return $class;	
@@ -717,15 +735,13 @@ class Edit_form extends PieReg_Base
 			$data .= '<input class="pie_prev" name="pie_prev" id="pie_prev_'.$this->pages.'" type="button" value="'.__("Previous","piereg").'" />';
 			$data .= '<input id="pie_prev_'.$this->pages.'_curr" name="page_no" type="hidden" value="'.($this->pages-1).'" />';						
 		}
-		$check_payment = get_option("pie_register_2")	;
-		//if($check_payment["enable_paypal"]==1 && !(empty($check_payment['paypal_butt_id'])))
-		//{
-			//$this->addPaypal();	
-		//}
-		//else
-		//{
-			$data .= '<input name="pie_submit_update" type="submit" value="'.__($this->field['text'],"piereg").'" />';	
-		//}
+		$check_payment = get_option("pie_register_2");
+		$cancel_url = $this->get_current_permalink();
+		if( isset($check_payment['alternate_profilepage']) && !empty($check_payment['alternate_profilepage']) && empty($cancel_url) ){
+			$cancel_url = $this->get_page_permalink_by_id( $check_payment['alternate_profilepage'] );
+		}
+		$data .= '<input type="button" class="piereg_cancel_profile_edit_btn" onclick="location.replace(\''.($cancel_url).'\');" value="'.__("Cancel","piereg").'" />';
+		$data .= '<input name="pie_submit_update" type="submit" value="'.__($this->field['text'],"piereg").'" />';	
 		return $data;
 	}
 	
@@ -935,7 +951,6 @@ class Edit_form extends PieReg_Base
 				case 'text' :								
 				case 'website' :							
 				case 'username' :
-				case 'password':			
 				case 'email' :
 				case 'textarea':
 				case 'dropdown':
@@ -951,8 +966,11 @@ class Edit_form extends PieReg_Base
 				case 'date':				
 				case 'list':							
 				case 'default':
-				$profile_fields_data .= '<div class="fieldset">'.$this->addLabel();
-				break;	
+					$profile_fields_data .= '<div class="fieldset">'.$this->addLabel();
+				break;
+				case 'password':
+					$profile_fields_data .= '<div class="fieldset">';
+				break;
 			endswitch;
 			
 		
@@ -1064,15 +1082,31 @@ class Edit_form extends PieReg_Base
 		$global_options = $piereg_global_options;
 		$errors = new WP_Error();
 		
+		/*
+			*	Sanitizing post data
+		*/
+		$this->piereg_sanitize_post_data( ( (isset($_POST) && !empty($_POST))?$_POST : array() ) );
+		
 		if ( empty( $_POST['e_mail'] ) || !filter_var($_POST['e_mail'],FILTER_VALIDATE_EMAIL) )
 		{
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_Email_address",__('Invalid E-mail address','piereg' )));
-		}	
-		
-		 if($this->user->data->user_pass != $_POST['password'] && $_POST['password'] != $_POST['confirm_password'])
-		 {
-			$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_password_Fields_do_not_macth",__('Password Fields do not macth!','piereg' )));
-		 }	
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_invalid_Email_address",__('Invalid E-mail address','piereg' )));
+		}
+		if($_POST['password'] != $_POST['confirm_password'] && isset($_POST['password'], $_POST['confirm_password']))
+		{
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_password_Fields_do_not_macth",__('Password Fields do not macth!','piereg' )));
+		}
+		/*
+			*	Validate old password since 2.0.15
+		*/
+		if(!wp_check_password( $_POST['old_password'], $this->user->data->user_pass, $this->user->ID ) && !empty($_POST['old_password']))
+		{
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_old_password_Fields_do_not_macth",__('Old Password Fields do not macth!','piereg' )));
+		}elseif(!empty($_POST['password']) && empty($_POST['old_password']) ){
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_old_password_Fields_do_not_macth",__('Invalid Old Password Field!','piereg' )));
+		}elseif($_POST['old_password'] == $_POST['password'] && !empty($_POST['password']) && !empty($_POST['old_password']))
+		{
+			$errors->add( "password" , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.apply_filters("piereg_old_password_and_new_password_same",__('Old and New passwords are same!','piereg' )));
+		}
 		
 		 foreach($this->data as $field)
 		 {
@@ -1113,51 +1147,53 @@ class Edit_form extends PieReg_Base
 			else if($field['type']=="email"){
 				$slug  = $this->createFieldName("e_mail");
 				/*
-					*	Is Email Verification On then
+					*	Is Email & Admin Verification On then
 					*	Add since 2.0.13
+					*	Modefy since 2.0.15
 				*/
-				if($this->user->data->user_email != $_POST['e_mail'] && $global_options['verification'] == 2)
+				if($this->user->data->user_email != $_POST['e_mail'] && !empty($global_options['email_edit_verification_step']) )
 				{
-					//Email dosen't Exists
+					//Email Exists or not
 					if(!email_exists($_POST['e_mail']))
 					{
 						/*
 							*	Save New Email Address in user meta
 						*/
 						update_user_meta($this->user->data->ID,"new_email_address",$_POST['e_mail']);
-						/*
-							*	Generate Key
-						*/
-						if ( empty( $wp_hasher ) ) {
-							require_once ABSPATH . 'wp-includes/class-phpass.php';
-						}
-						$wp_hasher = new PasswordHash( 8, true );
-						$email_hash = wp_generate_password( 40, true, true );
-						$current_time = time();
-						$email_key = md5($email_hash.$current_time);
+						$email_key = md5((uniqid("piereg_").time()));
 						/*
 							*	Email Key add in array for email template
 						*/
-						$keys_array = array("reset_email_key"=>$email_key);
+						if( intval($global_options['email_edit_verification_step']) == "1"){
+							$keys_array = array("reset_email_key"=>$email_key);
+							$email_slug = "email_edit_verification";
+							$user_email_address = esc_sql($_POST['e_mail']);
+							$email_edit_success_msg = "Please follow the link sent to your new Email to verify and make the change applied!";
+						}elseif(intval($global_options['email_edit_verification_step']) == "2"){
+							$keys_array = array("confirm_current_email_key"=>$email_key);
+							$email_slug = "current_email_verification";
+							$user_email_address = esc_sql($this->user->data->user_email);
+							$email_edit_success_msg = "Please confirm the link sent to your current Email to verify and make the change applied!";
+						}
 						/*
 							*	Email send snipt
 						*/
-						$subject 		= html_entity_decode($global_options['user_subject_email_email_edit_verification'],ENT_COMPAT,"UTF-8");
-						$message_temp = "";
-						if($global_options['user_formate_email_email_edit_verification'] == "0"){
-							$message_temp	= nl2br(strip_tags($global_options['user_message_email_email_edit_verification']));
+						$subject		= html_entity_decode($global_options["user_subject_email_{$email_slug}"],ENT_COMPAT,"UTF-8");
+						$message_temp 	= "";
+						if($global_options["user_formate_email_{$email_slug}"] == "0"){
+							$message_temp	= nl2br(strip_tags($global_options["user_message_email_{$email_slug}"]));
 						}else{
-							$message_temp	= $global_options['user_message_email_email_edit_verification'];
+							$message_temp	= $global_options["user_message_email_{$email_slug}"];
 						}
 						
 						$message		= $this->filterEmail($message_temp,$this->user->data, "",false,$keys_array );
-						$from_name		= $global_options['user_from_name_email_edit_verification'];
-						$from_email		= $global_options['user_from_email_email_edit_verification'];					
-						$reply_email 	= $global_options['user_to_email_email_edit_verification'];
+						$from_name		= $global_options["user_from_name_{$email_slug}"];
+						$from_email		= $global_options["user_from_email_{$email_slug}"];					
+						$reply_email 	= $global_options["user_to_email_{$email_slug}"];
 						
 						//Headers
-						$headers  = 'MIME-Version: 1.0' . "\r\n";
-						$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+						$headers  = "MIME-Version: 1.0" . "\r\n";
+						$headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
 					
 						if(!empty($from_email) && filter_var($from_email,FILTER_VALIDATE_EMAIL))//Validating From
 						$headers .= "From: ".$from_name." <".$from_email."> \r\n";
@@ -1168,7 +1204,7 @@ class Edit_form extends PieReg_Base
 							$headers .= "Reply-To: {$from_email}\r\n";
 							$headers .= "Return-Path: {$from_email}\r\n";
 						}
-						if(!wp_mail($_POST['e_mail'], $subject, $message , $headers))
+						if(!wp_mail($user_email_address, $subject, $message , $headers))
 						{
 							$errors->add('check-error',apply_filters("piereg_problem_and_the_email_was_probably_not_sent",__("There was a problem and the email was probably not sent.",'piereg')));
 						}
@@ -1178,7 +1214,7 @@ class Edit_form extends PieReg_Base
 						*/
 						update_user_meta($this->user->data->ID,"new_email_address_hashed",$email_key);
 						$_POST['e_mail'] = $this->user->data->user_email;
-						$_POST['success'] = __("Please follow the link sent to your new Email to verify and make the change applied!","piereg");
+						$_POST['success'] = __($email_edit_success_msg,"piereg");
 					}else{
 						$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.__('This Email already Exists','piereg') );
 					}
@@ -1186,25 +1222,28 @@ class Edit_form extends PieReg_Base
 					$this->user->data->user_email = $_POST['e_mail'];
 				}
 			}
-			
-			/*if($field['type']=="username" || $field['type']=="email"  || $field['type']=="password")
-			{
-				 $slug  = $this->createFieldName($field['label']);	
-			}*/			
-			if($field['type']=="upload")
-			{
-				$this->pie_upload_files($this->user_id,$field,$slug);
-			}
-			if($field['type']=="profile_pic")
-			{
-				$this->pie_profile_pictures_upload($this->user_id,$field,$slug);
-			}
 			$field_name			= ((isset($_POST[$slug]))?$_POST[$slug]:"");
-
-						
 			$required 			= (isset($field['required']))?$field['required']:"";
 			$rule				= (isset($field['validation_rule']))?$field['validation_rule']:"";
 			$validation_message	= (!empty($field['validation_message']) ? $field['validation_message'] : ((isset($field['label']))?$field['label']:"") ." is required.");
+			
+			if($field['type']=="upload")
+			{
+				if( isset($_FILES[$slug]['name']) && $_FILES[$slug]['name'] != '' ){
+					$this->pie_upload_files($this->user_id,$field,$slug);
+					$validation_message = "";
+				}elseif($required && ( !isset($_FILES[$slug]['name']) || empty($_FILES[$slug]['name']) ) )
+					$field_name = "";
+			}
+			if($field['type']=="profile_pic")
+			{
+				if( isset($_FILES[$slug]['name']) && $_FILES[$slug]['name'] != '' ){
+					$this->pie_profile_pictures_upload($this->user_id,$field,$slug);
+					$validation_message = "";
+				}elseif($required && ( !isset($_FILES[$slug]['name']) || empty($_FILES[$slug]['name']) ) )
+					$field_name = "";
+			}
+			
 			
 			if( (!isset($field_name) || empty($field_name)) && $required)
 			{
@@ -1246,7 +1285,7 @@ class Edit_form extends PieReg_Base
 					$errors->add( $slug , '<strong>'.__(ucwords('e'),'piereg').'</strong>: '.$field['label'] .apply_filters("piereg_must_be_a_valid_URL",__(' must be a valid URL.','piereg' )));
 				}	
 			}
-		 }			
+		 }
 		return $errors;
 	}
 	function UpdateUser()
@@ -1254,7 +1293,6 @@ class Edit_form extends PieReg_Base
 		global $wpdb,$pie_success,$pie_error,$pie_error_msg,$pie_suucess_msg,$errors;
 		$errors = new WP_Error();
 		$password = $_POST['password'];
-		
 		
 		foreach($this->data as $field)
 		{
@@ -1301,21 +1339,12 @@ class Edit_form extends PieReg_Base
 						case 'phone':
 						case 'date':
 						case 'list':
-							//$field_value = $_POST[$slug];
-							//update_user_meta($user_id,$slug, $field_value);
-							$field_name			= ((isset($_POST[$slug]))?$_POST[$slug]:"");
+							$field_name = ((isset($_POST[$slug]))?$_POST[$slug]:"");
 							if(update_user_meta($this->user_id, "pie_".$slug, $field_name))
 								$this->pie_success = 1;
 							else
 								$this->pie_error = 1;
-							
-							break;
-						case 'upload':
-							$this->pie_upload_files($this->user_id,$field,$slug);
-							break;
-						case 'profile_pic':
-							$this->pie_profile_pictures_upload($this->user_id,$field,$slug);
-							break;
+						break;
 						case 'time':
 							if($_POST[$slug]['time_format'])
 							{

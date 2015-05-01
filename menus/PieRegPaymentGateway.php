@@ -25,6 +25,14 @@
               <h2>
                 <?php _e('Payment Gateway Settings', 'piereg');?>
               </h2>
+              
+				<!-- Add Start -->
+				<?php
+                //$PieReg_Adds = new PieReg_Adds();
+                //$PieReg_Adds->get_add("payment_gateways");
+                ?>
+                <!-- Add End -->
+              
               <div id="pie-register">
                 <form method="post" action="#paypal_payment_gateway" enctype="multipart/form-data">
                 <?php if( function_exists( 'wp_nonce_field' )) wp_nonce_field( 'piereg_wp_paypal_settings_nonce','piereg_paypal_settings_nonce'); ?>
@@ -71,7 +79,7 @@
                 <li><?php _e("Give Your Button a Name. i.e: Website Access fee and Set Price.","piereg"); ?></li>
                 <li><?php _e('Click on Step3: Customize advance features (optional) Tab, select "Add advanced variables" checkbox and add the following snippet',"piereg"); ?>:
 
-<textarea readonly="readonly" onfocus="this.select();" onclick="this.select();" onkeypress="this.select();" style="height:100px;" >rm=2<?php echo "\r\n"; ?>
+<textarea readonly="readonly" onfocus="this.select();" onclick="this.select();" onkeypress="this.select();" style="height:100px;min-height:auto;" >rm=2<?php echo "\r\n"; ?>
 notify_url=<?php echo ''.trailingslashit(get_bloginfo("url")).'';?>?action=ipn_success<?php echo "\r\n"; ?>
 cancel_return=<?php echo ''.trailingslashit(get_bloginfo("url")).'';?>?action=payment_cancel<?php echo "\r\n"; ?>
 return=<?php echo ''.trailingslashit(get_bloginfo("url")).'' ;?>?action=payment_success</textarea>
@@ -79,14 +87,14 @@ return=<?php echo ''.trailingslashit(get_bloginfo("url")).'' ;?>?action=payment_
                   
                 </li>
                 <li><?php _e("Click Create button, On the next page, you will see the generated button code snippet like the following","piereg"); ?>:
-                  <xmp style="cursor:text;width:100%;white-space:pre-line; margin:0;">
-                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                  <input type="hidden" name="cmd" value="_s-xclick">
-                  <input type="hidden" name="hosted_button_id" value="XXXXXXXXXX">
-                  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                  <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                </form>
-                </xmp>
+                    <xmp style="cursor:text;width:100%;white-space:pre-line; margin:0;">
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                          <input type="hidden" name="cmd" value="_s-xclick">
+                          <input type="hidden" name="hosted_button_id" value="XXXXXXXXXX">
+                          <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                          <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        </form>
+                    </xmp>
                 </li>
                 <li><?php _e("Copy the snippet into any text editor, extract and put the hosted_button_id value (XXXXXXXXXX) into the Above Field.","piereg"); ?></li>
                 <li><?php _e("Save Changes, You're done!","piereg"); ?></li>
