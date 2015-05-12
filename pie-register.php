@@ -5,7 +5,7 @@ Plugin URI: http://pieregister.genetechsolutions.com/
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.15
+Version: 2.0.16
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -138,7 +138,6 @@ if( !class_exists('PieRegister') ){
 			add_action("get_payment_content_area",	 array($this,"get_payment_content_area"));
 			
 			add_action("show_icon_payment_gateway",	array($this,"show_icon_payment_gateway"));
-			add_action("check_enable_social_site_method",	array($this,"check_enable_social_site_method_func"));
 			
 			add_filter("piereg_messages",array($this,"modify_all_notices"));
 			
@@ -645,7 +644,7 @@ if( !class_exists('PieRegister') ){
 		private function show_invitaion_code_user(){
 			global $errors,$wpdb;
 				$prefix=$wpdb->prefix."pieregister_";
-				$inv_code = base64_decode($_GET['invitaion_code']);
+				$inv_code = base64_decode(esc_sql($_GET['invitaion_code']));
 				
 				$invitaion_code_users = $wpdb->get_results( "SELECT `user_login`,`user_email` FROM `wp_users` WHERE `ID` IN (SELECT user_id FROM `wp_usermeta` Where meta_key = 'invite_code' and meta_value = '{$inv_code}')" );
 				?>
@@ -914,22 +913,14 @@ if( !class_exists('PieRegister') ){
 					$creds['user_login'] 	= $_POST['log'];
 					$creds['user_password'] = $_POST['pwd'];
 					$creds['remember'] 		= isset($_POST['rememberme']);
-					if(isset($_POST['social_site']) and $_POST['social_site'] == "true" )
-					{
-						require_once( ABSPATH . WPINC . '/user.php' );
-						require_once( ABSPATH . WPINC . '/pluggable.php' );
-						wp_set_auth_cookie($_POST['user_id_social_site']);
-						$user = get_userdata($_POST['user_id_social_site']);
+					
+					$piereg_secure_cookie = false;
+					if ( (!empty($_POST['log']) && !empty($_POST['pwd'])) && (!force_ssl_admin() && is_ssl()) ) {
+						$piereg_secure_cookie = true;
+						force_ssl_admin(true);
 					}
-					else
-					{
-						$piereg_secure_cookie = false;
-						if ( (!empty($_POST['log']) && !empty($_POST['pwd'])) && (!force_ssl_admin() && is_ssl()) ) {
-							$piereg_secure_cookie = true;
-							force_ssl_admin(true);
-						}
-						$user = wp_signon( $creds, $piereg_secure_cookie);
-					}
+					$user = wp_signon( $creds, $piereg_secure_cookie);
+				
 					if ( is_wp_error($user))
 					{
 						$user_login_error = $user->get_error_message();
@@ -1334,8 +1325,6 @@ if( !class_exists('PieRegister') ){
 				}*/
 				//// update user role using wordpress function
 				wp_update_user( array ('ID' => $user_id, 'role' => $new_role ) ) ;
-				update_user_meta( $user_id, "is_social", "false", $unique = false );
-				update_user_meta( $user_id, "social_site_name", "", $unique = false );
 				$user 		= new WP_User($user_id);
 				do_action('pie_register_after_register_validate',$user);
 				////////////////////////////////////////////////////
@@ -1938,31 +1927,6 @@ if( !class_exists('PieRegister') ){
 		{
 			require_once($this->plugin_dir.'/menus/PieRegHelp.php');
 		}
-		function PieRegRestrictWidgets(){
-			require_once($this->plugin_dir.'/menus/PieRegRestrictWidgets.php');
-		}
-		function PieRegRedirectSettings(){
-			require_once($this->plugin_dir.'/menus/PieRegRedirectSettings.php');
-		}
-		
-		function PieRegAwaber(){
-			require_once($this->plugin_dir.'/menus/PieRegAwaber.php');
-		}
-		function PieRegMailChimp(){
-			require_once($this->plugin_dir.'/menus/PieRegMailChimp.php');
-		}
-		function PieRegProfileSearch(){
-			require_once($this->plugin_dir.'/menus/PieRegProfileSearch.php');
-		}
-		function PieRegSocialLogin(){
-			require_once($this->plugin_dir.'/menus/PieRegSocialLogin.php');
-		}
-		function PieRegTwilio(){
-			require_once($this->plugin_dir.'/menus/PieRegTwilio.php');
-		}
-		
-		
-		
 		
 		function PieRegInvitationCodes()
 		{
@@ -3522,18 +3486,7 @@ if( !class_exists('PieRegister') ){
 			}
 		}
 		
-		function check_enable_social_site_method_func()
-		{
-			if($this->check_enable_social_site_method() == "true"){
-				?>
-				<center><h2>OR</h2></center>
-				<h3>Login From Social Websit</h3>
-				<center>
-				<?php do_action("get_enable_social_sites_button"); ?>
-				</center>
-				<?php
-			}
-		}
+		
 		function add_custom_avatars($avatar="", $id_or_email="", $size="")
 		{
 			/*if(is_user_logged_in())

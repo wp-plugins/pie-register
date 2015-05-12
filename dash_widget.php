@@ -12,7 +12,7 @@ if( !class_exists('PieRegisterWidget') ){
 			$piereg = get_option( 'pie_register_2' );
 			
 			if ( current_user_can('manage_options') )
-				wp_register_sidebar_widget( 'piereg_invite_tracking', __('Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
+				wp_register_sidebar_widget( 'piereg_invite_tracking', __('PR Code Tracking', 'piereg' ), array($this, 'widget'), array( 'settings' => 'options-general.php?page=pie-register' ) );
 		}
 		
 		// Modifies the array of dashboard widgets and adds this plugin's

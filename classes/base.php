@@ -866,25 +866,7 @@ class PieReg_Base
 	{
 	  return strlen($headerStr);
 	}
-	public function check_enable_social_site_method()// only check any Social Site method enable or not.
-	{
-		$pie_reg = get_option('pie_register_2');
-		if(
-		(isset($pie_reg['piereg_enable_facebook']) and $pie_reg['piereg_enable_facebook'] == 1 and trim($pie_reg['piereg_facebook_app_id']) != "") or
-		(isset($pie_reg['piereg_enable_linkedin']) and $pie_reg['piereg_enable_linkedin'] == 1 and trim($pie_reg['piereg_linkedin_app_id']) != "")	or
-		(isset($pie_reg['piereg_enable_google']) and $pie_reg['piereg_enable_google'] 	  == 1 )	or
-		(isset($pie_reg['piereg_enable_yahoo']) and $pie_reg['piereg_enable_yahoo'] 	  == 1 )	or
-		(isset($pie_reg['piereg_enable_twitter']) and $pie_reg['piereg_enable_twitter']   == 1 and trim($pie_reg['piereg_twitter_app_id'] ) != "")
-		  )
-		{
-			return "true";
-		}
-		else
-		{
-			return "false";
-		}
-		
-	}
+	
 	public function check_enable_payment_method()// only check any payment method enable or not.
 	{
 		$pie_reg = get_option('pie_register_2');

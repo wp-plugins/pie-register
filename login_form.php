@@ -309,8 +309,6 @@ if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET[
 	</form>';
 }
 
- // do_action("check_enable_social_site_method");
-
 $form_data .='</div>
 </div></div>';
 
