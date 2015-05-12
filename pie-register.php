@@ -5,7 +5,7 @@ Plugin URI: http://pieregister.genetechsolutions.com/
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.16
+Version: 2.0.17
 Author URI: http://www.genetechsolutions.com/
 			
 CHANGELOG
@@ -644,9 +644,9 @@ if( !class_exists('PieRegister') ){
 		private function show_invitaion_code_user(){
 			global $errors,$wpdb;
 				$prefix=$wpdb->prefix."pieregister_";
-				$inv_code = base64_decode(esc_sql($_GET['invitaion_code']));
+				$inv_code = base64_decode($_GET['invitaion_code']);
 				
-				$invitaion_code_users = $wpdb->get_results( "SELECT `user_login`,`user_email` FROM `wp_users` WHERE `ID` IN (SELECT user_id FROM `wp_usermeta` Where meta_key = 'invite_code' and meta_value = '{$inv_code}')" );
+				$invitaion_code_users = $wpdb->get_results(  $wpdb->prepare( "SELECT `user_login`,`user_email` FROM `wp_users` WHERE `ID` IN (SELECT user_id FROM `wp_usermeta` Where meta_key = 'invite_code' and meta_value = %s )", $inv_code )  );
 				?>
 				<style type="text/css">
 					table.invitaion-code-table thead td,table.invitaion-code-table tfoot td{
