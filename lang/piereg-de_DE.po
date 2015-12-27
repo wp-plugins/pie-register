@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pie Register\n"
 "POT-Creation-Date: 2014-06-06 12:39+0500\n"
-"PO-Revision-Date: 2015-12-27 23:27+0100\n"
+"PO-Revision-Date: 2015-12-27 23:35+0100\n"
 "Last-Translator: Matthias Radmüller <matthias@radmueller.net>\n"
 "Language-Team: Matthias Radmüller <matthias@radmueller.net>\n"
 "Language: de_DE\n"
@@ -170,7 +170,7 @@ msgstr "Eine Nachricht wird an Ihre E-Mail-Adresse gesendet."
 
 #: \\wp-content\plugins\pie-register/forgot_password.php:93
 msgid "Reset my password"
-msgstr "Password zurücksetzen"
+msgstr "Passwort zurücksetzen"
 
 #: \\wp-content\plugins\pie-register/get_password.php:4
 msgid "Enter your new password below."
@@ -1233,7 +1233,7 @@ msgid "Password Label"
 msgstr "Passwort Label"
 
 msgid "Password Placeholder"
-msgstr "Password Placeholder"
+msgstr "Passwort Placeholder"
 
 msgid "Captcha Label"
 msgstr "Captcha Label"
@@ -1461,7 +1461,7 @@ msgid "is required"
 msgstr "ist erforderlich"
 
 msgid "The password you entered for the username"
-msgstr "Das angegebene Password für den Benutzernamen"
+msgstr "Das angegebene Passwort für den Benutzernamen"
 
 msgid "Invalid username or password."
 msgstr "Benutzername oder Passwort ungültig."
@@ -2826,7 +2826,7 @@ msgid "Pie Register - Registration"
 msgstr "Pie Register - Registrierung"
 
 msgid "Pie Register - Forgot Password"
-msgstr "Pie Register - Password vergessen"
+msgstr "Pie Register - Passwort vergessen"
 
 msgid "Pie Register - Profile"
 msgstr "Pie Register - Profil"
@@ -2860,7 +2860,7 @@ msgid "Invalid upload file."
 msgstr "Ungültiger Datei-Upload"
 
 msgid "Password not entered"
-msgstr "Password nicht eingegeben"
+msgstr "Passwort nicht eingegeben"
 
 msgid "Invalid Math Captcha"
 msgstr "Ungültige Captcha"
@@ -2881,7 +2881,7 @@ msgid "Invalid activation key"
 msgstr "Ungültiger Aktivierungsschlüssel."
 
 msgid "You key has been expired, please reset password again!"
-msgstr "Ihr Link ist abgelaufen, bitte Password erneut zurücksetzen."
+msgstr "Ihr Link ist abgelaufen, bitte Passwort erneut zurücksetzen."
 
 msgid "Password Lost and Found"
 msgstr "Passwort verloren"
@@ -2889,7 +2889,7 @@ msgstr "Passwort verloren"
 msgid ""
 "This Reset key is invalid or no longer exists. Please reset password again!"
 msgstr ""
-"Dieser Reset Key ist ungültig oder nicht mehr vorhanden ist. Bitte Password "
+"Dieser Reset Key ist ungültig oder nicht mehr vorhanden ist. Bitte Passwort "
 "erneut zurücksetzen!"
 
 msgid "Minimum 8 characters required in password"
@@ -2998,13 +2998,13 @@ msgid "Old Password"
 msgstr "Altes Kennwort"
 
 msgid "Old Password Field do not macth!"
-msgstr "Altes Password stimmt nicht!"
+msgstr "Altes Passwort stimmt nicht!"
 
 msgid "Old and New passwords are same!"
-msgstr "Altes und neues Password sind gleich!"
+msgstr "Altes und neues Passwort sind gleich!"
 
 msgid "Invalid Old Password Field!"
-msgstr "Ungültige Altes Password!"
+msgstr "Ungültige Altes Passwort!"
 
 msgid "Email Edit Verifications"
 msgstr "Überprüfungs-Email bearbeiten"
