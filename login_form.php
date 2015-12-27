@@ -254,8 +254,7 @@ if ( isset($_GET['action']) && ('rp' == $_GET['action'] || 'resetpass' == $_GET[
 		$form_data .= '<label for="user_pass">'.((isset($option['login_password_label']) && !empty($option['login_password_label']))? __($option['login_password_label'],"piereg") : __("Password","piereg")).'</label>';
 	}
 	
-	$form_data .= '
-			<input placeholder="'.((isset($option['login_password_placeholder']) && !empty($option['login_password_placeholder']))? __($option['login_password_placeholder'],"piereg") : "").'" type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
+	$form_data .= '<input placeholder="'.((isset($option['login_password_placeholder']) && !empty($option['login_password_placeholder']))? __($option['login_password_placeholder'],"piereg") : "").'" type="password" size="20" value="" class="input validate[required]" id="user_pass" name="pwd">
 		</p>';
 		
 		global $piereg_math_captcha_login,$piereg_math_captcha_login_widget;
